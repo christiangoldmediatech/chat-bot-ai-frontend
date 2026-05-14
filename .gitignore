@@ -1,21 +1,59 @@
-# Nuxt
-.nuxt
+# Nuxt dev/build outputs
 .output
 .data
+.nuxt
 .nitro
 .cache
+dist
 
-# Node
+# Node dependencies
 node_modules
-*.log
-.DS_Store
+.pnp
+.pnp.js
 
-# Env
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Misc
+.DS_Store
+.fleet
+.idea
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Local env files
 .env
 .env.local
 .env.*.local
+!.env.example
 
-# Editor
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Test coverage
+coverage
+*.lcov
+.nyc_output
+
+# Editor / OS
+*.swp
+*.swo
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Tailwind / PostCSS cache
+.postcssrc.cache
+
+# Vite
+vite.config.ts.timestamp-*
+vite.config.js.timestamp-*
+
+# Temp
+tmp
+temp
