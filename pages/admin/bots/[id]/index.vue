@@ -126,6 +126,9 @@ await load()
           <h2 class="text-sm font-semibold text-slate-900">System prompt</h2>
           <pre class="mt-3 whitespace-pre-wrap text-sm text-slate-700 font-mono">{{ bot.systemPrompt }}</pre>
         </section>
+
+        <BotCalendarCard :bot-id="bot.id" />
+        <BotDocumentsCard :bot-id="bot.id" />
       </div>
 
       <ConfirmDialog
