@@ -12,6 +12,12 @@ export default defineNuxtConfig({
     port: 8080,
   },
   modules: ['@pinia/nuxt', '@nuxtjs/tailwindcss', '@nuxt/eslint'],
+  // Workaround for nuxt/nuxt#34957 (Vite Node IPC socket path not configured)
+  // affecting SPA apps (ssr: false) on Nuxt 3.21.4+. Remove once we upgrade to
+  // a Nuxt release that ships the fix from PR #34959.
+  experimental: {
+    viteEnvironmentApi: true,
+  },
   typescript: {
     strict: true,
     typeCheck: false,
