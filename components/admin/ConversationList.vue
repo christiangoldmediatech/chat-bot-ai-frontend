@@ -7,9 +7,9 @@ defineProps<{
 </script>
 
 <template>
-  <ul class="divide-y divide-slate-100 rounded-xl border border-slate-200 bg-white">
+  <ul class="divide-y divide-slate-100 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass">
     <li v-if="conversations.length === 0" class="px-4 py-6 text-center text-slate-400 text-sm">
-      Sin conversaciones
+      No conversations
     </li>
     <li
       v-for="c in conversations"

@@ -40,6 +40,17 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: 'Admin panel for chat-bot-ai' },
       ],
+      // Poppins is the platform-wide font. Wired into Tailwind's `font-sans`
+      // stack in `tailwind.config.ts`, so every element inherits it through
+      // Tailwind's base layer without per-component overrides.
+      link: [
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap',
+        },
+      ],
     },
   },
 })

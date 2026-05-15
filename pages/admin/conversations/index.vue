@@ -110,19 +110,19 @@ function formatDate(s: string): string {
 
 <template>
   <div>
-    <h1 class="text-2xl font-semibold">Conversaciones</h1>
+    <h1 class="text-2xl font-semibold">Conversations</h1>
 
-    <!-- Filtros -->
+    <!-- Filters -->
     <form
-      class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 rounded-xl border border-slate-200 bg-white p-4"
+      class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-4"
       @submit.prevent="onApplyFilters"
     >
       <div class="lg:col-span-2">
-        <label class="block text-xs font-medium text-slate-600">Buscar</label>
+        <label class="block text-xs font-medium text-slate-600">Search</label>
         <input
           v-model="filters.q"
           type="text"
-          placeholder="Nombre o teléfono"
+          placeholder="Name or phone"
           class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
         >
       </div>
@@ -132,22 +132,22 @@ function formatDate(s: string): string {
           v-model="filters.botId"
           class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
         >
-          <option :value="undefined">Todos</option>
+          <option :value="undefined">All</option>
           <option v-for="b in bots" :key="b.id" :value="b.id">{{ b.name }}</option>
         </select>
       </div>
       <div>
-        <label class="block text-xs font-medium text-slate-600">Estado</label>
+        <label class="block text-xs font-medium text-slate-600">Status</label>
         <select
           v-model="filters.status"
           class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
         >
-          <option :value="undefined">Todos</option>
+          <option :value="undefined">All</option>
           <option v-for="s in statusOptions" :key="s" :value="s">{{ s }}</option>
         </select>
       </div>
       <div>
-        <label class="block text-xs font-medium text-slate-600">Desde</label>
+        <label class="block text-xs font-medium text-slate-600">From</label>
         <input
           v-model="filters.dateFrom"
           type="date"
@@ -155,7 +155,7 @@ function formatDate(s: string): string {
         >
       </div>
       <div>
-        <label class="block text-xs font-medium text-slate-600">Hasta</label>
+        <label class="block text-xs font-medium text-slate-600">To</label>
         <input
           v-model="filters.dateTo"
           type="date"
@@ -169,39 +169,39 @@ function formatDate(s: string): string {
           class="rounded-md border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
           @click="onResetFilters"
         >
-          Limpiar
+          Clear
         </button>
         <button
           type="submit"
-          class="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
+          class="rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800"
         >
-          Aplicar
+          Apply
         </button>
       </div>
     </form>
 
-    <p v-if="error" class="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+    <p v-if="error" class="mt-4 rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
       {{ error }}
     </p>
 
-    <div v-if="loading" class="mt-6 text-sm text-slate-500">Cargando…</div>
+    <SpinnerInline v-if="loading" class="mt-6" />
 
     <template v-else-if="data">
       <EmptyState
         v-if="data.items.length === 0"
-        title="Sin conversaciones"
-        description="Ajusta los filtros o espera a que un cliente escriba."
+        title="No conversations"
+        description="Adjust the filters or wait for a customer to message you."
         class="mt-6"
       />
 
-      <div v-else class="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+      <div v-else class="mt-6 overflow-x-auto rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass">
         <table class="w-full text-sm">
           <thead class="bg-slate-50 text-slate-600">
             <tr>
-              <th class="text-left font-medium px-4 py-3">Cliente</th>
+              <th class="text-left font-medium px-4 py-3">Customer</th>
               <th class="text-left font-medium px-4 py-3">Bot</th>
-              <th class="text-left font-medium px-4 py-3">Estado</th>
-              <th class="text-left font-medium px-4 py-3">Último mensaje</th>
+              <th class="text-left font-medium px-4 py-3">Status</th>
+              <th class="text-left font-medium px-4 py-3">Last message</th>
             </tr>
           </thead>
           <tbody>
@@ -232,7 +232,7 @@ function formatDate(s: string): string {
 
       <div class="mt-4 flex items-center justify-between text-sm text-slate-600">
         <div>
-          {{ data.total }} conversaciones — página {{ data.page }} / {{ totalPages }}
+          {{ data.total }} conversations — page {{ data.page }} / {{ totalPages }}
         </div>
         <div class="flex gap-2">
           <button
@@ -241,7 +241,7 @@ function formatDate(s: string): string {
             :disabled="(filters.page ?? 1) <= 1"
             @click="onPage(-1)"
           >
-            Anterior
+            Previous
           </button>
           <button
             type="button"
@@ -249,7 +249,7 @@ function formatDate(s: string): string {
             :disabled="(filters.page ?? 1) >= totalPages"
             @click="onPage(1)"
           >
-            Siguiente
+            Next
           </button>
         </div>
       </div>

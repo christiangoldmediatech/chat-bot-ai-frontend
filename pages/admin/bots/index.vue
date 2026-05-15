@@ -62,41 +62,41 @@ await load()
       <h1 class="text-2xl font-semibold">Bots</h1>
       <NuxtLink
         to="/admin/bots/create"
-        class="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+        class="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
       >
-        + Crear bot
+        + Create bot
       </NuxtLink>
     </div>
 
-    <p v-if="error" class="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+    <p v-if="error" class="mt-4 rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
       {{ error }}
     </p>
 
-    <div v-if="loading" class="mt-6 text-sm text-slate-500">Cargando…</div>
+    <SpinnerInline v-if="loading" class="mt-6" />
 
     <EmptyState
       v-else-if="items.length === 0"
-      title="Aún no tienes bots"
-      description="Crea el primero para conectarlo a un número de WhatsApp."
+      title="You don't have any bots yet"
+      description="Create the first one to connect it to a WhatsApp number."
       class="mt-6"
     >
       <NuxtLink
         to="/admin/bots/create"
-        class="inline-block rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+        class="inline-block rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
       >
-        + Crear bot
+        + Create bot
       </NuxtLink>
     </EmptyState>
 
-    <div v-else class="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+    <div v-else class="mt-6 overflow-x-auto rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass">
       <table class="w-full text-sm">
         <thead class="bg-slate-50 text-slate-600">
           <tr>
-            <th class="text-left font-medium px-4 py-3">Nombre</th>
-            <th class="text-left font-medium px-4 py-3">Modelo IA</th>
+            <th class="text-left font-medium px-4 py-3">Name</th>
+            <th class="text-left font-medium px-4 py-3">AI model</th>
             <th class="text-left font-medium px-4 py-3">Phone ID</th>
-            <th class="text-left font-medium px-4 py-3">Estado</th>
-            <th class="text-right font-medium px-4 py-3">Acciones</th>
+            <th class="text-left font-medium px-4 py-3">Status</th>
+            <th class="text-right font-medium px-4 py-3">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -127,15 +127,15 @@ await load()
               </button>
             </td>
             <td class="px-4 py-3 text-right space-x-3 text-sm">
-              <NuxtLink :to="`/admin/bots/${bot.id}`" class="text-brand-600 hover:text-brand-700">Ver</NuxtLink>
-              <NuxtLink :to="`/admin/bots/${bot.id}/edit`" class="text-brand-600 hover:text-brand-700">Editar</NuxtLink>
+              <NuxtLink :to="`/admin/bots/${bot.id}`" class="text-brand-600 hover:text-brand-700">View</NuxtLink>
+              <NuxtLink :to="`/admin/bots/${bot.id}/edit`" class="text-brand-600 hover:text-brand-700">Edit</NuxtLink>
               <NuxtLink :to="`/admin/bots/${bot.id}/config`" class="text-brand-600 hover:text-brand-700">Config</NuxtLink>
               <button
                 type="button"
-                class="text-red-600 hover:text-red-700"
+                class="text-danger-600 hover:text-danger-700"
                 @click="confirmingDelete = bot"
               >
-                Eliminar
+                Delete
               </button>
             </td>
           </tr>
@@ -145,8 +145,8 @@ await load()
 
     <ConfirmDialog
       :open="!!confirmingDelete"
-      :title="`Eliminar bot ${confirmingDelete?.name ?? ''}`"
-      message="Se borrarán también sus documentos, conversaciones e integraciones. Esta acción no se puede deshacer."
+      :title="`Delete bot ${confirmingDelete?.name ?? ''}`"
+      message="Its documents, conversations, and integrations will also be deleted. This action cannot be undone."
       @cancel="confirmingDelete = null"
       @confirm="onConfirmDelete"
     />

@@ -27,7 +27,7 @@ function normalizeError(err: unknown): ApiError {
   }
   const status = fetchErr.response?.status ?? 0
   const payload = fetchErr.data
-  let message = 'Error inesperado'
+  let message = 'Unexpected error'
   if (payload?.message) {
     message = Array.isArray(payload.message) ? payload.message.join(', ') : payload.message
   } else if (fetchErr.message) {

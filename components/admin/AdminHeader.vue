@@ -10,8 +10,8 @@ async function onLogout(): Promise<void> {
 </script>
 
 <template>
-  <header class="h-14 bg-white border-b border-slate-200 flex items-center justify-between px-6">
-    <div class="text-sm text-slate-500">Panel administrador</div>
+  <header class="h-14 bg-white/60 backdrop-blur-xl border-b border-white/60 flex items-center justify-between px-6">
+    <div class="text-sm text-slate-500">Admin panel</div>
 
     <div v-if="auth.user" class="flex items-center gap-4">
       <div class="hidden sm:block text-right">
@@ -23,7 +23,7 @@ async function onLogout(): Promise<void> {
         class="rounded-md border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
         @click="onLogout"
       >
-        Cerrar sesión
+        Log out
       </button>
     </div>
   </header>

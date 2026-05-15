@@ -49,7 +49,7 @@ async function onSubmit(): Promise<void> {
       plan: plan.value,
       status: status.value,
     })
-    success.value = 'Cambios guardados'
+    success.value = 'Changes saved'
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -66,21 +66,21 @@ await load()
 
 <template>
   <div>
-    <NuxtLink :to="`/superadmin/companies/${id}`" class="text-sm text-slate-400 hover:text-slate-200">← Volver al detalle</NuxtLink>
-    <h1 class="mt-2 text-2xl font-semibold text-slate-100">Editar empresa</h1>
+    <NuxtLink :to="`/superadmin/companies/${id}`" class="text-sm text-slate-400 hover:text-slate-200">← Back to details</NuxtLink>
+    <h1 class="mt-2 text-2xl font-semibold text-slate-100">Edit company</h1>
 
-    <p v-if="error" class="mt-4 rounded-md border border-red-800 bg-red-950 p-3 text-sm text-red-300">
+    <p v-if="error" class="mt-4 rounded-md border border-danger-800 bg-danger-950 p-3 text-sm text-danger-300">
       {{ error }}
     </p>
-    <p v-if="success" class="mt-4 rounded-md border border-emerald-800 bg-emerald-950 p-3 text-sm text-emerald-300">
+    <p v-if="success" class="mt-4 rounded-md border border-success-800 bg-success-950 p-3 text-sm text-success-300">
       {{ success }}
     </p>
 
-    <div v-if="loading" class="mt-6 text-sm text-slate-400">Cargando…</div>
+    <SpinnerInline v-if="loading" class="mt-6" tone="dark" />
 
     <form v-else-if="data" class="mt-6 max-w-xl space-y-4" @submit.prevent="onSubmit">
       <div>
-        <label class="block text-sm font-medium text-slate-300">Nombre</label>
+        <label class="block text-sm font-medium text-slate-300">Name</label>
         <input
           v-model="name"
           type="text"
@@ -95,7 +95,7 @@ await load()
         <div class="mt-1 rounded-md border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-400 font-mono">
           {{ data.slug }}
         </div>
-        <p class="mt-1 text-xs text-slate-500">El slug no se puede cambiar.</p>
+        <p class="mt-1 text-xs text-slate-500">The slug cannot be changed.</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -109,31 +109,31 @@ await load()
           </select>
         </div>
         <div>
-          <label class="block text-sm font-medium text-slate-300">Estado</label>
+          <label class="block text-sm font-medium text-slate-300">Status</label>
           <select
             v-model="status"
             class="mt-1 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100"
           >
             <option v-for="s in statusOptions" :key="s" :value="s">{{ s }}</option>
           </select>
-          <p class="mt-1 text-xs text-slate-500">SUSPENDED bloquea login para todos los usuarios del tenant.</p>
+          <p class="mt-1 text-xs text-slate-500">SUSPENDED blocks login for all users in the tenant.</p>
         </div>
       </div>
 
       <div class="pt-2 flex gap-2">
         <button
           type="submit"
-          class="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
+          class="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
           :disabled="saving"
         >
-          {{ saving ? 'Guardando…' : 'Guardar cambios' }}
+          {{ saving ? 'Saving…' : 'Save changes' }}
         </button>
         <button
           type="button"
           class="rounded-md border border-slate-700 px-4 py-2 text-sm text-slate-200 hover:bg-slate-800"
           @click="onCancel"
         >
-          Cancelar
+          Cancel
         </button>
       </div>
     </form>

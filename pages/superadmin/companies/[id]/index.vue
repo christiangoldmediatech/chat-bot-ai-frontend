@@ -44,13 +44,13 @@ await load()
 
 <template>
   <div>
-    <NuxtLink to="/superadmin/companies" class="text-sm text-slate-400 hover:text-slate-200">← Volver a empresas</NuxtLink>
+    <NuxtLink to="/superadmin/companies" class="text-sm text-slate-400 hover:text-slate-200">← Back to companies</NuxtLink>
 
-    <p v-if="error" class="mt-4 rounded-md border border-red-800 bg-red-950 p-3 text-sm text-red-300">
+    <p v-if="error" class="mt-4 rounded-md border border-danger-800 bg-danger-950 p-3 text-sm text-danger-300">
       {{ error }}
     </p>
 
-    <div v-if="loading" class="mt-6 text-sm text-slate-400">Cargando…</div>
+    <SpinnerInline v-if="loading" class="mt-6" tone="dark" />
 
     <template v-else-if="data">
       <header class="mt-2 flex items-start justify-between flex-wrap gap-3">
@@ -61,7 +61,7 @@ await load()
               class="inline-block rounded-full border px-2 py-0.5 text-xs font-medium"
               :class="
                 data.status === 'ACTIVE'
-                  ? 'bg-emerald-950 text-emerald-300 border-emerald-800'
+                  ? 'bg-success-950 text-success-300 border-success-800'
                   : 'bg-amber-950 text-amber-300 border-amber-800'
               "
             >
@@ -76,51 +76,39 @@ await load()
             :to="`/superadmin/companies/${data.id}/edit`"
             class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800"
           >
-            Editar
+            Edit
           </NuxtLink>
           <button
             type="button"
-            class="rounded-md border border-red-800 px-3 py-1.5 text-sm text-red-300 hover:bg-red-950"
+            class="rounded-md border border-danger-800 px-3 py-1.5 text-sm text-danger-300 hover:bg-danger-950"
             @click="confirmingDelete = true"
           >
-            Eliminar
+            Delete
           </button>
         </div>
       </header>
 
       <div class="mt-6 grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-5">
-          <div class="text-xs uppercase tracking-wider text-slate-400">Plan</div>
-          <div class="mt-2 text-2xl font-semibold">{{ data.plan }}</div>
-        </div>
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-5">
-          <div class="text-xs uppercase tracking-wider text-slate-400">Usuarios</div>
-          <div class="mt-2 text-2xl font-semibold">{{ data.userCount }}</div>
-        </div>
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-5">
-          <div class="text-xs uppercase tracking-wider text-slate-400">Bots</div>
-          <div class="mt-2 text-2xl font-semibold">{{ data.botCount }}</div>
-        </div>
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-5">
-          <div class="text-xs uppercase tracking-wider text-slate-400">Conversaciones</div>
-          <div class="mt-2 text-2xl font-semibold">{{ data.conversationCount }}</div>
-        </div>
+        <SuperadminStatCard label="Plan" :value="data.plan" />
+        <SuperadminStatCard label="Users" :value="data.userCount" />
+        <SuperadminStatCard label="Bots" :value="data.botCount" />
+        <SuperadminStatCard label="Conversations" :value="data.conversationCount" />
       </div>
 
       <section class="mt-8">
-        <h2 class="text-base font-semibold text-slate-200">Usuarios</h2>
-        <div class="mt-3 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900">
+        <h2 class="text-base font-semibold text-slate-200">Users</h2>
+        <div class="mt-3 overflow-x-auto rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg">
           <table class="w-full text-sm">
             <thead class="bg-slate-950 text-slate-400">
               <tr>
                 <th class="text-left font-medium px-4 py-3">Email</th>
-                <th class="text-left font-medium px-4 py-3">Rol</th>
-                <th class="text-left font-medium px-4 py-3">Creado</th>
+                <th class="text-left font-medium px-4 py-3">Role</th>
+                <th class="text-left font-medium px-4 py-3">Created</th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="data.users.length === 0">
-                <td colspan="3" class="px-4 py-6 text-center text-slate-500">Sin usuarios</td>
+                <td colspan="3" class="px-4 py-6 text-center text-slate-500">No users</td>
               </tr>
               <tr
                 v-for="u in data.users"
@@ -139,18 +127,18 @@ await load()
 
       <section class="mt-6">
         <h2 class="text-base font-semibold text-slate-200">Bots</h2>
-        <div class="mt-3 overflow-x-auto rounded-xl border border-slate-800 bg-slate-900">
+        <div class="mt-3 overflow-x-auto rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg">
           <table class="w-full text-sm">
             <thead class="bg-slate-950 text-slate-400">
               <tr>
-                <th class="text-left font-medium px-4 py-3">Nombre</th>
-                <th class="text-left font-medium px-4 py-3">Estado</th>
-                <th class="text-left font-medium px-4 py-3">Creado</th>
+                <th class="text-left font-medium px-4 py-3">Name</th>
+                <th class="text-left font-medium px-4 py-3">Status</th>
+                <th class="text-left font-medium px-4 py-3">Created</th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="data.bots.length === 0">
-                <td colspan="3" class="px-4 py-6 text-center text-slate-500">Sin bots</td>
+                <td colspan="3" class="px-4 py-6 text-center text-slate-500">No bots</td>
               </tr>
               <tr
                 v-for="b in data.bots"
@@ -159,7 +147,7 @@ await load()
                 class="border-t border-slate-800"
               >
                 <td class="px-4 py-3 text-slate-100">{{ b.name }}</td>
-                <td class="px-4 py-3 text-slate-300">{{ b.isActive ? 'Activo' : 'Inactivo' }}</td>
+                <td class="px-4 py-3 text-slate-300">{{ b.isActive ? 'Active' : 'Inactive' }}</td>
                 <td class="px-4 py-3 text-slate-400 text-xs">{{ new Date(b.createdAt).toLocaleString() }}</td>
               </tr>
             </tbody>
@@ -169,8 +157,8 @@ await load()
 
       <ConfirmDialog
         :open="confirmingDelete"
-        :title="`Eliminar empresa ${data.name}`"
-        message="Se eliminarán también todos sus usuarios, bots, conversaciones y documentos. Esta acción no se puede deshacer."
+        :title="`Delete company ${data.name}`"
+        message="All its users, bots, conversations, and documents will also be deleted. This action cannot be undone."
         @cancel="confirmingDelete = false"
         @confirm="onConfirmDelete"
       />

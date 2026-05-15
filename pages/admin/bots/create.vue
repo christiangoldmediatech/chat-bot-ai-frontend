@@ -57,15 +57,15 @@ async function onSubmit(): Promise<void> {
 
 <template>
   <div>
-    <NuxtLink to="/admin/bots" class="text-sm text-slate-500 hover:text-slate-700">← Volver a bots</NuxtLink>
-    <h1 class="mt-2 text-2xl font-semibold">Crear bot</h1>
+    <NuxtLink to="/admin/bots" class="text-sm text-slate-500 hover:text-slate-700">← Back to bots</NuxtLink>
+    <h1 class="mt-2 text-2xl font-semibold">Create bot</h1>
     <p class="text-slate-500 text-sm mt-1">
-      Conecta un número de WhatsApp Cloud API. La configuración fina (tono, personalidad, fallback) se completa después en el panel del bot.
+      Connect a WhatsApp Cloud API number. Fine-tuning (tone, personality, fallback) is completed later in the bot panel.
     </p>
 
     <form class="mt-6 max-w-2xl space-y-5" @submit.prevent="onSubmit">
       <div>
-        <label for="name" class="block text-sm font-medium text-slate-700">Nombre</label>
+        <label for="name" class="block text-sm font-medium text-slate-700">Name</label>
         <input
           id="name"
           v-model="form.name"
@@ -86,7 +86,7 @@ async function onSubmit(): Promise<void> {
           rows="5"
           class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 font-mono"
         />
-        <p class="mt-1 text-xs text-slate-500">Instrucciones base que recibirá el modelo en cada conversación.</p>
+        <p class="mt-1 text-xs text-slate-500">Base instructions the model will receive on every conversation.</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -102,7 +102,7 @@ async function onSubmit(): Promise<void> {
         </div>
         <div>
           <label for="wabaId" class="block text-sm font-medium text-slate-700">
-            WABA ID <span class="text-slate-400 font-normal">(opcional)</span>
+            WABA ID <span class="text-slate-400 font-normal">(optional)</span>
           </label>
           <input
             id="wabaId"
@@ -123,12 +123,12 @@ async function onSubmit(): Promise<void> {
           pattern="EAA[A-Za-z0-9_-]+"
           class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm font-mono"
         >
-        <p class="mt-1 text-xs text-slate-500">Se guarda cifrado con AES-256-GCM.</p>
+        <p class="mt-1 text-xs text-slate-500">Stored encrypted with AES-256-GCM.</p>
       </div>
 
       <div>
         <label for="appSecret" class="block text-sm font-medium text-slate-700">
-          App secret <span class="text-slate-400 font-normal">(opcional)</span>
+          App secret <span class="text-slate-400 font-normal">(optional)</span>
         </label>
         <input
           id="appSecret"
@@ -137,7 +137,7 @@ async function onSubmit(): Promise<void> {
           pattern="[a-fA-F0-9]+"
           class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm font-mono"
         >
-        <p class="mt-1 text-xs text-slate-500">Habilita validación HMAC del webhook de Meta.</p>
+        <p class="mt-1 text-xs text-slate-500">Enables HMAC validation for Meta's webhook.</p>
       </div>
 
       <div>
@@ -156,28 +156,28 @@ async function onSubmit(): Promise<void> {
             class="rounded-md border border-slate-200 px-3 text-sm text-slate-700 hover:bg-slate-50"
             @click="generateVerifyToken"
           >
-            Generar
+            Generate
           </button>
         </div>
-        <p class="mt-1 text-xs text-slate-500">Lo configurarás idéntico en Meta App → WhatsApp → Webhook.</p>
+        <p class="mt-1 text-xs text-slate-500">You will set the same value in Meta App → WhatsApp → Webhook.</p>
       </div>
 
       <div class="flex items-center gap-2">
         <input id="isActive" v-model="form.isActive" type="checkbox" class="size-4 rounded border-slate-300">
-        <label for="isActive" class="text-sm text-slate-700">Bot activo</label>
+        <label for="isActive" class="text-sm text-slate-700">Bot active</label>
       </div>
 
-      <p v-if="error" class="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+      <p v-if="error" class="rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
         {{ error }}
       </p>
 
       <div class="pt-2">
         <button
           type="submit"
-          class="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
+          class="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
           :disabled="saving"
         >
-          {{ saving ? 'Creando…' : 'Crear bot' }}
+          {{ saving ? 'Creating…' : 'Create bot' }}
         </button>
       </div>
     </form>

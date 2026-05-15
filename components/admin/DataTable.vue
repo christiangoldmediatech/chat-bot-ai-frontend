@@ -14,7 +14,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+  <div class="overflow-x-auto rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass">
     <table class="w-full text-sm">
       <thead class="bg-slate-50 text-slate-600">
         <tr>
@@ -29,13 +29,13 @@ defineProps<{
       </thead>
       <tbody>
         <tr v-if="loading">
-          <td :colspan="columns.length" class="px-4 py-6 text-center text-slate-400">
-            Cargando…
+          <td :colspan="columns.length" class="px-4 py-6 text-center">
+            <SpinnerInline />
           </td>
         </tr>
         <tr v-else-if="rows.length === 0">
           <td :colspan="columns.length" class="px-4 py-6 text-center text-slate-400">
-            {{ emptyMessage ?? 'Sin datos' }}
+            {{ emptyMessage ?? 'No data' }}
           </td>
         </tr>
         <tr

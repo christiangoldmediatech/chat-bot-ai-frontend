@@ -44,13 +44,13 @@ await load()
 
 <template>
   <div>
-    <NuxtLink to="/admin/bots" class="text-sm text-slate-500 hover:text-slate-700">← Volver a bots</NuxtLink>
+    <NuxtLink to="/admin/bots" class="text-sm text-slate-500 hover:text-slate-700">← Back to bots</NuxtLink>
 
-    <p v-if="error" class="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+    <p v-if="error" class="mt-4 rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
       {{ error }}
     </p>
 
-    <div v-if="loading" class="mt-6 text-sm text-slate-500">Cargando…</div>
+    <SpinnerInline v-if="loading" class="mt-6" />
 
     <template v-else-if="bot">
       <div class="mt-2 flex items-center justify-between flex-wrap gap-3">
@@ -67,40 +67,40 @@ await load()
             :to="`/admin/bots/${bot.id}/edit`"
             class="rounded-md border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
           >
-            Editar
+            Edit
           </NuxtLink>
           <NuxtLink
             :to="`/admin/bots/${bot.id}/config`"
-            class="rounded-md bg-brand-600 px-3 py-1.5 text-sm text-white hover:bg-brand-700"
+            class="rounded-md bg-slate-900 px-3 py-1.5 text-sm text-white hover:bg-slate-800"
           >
-            Configurar
+            Configure
           </NuxtLink>
           <button
             type="button"
-            class="rounded-md border border-red-200 px-3 py-1.5 text-sm text-red-700 hover:bg-red-50"
+            class="rounded-md border border-danger-200 px-3 py-1.5 text-sm text-danger-700 hover:bg-danger-50"
             @click="confirmingDelete = true"
           >
-            Eliminar
+            Delete
           </button>
         </div>
       </div>
 
       <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <section class="rounded-xl border border-slate-200 bg-white p-5">
-          <h2 class="text-sm font-semibold text-slate-900">IA</h2>
+        <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
+          <h2 class="text-sm font-semibold text-slate-900">AI</h2>
           <dl class="mt-3 space-y-2 text-sm">
             <div class="flex justify-between">
-              <dt class="text-slate-500">Proveedor</dt>
+              <dt class="text-slate-500">Provider</dt>
               <dd class="text-slate-900">{{ bot.aiProvider }}</dd>
             </div>
             <div class="flex justify-between">
-              <dt class="text-slate-500">Modelo</dt>
+              <dt class="text-slate-500">Model</dt>
               <dd class="text-slate-900 font-mono">{{ bot.aiModel }}</dd>
             </div>
           </dl>
         </section>
 
-        <section class="rounded-xl border border-slate-200 bg-white p-5">
+        <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
           <h2 class="text-sm font-semibold text-slate-900">WhatsApp</h2>
           <dl class="mt-3 space-y-2 text-sm">
             <div class="flex justify-between">
@@ -113,7 +113,7 @@ await load()
             </div>
             <div class="flex justify-between">
               <dt class="text-slate-500">App secret</dt>
-              <dd class="text-slate-900">{{ bot.hasAppSecret ? 'Configurado' : 'No configurado' }}</dd>
+              <dd class="text-slate-900">{{ bot.hasAppSecret ? 'Configured' : 'Not configured' }}</dd>
             </div>
             <div class="flex justify-between">
               <dt class="text-slate-500">Verify token</dt>
@@ -122,7 +122,7 @@ await load()
           </dl>
         </section>
 
-        <section class="md:col-span-2 rounded-xl border border-slate-200 bg-white p-5">
+        <section class="md:col-span-2 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
           <h2 class="text-sm font-semibold text-slate-900">System prompt</h2>
           <pre class="mt-3 whitespace-pre-wrap text-sm text-slate-700 font-mono">{{ bot.systemPrompt }}</pre>
         </section>
@@ -133,8 +133,8 @@ await load()
 
       <ConfirmDialog
         :open="confirmingDelete"
-        :title="`Eliminar bot ${bot.name}`"
-        message="Se borrarán también sus documentos, conversaciones e integraciones. Esta acción no se puede deshacer."
+        :title="`Delete bot ${bot.name}`"
+        message="Its documents, conversations, and integrations will also be deleted. This action cannot be undone."
         @cancel="confirmingDelete = false"
         @confirm="onConfirmDelete"
       />

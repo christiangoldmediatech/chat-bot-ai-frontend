@@ -31,52 +31,47 @@ await load()
 <template>
   <div>
     <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-semibold text-slate-100">Dashboard global</h1>
+      <h1 class="text-2xl font-semibold text-slate-100">Global dashboard</h1>
       <button
         type="button"
         class="text-sm text-slate-400 hover:text-slate-200"
         :disabled="loading"
         @click="load"
       >
-        Recargar
+        Reload
       </button>
     </div>
 
-    <p v-if="error" class="mt-4 rounded-md border border-red-800 bg-red-950 p-3 text-sm text-red-300">
+    <p v-if="error" class="mt-4 rounded-md border border-danger-800 bg-danger-950 p-3 text-sm text-danger-300">
       {{ error }}
     </p>
 
-    <div v-if="loading" class="mt-6 text-sm text-slate-400">Cargando…</div>
+    <SpinnerInline v-if="loading" class="mt-6" tone="dark" />
 
     <template v-else-if="data">
       <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-5">
-          <div class="text-xs uppercase tracking-wider text-slate-400">Empresas</div>
-          <div class="mt-2 text-3xl font-semibold">{{ data.totalCompanies }}</div>
-          <div class="mt-1 text-xs text-slate-500">
-            {{ data.activeCompanies }} activas · {{ data.suspendedCompanies }} suspendidas
-          </div>
-        </div>
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-5">
-          <div class="text-xs uppercase tracking-wider text-slate-400">Usuarios</div>
-          <div class="mt-2 text-3xl font-semibold">{{ data.totalUsers }}</div>
-        </div>
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-5">
-          <div class="text-xs uppercase tracking-wider text-slate-400">Bots</div>
-          <div class="mt-2 text-3xl font-semibold">{{ data.totalBots }}</div>
-          <div class="mt-1 text-xs text-slate-500">{{ data.activeBots }} activos</div>
-        </div>
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-5">
-          <div class="text-xs uppercase tracking-wider text-slate-400">Conversaciones</div>
-          <div class="mt-2 text-3xl font-semibold">{{ data.totalConversations }}</div>
-          <div class="mt-1 text-xs text-slate-500">{{ data.totalDocuments }} documentos</div>
-        </div>
+        <SuperadminStatCard
+          label="Companies"
+          :value="data.totalCompanies"
+          :hint="`${data.activeCompanies} active · ${data.suspendedCompanies} suspended`"
+        />
+        <SuperadminStatCard label="Users" :value="data.totalUsers" />
+        <SuperadminStatCard
+          label="Bots"
+          :value="data.totalBots"
+          :hint="`${data.activeBots} active`"
+        />
+        <SuperadminStatCard
+          label="Conversations"
+          :value="data.totalConversations"
+          :hint="`${data.totalDocuments} documents`"
+        />
       </div>
 
-      <h2 class="mt-8 text-base font-semibold text-slate-200">Empresas recientes</h2>
+      <h2 class="mt-8 text-base font-semibold text-slate-200">Recent companies</h2>
       <ul
         v-if="data.recentCompanies.length > 0"
-        class="mt-3 divide-y divide-slate-800 rounded-xl border border-slate-800 bg-slate-900"
+        class="mt-3 divide-y divide-slate-800 rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg"
       >
         <li
           v-for="c in data.recentCompanies"
@@ -95,7 +90,7 @@ await load()
           </NuxtLink>
         </li>
       </ul>
-      <p v-else class="mt-3 text-sm text-slate-500">Aún no hay empresas registradas.</p>
+      <p v-else class="mt-3 text-sm text-slate-500">No companies registered yet.</p>
     </template>
   </div>
 </template>

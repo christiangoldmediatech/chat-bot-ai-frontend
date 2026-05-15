@@ -75,13 +75,13 @@ function statusClass(s: ConversationStatus): string {
 
 <template>
   <div>
-    <NuxtLink to="/admin/conversations" class="text-sm text-slate-500 hover:text-slate-700">← Volver a conversaciones</NuxtLink>
+    <NuxtLink to="/admin/conversations" class="text-sm text-slate-500 hover:text-slate-700">← Back to conversations</NuxtLink>
 
-    <p v-if="error" class="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+    <p v-if="error" class="mt-4 rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
       {{ error }}
     </p>
 
-    <div v-if="loading" class="mt-6 text-sm text-slate-500">Cargando…</div>
+    <SpinnerInline v-if="loading" class="mt-6" />
 
     <template v-else-if="data">
       <header class="mt-2 flex items-start justify-between flex-wrap gap-4">
@@ -105,7 +105,7 @@ function statusClass(s: ConversationStatus): string {
             class="rounded-md border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm text-amber-800 hover:bg-amber-100 disabled:opacity-50 disabled:cursor-not-allowed"
             @click="changeStatus('HUMAN')"
           >
-            Tomar (HUMAN)
+            Take over (HUMAN)
           </button>
           <button
             type="button"
@@ -113,7 +113,7 @@ function statusClass(s: ConversationStatus): string {
             class="rounded-md border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-800 hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
             @click="changeStatus('BOT')"
           >
-            Devolver al bot
+            Hand back to bot
           </button>
           <button
             type="button"
@@ -121,47 +121,47 @@ function statusClass(s: ConversationStatus): string {
             class="rounded-md border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
             @click="changeStatus('CLOSED')"
           >
-            Cerrar
+            Close
           </button>
         </div>
       </header>
 
-      <p v-if="statusError" class="mt-3 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+      <p v-if="statusError" class="mt-3 rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
         {{ statusError }}
       </p>
 
-      <section class="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 max-h-[60vh] overflow-y-auto">
+      <section class="mt-6 rounded-2xl bg-white/60 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-4 max-h-[60vh] overflow-y-auto">
         <ChatMessages :messages="data.messages" />
         <p v-if="data.messages.length === 0" class="text-sm text-slate-400 text-center py-6">
-          Sin mensajes
+          No messages
         </p>
       </section>
 
       <!-- Agent input: only when HUMAN. Backend rejects sends in BOT/CLOSED. -->
       <section
         v-if="data.status === 'HUMAN'"
-        class="mt-4 rounded-xl border border-slate-200 bg-white p-4"
+        class="mt-4 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-4"
       >
-        <label class="block text-sm font-medium text-slate-700">Enviar como agente</label>
+        <label class="block text-sm font-medium text-slate-700">Send as agent</label>
         <form class="mt-2 flex gap-2" @submit.prevent="onSend">
           <textarea
             v-model="newMessage"
             rows="2"
             required
-            placeholder="Escribe tu respuesta…"
+            placeholder="Type your reply…"
             class="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
           />
           <button
             type="submit"
-            class="self-end rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
+            class="self-end rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
             :disabled="sending || !newMessage.trim()"
           >
-            {{ sending ? 'Enviando…' : 'Enviar' }}
+            {{ sending ? 'Sending…' : 'Send' }}
           </button>
         </form>
-        <p v-if="sendError" class="mt-2 text-sm text-red-700">{{ sendError }}</p>
+        <p v-if="sendError" class="mt-2 text-sm text-danger-700">{{ sendError }}</p>
         <p class="mt-2 text-xs text-slate-500">
-          El mensaje se almacena y queda en el historial. La entrega a WhatsApp del lado del agente todavía no está cableada en el backend — confirma con el usuario por otro canal mientras tanto.
+          The message is stored and kept in the history. Outbound delivery to WhatsApp from the agent side is not wired up in the backend yet — confirm with the customer through another channel in the meantime.
         </p>
       </section>
 
@@ -169,13 +169,13 @@ function statusClass(s: ConversationStatus): string {
         v-else-if="data.status === 'CLOSED'"
         class="mt-4 text-sm text-slate-500 italic"
       >
-        Conversación cerrada. Al recibir un mensaje del cliente vuelve a estado BOT automáticamente.
+        Conversation closed. It automatically returns to BOT status when the customer sends a new message.
       </p>
       <p
         v-else
         class="mt-4 text-sm text-slate-500 italic"
       >
-        El bot está respondiendo. Toma la conversación para escribir como agente.
+        The bot is responding. Take over the conversation to reply as an agent.
       </p>
     </template>
   </div>

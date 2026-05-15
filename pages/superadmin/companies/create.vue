@@ -34,11 +34,11 @@ function onSlugInput(): void {
 
 async function onSubmit(): Promise<void> {
   if (ownerPassword.value.length < 12) {
-    error.value = 'La contraseña del OWNER debe tener al menos 12 caracteres.'
+    error.value = 'OWNER password must be at least 12 characters.'
     return
   }
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug.value)) {
-    error.value = 'El slug debe ser kebab-case (minúsculas, números y guiones).'
+    error.value = 'Slug must be kebab-case (lowercase letters, numbers, and hyphens).'
     return
   }
   error.value = null
@@ -61,15 +61,15 @@ async function onSubmit(): Promise<void> {
 
 <template>
   <div>
-    <NuxtLink to="/superadmin/companies" class="text-sm text-slate-400 hover:text-slate-200">← Volver a empresas</NuxtLink>
-    <h1 class="mt-2 text-2xl font-semibold text-slate-100">Crear empresa</h1>
+    <NuxtLink to="/superadmin/companies" class="text-sm text-slate-400 hover:text-slate-200">← Back to companies</NuxtLink>
+    <h1 class="mt-2 text-2xl font-semibold text-slate-100">Create company</h1>
     <p class="text-slate-400 text-sm mt-1">
-      Se crea el tenant y un usuario OWNER inicial. El OWNER recibe credenciales en texto plano — entrégalas por un canal seguro.
+      Creates the tenant and an initial OWNER user. The OWNER receives plaintext credentials — share them through a secure channel.
     </p>
 
     <form class="mt-6 max-w-xl space-y-4" @submit.prevent="onSubmit">
       <div>
-        <label class="block text-sm font-medium text-slate-300">Nombre</label>
+        <label class="block text-sm font-medium text-slate-300">Name</label>
         <input
           v-model="name"
           type="text"
@@ -89,11 +89,11 @@ async function onSubmit(): Promise<void> {
           class="mt-1 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 font-mono"
           @input="onSlugInput"
         >
-        <p class="mt-1 text-xs text-slate-500">Identificador único, kebab-case.</p>
+        <p class="mt-1 text-xs text-slate-500">Unique identifier, kebab-case.</p>
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-slate-300">Email del OWNER</label>
+        <label class="block text-sm font-medium text-slate-300">OWNER email</label>
         <input
           v-model="ownerEmail"
           type="email"
@@ -103,7 +103,7 @@ async function onSubmit(): Promise<void> {
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-slate-300">Contraseña del OWNER</label>
+        <label class="block text-sm font-medium text-slate-300">OWNER password</label>
         <input
           v-model="ownerPassword"
           type="password"
@@ -111,20 +111,20 @@ async function onSubmit(): Promise<void> {
           minlength="12"
           class="mt-1 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100"
         >
-        <p class="mt-1 text-xs text-slate-500">Mínimo 12 caracteres.</p>
+        <p class="mt-1 text-xs text-slate-500">Minimum 12 characters.</p>
       </div>
 
-      <p v-if="error" class="rounded-md border border-red-800 bg-red-950 p-3 text-sm text-red-300">
+      <p v-if="error" class="rounded-md border border-danger-800 bg-danger-950 p-3 text-sm text-danger-300">
         {{ error }}
       </p>
 
       <div class="pt-2">
         <button
           type="submit"
-          class="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
+          class="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
           :disabled="saving"
         >
-          {{ saving ? 'Creando…' : 'Crear empresa' }}
+          {{ saving ? 'Creating…' : 'Create company' }}
         </button>
       </div>
     </form>

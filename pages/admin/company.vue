@@ -36,7 +36,7 @@ async function onSubmit(): Promise<void> {
   success.value = null
   try {
     data.value = await tenant.update({ name: name.value })
-    success.value = 'Cambios guardados'
+    success.value = 'Changes saved'
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -49,22 +49,22 @@ await load()
 
 <template>
   <div>
-    <h1 class="text-2xl font-semibold">Mi empresa</h1>
-    <p class="text-slate-500 mt-1 text-sm">Datos del tenant al que pertenece tu usuario.</p>
+    <h1 class="text-2xl font-semibold">My company</h1>
+    <p class="text-slate-500 mt-1 text-sm">Details of the tenant your user belongs to.</p>
 
-    <p v-if="error" class="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+    <p v-if="error" class="mt-4 rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
       {{ error }}
     </p>
 
-    <p v-if="success" class="mt-4 rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+    <p v-if="success" class="mt-4 rounded-md border border-success-200 bg-success-50 p-3 text-sm text-success-700">
       {{ success }}
     </p>
 
-    <div v-if="loading" class="mt-6 text-sm text-slate-500">Cargando…</div>
+    <SpinnerInline v-if="loading" class="mt-6" />
 
     <form v-else-if="data" class="mt-6 max-w-xl space-y-4" @submit.prevent="onSubmit">
       <div>
-        <label for="name" class="block text-sm font-medium text-slate-700">Nombre</label>
+        <label for="name" class="block text-sm font-medium text-slate-700">Name</label>
         <input
           id="name"
           v-model="name"
@@ -85,7 +85,7 @@ await load()
           <div class="mt-1 rounded-md bg-slate-50 px-3 py-2 text-sm text-slate-600">{{ data.plan }}</div>
         </div>
         <div>
-          <label class="block text-sm font-medium text-slate-700">Estado</label>
+          <label class="block text-sm font-medium text-slate-700">Status</label>
           <div class="mt-1 rounded-md bg-slate-50 px-3 py-2 text-sm text-slate-600">{{ data.status }}</div>
         </div>
       </div>
@@ -93,10 +93,10 @@ await load()
       <div class="pt-4">
         <button
           type="submit"
-          class="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
+          class="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
           :disabled="saving"
         >
-          {{ saving ? 'Guardando…' : 'Guardar cambios' }}
+          {{ saving ? 'Saving…' : 'Save changes' }}
         </button>
       </div>
     </form>

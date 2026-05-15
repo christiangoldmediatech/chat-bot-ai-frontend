@@ -38,28 +38,26 @@ await load()
         :disabled="loading"
         @click="load"
       >
-        Recargar
+        Reload
       </button>
     </div>
 
-    <p v-if="error" class="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+    <p v-if="error" class="mt-4 rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
       {{ error }}
     </p>
 
-    <div v-if="loading" class="mt-6 text-sm text-slate-500">
-      Cargando…
-    </div>
+    <SpinnerInline v-if="loading" class="mt-6" />
 
     <template v-else-if="data">
       <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Bots" :value="data.bots" :hint="`${data.activeBots} activos`" />
-        <StatCard label="Conversaciones" :value="data.conversations" :hint="`${data.openConversations} abiertas`" />
-        <StatCard label="En manos humanas" :value="data.humanConversations" hint="Estado HUMAN" />
-        <StatCard label="Clientes" :value="data.customers" hint="Teléfonos únicos" />
+        <StatCard label="Bots" :value="data.bots" :hint="`${data.activeBots} active`" />
+        <StatCard label="Conversations" :value="data.conversations" :hint="`${data.openConversations} open`" />
+        <StatCard label="Handled by humans" :value="data.humanConversations" hint="HUMAN status" />
+        <StatCard label="Customers" :value="data.customers" hint="Unique phone numbers" />
       </div>
 
       <div class="mt-8">
-        <h2 class="text-base font-semibold text-slate-900">Conversaciones recientes</h2>
+        <h2 class="text-base font-semibold text-slate-900">Recent conversations</h2>
         <div class="mt-3">
           <ConversationList :conversations="data.recentConversations" />
         </div>

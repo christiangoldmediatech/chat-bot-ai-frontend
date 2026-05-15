@@ -19,7 +19,7 @@ defineProps<{
         :class="
           msg.role === 'USER'
             ? 'bg-white border border-slate-200 text-slate-800'
-            : 'bg-brand-600 text-white'
+            : 'bg-slate-900 text-white'
         "
       >
         <div class="whitespace-pre-wrap">{{ msg.content }}</div>

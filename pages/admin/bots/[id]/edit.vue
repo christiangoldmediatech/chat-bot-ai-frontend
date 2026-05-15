@@ -70,7 +70,7 @@ async function onSubmit(): Promise<void> {
       webhookVerifyToken: form.webhookVerifyToken,
       isActive: form.isActive,
     })
-    success.value = 'Cambios guardados'
+    success.value = 'Changes saved'
     hydrate(updated)
   } catch (err) {
     error.value = (err as ApiError).message
@@ -88,21 +88,21 @@ await load()
 
 <template>
   <div>
-    <NuxtLink :to="`/admin/bots/${id}`" class="text-sm text-slate-500 hover:text-slate-700">← Volver al bot</NuxtLink>
-    <h1 class="mt-2 text-2xl font-semibold">Editar bot</h1>
+    <NuxtLink :to="`/admin/bots/${id}`" class="text-sm text-slate-500 hover:text-slate-700">← Back to bot</NuxtLink>
+    <h1 class="mt-2 text-2xl font-semibold">Edit bot</h1>
 
-    <p v-if="error" class="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+    <p v-if="error" class="mt-4 rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
       {{ error }}
     </p>
-    <p v-if="success" class="mt-4 rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+    <p v-if="success" class="mt-4 rounded-md border border-success-200 bg-success-50 p-3 text-sm text-success-700">
       {{ success }}
     </p>
 
-    <div v-if="loading" class="mt-6 text-sm text-slate-500">Cargando…</div>
+    <SpinnerInline v-if="loading" class="mt-6" />
 
     <form v-else class="mt-6 max-w-2xl space-y-5" @submit.prevent="onSubmit">
       <div>
-        <label class="block text-sm font-medium text-slate-700">Nombre</label>
+        <label class="block text-sm font-medium text-slate-700">Name</label>
         <input
           v-model="form.name"
           type="text"
@@ -145,7 +145,7 @@ await load()
 
       <div>
         <label class="block text-sm font-medium text-slate-700">
-          Nuevo access token <span class="text-slate-400 font-normal">(dejar vacío para no cambiarlo)</span>
+          New access token <span class="text-slate-400 font-normal">(leave blank to keep current)</span>
         </label>
         <input
           v-model="form.whatsappToken"
@@ -157,7 +157,7 @@ await load()
 
       <div>
         <label class="block text-sm font-medium text-slate-700">
-          Nuevo app secret <span class="text-slate-400 font-normal">(dejar vacío para no cambiarlo)</span>
+          New app secret <span class="text-slate-400 font-normal">(leave blank to keep current)</span>
         </label>
         <input
           v-model="form.whatsappAppSecret"
@@ -180,23 +180,23 @@ await load()
 
       <div class="flex items-center gap-2">
         <input id="isActive" v-model="form.isActive" type="checkbox" class="size-4 rounded border-slate-300">
-        <label for="isActive" class="text-sm text-slate-700">Bot activo</label>
+        <label for="isActive" class="text-sm text-slate-700">Bot active</label>
       </div>
 
       <div class="pt-2 flex gap-2">
         <button
           type="submit"
-          class="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
+          class="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
           :disabled="saving"
         >
-          {{ saving ? 'Guardando…' : 'Guardar cambios' }}
+          {{ saving ? 'Saving…' : 'Save changes' }}
         </button>
         <button
           type="button"
           class="rounded-md border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
           @click="onCancel"
         >
-          Cancelar
+          Cancel
         </button>
       </div>
     </form>

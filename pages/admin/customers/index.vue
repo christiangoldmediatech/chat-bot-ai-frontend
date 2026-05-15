@@ -47,43 +47,43 @@ await Promise.all([loadBots(), load()])
 <template>
   <div>
     <div class="flex items-center justify-between flex-wrap gap-3">
-      <h1 class="text-2xl font-semibold">Clientes</h1>
+      <h1 class="text-2xl font-semibold">Customers</h1>
 
       <div>
-        <label class="text-xs text-slate-500 mr-2">Filtrar por bot</label>
+        <label class="text-xs text-slate-500 mr-2">Filter by bot</label>
         <select
           v-model="filterBotId"
           class="rounded-md border border-slate-300 px-3 py-1.5 text-sm"
           @change="onFilterChange"
         >
-          <option :value="undefined">Todos</option>
+          <option :value="undefined">All</option>
           <option v-for="b in bots" :key="b.id" :value="b.id">{{ b.name }}</option>
         </select>
       </div>
     </div>
 
-    <p v-if="error" class="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+    <p v-if="error" class="mt-4 rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
       {{ error }}
     </p>
 
-    <div v-if="loading" class="mt-6 text-sm text-slate-500">Cargando…</div>
+    <SpinnerInline v-if="loading" class="mt-6" />
 
     <EmptyState
       v-else-if="items.length === 0"
-      title="Aún no hay clientes"
-      description="Los clientes aparecen cuando alguien escribe a uno de tus bots."
+      title="No customers yet"
+      description="Customers appear when someone messages one of your bots."
       class="mt-6"
     />
 
-    <div v-else class="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+    <div v-else class="mt-6 overflow-x-auto rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass">
       <table class="w-full text-sm">
         <thead class="bg-slate-50 text-slate-600">
           <tr>
-            <th class="text-left font-medium px-4 py-3">Cliente</th>
-            <th class="text-left font-medium px-4 py-3">Teléfono</th>
-            <th class="text-right font-medium px-4 py-3">Conversaciones</th>
-            <th class="text-right font-medium px-4 py-3">Abiertas</th>
-            <th class="text-left font-medium px-4 py-3">Último mensaje</th>
+            <th class="text-left font-medium px-4 py-3">Customer</th>
+            <th class="text-left font-medium px-4 py-3">Phone</th>
+            <th class="text-right font-medium px-4 py-3">Conversations</th>
+            <th class="text-right font-medium px-4 py-3">Open</th>
+            <th class="text-left font-medium px-4 py-3">Last message</th>
           </tr>
         </thead>
         <tbody>

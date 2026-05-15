@@ -42,13 +42,13 @@ await load()
 
 <template>
   <div>
-    <NuxtLink to="/admin/customers" class="text-sm text-slate-500 hover:text-slate-700">← Volver a clientes</NuxtLink>
+    <NuxtLink to="/admin/customers" class="text-sm text-slate-500 hover:text-slate-700">← Back to customers</NuxtLink>
 
-    <p v-if="error" class="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+    <p v-if="error" class="mt-4 rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
       {{ error }}
     </p>
 
-    <div v-if="loading" class="mt-6 text-sm text-slate-500">Cargando…</div>
+    <SpinnerInline v-if="loading" class="mt-6" />
 
     <template v-else-if="data">
       <header class="mt-2">
@@ -57,20 +57,20 @@ await load()
       </header>
 
       <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard label="Conversaciones" :value="data.conversationCount" />
-        <StatCard label="Abiertas" :value="data.openConversationCount" />
-        <StatCard label="Último mensaje" :value="new Date(data.lastMessageAt).toLocaleString()" />
+        <StatCard label="Conversations" :value="data.conversationCount" />
+        <StatCard label="Open" :value="data.openConversationCount" />
+        <StatCard label="Last message" :value="new Date(data.lastMessageAt).toLocaleString()" />
       </div>
 
-      <h2 class="mt-8 text-base font-semibold text-slate-900">Conversaciones</h2>
-      <div class="mt-3 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+      <h2 class="mt-8 text-base font-semibold text-slate-900">Conversations</h2>
+      <div class="mt-3 overflow-x-auto rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass">
         <table class="w-full text-sm">
           <thead class="bg-slate-50 text-slate-600">
             <tr>
               <th class="text-left font-medium px-4 py-3">Bot</th>
-              <th class="text-left font-medium px-4 py-3">Estado</th>
-              <th class="text-left font-medium px-4 py-3">Último mensaje</th>
-              <th class="text-left font-medium px-4 py-3">Creada</th>
+              <th class="text-left font-medium px-4 py-3">Status</th>
+              <th class="text-left font-medium px-4 py-3">Last message</th>
+              <th class="text-left font-medium px-4 py-3">Created</th>
             </tr>
           </thead>
           <tbody>
