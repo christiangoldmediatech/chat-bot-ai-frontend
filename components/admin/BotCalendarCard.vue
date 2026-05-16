@@ -18,7 +18,8 @@ async function load(): Promise<void> {
   loading.value = true
   error.value = null
   try {
-    integration.value = await calendar.get(props.botId)
+    const result = await calendar.get(props.botId)
+    integration.value = result && result.isActive ? result : null
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -42,11 +43,18 @@ async function onConnect(): Promise<void> {
 }
 
 async function onDisconnect(): Promise<void> {
+  if (!window.confirm('Disconnect this Google account from the bot? You\'ll be able to reconnect afterwards.')) {
+    return
+  }
   busy.value = true
   error.value = null
   try {
     await calendar.disconnect(props.botId)
     integration.value = null
+    // Re-fetch so the UI reflects the actual server state, not just the
+    // optimistic clear. After this returns null the empty state renders and
+    // the user can reconnect (same or different account) immediately.
+    await load()
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
