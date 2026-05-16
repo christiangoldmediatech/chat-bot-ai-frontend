@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
-import type { CompanyDetail } from '~/types/company'
+import type { CompanyBot, CompanyDetail } from '~/types/company'
 
 definePageMeta({
   layout: 'superadmin',
@@ -11,11 +11,13 @@ const route = useRoute()
 const router = useRouter()
 const companiesApi = useCompanies()
 const id = route.params.id as string
+const bots = useBots(id)
 
 const data = ref<CompanyDetail | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
 const confirmingDelete = ref(false)
+const confirmingDeleteBot = ref<CompanyBot | null>(null)
 
 async function load(): Promise<void> {
   loading.value = true
@@ -36,6 +38,20 @@ async function onConfirmDelete(): Promise<void> {
   } catch (err) {
     error.value = (err as ApiError).message
     confirmingDelete.value = false
+  }
+}
+
+async function onConfirmDeleteBot(): Promise<void> {
+  const target = confirmingDeleteBot.value
+  if (!target || !data.value) return
+  try {
+    await bots.remove(target.id)
+    data.value.bots = data.value.bots.filter((b) => b.id !== target.id)
+    data.value.botCount = data.value.bots.length
+  } catch (err) {
+    error.value = (err as ApiError).message
+  } finally {
+    confirmingDeleteBot.value = null
   }
 }
 
@@ -126,7 +142,15 @@ await load()
       </section>
 
       <section class="mt-6">
-        <h2 class="text-base font-semibold text-slate-200">Bots</h2>
+        <div class="flex items-center justify-between">
+          <h2 class="text-base font-semibold text-slate-200">Bots</h2>
+          <NuxtLink
+            :to="`/superadmin/companies/${id}/bots/create`"
+            class="rounded-md bg-white px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-100"
+          >
+            + Add bot
+          </NuxtLink>
+        </div>
         <div class="mt-3 overflow-x-auto rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg">
           <table class="w-full text-sm">
             <thead class="bg-slate-950 text-slate-400">
@@ -134,11 +158,12 @@ await load()
                 <th class="text-left font-medium px-4 py-3">Name</th>
                 <th class="text-left font-medium px-4 py-3">Status</th>
                 <th class="text-left font-medium px-4 py-3">Created</th>
+                <th class="text-right font-medium px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="data.bots.length === 0">
-                <td colspan="3" class="px-4 py-6 text-center text-slate-500">No bots</td>
+                <td colspan="4" class="px-4 py-6 text-center text-slate-500">No bots</td>
               </tr>
               <tr
                 v-for="b in data.bots"
@@ -149,6 +174,33 @@ await load()
                 <td class="px-4 py-3 text-slate-100">{{ b.name }}</td>
                 <td class="px-4 py-3 text-slate-300">{{ b.isActive ? 'Active' : 'Inactive' }}</td>
                 <td class="px-4 py-3 text-slate-400 text-xs">{{ new Date(b.createdAt).toLocaleString() }}</td>
+                <td class="px-4 py-3 text-right space-x-3 text-sm">
+                  <NuxtLink
+                    :to="`/superadmin/companies/${id}/bots/${b.id}`"
+                    class="text-slate-200 hover:text-white"
+                  >
+                    View
+                  </NuxtLink>
+                  <NuxtLink
+                    :to="`/superadmin/companies/${id}/bots/${b.id}/edit`"
+                    class="text-slate-200 hover:text-white"
+                  >
+                    Edit
+                  </NuxtLink>
+                  <NuxtLink
+                    :to="`/superadmin/companies/${id}/bots/${b.id}/config`"
+                    class="text-slate-200 hover:text-white"
+                  >
+                    Config
+                  </NuxtLink>
+                  <button
+                    type="button"
+                    class="text-danger-400 hover:text-danger-300"
+                    @click="confirmingDeleteBot = b"
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -161,6 +213,14 @@ await load()
         message="All its users, bots, conversations, and documents will also be deleted. This action cannot be undone."
         @cancel="confirmingDelete = false"
         @confirm="onConfirmDelete"
+      />
+
+      <ConfirmDialog
+        :open="!!confirmingDeleteBot"
+        :title="`Delete bot ${confirmingDeleteBot?.name ?? ''}`"
+        message="The bot's documents, conversations, and integrations will also be deleted. This action cannot be undone."
+        @cancel="confirmingDeleteBot = null"
+        @confirm="onConfirmDeleteBot"
       />
     </template>
   </div>

@@ -12,6 +12,13 @@ export default defineNuxtConfig({
     port: 8080,
   },
   modules: ['@pinia/nuxt', '@nuxtjs/tailwindcss', '@nuxt/eslint'],
+  // Don't prefix nested-folder components with the folder name. We organize
+  // components by area (e.g. `components/admin/*`) but reference them by
+  // their filename only (`<BotDocumentsCard>`, not `<AdminBotDocumentsCard>`).
+  // Without this, Nuxt's default `pathPrefix: true` silently turns those tags
+  // into unknown elements that render as empty DOM nodes — see the same-name
+  // discussion in the polish-ui skill.
+  components: [{ path: '~/components', pathPrefix: false }],
   // Workaround for nuxt/nuxt#34957 (Vite Node IPC socket path not configured)
   // affecting SPA apps (ssr: false) on Nuxt 3.21.4+. Remove once we upgrade to
   // a Nuxt release that ships the fix from PR #34959.

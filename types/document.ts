@@ -9,3 +9,12 @@ export interface DocumentItem {
   chunkCount?: number
   createdAt: string
 }
+
+export interface DocumentContent {
+  id: string
+  fileName: string
+  fileType: string
+  chunkCount: number
+  // Stored chunks joined with double newlines. Empty for non-READY docs.
+  content: string
+}

@@ -4,9 +4,10 @@ import type { Integration } from '~/types/integration'
 
 const props = defineProps<{
   botId: string
+  tenantId?: string
 }>()
 
-const calendar = useCalendarIntegration()
+const calendar = useCalendarIntegration(props.tenantId)
 
 const integration = ref<Integration | null>(null)
 const loading = ref(true)
@@ -53,7 +54,9 @@ async function onDisconnect(): Promise<void> {
   }
 }
 
-await load()
+onMounted(() => {
+  void load()
+})
 </script>
 
 <template>
