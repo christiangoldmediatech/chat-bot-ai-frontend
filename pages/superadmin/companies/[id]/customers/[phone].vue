@@ -4,15 +4,15 @@ import type { Bot } from '~/types/bot'
 import type { CustomerDetail } from '~/types/customer'
 
 definePageMeta({
-  layout: 'admin',
-  middleware: 'auth',
+  layout: 'superadmin',
+  middleware: 'superadmin-auth',
 })
 
 const route = useRoute()
-const customersApi = useCustomers()
-const botsApi = useBots()
-
+const tenantId = route.params.id as string
 const phone = decodeURIComponent(route.params.phone as string)
+const customersApi = useCustomers(tenantId)
+const botsApi = useBots(tenantId)
 
 const data = ref<CustomerDetail | null>(null)
 const bots = ref<Bot[]>([])
@@ -42,34 +42,41 @@ await load()
 
 <template>
   <div>
-    <NuxtLink to="/admin/customers" class="text-sm text-slate-500 hover:text-slate-700">← Back to customers</NuxtLink>
+    <NuxtLink
+      :to="`/superadmin/companies/${tenantId}/customers`"
+      class="text-sm text-slate-400 hover:text-slate-200"
+    >
+      ← Back to customers
+    </NuxtLink>
 
-    <p v-if="error" class="mt-4 rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
+    <p v-if="error" class="mt-4 rounded-md border border-danger-800 bg-danger-950 p-3 text-sm text-danger-300">
       {{ error }}
     </p>
 
-    <SpinnerInline v-if="loading" class="mt-6" />
+    <SpinnerInline v-if="loading" class="mt-6" tone="dark" />
 
     <template v-else-if="data">
       <header class="mt-2">
-        <h1 class="text-2xl font-semibold">{{ data.customerName || data.customerPhone }}</h1>
+        <h1 class="text-2xl font-semibold text-slate-100">
+          {{ data.customerName || data.customerPhone }}
+        </h1>
         <p class="mt-1 text-sm text-slate-500 font-mono">{{ data.customerPhone }}</p>
       </header>
 
       <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard label="Conversations" :value="data.conversationCount" />
-        <StatCard label="Open" :value="data.openConversationCount" />
-        <StatCard label="Last message" :value="new Date(data.lastMessageAt).toLocaleString()" />
+        <SuperadminStatCard label="Conversations" :value="data.conversationCount" />
+        <SuperadminStatCard label="Open" :value="data.openConversationCount" />
+        <SuperadminStatCard label="Last message" :value="new Date(data.lastMessageAt).toLocaleString()" />
       </div>
 
       <div class="mt-8">
-        <CustomerMeetingsCard :phone="phone" />
+        <CustomerMeetingsCard :phone="phone" :tenant-id="tenantId" tone="dark" />
       </div>
 
-      <h2 class="mt-8 text-base font-semibold text-slate-900">Conversations</h2>
-      <div class="mt-3 overflow-x-auto rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass">
+      <h2 class="mt-8 text-base font-semibold text-slate-200">Conversations</h2>
+      <div class="mt-3 overflow-x-auto rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg">
         <table class="w-full text-sm">
-          <thead class="bg-slate-50 text-slate-600">
+          <thead class="bg-slate-950 text-slate-400">
             <tr>
               <th class="text-left font-medium px-4 py-3">Bot</th>
               <th class="text-left font-medium px-4 py-3">Status</th>
@@ -81,13 +88,12 @@ await load()
             <tr
               v-for="c in data.conversations"
               :key="c.id"
-              class="border-t border-slate-100 cursor-pointer hover:bg-slate-50"
-              @click="navigateTo(`/admin/conversations/${c.id}`)"
+              class="border-t border-slate-800"
             >
-              <td class="px-4 py-3 text-slate-700">{{ botMap.get(c.botId)?.name ?? '—' }}</td>
-              <td class="px-4 py-3 text-slate-700">{{ c.status }}</td>
-              <td class="px-4 py-3 text-slate-600 text-xs">{{ new Date(c.lastMessageAt).toLocaleString() }}</td>
-              <td class="px-4 py-3 text-slate-600 text-xs">{{ new Date(c.createdAt).toLocaleString() }}</td>
+              <td class="px-4 py-3 text-slate-100">{{ botMap.get(c.botId)?.name ?? '—' }}</td>
+              <td class="px-4 py-3 text-slate-300">{{ c.status }}</td>
+              <td class="px-4 py-3 text-slate-400 text-xs">{{ new Date(c.lastMessageAt).toLocaleString() }}</td>
+              <td class="px-4 py-3 text-slate-400 text-xs">{{ new Date(c.createdAt).toLocaleString() }}</td>
             </tr>
           </tbody>
         </table>
