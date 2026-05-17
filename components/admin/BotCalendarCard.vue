@@ -14,12 +14,53 @@ const loading = ref(true)
 const busy = ref(false)
 const error = ref<string | null>(null)
 
+// Editable escalation settings. Lives on the same row as Calendar config but
+// only takes effect for the case-escalation tools.
+const form = reactive({
+  advisorEmail: '',
+  advisorName: '',
+  followupHours: 24,
+})
+const saving = ref(false)
+const escalationSavedAt = ref<number | null>(null)
+
+function hydrateForm(value: Integration | null): void {
+  form.advisorEmail = value?.advisorEmail ?? ''
+  form.advisorName = value?.advisorName ?? ''
+  form.followupHours = value?.followupHours ?? 24
+}
+
+async function onSaveEscalation(): Promise<void> {
+  saving.value = true
+  error.value = null
+  try {
+    const updated = await calendar.update(props.botId, {
+      advisorEmail: form.advisorEmail.trim() === '' ? null : form.advisorEmail.trim(),
+      advisorName: form.advisorName.trim() === '' ? null : form.advisorName.trim(),
+      followupHours: form.followupHours,
+    })
+    integration.value = updated
+    hydrateForm(updated)
+    escalationSavedAt.value = Date.now()
+    setTimeout(() => {
+      if (escalationSavedAt.value && Date.now() - escalationSavedAt.value >= 2500) {
+        escalationSavedAt.value = null
+      }
+    }, 2600)
+  } catch (err) {
+    error.value = (err as ApiError).message
+  } finally {
+    saving.value = false
+  }
+}
+
 async function load(): Promise<void> {
   loading.value = true
   error.value = null
   try {
     const result = await calendar.get(props.botId)
     integration.value = result && result.isActive ? result : null
+    hydrateForm(integration.value)
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -116,6 +157,73 @@ onMounted(() => {
           <dd class="text-slate-900">{{ integration.defaultDurationMinutes }} min</dd>
         </div>
       </dl>
+      <!-- Escalation settings: advisorEmail + follow-up. Lives here because
+           it shares the OAuth account with Calendar (sends email via gmail.send). -->
+      <div class="mt-5 pt-5 border-t border-slate-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-600">
+              Escalado a asesor
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Datos del asesor y cuándo el bot debe hacer follow-up si el caso queda pendiente.
+            </p>
+          </div>
+          <span
+            v-if="escalationSavedAt"
+            class="text-xs text-success-700 bg-success-50 border border-success-200 rounded-full px-2 py-0.5"
+          >
+            Guardado ✓
+          </span>
+        </div>
+
+        <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-medium text-slate-700">Correo del asesor</label>
+            <input
+              v-model="form.advisorEmail"
+              type="email"
+              maxlength="254"
+              placeholder="ventas@empresa.com"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+            >
+            <p class="mt-1 text-[11px] text-slate-500">
+              Cuando el bot escale, este correo recibe la notificación. Déjalo vacío para deshabilitar el escalado.
+            </p>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700">Nombre del asesor</label>
+            <input
+              v-model="form.advisorName"
+              type="text"
+              maxlength="120"
+              placeholder="(opcional)"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-700">Follow-up tras (horas)</label>
+            <input
+              v-model.number="form.followupHours"
+              type="number"
+              min="0"
+              max="168"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+            >
+            <p class="mt-1 text-[11px] text-slate-500">0 = sin follow-up automático.</p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="mt-3 rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
+          :disabled="saving"
+          @click="onSaveEscalation"
+        >
+          {{ saving ? 'Guardando…' : 'Guardar escalado' }}
+        </button>
+      </div>
+
       <button
         type="button"
         class="mt-4 rounded-md border border-danger-200 px-3 py-1.5 text-sm text-danger-700 hover:bg-danger-50 disabled:opacity-60"

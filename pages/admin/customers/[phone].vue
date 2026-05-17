@@ -62,8 +62,9 @@ await load()
         <StatCard label="Last message" :value="new Date(data.lastMessageAt).toLocaleString()" />
       </div>
 
-      <div class="mt-8">
+      <div class="mt-8 grid grid-cols-1 xl:grid-cols-2 gap-6">
         <CustomerMeetingsCard :phone="phone" />
+        <CustomerCasesCard :phone="phone" />
       </div>
 
       <h2 class="mt-8 text-base font-semibold text-slate-900">Conversations</h2>

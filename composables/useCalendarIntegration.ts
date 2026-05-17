@@ -1,5 +1,9 @@
 import type { ApiError } from '~/types/api'
-import type { ConnectUrlResponse, Integration } from '~/types/integration'
+import type {
+  ConnectUrlResponse,
+  Integration,
+  UpdateIntegrationPayload,
+} from '~/types/integration'
 
 /**
  * Wraps the bot ↔ Google Calendar integration endpoints. `get` returns null
@@ -32,5 +36,7 @@ export function useCalendarIntegration(tenantId?: string) {
       api.get<ConnectUrlResponse>(`${baseForBot(botId)}/google/connect`),
     disconnect: (botId: string): Promise<void> =>
       api.delete(`${baseForBot(botId)}/integration`),
+    update: (botId: string, payload: UpdateIntegrationPayload): Promise<Integration> =>
+      api.patch<Integration>(`${baseForBot(botId)}/integration`, payload),
   }
 }

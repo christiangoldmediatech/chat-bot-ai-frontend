@@ -95,6 +95,18 @@ await load()
             Customers
           </NuxtLink>
           <NuxtLink
+            :to="`/superadmin/companies/${data.id}/meetings`"
+            class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800"
+          >
+            Meetings
+          </NuxtLink>
+          <NuxtLink
+            :to="`/superadmin/companies/${data.id}/cases`"
+            class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800"
+          >
+            Cases
+          </NuxtLink>
+          <NuxtLink
             :to="`/superadmin/companies/${data.id}/edit`"
             class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800"
           >

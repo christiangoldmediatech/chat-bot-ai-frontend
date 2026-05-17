@@ -9,7 +9,16 @@ export interface Integration {
   defaultDurationMinutes: number
   workingHoursStart: string
   workingHoursEnd: string
+  advisorEmail: string | null
+  advisorName: string | null
+  followupHours: number
   createdAt: string
+}
+
+export interface UpdateIntegrationPayload {
+  advisorEmail?: string | null
+  advisorName?: string | null
+  followupHours?: number
 }
 
 export interface ConnectUrlResponse {

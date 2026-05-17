@@ -5,6 +5,8 @@ const links = [
   { to: '/admin/bots', label: 'Bots' },
   { to: '/admin/conversations', label: 'Conversations' },
   { to: '/admin/customers', label: 'Customers' },
+  { to: '/admin/meetings', label: 'Meetings' },
+  { to: '/admin/cases', label: 'Cases' },
 ]
 </script>
 

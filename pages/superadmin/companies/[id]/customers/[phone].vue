@@ -69,8 +69,9 @@ await load()
         <SuperadminStatCard label="Last message" :value="new Date(data.lastMessageAt).toLocaleString()" />
       </div>
 
-      <div class="mt-8">
+      <div class="mt-8 grid grid-cols-1 xl:grid-cols-2 gap-6">
         <CustomerMeetingsCard :phone="phone" :tenant-id="tenantId" tone="dark" />
+        <CustomerCasesCard :phone="phone" :tenant-id="tenantId" tone="dark" />
       </div>
 
       <h2 class="mt-8 text-base font-semibold text-slate-200">Conversations</h2>
