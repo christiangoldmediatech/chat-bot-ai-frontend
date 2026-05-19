@@ -16,7 +16,6 @@ const form = reactive({
   whatsappPhoneId: '',
   whatsappBusinessAccountId: '',
   whatsappToken: '',
-  whatsappAppSecret: '',
   webhookVerifyToken: '',
   isActive: true,
 })
@@ -47,7 +46,6 @@ async function onSubmit(): Promise<void> {
       whatsappPhoneId: form.whatsappPhoneId,
       whatsappBusinessAccountId: form.whatsappBusinessAccountId || undefined,
       whatsappToken: form.whatsappToken,
-      whatsappAppSecret: form.whatsappAppSecret || undefined,
       webhookVerifyToken: form.webhookVerifyToken,
       isActive: form.isActive,
     })
@@ -133,20 +131,6 @@ async function onContinue(): Promise<void> {
           class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm font-mono"
         >
         <p class="mt-1 text-xs text-slate-500">Stored encrypted with AES-256-GCM.</p>
-      </div>
-
-      <div>
-        <label for="appSecret" class="block text-sm font-medium text-slate-700">
-          App secret <span class="text-slate-400 font-normal">(optional)</span>
-        </label>
-        <input
-          id="appSecret"
-          v-model="form.whatsappAppSecret"
-          type="password"
-          pattern="[a-fA-F0-9]+"
-          class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm font-mono"
-        >
-        <p class="mt-1 text-xs text-slate-500">Enables HMAC validation for Meta's webhook.</p>
       </div>
 
       <div>

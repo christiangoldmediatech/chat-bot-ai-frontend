@@ -41,16 +41,19 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'Chat Bot AI — Admin',
+      title: 'Kaibot — WhatsApp AI for businesses',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Admin panel for chat-bot-ai' },
+        { name: 'description', content: 'Kaibot replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
+        { name: 'theme-color', content: '#6366f1' },
       ],
       // Poppins is the platform-wide font. Wired into Tailwind's `font-sans`
       // stack in `tailwind.config.ts`, so every element inherits it through
       // Tailwind's base layer without per-component overrides.
       link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'apple-touch-icon', href: '/favicon.svg' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         {
