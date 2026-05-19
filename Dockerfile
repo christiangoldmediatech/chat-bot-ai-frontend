@@ -6,13 +6,14 @@ FROM node:22.13.1-alpine AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --ignore-scripts
 
 COPY . .
 
 ARG NUXT_PUBLIC_API_BASE_URL
 ENV NUXT_PUBLIC_API_BASE_URL=$NUXT_PUBLIC_API_BASE_URL
 
+RUN npx nuxt prepare
 RUN npm run build
 
 # ---- Runner ----
