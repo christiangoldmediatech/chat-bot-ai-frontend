@@ -164,11 +164,11 @@ await load()
           <div>
             <h2 class="text-base font-semibold text-slate-200">Bots</h2>
             <p class="text-xs text-slate-500 mt-1 max-w-xl">
-              Each bot has two settings panels: the
-              <span class="font-medium text-emerald-400">WhatsApp connection</span>
-              (credentials from Meta) and the
-              <span class="font-medium text-indigo-300">AI agent</span>
-              (how it talks).
+              Jump straight into any setting for each bot:
+              <span class="font-medium text-emerald-400">WhatsApp connection</span>,
+              <span class="font-medium text-indigo-300">AI agent</span>,
+              <span class="font-medium text-amber-300">Documents</span>, or
+              <span class="font-medium text-sky-300">Google Calendar</span>.
             </p>
           </div>
           <NuxtLink
@@ -218,7 +218,7 @@ await load()
               </span>
             </header>
 
-            <!-- Two config panels: WhatsApp connection vs. Agent behavior. -->
+            <!-- Four config panels: deep-link straight into each setting bucket. -->
             <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
               <!-- WhatsApp connection card -->
               <NuxtLink
@@ -264,6 +264,54 @@ await load()
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </NuxtLink>
+
+              <!-- Documents (RAG) card -->
+              <NuxtLink
+                :to="`/superadmin/companies/${id}/bots/${b.id}#documents`"
+                class="group/card flex items-start gap-3 rounded-xl bg-amber-500/5 ring-1 ring-amber-500/20 p-3 hover:bg-amber-500/10 hover:ring-amber-500/40 transition"
+              >
+                <div class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-slate-950 ring-1 ring-amber-500/30">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-amber-300" aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="8" y1="13" x2="16" y2="13" />
+                    <line x1="8" y1="17" x2="13" y2="17" />
+                  </svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-[11px] uppercase tracking-wider font-semibold text-amber-300">Documents</p>
+                  <p class="mt-0.5 text-xs text-slate-300">Knowledge base</p>
+                  <p class="mt-0.5 text-[11px] text-slate-500">Upload .md / .txt / .pdf for RAG</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-amber-300 opacity-0 group-hover/card:opacity-100 self-center transition" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </NuxtLink>
+
+              <!-- Google Calendar card -->
+              <NuxtLink
+                :to="`/superadmin/companies/${id}/bots/${b.id}#calendar`"
+                class="group/card flex items-start gap-3 rounded-xl bg-sky-500/5 ring-1 ring-sky-500/20 p-3 hover:bg-sky-500/10 hover:ring-sky-500/40 transition"
+              >
+                <div class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-slate-950 ring-1 ring-sky-500/30">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-sky-300" aria-hidden="true">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-[11px] uppercase tracking-wider font-semibold text-sky-300">Google Calendar</p>
+                  <p class="mt-0.5 text-xs text-slate-300">Meeting bookings</p>
+                  <p class="mt-0.5 text-[11px] text-slate-500">Connect &amp; manage availability</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-sky-300 opacity-0 group-hover/card:opacity-100 self-center transition" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </NuxtLink>
             </div>
 
             <!-- Footer actions -->
@@ -304,8 +352,11 @@ await load()
 
       <ConfirmDialog
         :open="!!confirmingDeleteBot"
-        :title="`Delete bot ${confirmingDeleteBot?.name ?? ''}`"
-        message="The bot's documents, conversations, and integrations will also be deleted. This action cannot be undone."
+        :title="`Delete bot ${confirmingDeleteBot?.name ?? ''}?`"
+        message="The bot's documents, conversations, customers, and integrations will also be permanently deleted. This action cannot be undone."
+        :require-typed="confirmingDeleteBot?.name"
+        require-typed-label="To confirm, type the bot's name:"
+        confirm-label="Delete bot"
         @cancel="confirmingDeleteBot = null"
         @confirm="onConfirmDeleteBot"
       />

@@ -46,38 +46,44 @@ await load()
   <div>
     <NuxtLink to="/admin/bots" class="text-sm text-slate-500 hover:text-slate-700">← Back to bots</NuxtLink>
 
-    <p v-if="error" class="mt-4 rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
+    <p v-if="error" class="mt-4 rounded-2xl border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">
       {{ error }}
     </p>
 
     <SpinnerInline v-if="loading" class="mt-6" />
 
     <template v-else-if="bot">
+      <!-- Header -->
       <div class="mt-2 flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 class="text-2xl font-semibold flex items-center gap-3">
-            {{ bot.name }}
-            <BotStatusBadge :is-active="bot.isActive" />
-          </h1>
-          <p v-if="bot.description" class="text-slate-500 mt-1 text-sm">{{ bot.description }}</p>
+        <div class="flex items-center gap-3">
+          <div class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 text-white font-semibold text-xl ring-1 ring-white/40 shadow-inner">
+            {{ bot.name.charAt(0).toUpperCase() }}
+          </div>
+          <div>
+            <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-3">
+              {{ bot.name }}
+              <BotStatusBadge :is-active="bot.isActive" />
+            </h1>
+            <p v-if="bot.description" class="text-slate-500 mt-0.5 text-sm">{{ bot.description }}</p>
+          </div>
         </div>
 
         <div class="flex gap-2">
           <NuxtLink
             :to="`/admin/bots/${bot.id}/edit`"
-            class="rounded-md border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+            class="rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
           >
-            Edit
+            WhatsApp
           </NuxtLink>
           <NuxtLink
             :to="`/admin/bots/${bot.id}/config`"
-            class="rounded-md bg-slate-900 px-3 py-1.5 text-sm text-white hover:bg-slate-800"
+            class="rounded-xl bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800 shadow-glass transition"
           >
-            Configure
+            Configure agent
           </NuxtLink>
           <button
             type="button"
-            class="rounded-md border border-danger-200 px-3 py-1.5 text-sm text-danger-700 hover:bg-danger-50"
+            class="rounded-xl border border-danger-200 bg-danger-50/40 px-3 py-1.5 text-sm font-medium text-danger-700 hover:bg-danger-50 transition"
             @click="confirmingDelete = true"
           >
             Delete
@@ -85,8 +91,30 @@ await load()
         </div>
       </div>
 
-      <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
+      <!-- Quick-jump nav -->
+      <nav class="mt-5 flex flex-wrap items-center gap-2 text-sm">
+        <a href="#overview" class="rounded-full bg-white/70 ring-1 ring-slate-200/70 px-3 py-1 text-slate-700 hover:bg-white hover:ring-slate-300 transition">Overview</a>
+        <a href="#documents" class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 ring-1 ring-amber-100 px-3 py-1 text-amber-700 hover:bg-amber-100 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+          </svg>
+          Documents
+        </a>
+        <a href="#calendar" class="inline-flex items-center gap-1.5 rounded-full bg-sky-50 ring-1 ring-sky-100 px-3 py-1 text-sky-700 hover:bg-sky-100 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          Google Calendar
+        </a>
+      </nav>
+
+      <!-- Overview: AI + WhatsApp summary, then system prompt -->
+      <section id="overview" class="scroll-mt-24 mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
           <h2 class="text-sm font-semibold text-slate-900">AI</h2>
           <dl class="mt-3 space-y-2 text-sm">
             <div class="flex justify-between">
@@ -98,9 +126,9 @@ await load()
               <dd class="text-slate-900 font-mono">{{ bot.aiModel }}</dd>
             </div>
           </dl>
-        </section>
+        </div>
 
-        <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
+        <div class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
           <h2 class="text-sm font-semibold text-slate-900">WhatsApp</h2>
           <dl class="mt-3 space-y-2 text-sm">
             <div class="flex justify-between">
@@ -120,21 +148,59 @@ await load()
               <dd class="text-slate-900 font-mono text-xs break-all max-w-xs text-right">{{ bot.webhookVerifyToken }}</dd>
             </div>
           </dl>
-        </section>
+        </div>
 
-        <section class="md:col-span-2 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
+        <div class="md:col-span-2 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
           <h2 class="text-sm font-semibold text-slate-900">System prompt</h2>
           <pre class="mt-3 whitespace-pre-wrap text-sm text-slate-700 font-mono">{{ bot.systemPrompt }}</pre>
-        </section>
+        </div>
+      </section>
 
-        <BotCalendarCard :bot-id="bot.id" />
+      <!-- Documents (knowledge base) -->
+      <section id="documents" class="scroll-mt-24 mt-6">
+        <header class="flex items-start gap-3 mb-3">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 ring-1 ring-amber-100">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-amber-600" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="8" y1="13" x2="16" y2="13" />
+              <line x1="8" y1="17" x2="13" y2="17" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-slate-900">Documents</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Upload .md, .txt or .pdf files — the bot uses them as knowledge context (RAG).</p>
+          </div>
+        </header>
         <BotDocumentsCard :bot-id="bot.id" />
-      </div>
+      </section>
+
+      <!-- Google Calendar -->
+      <section id="calendar" class="scroll-mt-24 mt-6">
+        <header class="flex items-start gap-3 mb-3">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 ring-1 ring-sky-100">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-sky-600" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-slate-900">Google Calendar</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Connect a Google account so the bot can read availability and book meetings.</p>
+          </div>
+        </header>
+        <BotCalendarCard :bot-id="bot.id" />
+      </section>
 
       <ConfirmDialog
         :open="confirmingDelete"
-        :title="`Delete bot ${bot.name}`"
-        message="Its documents, conversations, and integrations will also be deleted. This action cannot be undone."
+        :title="`Delete bot ${bot.name}?`"
+        message="Its documents, conversations, customers, and integrations will also be permanently deleted. This action cannot be undone."
+        :require-typed="bot.name"
+        require-typed-label="To confirm, type the bot's name:"
+        confirm-label="Delete bot"
         @cancel="confirmingDelete = false"
         @confirm="onConfirmDelete"
       />
