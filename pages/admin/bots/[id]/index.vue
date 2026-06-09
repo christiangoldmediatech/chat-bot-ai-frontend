@@ -10,7 +10,10 @@ definePageMeta({
 const route = useRoute()
 const router = useRouter()
 const bots = useBots()
+const config = useRuntimeConfig()
 const id = route.params.id as string
+
+const callbackUrl = computed(() => `${config.public.apiBaseUrl}/webhooks/whatsapp/${id}`)
 
 const bot = ref<Bot | null>(null)
 const loading = ref(true)
@@ -143,11 +146,32 @@ await load()
               <dt class="text-slate-500">App secret</dt>
               <dd class="text-slate-900">{{ bot.hasAppSecret ? 'Configured' : 'Not configured' }}</dd>
             </div>
-            <div class="flex justify-between">
-              <dt class="text-slate-500">Verify token</dt>
-              <dd class="text-slate-900 font-mono text-xs break-all max-w-xs text-right">{{ bot.webhookVerifyToken }}</dd>
-            </div>
           </dl>
+
+          <!-- Webhook info (read-only, copyable) — for pasting in Meta -->
+          <div class="mt-4 pt-4 border-t border-slate-200/70 space-y-3">
+            <div>
+              <div class="flex items-center justify-between">
+                <p class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">Callback URL</p>
+                <CopyButton :value="callbackUrl" label="Copy" />
+              </div>
+              <code class="mt-1 block text-[11px] font-mono text-slate-700 break-all select-all bg-slate-50/80 ring-1 ring-slate-200/70 rounded-lg px-2 py-1.5">
+                {{ callbackUrl }}
+              </code>
+            </div>
+            <div>
+              <div class="flex items-center justify-between">
+                <p class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">Verify token</p>
+                <CopyButton :value="bot.webhookVerifyToken" label="Copy" />
+              </div>
+              <code class="mt-1 block text-[11px] font-mono text-slate-700 break-all select-all bg-slate-50/80 ring-1 ring-slate-200/70 rounded-lg px-2 py-1.5">
+                {{ bot.webhookVerifyToken }}
+              </code>
+            </div>
+            <p class="text-[11px] text-slate-500">
+              Paste both in <span class="font-medium text-slate-600">Meta App → WhatsApp → Configuration → Webhook</span>.
+            </p>
+          </div>
         </div>
 
         <div class="md:col-span-2 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
