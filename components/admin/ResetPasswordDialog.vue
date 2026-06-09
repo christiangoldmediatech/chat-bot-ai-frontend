@@ -136,7 +136,7 @@ function generateStrong(): void {
                   :type="showPassword ? 'text' : 'password'"
                   autocomplete="new-password"
                   spellcheck="false"
-                  class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 pr-10 text-sm font-mono focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                  class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 pr-10 text-sm font-mono text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
                   :class="{ 'border-danger-300 focus:border-danger-500 focus:ring-danger-500': tooShort }"
                   @keyup.enter="onConfirm"
                 >
@@ -160,7 +160,7 @@ function generateStrong(): void {
                 :type="showPassword ? 'text' : 'password'"
                 autocomplete="new-password"
                 spellcheck="false"
-                class="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-mono focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                class="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-mono text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
                 :class="{ 'border-danger-300 focus:border-danger-500 focus:ring-danger-500': mismatch }"
                 @keyup.enter="onConfirm"
               >
