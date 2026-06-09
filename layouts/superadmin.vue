@@ -6,6 +6,7 @@ const { superadminLogout } = useAuth()
 const links = [
   { to: '/superadmin', label: 'Dashboard' },
   { to: '/superadmin/companies', label: 'Companies' },
+  { to: '/superadmin/profile', label: 'My profile' },
 ]
 
 async function onLogout(): Promise<void> {
@@ -41,14 +42,23 @@ async function onLogout(): Promise<void> {
       <header class="h-14 bg-slate-950/60 backdrop-blur-xl border-b border-slate-800/60 flex items-center justify-between px-6">
         <h1 class="text-sm font-medium text-slate-300">Global administration</h1>
 
-        <div v-if="auth.user" class="flex items-center gap-4">
-          <div class="hidden sm:block text-right">
-            <div class="text-sm font-medium text-slate-100">{{ auth.user.email }}</div>
-            <div class="text-xs text-slate-400">Super admin</div>
-          </div>
+        <div v-if="auth.user" class="flex items-center gap-3">
+          <NuxtLink
+            to="/superadmin/profile"
+            class="hidden sm:flex items-center gap-3 rounded-xl px-2.5 py-1.5 hover:bg-slate-800/60 transition"
+            title="My profile"
+          >
+            <div class="text-right">
+              <div class="text-sm font-medium text-slate-100">{{ auth.user.email }}</div>
+              <div class="text-xs text-slate-400">Super admin</div>
+            </div>
+            <div class="flex size-9 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 text-white text-sm font-semibold ring-1 ring-slate-700">
+              {{ auth.user.email.charAt(0).toUpperCase() }}
+            </div>
+          </NuxtLink>
           <button
             type="button"
-            class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800"
+            class="rounded-xl border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800 transition"
             @click="onLogout"
           >
             Log out

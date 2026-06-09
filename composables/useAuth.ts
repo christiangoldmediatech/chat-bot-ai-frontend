@@ -33,6 +33,10 @@ export function useAuth() {
     auth.clear()
   }
 
+  async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    await api.post<void>('/auth/change-password', { currentPassword, newPassword })
+  }
+
   async function superadminLogin(
     email: string,
     password: string,
@@ -49,5 +53,17 @@ export function useAuth() {
     superadminAuth.clear()
   }
 
-  return { login, register, logout, superadminLogin, superadminLogout }
+  async function superadminChangePassword(currentPassword: string, newPassword: string): Promise<void> {
+    await api.post<void>('/superadmin/auth/change-password', { currentPassword, newPassword })
+  }
+
+  return {
+    login,
+    register,
+    logout,
+    changePassword,
+    superadminLogin,
+    superadminLogout,
+    superadminChangePassword,
+  }
 }
