@@ -19,12 +19,6 @@ export default defineNuxtConfig({
   // into unknown elements that render as empty DOM nodes — see the same-name
   // discussion in the polish-ui skill.
   components: [{ path: '~/components', pathPrefix: false }],
-  // Workaround for nuxt/nuxt#34957 (Vite Node IPC socket path not configured)
-  // affecting SPA apps (ssr: false) on Nuxt 3.21.4+. Remove once we upgrade to
-  // a Nuxt release that ships the fix from PR #34959.
-  experimental: {
-    viteEnvironmentApi: true,
-  },
   typescript: {
     strict: true,
     typeCheck: false,

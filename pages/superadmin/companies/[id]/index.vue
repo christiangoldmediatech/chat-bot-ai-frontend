@@ -160,68 +160,137 @@ await load()
       </section>
 
       <section class="mt-6">
-        <div class="flex items-center justify-between">
-          <h2 class="text-base font-semibold text-slate-200">Bots</h2>
+        <div class="flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <h2 class="text-base font-semibold text-slate-200">Bots</h2>
+            <p class="text-xs text-slate-500 mt-1 max-w-xl">
+              Each bot has two settings panels: the
+              <span class="font-medium text-emerald-400">WhatsApp connection</span>
+              (credentials from Meta) and the
+              <span class="font-medium text-indigo-300">AI agent</span>
+              (how it talks).
+            </p>
+          </div>
           <NuxtLink
             :to="`/superadmin/companies/${id}/bots/create`"
-            class="rounded-md bg-white px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-100"
+            class="rounded-xl bg-white px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-100 transition"
           >
             + Add bot
           </NuxtLink>
         </div>
-        <div class="mt-3 overflow-x-auto rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg">
-          <table class="w-full text-sm">
-            <thead class="bg-slate-950 text-slate-400">
-              <tr>
-                <th class="text-left font-medium px-4 py-3">Name</th>
-                <th class="text-left font-medium px-4 py-3">Status</th>
-                <th class="text-left font-medium px-4 py-3">Created</th>
-                <th class="text-right font-medium px-4 py-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-if="data.bots.length === 0">
-                <td colspan="4" class="px-4 py-6 text-center text-slate-500">No bots</td>
-              </tr>
-              <tr
-                v-for="b in data.bots"
-                v-else
-                :key="b.id"
-                class="border-t border-slate-800"
+
+        <!-- Empty state -->
+        <div v-if="data.bots.length === 0" class="mt-3 rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-8 text-center">
+          <p class="text-sm text-slate-400">No bots yet for this company.</p>
+        </div>
+
+        <!-- Cards grid: two clearly-labeled config entry points per bot. -->
+        <div v-else class="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <article
+            v-for="b in data.bots"
+            :key="b.id"
+            class="group relative flex flex-col rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg p-5 hover:ring-slate-600 transition"
+          >
+            <!-- Header: avatar + name + status -->
+            <header class="flex items-start gap-3">
+              <div class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 text-white font-semibold text-base ring-1 ring-slate-700 shadow-inner">
+                {{ b.name.charAt(0).toUpperCase() }}
+              </div>
+              <div class="min-w-0 flex-1">
+                <NuxtLink
+                  :to="`/superadmin/companies/${id}/bots/${b.id}`"
+                  class="block font-semibold text-slate-100 hover:underline truncate"
+                >
+                  {{ b.name }}
+                </NuxtLink>
+                <p class="text-xs text-slate-500 mt-0.5">
+                  Created {{ new Date(b.createdAt).toLocaleDateString() }}
+                </p>
+              </div>
+              <span
+                class="shrink-0 inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium ring-1"
+                :class="b.isActive
+                  ? 'bg-emerald-500/10 text-emerald-300 ring-emerald-500/30'
+                  : 'bg-slate-800 text-slate-400 ring-slate-700'"
               >
-                <td class="px-4 py-3 text-slate-100">{{ b.name }}</td>
-                <td class="px-4 py-3 text-slate-300">{{ b.isActive ? 'Active' : 'Inactive' }}</td>
-                <td class="px-4 py-3 text-slate-400 text-xs">{{ new Date(b.createdAt).toLocaleString() }}</td>
-                <td class="px-4 py-3 text-right space-x-3 text-sm">
-                  <NuxtLink
-                    :to="`/superadmin/companies/${id}/bots/${b.id}`"
-                    class="text-slate-200 hover:text-white"
-                  >
-                    View
-                  </NuxtLink>
-                  <NuxtLink
-                    :to="`/superadmin/companies/${id}/bots/${b.id}/edit`"
-                    class="text-slate-200 hover:text-white"
-                  >
-                    Edit
-                  </NuxtLink>
-                  <NuxtLink
-                    :to="`/superadmin/companies/${id}/bots/${b.id}/config`"
-                    class="text-slate-200 hover:text-white"
-                  >
-                    Config
-                  </NuxtLink>
-                  <button
-                    type="button"
-                    class="text-danger-400 hover:text-danger-300"
-                    @click="confirmingDeleteBot = b"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                <span class="size-1.5 rounded-full" :class="b.isActive ? 'bg-emerald-400' : 'bg-slate-500'" />
+                {{ b.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </header>
+
+            <!-- Two config panels: WhatsApp connection vs. Agent behavior. -->
+            <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- WhatsApp connection card -->
+              <NuxtLink
+                :to="`/superadmin/companies/${id}/bots/${b.id}/edit`"
+                class="group/card flex items-start gap-3 rounded-xl bg-emerald-500/5 ring-1 ring-emerald-500/20 p-3 hover:bg-emerald-500/10 hover:ring-emerald-500/40 transition"
+              >
+                <div class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-slate-950 ring-1 ring-emerald-500/30">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 text-emerald-400" aria-hidden="true">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                  </svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-[11px] uppercase tracking-wider font-semibold text-emerald-300">WhatsApp connection</p>
+                  <p class="mt-0.5 text-xs text-slate-300">Meta credentials</p>
+                  <p class="mt-0.5 text-[11px] text-slate-500">Phone ID, token, webhook</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-emerald-400 opacity-0 group-hover/card:opacity-100 self-center transition" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </NuxtLink>
+
+              <!-- Agent behavior card -->
+              <NuxtLink
+                :to="`/superadmin/companies/${id}/bots/${b.id}/config`"
+                class="group/card flex items-start gap-3 rounded-xl bg-indigo-500/5 ring-1 ring-indigo-500/20 p-3 hover:bg-indigo-500/10 hover:ring-indigo-500/40 transition"
+              >
+                <div class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-slate-950 ring-1 ring-indigo-500/30">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-indigo-300" aria-hidden="true">
+                    <path d="M12 2a3 3 0 0 1 3 3v1.5a4.5 4.5 0 0 1 4.5 4.5V13a4 4 0 0 1-4 4h-7a4 4 0 0 1-4-4v-2a4.5 4.5 0 0 1 4.5-4.5V5a3 3 0 0 1 3-3z" />
+                    <line x1="9" y1="13" x2="9" y2="13" />
+                    <line x1="15" y1="13" x2="15" y2="13" />
+                    <path d="M9 21v-4M15 21v-4" />
+                  </svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-[11px] uppercase tracking-wider font-semibold text-indigo-300">AI agent</p>
+                  <p class="mt-0.5 text-xs text-slate-300">Bot behavior</p>
+                  <p class="mt-0.5 text-[11px] text-slate-500">Tone, prompts &amp; model</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-indigo-300 opacity-0 group-hover/card:opacity-100 self-center transition" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </NuxtLink>
+            </div>
+
+            <!-- Footer actions -->
+            <footer class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-sm">
+              <NuxtLink
+                :to="`/superadmin/companies/${id}/bots/${b.id}`"
+                class="inline-flex items-center gap-1.5 font-medium text-slate-200 hover:text-white"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                Open dashboard
+              </NuxtLink>
+              <button
+                type="button"
+                class="inline-flex items-center gap-1.5 text-danger-400 hover:text-danger-300"
+                @click="confirmingDeleteBot = b"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+                Delete
+              </button>
+            </footer>
+          </article>
         </div>
       </section>
 

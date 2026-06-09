@@ -24,6 +24,31 @@ const form = reactive({
   isActive: true,
 })
 
+const TONE_PRESETS = ['Professional', 'Friendly', 'Formal', 'Casual', 'Playful', 'Empathetic']
+const DELAY_PRESETS: { label: string, value: number }[] = [
+  { label: 'Off', value: 0 },
+  { label: '1s', value: 1000 },
+  { label: '2s', value: 2000 },
+  { label: '3s', value: 3000 },
+  { label: '5s', value: 5000 },
+]
+const PROVIDERS: { value: string, label: string, models: string[] }[] = [
+  {
+    value: 'anthropic',
+    label: 'Anthropic',
+    models: ['claude-opus-4-7', 'claude-sonnet-4-6', 'claude-haiku-4-5-20251001'],
+  },
+  {
+    value: 'openai',
+    label: 'OpenAI',
+    models: ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo'],
+  },
+]
+const availableModels = computed(() => {
+  const provider = PROVIDERS.find(p => p.value === form.aiProvider)
+  return provider?.models ?? []
+})
+
 const botName = ref('')
 const loading = ref(true)
 const saving = ref(false)
@@ -95,52 +120,91 @@ await load()
 <template>
   <div>
     <NuxtLink :to="`/admin/bots/${id}`" class="text-sm text-slate-500 hover:text-slate-700">← Back to bot</NuxtLink>
-    <h1 class="mt-2 text-2xl font-semibold">
-      Configuration<span v-if="botName" class="text-slate-500 font-normal"> — {{ botName }}</span>
-    </h1>
-    <p class="text-slate-500 text-sm mt-1">
-      Personality, messages and model. WhatsApp credentials are edited from the bot's main screen.
+    <div class="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+      <span class="inline-flex items-center gap-1.5 rounded-full bg-primary-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary-700 ring-1 ring-primary-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3" aria-hidden="true">
+          <path d="M12 2a3 3 0 0 1 3 3v1.5a4.5 4.5 0 0 1 4.5 4.5V13a4 4 0 0 1-4 4h-7a4 4 0 0 1-4-4v-2a4.5 4.5 0 0 1 4.5-4.5V5a3 3 0 0 1 3-3z" />
+          <line x1="9" y1="13" x2="9" y2="13" />
+          <line x1="15" y1="13" x2="15" y2="13" />
+        </svg>
+        Agent
+      </span>
+      <h1 class="text-2xl font-semibold tracking-tight">Agent configuration</h1>
+      <span v-if="botName" class="text-slate-500 text-base">— {{ botName }}</span>
+    </div>
+    <p class="text-slate-500 text-sm mt-2 max-w-3xl">
+      Define how the AI agent <strong class="font-medium text-slate-700">thinks and speaks</strong>: tone, personality, response rules, welcome and fallback messages, and the underlying model.
     </p>
 
-    <p v-if="error" class="mt-4 rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
+    <!-- Scope helper: clarify what this page is vs. the WhatsApp integration. -->
+    <div class="mt-4 max-w-3xl rounded-2xl bg-primary-50/70 ring-1 ring-primary-100 px-4 py-3 text-sm text-primary-900/80 flex items-start gap-3">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 mt-0.5 shrink-0 text-primary-600" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="16" x2="12" y2="12" />
+        <line x1="12" y1="8" x2="12.01" y2="8" />
+      </svg>
+      <p class="leading-relaxed">
+        This page is <strong class="font-semibold">only</strong> the agent's brain — what it says and how it sounds.
+        For WhatsApp Business credentials (phone ID, access token, webhook), use
+        <NuxtLink :to="`/admin/bots/${id}/edit`" class="font-semibold text-primary-700 underline-offset-2 hover:underline">Edit bot →</NuxtLink>.
+      </p>
+    </div>
+
+    <p v-if="error" class="mt-4 max-w-3xl rounded-2xl border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">
       {{ error }}
     </p>
-    <p v-if="success" class="mt-4 rounded-md border border-success-200 bg-success-50 p-3 text-sm text-success-700">
+    <p v-if="success" class="mt-4 max-w-3xl rounded-2xl border border-success-200 bg-success-50/80 p-3 text-sm text-success-700">
       {{ success }}
     </p>
 
     <SpinnerInline v-if="loading" class="mt-6" />
 
     <form v-else class="mt-6 max-w-3xl space-y-6" @submit.prevent="onSubmit">
-      <!-- Identity -->
-      <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5 space-y-4">
-        <h2 class="text-sm font-semibold text-slate-900">Identity</h2>
+      <!-- ────────────────────────────────────────────────────────────────
+           SECTION 1 — AI behavior (what's sent to the model)
+      ───────────────────────────────────────────────────────────────── -->
+      <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6 space-y-5">
+        <header class="flex items-start gap-3">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 ring-1 ring-primary-100">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-primary-600" aria-hidden="true">
+              <path d="M12 2a3 3 0 0 1 3 3v1.5a4.5 4.5 0 0 1 4.5 4.5V13a4 4 0 0 1-4 4h-7a4 4 0 0 1-4-4v-2a4.5 4.5 0 0 1 4.5-4.5V5a3 3 0 0 1 3-3z" />
+              <line x1="9" y1="13" x2="9" y2="13" />
+              <line x1="15" y1="13" x2="15" y2="13" />
+              <path d="M9 21v-4M15 21v-4" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-slate-900">AI behavior</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Sent to the model on every conversation — shapes how it speaks.</p>
+          </div>
+        </header>
 
         <div>
-          <label class="block text-sm font-medium text-slate-700">Internal description</label>
+          <label class="block text-sm font-medium text-slate-700">Tone</label>
           <input
-            v-model="form.description"
+            v-model="form.tone"
             type="text"
-            maxlength="280"
-            class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+            maxlength="40"
+            list="tone-presets"
+            placeholder="e.g. Professional, Friendly"
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
-          <p class="mt-1 text-xs text-slate-500">Only shown in the panel; not sent to the model.</p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-slate-700">Tone</label>
-            <input
-              v-model="form.tone"
-              type="text"
-              maxlength="40"
-              placeholder="professional, friendly, formal…"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+          <datalist id="tone-presets">
+            <option v-for="t in TONE_PRESETS" :key="t" :value="t" />
+          </datalist>
+          <div class="mt-2 flex flex-wrap gap-1.5">
+            <button
+              v-for="t in TONE_PRESETS"
+              :key="t"
+              type="button"
+              class="rounded-full px-2.5 py-1 text-xs font-medium ring-1 transition"
+              :class="form.tone === t
+                ? 'bg-primary-600 text-white ring-primary-600'
+                : 'bg-white/80 text-slate-600 ring-slate-200 hover:ring-slate-300'"
+              @click="form.tone = t"
             >
-          </div>
-          <div class="flex items-center gap-2 sm:mt-7">
-            <input id="cfgActive" v-model="form.isActive" type="checkbox" class="size-4 rounded border-slate-300">
-            <label for="cfgActive" class="text-sm text-slate-700">Bot active</label>
+              {{ t }}
+            </button>
           </div>
         </div>
 
@@ -150,23 +214,10 @@ await load()
             v-model="form.personality"
             rows="3"
             maxlength="4000"
-            class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+            placeholder="Describe traits: empathetic, concise, uses emojis sparingly…"
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
-        </div>
-      </section>
-
-      <!-- Messages -->
-      <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5 space-y-4">
-        <h2 class="text-sm font-semibold text-slate-900">Messages</h2>
-
-        <div>
-          <label class="block text-sm font-medium text-slate-700">Welcome message</label>
-          <textarea
-            v-model="form.welcomeMessage"
-            rows="2"
-            maxlength="2000"
-            class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-          />
+          <p class="mt-1 text-xs text-slate-500">{{ form.personality.length }}/4000</p>
         </div>
 
         <div>
@@ -175,34 +226,79 @@ await load()
             v-model="form.responseRules"
             rows="4"
             maxlength="4000"
-            class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+            placeholder="Always greet by name. Never quote prices without confirming. Escalate to a human if customer is upset…"
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
+          <p class="mt-1 text-xs text-slate-500">Explicit do's and don'ts. {{ form.responseRules.length }}/4000</p>
+        </div>
+      </section>
+
+      <!-- ────────────────────────────────────────────────────────────────
+           SECTION 2 — Conversation messages (templates sent verbatim)
+      ───────────────────────────────────────────────────────────────── -->
+      <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6 space-y-5">
+        <header class="flex items-start gap-3">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-success-50 ring-1 ring-success-100">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-success-600" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-slate-900">Conversation messages</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Fixed copy used at key moments of the chat.</p>
+          </div>
+        </header>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Welcome message</label>
+          <textarea
+            v-model="form.welcomeMessage"
+            rows="2"
+            maxlength="2000"
+            placeholder="Hi! I'm Kaibot, your assistant. How can I help today?"
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          />
+          <p class="mt-1 text-xs text-slate-500">Sent on the first message of a new conversation.</p>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-slate-700">Fallback (when it doesn't know how to answer)</label>
+          <label class="block text-sm font-medium text-slate-700">Fallback message</label>
           <textarea
             v-model="form.fallbackMessage"
             rows="2"
             maxlength="2000"
-            class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+            placeholder="I'm not sure I can help with that. Want me to connect you with a person?"
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
+          <p class="mt-1 text-xs text-slate-500">Sent when the bot doesn't know how to answer.</p>
         </div>
       </section>
 
-      <!-- Model & timing -->
-      <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5 space-y-4">
-        <h2 class="text-sm font-semibold text-slate-900">Model & behavior</h2>
+      <!-- ────────────────────────────────────────────────────────────────
+           SECTION 3 — Model & timing
+      ───────────────────────────────────────────────────────────────── -->
+      <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6 space-y-5">
+        <header class="flex items-start gap-3">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 ring-1 ring-indigo-100">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-indigo-600" aria-hidden="true">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-slate-900">Model &amp; timing</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Which AI generates the replies and how fast they're sent.</p>
+          </div>
+        </header>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-slate-700">Provider</label>
-            <input
+            <select
               v-model="form.aiProvider"
-              type="text"
-              maxlength="40"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+              class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             >
+              <option v-for="p in PROVIDERS" :key="p.value" :value="p.value">{{ p.label }}</option>
+            </select>
           </div>
           <div>
             <label class="block text-sm font-medium text-slate-700">Model</label>
@@ -210,21 +306,83 @@ await load()
               v-model="form.aiModel"
               type="text"
               maxlength="80"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm font-mono"
+              list="model-presets"
+              class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             >
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-slate-700">Human delay (ms)</label>
-            <input
-              v-model.number="form.humanDelayMs"
-              type="number"
-              min="0"
-              max="30000"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-            >
-            <p class="mt-1 text-xs text-slate-500">0 = no delay.</p>
+            <datalist id="model-presets">
+              <option v-for="m in availableModels" :key="m" :value="m" />
+            </datalist>
+            <p class="mt-1 text-xs text-slate-500">Pick a suggestion or type a custom model ID.</p>
           </div>
         </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Human delay</label>
+          <p class="mt-0.5 text-xs text-slate-500">Pauses before each reply to feel more human. Pick a preset or set a custom value.</p>
+          <div class="mt-2 flex flex-wrap items-center gap-2">
+            <button
+              v-for="preset in DELAY_PRESETS"
+              :key="preset.value"
+              type="button"
+              class="rounded-full px-3 py-1 text-xs font-medium ring-1 transition"
+              :class="form.humanDelayMs === preset.value
+                ? 'bg-primary-600 text-white ring-primary-600'
+                : 'bg-white/80 text-slate-600 ring-slate-200 hover:ring-slate-300'"
+              @click="form.humanDelayMs = preset.value"
+            >
+              {{ preset.label }}
+            </button>
+            <div class="ml-2 flex items-center gap-2">
+              <input
+                v-model.number="form.humanDelayMs"
+                type="number"
+                min="0"
+                max="30000"
+                step="100"
+                class="w-28 rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              >
+              <span class="text-xs text-slate-500">ms</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ────────────────────────────────────────────────────────────────
+           SECTION 4 — Internal metadata + status
+      ───────────────────────────────────────────────────────────────── -->
+      <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6 space-y-5">
+        <header class="flex items-start gap-3">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 ring-1 ring-slate-200">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-slate-600" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-slate-900">Internal</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Notes for your team and runtime status. Not sent to the model.</p>
+          </div>
+        </header>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Description</label>
+          <input
+            v-model="form.description"
+            type="text"
+            maxlength="280"
+            placeholder="What this bot is for, who owns it…"
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          >
+        </div>
+
+        <label class="flex items-center justify-between rounded-xl bg-white/60 ring-1 ring-slate-200/80 px-4 py-3">
+          <div>
+            <p class="text-sm font-medium text-slate-900">Bot active</p>
+            <p class="text-xs text-slate-500">When off, the bot doesn't reply to incoming WhatsApp messages.</p>
+          </div>
+          <input v-model="form.isActive" type="checkbox" class="size-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500">
+        </label>
       </section>
 
       <!-- Knowledge: documents the bot uses as RAG context. -->
@@ -233,14 +391,23 @@ await load()
       <!-- Google Calendar integration. -->
       <BotCalendarCard :bot-id="id" />
 
-      <div class="pt-2">
-        <button
-          type="submit"
-          class="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
-          :disabled="saving"
-        >
-          {{ saving ? 'Saving…' : 'Save configuration' }}
-        </button>
+      <!-- Sticky-feel action bar -->
+      <div class="sticky bottom-0 -mx-1 pb-1 pt-3 bg-gradient-to-t from-white/90 to-white/0 backdrop-blur-sm">
+        <div class="flex items-center justify-end gap-2">
+          <NuxtLink
+            :to="`/admin/bots/${id}`"
+            class="rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+          >
+            Cancel
+          </NuxtLink>
+          <button
+            type="submit"
+            class="rounded-xl bg-slate-900 px-5 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 shadow-glass transition"
+            :disabled="saving"
+          >
+            {{ saving ? 'Saving…' : 'Save configuration' }}
+          </button>
+        </div>
       </div>
     </form>
   </div>
