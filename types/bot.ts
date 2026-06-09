@@ -23,6 +23,9 @@ export interface BotConfig {
   responseRules: string | null
   fallbackMessage: string | null
   humanDelayMs: number
+  followupInactivityEnabled: boolean
+  followupInactivityHours: number
+  followupInactivityMaxCount: number
   aiProvider: string
   aiModel: string
   isActive: boolean
@@ -58,6 +61,9 @@ export interface UpdateBotConfigInput {
   responseRules?: string | null
   fallbackMessage?: string | null
   humanDelayMs?: number
+  followupInactivityEnabled?: boolean
+  followupInactivityHours?: number
+  followupInactivityMaxCount?: number
   aiProvider?: string
   aiModel?: string
   isActive?: boolean

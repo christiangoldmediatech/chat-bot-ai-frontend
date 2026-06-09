@@ -6,6 +6,7 @@ import type {
   ConversationStatus,
   FindConversationsQuery,
 } from '~/types/conversation'
+import type { MessagesActivity, MessagesActivityRange } from '~/types/dashboard'
 
 definePageMeta({
   layout: 'admin',
@@ -14,6 +15,35 @@ definePageMeta({
 
 const conversationsApi = useConversations()
 const botsApi = useBots()
+const dashboardApi = useDashboard()
+
+// Activity dashboard (day / week / month) shown above the filter panel.
+const activity = reactive<Record<MessagesActivityRange, MessagesActivity | null>>({
+  day: null,
+  week: null,
+  month: null,
+})
+const activityLoading = ref(true)
+const activityError = ref<string | null>(null)
+
+async function loadActivity(): Promise<void> {
+  activityLoading.value = true
+  activityError.value = null
+  try {
+    const [day, week, month] = await Promise.all([
+      dashboardApi.messagesActivity({ range: 'day' }),
+      dashboardApi.messagesActivity({ range: 'week' }),
+      dashboardApi.messagesActivity({ range: 'month' }),
+    ])
+    activity.day = day
+    activity.week = week
+    activity.month = month
+  } catch (err) {
+    activityError.value = (err as ApiError).message
+  } finally {
+    activityLoading.value = false
+  }
+}
 
 const filters = reactive<FindConversationsQuery>({
   botId: undefined,
@@ -91,7 +121,7 @@ function onPage(delta: number): void {
   void load()
 }
 
-await Promise.all([loadBots(), load()])
+await Promise.all([loadBots(), load(), loadActivity()])
 
 const statusOptions: ConversationStatus[] = ['BOT', 'HUMAN', 'CLOSED']
 
@@ -110,7 +140,55 @@ function formatDate(s: string): string {
 
 <template>
   <div>
-    <h1 class="text-2xl font-semibold">Conversations</h1>
+    <div class="flex items-end justify-between gap-3 flex-wrap">
+      <div>
+        <h1 class="text-2xl font-semibold tracking-tight">Conversations</h1>
+        <p class="text-slate-500 text-sm mt-1">
+          Inbound and outbound message volume across all your bots.
+        </p>
+      </div>
+      <button
+        type="button"
+        class="text-xs text-slate-500 hover:text-slate-700 inline-flex items-center gap-1"
+        :disabled="activityLoading"
+        @click="loadActivity"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" :class="activityLoading ? 'animate-spin' : ''" aria-hidden="true">
+          <polyline points="23 4 23 10 17 10" />
+          <polyline points="1 20 1 14 7 14" />
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+        </svg>
+        Reload stats
+      </button>
+    </div>
+
+    <!-- Activity dashboard: day / week / month, always visible together. -->
+    <section class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <MessagesActivityCard
+        :data="activity.day!"
+        :loading="activityLoading"
+        :error="activityError"
+        title="Daily"
+        subtitle="Last 14 days · grouped by day"
+        tone="primary"
+      />
+      <MessagesActivityCard
+        :data="activity.week!"
+        :loading="activityLoading"
+        :error="activityError"
+        title="Weekly"
+        subtitle="Last 12 weeks · grouped by week"
+        tone="success"
+      />
+      <MessagesActivityCard
+        :data="activity.month!"
+        :loading="activityLoading"
+        :error="activityError"
+        title="Monthly"
+        subtitle="Last 12 months · grouped by month"
+        tone="amber"
+      />
+    </section>
 
     <!-- Filters -->
     <form

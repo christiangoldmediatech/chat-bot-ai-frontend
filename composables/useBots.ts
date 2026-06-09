@@ -5,6 +5,7 @@ import type {
   UpdateBotConfigInput,
   UpdateBotInput,
 } from '~/types/bot'
+import type { MessagesActivity, MessagesActivityRange } from '~/types/dashboard'
 
 /**
  * Bot CRUD. Without a tenantId, hits the tenant-scoped `/bots/*` routes
@@ -15,6 +16,18 @@ import type {
 export function useBots(tenantId?: string) {
   const api = useApi()
   const base = tenantId ? `/superadmin/companies/${tenantId}/bots` : '/bots'
+
+  // Per-bot activity time-series.
+  // - Superadmin: dedicated endpoint nested under the bot resource.
+  // - Tenant: reuse the dashboard endpoint with `botId` query param.
+  function messagesActivity(botId: string, range: MessagesActivityRange): Promise<MessagesActivity> {
+    if (tenantId) {
+      return api.get<MessagesActivity>(`${base}/${botId}/messages-activity`, { query: { range } })
+    }
+    return api.get<MessagesActivity>('/admin/dashboard/messages-activity', {
+      query: { range, botId },
+    })
+  }
 
   return {
     list: (): Promise<Bot[]> => api.get<Bot[]>(base),
@@ -27,5 +40,6 @@ export function useBots(tenantId?: string) {
       api.get<BotConfig>(`${base}/${id}/config`),
     updateConfig: (id: string, data: UpdateBotConfigInput): Promise<BotConfig> =>
       api.patch<BotConfig>(`${base}/${id}/config`, data),
+    messagesActivity,
   }
 }

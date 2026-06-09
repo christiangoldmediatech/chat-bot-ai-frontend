@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
 import type { Bot } from '~/types/bot'
+import type { MessagesActivity, MessagesActivityRange } from '~/types/dashboard'
 
 definePageMeta({
   layout: 'superadmin',
@@ -20,6 +21,34 @@ const bot = ref<Bot | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
 const confirmingDelete = ref(false)
+
+// Per-bot messages activity (day / week / month) shown alongside the overview.
+const activity = reactive<Record<MessagesActivityRange, MessagesActivity | null>>({
+  day: null,
+  week: null,
+  month: null,
+})
+const activityLoading = ref(true)
+const activityError = ref<string | null>(null)
+
+async function loadActivity(): Promise<void> {
+  activityLoading.value = true
+  activityError.value = null
+  try {
+    const [day, week, month] = await Promise.all([
+      bots.messagesActivity(botId, 'day'),
+      bots.messagesActivity(botId, 'week'),
+      bots.messagesActivity(botId, 'month'),
+    ])
+    activity.day = day
+    activity.week = week
+    activity.month = month
+  } catch (err) {
+    activityError.value = (err as ApiError).message
+  } finally {
+    activityLoading.value = false
+  }
+}
 
 async function load(): Promise<void> {
   loading.value = true
@@ -43,7 +72,7 @@ async function onConfirmDelete(): Promise<void> {
   }
 }
 
-await load()
+await Promise.all([load(), loadActivity()])
 </script>
 
 <template>
@@ -97,6 +126,12 @@ await load()
 
       <!-- Quick-jump nav -->
       <nav class="mt-5 flex flex-wrap items-center gap-2 text-sm">
+        <a href="#activity" class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 ring-1 ring-indigo-500/30 px-3 py-1 text-indigo-300 hover:bg-indigo-500/20 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+          Activity
+        </a>
         <a href="#overview" class="rounded-full bg-slate-900 ring-1 ring-slate-700 px-3 py-1 text-slate-300 hover:bg-slate-800 hover:ring-slate-600 transition">Overview</a>
         <a href="#documents" class="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 ring-1 ring-amber-500/30 px-3 py-1 text-amber-300 hover:bg-amber-500/20 transition">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
@@ -115,6 +150,58 @@ await load()
           Google Calendar
         </a>
       </nav>
+
+      <!-- Activity dashboard: day / week / month, always visible together. -->
+      <section id="activity" class="scroll-mt-24 mt-6">
+        <div class="flex items-end justify-between gap-3 flex-wrap mb-3">
+          <div>
+            <h2 class="text-base font-semibold text-slate-100">Message activity</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Inbound &amp; outbound volume for this bot only.</p>
+          </div>
+          <button
+            type="button"
+            class="text-xs text-slate-400 hover:text-slate-200 inline-flex items-center gap-1"
+            :disabled="activityLoading"
+            @click="loadActivity"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" :class="activityLoading ? 'animate-spin' : ''" aria-hidden="true">
+              <polyline points="23 4 23 10 17 10" />
+              <polyline points="1 20 1 14 7 14" />
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+            </svg>
+            Reload
+          </button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <MessagesActivityCard
+            :data="activity.day!"
+            :loading="activityLoading"
+            :error="activityError"
+            title="Daily"
+            subtitle="Last 14 days · grouped by day"
+            tone="primary"
+            theme="dark"
+          />
+          <MessagesActivityCard
+            :data="activity.week!"
+            :loading="activityLoading"
+            :error="activityError"
+            title="Weekly"
+            subtitle="Last 12 weeks · grouped by week"
+            tone="success"
+            theme="dark"
+          />
+          <MessagesActivityCard
+            :data="activity.month!"
+            :loading="activityLoading"
+            :error="activityError"
+            title="Monthly"
+            subtitle="Last 12 months · grouped by month"
+            tone="amber"
+            theme="dark"
+          />
+        </div>
+      </section>
 
       <!-- Overview: AI + WhatsApp summary, then system prompt -->
       <section id="overview" class="scroll-mt-24 mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
