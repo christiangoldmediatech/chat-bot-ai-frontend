@@ -47,7 +47,9 @@ export default defineNuxtConfig({
       // Tailwind's base layer without per-component overrides.
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-        { rel: 'apple-touch-icon', href: '/favicon.svg' },
+        { rel: 'icon', type: 'image/png', href: '/kaibot-logo.png' },
+        { rel: 'shortcut icon', type: 'image/png', href: '/kaibot-logo.png' },
+        { rel: 'apple-touch-icon', href: '/kaibot-logo.png' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         {

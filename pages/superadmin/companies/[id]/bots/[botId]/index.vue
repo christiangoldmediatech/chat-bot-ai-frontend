@@ -140,6 +140,14 @@ await Promise.all([load(), loadActivity()])
           </svg>
           Documents
         </a>
+        <a href="#media" class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 ring-1 ring-indigo-500/30 px-3 py-1 text-indigo-300 hover:bg-indigo-500/20 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <polyline points="21 15 16 10 5 21" />
+          </svg>
+          Multimedia
+        </a>
         <a href="#calendar" class="inline-flex items-center gap-1.5 rounded-full bg-sky-500/10 ring-1 ring-sky-500/30 px-3 py-1 text-sky-300 hover:bg-sky-500/20 transition">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
             <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -285,6 +293,24 @@ await Promise.all([load(), loadActivity()])
           </div>
         </header>
         <BotDocumentsCard :bot-id="bot.id" :tenant-id="tenantId" />
+      </section>
+
+      <!-- Multimedia (sendable resources) -->
+      <section id="media" class="scroll-mt-24 mt-6">
+        <header class="flex items-start gap-3 mb-3">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 ring-1 ring-indigo-500/30">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-indigo-300" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-slate-100">Multimedia resources</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Sendable assets (images, PDFs, videos, audios, locations) the bot can attach natively in WhatsApp.</p>
+          </div>
+        </header>
+        <BotMediaAssetsCard :bot-id="bot.id" :tenant-id="tenantId" />
       </section>
 
       <!-- Google Calendar -->

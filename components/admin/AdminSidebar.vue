@@ -62,10 +62,10 @@ onMounted(() => {
     aria-label="Main navigation"
   >
     <div class="flex items-center justify-between gap-2 mb-6 px-2">
-      <div class="flex items-center gap-2">
-        <span class="inline-flex size-8 items-center justify-center rounded-xl bg-slate-900 text-white text-xs font-bold tracking-tight">CB</span>
-        <span class="text-base font-semibold text-slate-900">Chat Bot AI</span>
-      </div>
+      <NuxtLink to="/admin" class="flex items-center gap-2 group" aria-label="Kaibot dashboard">
+        <KaibotLogo :size="36" rounded="rounded-xl" class="bg-white ring-1 ring-white/70 shadow-sm transition-transform group-hover:scale-105" />
+        <span class="text-base font-semibold text-slate-900">Kaibot</span>
+      </NuxtLink>
       <!-- Close button only on mobile -->
       <button
         type="button"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
-import type { CompanyBot, CompanyDetail } from '~/types/company'
+import type { CompanyBot, CompanyDetail, CompanyUser } from '~/types/company'
 
 definePageMeta({
   layout: 'superadmin',
@@ -18,6 +18,10 @@ const loading = ref(true)
 const error = ref<string | null>(null)
 const confirmingDelete = ref(false)
 const confirmingDeleteBot = ref<CompanyBot | null>(null)
+const resettingPasswordFor = ref<CompanyUser | null>(null)
+const resetPasswordLoading = ref(false)
+const resetPasswordError = ref<string | null>(null)
+const resetPasswordSuccess = ref<string | null>(null)
 
 async function load(): Promise<void> {
   loading.value = true
@@ -53,6 +57,31 @@ async function onConfirmDeleteBot(): Promise<void> {
   } finally {
     confirmingDeleteBot.value = null
   }
+}
+
+async function onConfirmResetPassword(newPassword: string): Promise<void> {
+  const target = resettingPasswordFor.value
+  if (!target) return
+  resetPasswordLoading.value = true
+  resetPasswordError.value = null
+  try {
+    await companiesApi.resetUserPassword(id, target.id, newPassword)
+    resetPasswordSuccess.value = `Password updated for ${target.email}.`
+    resettingPasswordFor.value = null
+    setTimeout(() => {
+      resetPasswordSuccess.value = null
+    }, 4000)
+  } catch (err) {
+    resetPasswordError.value = (err as ApiError).message
+  } finally {
+    resetPasswordLoading.value = false
+  }
+}
+
+function onCancelResetPassword(): void {
+  if (resetPasswordLoading.value) return
+  resettingPasswordFor.value = null
+  resetPasswordError.value = null
 }
 
 await load()
@@ -131,6 +160,12 @@ await load()
 
       <section class="mt-8">
         <h2 class="text-base font-semibold text-slate-200">Users</h2>
+        <p
+          v-if="resetPasswordSuccess"
+          class="mt-2 rounded-md border border-success-800 bg-success-950 px-3 py-2 text-xs text-success-300"
+        >
+          {{ resetPasswordSuccess }}
+        </p>
         <div class="mt-3 overflow-x-auto rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg">
           <table class="w-full text-sm">
             <thead class="bg-slate-950 text-slate-400">
@@ -138,11 +173,12 @@ await load()
                 <th class="text-left font-medium px-4 py-3">Email</th>
                 <th class="text-left font-medium px-4 py-3">Role</th>
                 <th class="text-left font-medium px-4 py-3">Created</th>
+                <th class="text-right font-medium px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="data.users.length === 0">
-                <td colspan="3" class="px-4 py-6 text-center text-slate-500">No users</td>
+                <td colspan="4" class="px-4 py-6 text-center text-slate-500">No users</td>
               </tr>
               <tr
                 v-for="u in data.users"
@@ -153,6 +189,19 @@ await load()
                 <td class="px-4 py-3 text-slate-100">{{ u.email }}</td>
                 <td class="px-4 py-3 text-slate-300">{{ u.role }}</td>
                 <td class="px-4 py-3 text-slate-400 text-xs">{{ new Date(u.createdAt).toLocaleString() }}</td>
+                <td class="px-4 py-3 text-right">
+                  <button
+                    type="button"
+                    class="inline-flex items-center gap-1.5 rounded-md border border-amber-700/60 bg-amber-500/5 px-2.5 py-1 text-xs font-medium text-amber-300 hover:bg-amber-500/10 hover:border-amber-600 transition"
+                    @click="resettingPasswordFor = u; resetPasswordError = null"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                    Reset password
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -348,6 +397,15 @@ await load()
         message="All its users, bots, conversations, and documents will also be deleted. This action cannot be undone."
         @cancel="confirmingDelete = false"
         @confirm="onConfirmDelete"
+      />
+
+      <ResetPasswordDialog
+        :open="!!resettingPasswordFor"
+        :user-email="resettingPasswordFor?.email ?? ''"
+        :loading="resetPasswordLoading"
+        :error="resetPasswordError"
+        @cancel="onCancelResetPassword"
+        @confirm="onConfirmResetPassword"
       />
 
       <ConfirmDialog
