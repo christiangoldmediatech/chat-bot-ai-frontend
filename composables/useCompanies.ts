@@ -22,5 +22,14 @@ export function useCompanies() {
     update: (id: string, data: UpdateCompanyInput): Promise<Company> =>
       api.patch<Company>(`/superadmin/companies/${id}`, data),
     remove: (id: string): Promise<void> => api.delete(`/superadmin/companies/${id}`),
+    resetUserPassword: (
+      tenantId: string,
+      userId: string,
+      newPassword: string,
+    ): Promise<void> =>
+      api.patch<void>(
+        `/superadmin/companies/${tenantId}/users/${userId}/password`,
+        { newPassword },
+      ),
   }
 }

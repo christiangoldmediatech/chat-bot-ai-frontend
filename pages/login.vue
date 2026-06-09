@@ -50,6 +50,12 @@ async function onSubmit(): Promise<void> {
 
 <template>
   <div class="w-full max-w-md">
+    <!-- Brand mark -->
+    <div class="mb-6 flex flex-col items-center">
+      <KaibotLogo :size="72" rounded="rounded-3xl" class="bg-white ring-1 ring-white/70 shadow-glass-lg" />
+      <p class="mt-3 text-base font-semibold tracking-tight text-slate-900">Kaibot</p>
+      <p class="text-xs text-slate-500">WhatsApp AI for businesses</p>
+    </div>
     <!-- Glass card -->
     <div
       class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/50 via-white/30 to-white/15 backdrop-blur-3xl backdrop-saturate-150 ring-1 ring-white/40 shadow-glass-lg p-8 sm:p-10"

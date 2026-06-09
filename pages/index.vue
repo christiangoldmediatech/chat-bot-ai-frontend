@@ -51,12 +51,10 @@ onBeforeUnmount(() => {
         : 'bg-white/60 ring-white/50'"
     >
       <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <div class="flex items-center gap-2">
-          <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-glass">
-            <span class="text-base font-bold text-white">K</span>
-          </div>
+        <NuxtLink to="/" class="flex items-center gap-2.5 group" aria-label="Kaibot home">
+          <KaibotLogo :size="40" rounded="rounded-2xl" class="shadow-glass ring-1 ring-white/60 bg-white transition-transform group-hover:scale-105" />
           <span class="text-lg font-semibold tracking-tight">Kaibot</span>
-        </div>
+        </NuxtLink>
         <nav class="hidden items-center gap-8 text-sm font-medium text-slate-700 md:flex">
           <a href="#features" class="transition hover:text-slate-900">Features</a>
           <a href="#how" class="transition hover:text-slate-900">How it works</a>
@@ -146,18 +144,24 @@ onBeforeUnmount(() => {
         >
           <div class="rounded-3xl bg-white/70 p-6 ring-1 ring-white/60 shadow-glass-lg backdrop-blur-xl">
             <div class="flex items-center gap-3 border-b border-slate-200/60 pb-4">
-              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-success-500 text-white font-bold">K</div>
+              <KaibotLogo :size="44" rounded="rounded-full" class="ring-2 ring-white shadow-glass bg-white" alt="Kaibot avatar" />
               <div class="text-left">
                 <p class="text-sm font-semibold text-slate-900">Kaibot · Acme Co.</p>
-                <p class="text-xs text-success-600">online</p>
+                <p class="flex items-center gap-1.5 text-xs text-success-600">
+                  <span class="size-1.5 rounded-full bg-success-500 animate-pulse" />
+                  online
+                </p>
               </div>
             </div>
             <div class="mt-5 space-y-3 text-left">
               <div class="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-success-500 px-4 py-2.5 text-sm text-white">
                 Hi! Do you ship to Mexico?
               </div>
-              <div class="max-w-[80%] rounded-2xl rounded-tl-sm bg-slate-100 px-4 py-2.5 text-sm text-slate-800">
-                Yes, we ship across all of Mexico — usually 2-4 business days. Want me to pass you a shipping quote?
+              <div class="flex items-end gap-2 max-w-[85%]">
+                <KaibotLogo :size="24" rounded="rounded-full" class="shrink-0 ring-1 ring-white shadow-sm bg-white" alt="Kaibot" />
+                <div class="rounded-2xl rounded-tl-sm bg-slate-100 px-4 py-2.5 text-sm text-slate-800">
+                  Yes, we ship across all of Mexico — usually 2-4 business days. Want me to pass you a shipping quote?
+                </div>
               </div>
               <div class="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-success-500 px-4 py-2.5 text-sm text-white">
                 Yes please
@@ -321,9 +325,7 @@ onBeforeUnmount(() => {
     <footer class="relative border-t border-white/40 bg-white/50 backdrop-blur-xl">
       <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-8 sm:flex-row">
         <div class="flex items-center gap-2 text-sm text-slate-600">
-          <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-700">
-            <span class="text-xs font-bold text-white">K</span>
-          </div>
+          <KaibotLogo :size="28" rounded="rounded-lg" class="bg-white ring-1 ring-white/60 shadow-sm" />
           <span class="font-semibold text-slate-900">Kaibot</span>
           <span class="text-slate-400">·</span>
           <span>WhatsApp AI for modern businesses</span>

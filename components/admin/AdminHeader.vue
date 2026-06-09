@@ -27,10 +27,10 @@ async function onLogout(): Promise<void> {
         </svg>
       </button>
       <!-- Mobile brand (sidebar is hidden until drawer opens) -->
-      <div class="md:hidden flex items-center gap-2 min-w-0">
-        <span class="inline-flex size-7 items-center justify-center rounded-lg bg-slate-900 text-white text-[10px] font-bold tracking-tight">CB</span>
-        <span class="text-sm font-semibold text-slate-900 truncate">Chat Bot AI</span>
-      </div>
+      <NuxtLink to="/admin" class="md:hidden flex items-center gap-2 min-w-0" aria-label="Kaibot dashboard">
+        <KaibotLogo :size="28" rounded="rounded-lg" class="bg-white ring-1 ring-white/70 shadow-sm" />
+        <span class="text-sm font-semibold text-slate-900 truncate">Kaibot</span>
+      </NuxtLink>
       <!-- Desktop subtitle -->
       <div class="hidden md:block text-sm text-slate-500">Admin panel</div>
     </div>

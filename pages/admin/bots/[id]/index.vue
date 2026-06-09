@@ -104,6 +104,14 @@ await load()
           </svg>
           Documents
         </a>
+        <a href="#media" class="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 ring-1 ring-indigo-100 px-3 py-1 text-indigo-700 hover:bg-indigo-100 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <polyline points="21 15 16 10 5 21" />
+          </svg>
+          Multimedia
+        </a>
         <a href="#calendar" class="inline-flex items-center gap-1.5 rounded-full bg-sky-50 ring-1 ring-sky-100 px-3 py-1 text-sky-700 hover:bg-sky-100 transition">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
             <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -197,6 +205,24 @@ await load()
           </div>
         </header>
         <BotDocumentsCard :bot-id="bot.id" />
+      </section>
+
+      <!-- Multimedia (sendable resources for native WhatsApp attachments) -->
+      <section id="media" class="scroll-mt-24 mt-6">
+        <header class="flex items-start gap-3 mb-3">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 ring-1 ring-indigo-100">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-indigo-600" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-slate-900">Recursos multimedia</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Imágenes, PDFs, videos, audios o ubicaciones que el bot envía como adjuntos nativos en WhatsApp.</p>
+          </div>
+        </header>
+        <BotMediaAssetsCard :bot-id="bot.id" />
       </section>
 
       <!-- Google Calendar -->

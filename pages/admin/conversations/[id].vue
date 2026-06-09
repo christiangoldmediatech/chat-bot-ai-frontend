@@ -131,7 +131,7 @@ function statusClass(s: ConversationStatus): string {
       </p>
 
       <section class="mt-6 rounded-2xl bg-white/60 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-4 max-h-[60vh] overflow-y-auto">
-        <ChatMessages :messages="data.messages" />
+        <ChatMessages :messages="data.messages" :bot-id="data.botId" />
         <p v-if="data.messages.length === 0" class="text-sm text-slate-400 text-center py-6">
           No messages
         </p>

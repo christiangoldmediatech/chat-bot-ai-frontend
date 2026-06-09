@@ -69,10 +69,10 @@ async function onSubmit(): Promise<void> {
 
 <template>
   <div class="w-full max-w-md">
-    <div class="mx-auto flex size-14 items-center justify-center rounded-2xl bg-white shadow-glass ring-1 ring-slate-900/5">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-6 text-slate-900" aria-hidden="true">
-        <path d="M21 13.255A23.93 23.93 0 0 1 12 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2m13 4H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2z" />
-      </svg>
+    <div class="flex flex-col items-center">
+      <KaibotLogo :size="72" rounded="rounded-3xl" class="bg-white ring-1 ring-white/70 shadow-glass-lg" />
+      <p class="mt-3 text-base font-semibold tracking-tight text-slate-900">Kaibot</p>
+      <p class="text-xs text-slate-500">WhatsApp AI for businesses</p>
     </div>
 
     <div class="mt-5 rounded-3xl bg-white/70 backdrop-blur-2xl ring-1 ring-white/60 shadow-glass-lg p-8 sm:p-10">
