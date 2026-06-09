@@ -45,13 +45,13 @@ const FOLLOWUP_HOUR_PRESETS: { label: string, value: number }[] = [
 const FOLLOWUP_ATTEMPT_PRESETS: number[] = [1, 2, 3, 5]
 const followupSummary = computed(() => {
   if (!form.followupInactivityEnabled) {
-    return 'Desactivado: si el cliente deja de responder, el bot no insiste.'
+    return 'Off — if the customer stops replying, the bot won\'t follow up.'
   }
   const h = form.followupInactivityHours
   const n = form.followupInactivityMaxCount
   const total = h * n
-  const totalLabel = total >= 24 ? `${Math.round((total / 24) * 10) / 10} días` : `${total} h`
-  return `Tras ${h} h sin respuesta, el bot retoma con contexto. Hasta ${n} intento${n === 1 ? '' : 's'} (~${totalLabel} en total).`
+  const totalLabel = total >= 24 ? `${Math.round((total / 24) * 10) / 10} days` : `${total} h`
+  return `After ${h} h of silence, the bot follows up with context. Up to ${n} attempt${n === 1 ? '' : 's'} (~${totalLabel} total).`
 })
 const PROVIDERS: { value: string, label: string, models: string[] }[] = [
   {
@@ -373,7 +373,7 @@ await load()
       </section>
 
       <!-- ────────────────────────────────────────────────────────────────
-           SECTION 4 — Follow-up por inactividad
+           SECTION 4 — Inactivity follow-up
       ───────────────────────────────────────────────────────────────── -->
       <section class="rounded-2xl bg-slate-900/60 ring-1 ring-slate-800 p-6 space-y-5">
         <header class="flex items-start gap-3">
@@ -384,16 +384,16 @@ await load()
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-slate-100">Follow-up por inactividad</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Cuando el cliente deja de responder, el bot retoma la conversación con contexto del último tema.</p>
+            <h2 class="text-base font-semibold text-slate-100">Inactivity follow-up</h2>
+            <p class="text-xs text-slate-500 mt-0.5">When the customer stops replying, the bot re-engages with context from the latest topic.</p>
           </div>
         </header>
 
-        <!-- Toggle principal -->
+        <!-- Main toggle -->
         <label class="flex items-center justify-between rounded-xl bg-slate-950 ring-1 ring-slate-800 px-4 py-3 cursor-pointer">
           <div>
-            <p class="text-sm font-medium text-slate-100">Activar seguimiento automático</p>
-            <p class="text-xs text-slate-500">El bot genera mensajes contextuales con LLM. Nunca envía saludos vacíos tipo "¿en qué te puedo ayudar?".</p>
+            <p class="text-sm font-medium text-slate-100">Enable automatic follow-up</p>
+            <p class="text-xs text-slate-500">The bot writes a contextual message with the LLM — never empty "how can I help?" greetings.</p>
           </div>
           <button
             type="button"
@@ -410,7 +410,7 @@ await load()
           </button>
         </label>
 
-        <!-- Resumen en vivo -->
+        <!-- Live summary -->
         <div
           class="rounded-xl px-4 py-3 text-xs"
           :class="form.followupInactivityEnabled
@@ -420,11 +420,11 @@ await load()
           {{ followupSummary }}
         </div>
 
-        <!-- Inputs (deshabilitados si toggle off) -->
+        <!-- Inputs (disabled when toggle is off) -->
         <fieldset :disabled="!form.followupInactivityEnabled" class="space-y-5" :class="{ 'opacity-50 pointer-events-none': !form.followupInactivityEnabled }">
           <div>
-            <label class="block text-sm font-medium text-slate-300">Horas de espera entre intentos</label>
-            <p class="mt-0.5 text-xs text-slate-500">Cuánto tiempo de silencio del cliente debe pasar antes de cada intento.</p>
+            <label class="block text-sm font-medium text-slate-300">Hours between follow-ups</label>
+            <p class="mt-0.5 text-xs text-slate-500">How long the customer can stay silent before the bot sends each follow-up.</p>
             <div class="mt-2 flex flex-wrap items-center gap-2">
               <button
                 v-for="preset in FOLLOWUP_HOUR_PRESETS"
@@ -447,14 +447,14 @@ await load()
                   step="1"
                   class="w-24 rounded-xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-sm text-slate-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 >
-                <span class="text-xs text-slate-500">horas (1–168)</span>
+                <span class="text-xs text-slate-500">hours (1–168)</span>
               </div>
             </div>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-slate-300">Máximo de intentos</label>
-            <p class="mt-0.5 text-xs text-slate-500">Cuando se alcanza el límite sin respuesta, el bot deja de insistir. El contador se resetea cuando el cliente vuelve a escribir.</p>
+            <label class="block text-sm font-medium text-slate-300">Maximum attempts</label>
+            <p class="mt-0.5 text-xs text-slate-500">When the limit is reached without a reply, the bot stops following up. The counter resets when the customer writes back.</p>
             <div class="mt-2 flex flex-wrap items-center gap-2">
               <button
                 v-for="n in FOLLOWUP_ATTEMPT_PRESETS"
@@ -477,7 +477,7 @@ await load()
                   step="1"
                   class="w-24 rounded-xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-sm text-slate-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 >
-                <span class="text-xs text-slate-500">intentos (1–10)</span>
+                <span class="text-xs text-slate-500">attempts (1–10)</span>
               </div>
             </div>
           </div>
