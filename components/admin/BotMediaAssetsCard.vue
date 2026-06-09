@@ -272,7 +272,7 @@ onMounted(() => {
             v-model="fileKey"
             type="text"
             placeholder="ej. catalogo-primavera.pdf"
-            class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
           <p class="mt-1 text-[11px] text-slate-500">Solo a-z, 0-9, punto, guion. El bot lo usa para referenciar este recurso.</p>
         </div>
@@ -282,7 +282,7 @@ onMounted(() => {
             v-model="fileDescription"
             type="text"
             placeholder="ej. Catálogo completo de productos primavera 2026"
-            class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
           <p class="mt-1 text-[11px] text-slate-500">Esta línea le dice al bot cuándo usar este recurso.</p>
         </div>
@@ -327,7 +327,7 @@ onMounted(() => {
             v-model="locKey"
             type="text"
             placeholder="ej. tienda-principal"
-            class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
         </div>
         <div>
@@ -336,7 +336,7 @@ onMounted(() => {
             v-model="locDescription"
             type="text"
             placeholder="ej. Sucursal centro"
-            class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
         </div>
         <div>
@@ -346,7 +346,7 @@ onMounted(() => {
             type="number"
             step="any"
             placeholder="-2.90055"
-            class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-mono focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm font-mono focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
         </div>
         <div>
@@ -356,7 +356,7 @@ onMounted(() => {
             type="number"
             step="any"
             placeholder="-79.00453"
-            class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-mono focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm font-mono focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
         </div>
         <div>
@@ -365,7 +365,7 @@ onMounted(() => {
             v-model="locName"
             type="text"
             placeholder="ej. Tienda Centro"
-            class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
         </div>
         <div>
@@ -374,7 +374,7 @@ onMounted(() => {
             v-model="locAddress"
             type="text"
             placeholder="ej. Av. 9 de Octubre 123, Cuenca"
-            class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
         </div>
       </div>
