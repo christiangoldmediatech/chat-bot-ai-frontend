@@ -7,6 +7,7 @@ definePageMeta({
   middleware: 'superadmin-auth',
 })
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const companiesApi = useCompanies()
@@ -21,15 +22,15 @@ const saving = ref(false)
 const error = ref<string | null>(null)
 const success = ref<string | null>(null)
 
-const planOptions: { value: Plan, label: string, description: string }[] = [
-  { value: 'FREE', label: 'Free', description: 'Trial / starter tier' },
-  { value: 'PRO', label: 'Pro', description: 'Standard paid tier' },
-  { value: 'ENTERPRISE', label: 'Enterprise', description: 'Custom contract, premium support' },
-]
-const statusOptions: { value: TenantStatus, label: string, description: string }[] = [
-  { value: 'ACTIVE', label: 'Active', description: 'Users can log in and operate normally.' },
-  { value: 'SUSPENDED', label: 'Suspended', description: 'Login is blocked for everyone in this tenant.' },
-]
+const planOptions = computed<{ value: Plan, label: string, description: string }[]>(() => [
+  { value: 'FREE', label: t('superadmin.companyEdit.planFreeLabel'), description: t('superadmin.companyEdit.planFreeDesc') },
+  { value: 'PRO', label: t('superadmin.companyEdit.planProLabel'), description: t('superadmin.companyEdit.planProDesc') },
+  { value: 'ENTERPRISE', label: t('superadmin.companyEdit.planEnterpriseLabel'), description: t('superadmin.companyEdit.planEnterpriseDesc') },
+])
+const statusOptions = computed<{ value: TenantStatus, label: string, description: string }[]>(() => [
+  { value: 'ACTIVE', label: t('superadmin.companyEdit.statusActive'), description: t('superadmin.companyEdit.statusActiveDesc') },
+  { value: 'SUSPENDED', label: t('superadmin.companyEdit.statusSuspended'), description: t('superadmin.companyEdit.statusSuspendedDesc') },
+])
 
 const isDirty = computed(() => {
   if (!data.value) return false
@@ -76,7 +77,7 @@ async function onSubmit(): Promise<void> {
     if (data.value) {
       data.value = { ...data.value, name: updated.name, plan: updated.plan, status: updated.status }
     }
-    success.value = 'Changes saved'
+    success.value = t('superadmin.companyEdit.successMessage')
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -93,16 +94,16 @@ await load()
 
 <template>
   <div>
-    <NuxtLink :to="`/superadmin/companies/${id}`" class="text-sm text-slate-400 hover:text-slate-200">← Back to details</NuxtLink>
+    <NuxtLink :to="`/superadmin/companies/${id}`" class="text-sm text-slate-400 hover:text-slate-200">{{ $t('superadmin.companyEdit.back') }}</NuxtLink>
     <div class="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
       <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-indigo-300 ring-1 ring-indigo-500/30">
         <span class="size-1.5 rounded-full bg-indigo-400" />
-        Tenant
+        {{ $t('superadmin.companyEdit.tenantKicker') }}
       </span>
-      <h1 class="text-2xl font-semibold text-slate-100 tracking-tight">Edit company</h1>
+      <h1 class="text-2xl font-semibold text-slate-100 tracking-tight">{{ $t('superadmin.companyEdit.title') }}</h1>
     </div>
     <p class="text-slate-400 text-sm mt-1 max-w-2xl">
-      Manage the tenant's billing tier and access. Changes apply immediately for all users in this workspace.
+      {{ $t('superadmin.companyEdit.subtitle') }}
     </p>
 
     <p v-if="error" class="mt-4 max-w-2xl rounded-2xl border border-danger-800 bg-danger-950/80 p-3 text-sm text-danger-300">
@@ -133,9 +134,9 @@ await load()
                 : 'bg-amber-500/10 text-amber-300 ring-amber-500/30'"
             >
               <span class="size-1.5 rounded-full" :class="data.status === 'ACTIVE' ? 'bg-emerald-400' : 'bg-amber-400'" />
-              {{ data.status === 'ACTIVE' ? 'Active' : 'Suspended' }}
+              {{ data.status === 'ACTIVE' ? $t('superadmin.companyEdit.statusActive') : $t('superadmin.companyEdit.statusSuspended') }}
             </span>
-            <span class="text-[10px] uppercase tracking-wider font-medium text-slate-500">Current: {{ data.plan }}</span>
+            <span class="text-[10px] uppercase tracking-wider font-medium text-slate-500">{{ $t('superadmin.companyEdit.currentPlanLabel', { plan: data.plan }) }}</span>
           </div>
         </div>
       </section>
@@ -155,13 +156,13 @@ await load()
               </svg>
             </div>
             <div>
-              <h2 class="text-base font-semibold text-slate-100">Identity</h2>
-              <p class="text-xs text-slate-500 mt-0.5">Company name shown in the panel and notifications.</p>
+              <h2 class="text-base font-semibold text-slate-100">{{ $t('superadmin.companyEdit.sectionIdentity') }}</h2>
+              <p class="text-xs text-slate-500 mt-0.5">{{ $t('superadmin.companyEdit.sectionIdentityHelp') }}</p>
             </div>
           </header>
 
           <div>
-            <label class="block text-sm font-medium text-slate-300">Company name</label>
+            <label class="block text-sm font-medium text-slate-300">{{ $t('superadmin.companyEdit.tenantName') }}</label>
             <input
               v-model="name"
               type="text"
@@ -174,19 +175,19 @@ await load()
 
           <div>
             <label class="block text-sm font-medium text-slate-300">
-              Slug
+              {{ $t('superadmin.companyEdit.tenantSlug') }}
               <span class="ml-1 inline-flex items-center gap-1 rounded-full bg-slate-800 px-2 py-0.5 text-[10px] font-medium text-slate-400 ring-1 ring-slate-700 normal-case tracking-normal">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3" aria-hidden="true">
                   <rect x="3" y="11" width="18" height="11" rx="2" />
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
-                Read-only
+                {{ $t('superadmin.companyEdit.slugReadOnly') }}
               </span>
             </label>
             <div class="mt-1 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-slate-400 font-mono select-all">
               {{ data.slug }}
             </div>
-            <p class="mt-1 text-xs text-slate-500">Used in URLs and integrations. Changing it would break existing links.</p>
+            <p class="mt-1 text-xs text-slate-500">{{ $t('superadmin.companyEdit.slugHelp') }}</p>
           </div>
         </section>
 
@@ -201,8 +202,8 @@ await load()
               </svg>
             </div>
             <div>
-              <h2 class="text-base font-semibold text-slate-100">Plan</h2>
-              <p class="text-xs text-slate-500 mt-0.5">Billing tier and feature access for this tenant.</p>
+              <h2 class="text-base font-semibold text-slate-100">{{ $t('superadmin.companyEdit.sectionPlan') }}</h2>
+              <p class="text-xs text-slate-500 mt-0.5">{{ $t('superadmin.companyEdit.sectionPlanHelp') }}</p>
             </div>
           </header>
 
@@ -246,8 +247,8 @@ await load()
               </svg>
             </div>
             <div>
-              <h2 class="text-base font-semibold text-slate-100">Access status</h2>
-              <p class="text-xs text-slate-500 mt-0.5">Controls whether users in this tenant can log in.</p>
+              <h2 class="text-base font-semibold text-slate-100">{{ $t('superadmin.companyEdit.sectionAccess') }}</h2>
+              <p class="text-xs text-slate-500 mt-0.5">{{ $t('superadmin.companyEdit.sectionAccessHelp') }}</p>
             </div>
           </header>
 
@@ -300,7 +301,7 @@ await load()
               <line x1="12" y1="17" x2="12.01" y2="17" />
             </svg>
             <p class="leading-relaxed">
-              Suspending will <strong class="font-semibold">block login for every user</strong> in this tenant immediately. Their data is preserved and access is restored on re-activation.
+              {{ $t('superadmin.companyEdit.suspendedWarningBefore') }}<strong class="font-semibold">{{ $t('superadmin.companyEdit.suspendedWarningEmph') }}</strong>{{ $t('superadmin.companyEdit.suspendedWarningAfter') }}
             </p>
           </div>
         </section>
@@ -313,21 +314,21 @@ await load()
             :disabled="saving || !isDirty"
             @click="onDiscard"
           >
-            Discard
+            {{ $t('superadmin.companyEdit.discard') }}
           </button>
           <button
             type="button"
             class="rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-800 transition"
             @click="onCancel"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
           <button
             type="submit"
             class="rounded-xl bg-white px-5 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60 transition"
             :disabled="saving || !isDirty || !name"
           >
-            {{ saving ? 'Saving…' : 'Save changes' }}
+            {{ saving ? $t('superadmin.companyEdit.saving') : $t('superadmin.companyEdit.saveChanges') }}
           </button>
         </div>
       </form>

@@ -7,6 +7,7 @@ definePageMeta({
   middleware: 'superadmin-auth',
 })
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const companiesApi = useCompanies()
@@ -66,7 +67,7 @@ async function onConfirmResetPassword(newPassword: string): Promise<void> {
   resetPasswordError.value = null
   try {
     await companiesApi.resetUserPassword(id, target.id, newPassword)
-    resetPasswordSuccess.value = `Password updated for ${target.email}.`
+    resetPasswordSuccess.value = t('superadmin.companyDetail.users.passwordUpdated', { email: target.email })
     resettingPasswordFor.value = null
     setTimeout(() => {
       resetPasswordSuccess.value = null
@@ -89,7 +90,7 @@ await load()
 
 <template>
   <div>
-    <NuxtLink to="/superadmin/companies" class="text-sm text-slate-400 hover:text-slate-200">← Back to companies</NuxtLink>
+    <NuxtLink to="/superadmin/companies" class="text-sm text-slate-400 hover:text-slate-200">{{ $t('superadmin.companyDetail.back') }}</NuxtLink>
 
     <p v-if="error" class="mt-4 rounded-md border border-danger-800 bg-danger-950 p-3 text-sm text-danger-300">
       {{ error }}
@@ -121,45 +122,45 @@ await load()
             :to="`/superadmin/companies/${data.id}/customers`"
             class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800"
           >
-            Customers
+            {{ $t('superadmin.companyDetail.sections.navCustomers') }}
           </NuxtLink>
           <NuxtLink
             :to="`/superadmin/companies/${data.id}/meetings`"
             class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800"
           >
-            Meetings
+            {{ $t('superadmin.companyDetail.sections.navMeetings') }}
           </NuxtLink>
           <NuxtLink
             :to="`/superadmin/companies/${data.id}/cases`"
             class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800"
           >
-            Cases
+            {{ $t('superadmin.companyDetail.sections.navCases') }}
           </NuxtLink>
           <NuxtLink
             :to="`/superadmin/companies/${data.id}/edit`"
             class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800"
           >
-            Edit
+            {{ $t('common.edit') }}
           </NuxtLink>
           <button
             type="button"
             class="rounded-md border border-danger-800 px-3 py-1.5 text-sm text-danger-300 hover:bg-danger-950"
             @click="confirmingDelete = true"
           >
-            Delete
+            {{ $t('common.delete') }}
           </button>
         </div>
       </header>
 
       <div class="mt-6 grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <SuperadminStatCard label="Plan" :value="data.plan" />
-        <SuperadminStatCard label="Users" :value="data.userCount" />
-        <SuperadminStatCard label="Bots" :value="data.botCount" />
-        <SuperadminStatCard label="Conversations" :value="data.conversationCount" />
+        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.plan')" :value="data.plan" />
+        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.users')" :value="data.userCount" />
+        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.bots')" :value="data.botCount" />
+        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.conversations')" :value="data.conversationCount" />
       </div>
 
       <section class="mt-8">
-        <h2 class="text-base font-semibold text-slate-200">Users</h2>
+        <h2 class="text-base font-semibold text-slate-200">{{ $t('superadmin.companyDetail.users.title') }}</h2>
         <p
           v-if="resetPasswordSuccess"
           class="mt-2 rounded-md border border-success-800 bg-success-950 px-3 py-2 text-xs text-success-300"
@@ -170,15 +171,15 @@ await load()
           <table class="w-full text-sm">
             <thead class="bg-slate-950 text-slate-400">
               <tr>
-                <th class="text-left font-medium px-4 py-3">Email</th>
-                <th class="text-left font-medium px-4 py-3">Role</th>
-                <th class="text-left font-medium px-4 py-3">Created</th>
-                <th class="text-right font-medium px-4 py-3">Actions</th>
+                <th class="text-left font-medium px-4 py-3">{{ $t('superadmin.companyDetail.users.tableEmail') }}</th>
+                <th class="text-left font-medium px-4 py-3">{{ $t('superadmin.companyDetail.users.tableRole') }}</th>
+                <th class="text-left font-medium px-4 py-3">{{ $t('superadmin.companyDetail.users.tableCreated') }}</th>
+                <th class="text-right font-medium px-4 py-3">{{ $t('superadmin.companyDetail.users.tableActions') }}</th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="data.users.length === 0">
-                <td colspan="4" class="px-4 py-6 text-center text-slate-500">No users</td>
+                <td colspan="4" class="px-4 py-6 text-center text-slate-500">{{ $t('superadmin.companyDetail.noUsers') }}</td>
               </tr>
               <tr
                 v-for="u in data.users"
@@ -199,7 +200,7 @@ await load()
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                     </svg>
-                    Reset password
+                    {{ $t('superadmin.companyDetail.users.resetPassword') }}
                   </button>
                 </td>
               </tr>
@@ -211,26 +212,26 @@ await load()
       <section class="mt-6">
         <div class="flex items-start justify-between flex-wrap gap-3">
           <div>
-            <h2 class="text-base font-semibold text-slate-200">Bots</h2>
+            <h2 class="text-base font-semibold text-slate-200">{{ $t('superadmin.companyDetail.bots.title') }}</h2>
             <p class="text-xs text-slate-500 mt-1 max-w-xl">
-              Jump straight into any setting for each bot:
-              <span class="font-medium text-emerald-400">WhatsApp connection</span>,
-              <span class="font-medium text-indigo-300">AI agent</span>,
-              <span class="font-medium text-amber-300">Documents</span>, or
-              <span class="font-medium text-sky-300">Google Calendar</span>.
+              {{ $t('superadmin.companyDetail.bots.description') }}
+              <span class="font-medium text-emerald-400">{{ $t('superadmin.companyDetail.bots.descWhatsapp') }}</span>,
+              <span class="font-medium text-indigo-300">{{ $t('superadmin.companyDetail.bots.descAgent') }}</span>,
+              <span class="font-medium text-amber-300">{{ $t('superadmin.companyDetail.bots.descDocuments') }}</span>,
+              <span class="font-medium text-sky-300">{{ $t('superadmin.companyDetail.bots.descCalendar') }}</span>.
             </p>
           </div>
           <NuxtLink
             :to="`/superadmin/companies/${id}/bots/create`"
             class="rounded-xl bg-white px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-100 transition"
           >
-            + Add bot
+            {{ $t('superadmin.companyDetail.addBot') }}
           </NuxtLink>
         </div>
 
         <!-- Empty state -->
         <div v-if="data.bots.length === 0" class="mt-3 rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-8 text-center">
-          <p class="text-sm text-slate-400">No bots yet for this company.</p>
+          <p class="text-sm text-slate-400">{{ $t('superadmin.companyDetail.noBots') }}</p>
         </div>
 
         <!-- Cards grid: two clearly-labeled config entry points per bot. -->
@@ -253,7 +254,7 @@ await load()
                   {{ b.name }}
                 </NuxtLink>
                 <p class="text-xs text-slate-500 mt-0.5">
-                  Created {{ new Date(b.createdAt).toLocaleDateString() }}
+                  {{ $t('superadmin.companyDetail.bots.createdOn', { date: new Date(b.createdAt).toLocaleDateString() }) }}
                 </p>
               </div>
               <span
@@ -263,7 +264,7 @@ await load()
                   : 'bg-slate-800 text-slate-400 ring-slate-700'"
               >
                 <span class="size-1.5 rounded-full" :class="b.isActive ? 'bg-emerald-400' : 'bg-slate-500'" />
-                {{ b.isActive ? 'Active' : 'Inactive' }}
+                {{ b.isActive ? $t('superadmin.companyDetail.bots.active') : $t('superadmin.companyDetail.bots.inactive') }}
               </span>
             </header>
 
@@ -280,9 +281,9 @@ await load()
                   </svg>
                 </div>
                 <div class="min-w-0 flex-1">
-                  <p class="text-[11px] uppercase tracking-wider font-semibold text-emerald-300">WhatsApp connection</p>
-                  <p class="mt-0.5 text-xs text-slate-300">Meta credentials</p>
-                  <p class="mt-0.5 text-[11px] text-slate-500">Phone ID, token, webhook</p>
+                  <p class="text-[11px] uppercase tracking-wider font-semibold text-emerald-300">{{ $t('superadmin.companyDetail.bots.panels.whatsappLabel') }}</p>
+                  <p class="mt-0.5 text-xs text-slate-300">{{ $t('superadmin.companyDetail.bots.panels.whatsappTitle') }}</p>
+                  <p class="mt-0.5 text-[11px] text-slate-500">{{ $t('superadmin.companyDetail.bots.panels.whatsappHint') }}</p>
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-emerald-400 opacity-0 group-hover/card:opacity-100 self-center transition" aria-hidden="true">
                   <line x1="5" y1="12" x2="19" y2="12" />
@@ -304,9 +305,9 @@ await load()
                   </svg>
                 </div>
                 <div class="min-w-0 flex-1">
-                  <p class="text-[11px] uppercase tracking-wider font-semibold text-indigo-300">AI agent</p>
-                  <p class="mt-0.5 text-xs text-slate-300">Bot behavior</p>
-                  <p class="mt-0.5 text-[11px] text-slate-500">Tone, prompts &amp; model</p>
+                  <p class="text-[11px] uppercase tracking-wider font-semibold text-indigo-300">{{ $t('superadmin.companyDetail.bots.panels.agentLabel') }}</p>
+                  <p class="mt-0.5 text-xs text-slate-300">{{ $t('superadmin.companyDetail.bots.panels.agentTitle') }}</p>
+                  <p class="mt-0.5 text-[11px] text-slate-500">{{ $t('superadmin.companyDetail.bots.panels.agentHint') }}</p>
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-indigo-300 opacity-0 group-hover/card:opacity-100 self-center transition" aria-hidden="true">
                   <line x1="5" y1="12" x2="19" y2="12" />
@@ -328,9 +329,9 @@ await load()
                   </svg>
                 </div>
                 <div class="min-w-0 flex-1">
-                  <p class="text-[11px] uppercase tracking-wider font-semibold text-amber-300">Documents</p>
-                  <p class="mt-0.5 text-xs text-slate-300">Knowledge base</p>
-                  <p class="mt-0.5 text-[11px] text-slate-500">Upload .md / .txt / .pdf for RAG</p>
+                  <p class="text-[11px] uppercase tracking-wider font-semibold text-amber-300">{{ $t('superadmin.companyDetail.bots.panels.documentsLabel') }}</p>
+                  <p class="mt-0.5 text-xs text-slate-300">{{ $t('superadmin.companyDetail.bots.panels.documentsTitle') }}</p>
+                  <p class="mt-0.5 text-[11px] text-slate-500">{{ $t('superadmin.companyDetail.bots.panels.documentsHint') }}</p>
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-amber-300 opacity-0 group-hover/card:opacity-100 self-center transition" aria-hidden="true">
                   <line x1="5" y1="12" x2="19" y2="12" />
@@ -352,9 +353,9 @@ await load()
                   </svg>
                 </div>
                 <div class="min-w-0 flex-1">
-                  <p class="text-[11px] uppercase tracking-wider font-semibold text-sky-300">Google Calendar</p>
-                  <p class="mt-0.5 text-xs text-slate-300">Meeting bookings</p>
-                  <p class="mt-0.5 text-[11px] text-slate-500">Connect &amp; manage availability</p>
+                  <p class="text-[11px] uppercase tracking-wider font-semibold text-sky-300">{{ $t('superadmin.companyDetail.bots.panels.calendarLabel') }}</p>
+                  <p class="mt-0.5 text-xs text-slate-300">{{ $t('superadmin.companyDetail.bots.panels.calendarTitle') }}</p>
+                  <p class="mt-0.5 text-[11px] text-slate-500">{{ $t('superadmin.companyDetail.bots.panels.calendarHint') }}</p>
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-sky-300 opacity-0 group-hover/card:opacity-100 self-center transition" aria-hidden="true">
                   <line x1="5" y1="12" x2="19" y2="12" />
@@ -373,7 +374,7 @@ await load()
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                   <circle cx="12" cy="12" r="3" />
                 </svg>
-                Open dashboard
+                {{ $t('superadmin.companyDetail.bots.openDashboard') }}
               </NuxtLink>
               <button
                 type="button"
@@ -384,7 +385,7 @@ await load()
                   <polyline points="3 6 5 6 21 6" />
                   <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                 </svg>
-                Delete
+                {{ $t('common.delete') }}
               </button>
             </footer>
           </article>
@@ -393,8 +394,8 @@ await load()
 
       <ConfirmDialog
         :open="confirmingDelete"
-        :title="`Delete company ${data.name}`"
-        message="All its users, bots, conversations, and documents will also be deleted. This action cannot be undone."
+        :title="$t('superadmin.companyDetail.deleteCompanyConfirmTitle', { name: data.name })"
+        :message="$t('superadmin.companyDetail.deleteCompanyConfirmMessage')"
         @cancel="confirmingDelete = false"
         @confirm="onConfirmDelete"
       />
@@ -410,11 +411,11 @@ await load()
 
       <ConfirmDialog
         :open="!!confirmingDeleteBot"
-        :title="`Delete bot ${confirmingDeleteBot?.name ?? ''}?`"
-        message="The bot's documents, conversations, customers, and integrations will also be permanently deleted. This action cannot be undone."
+        :title="$t('superadmin.companyDetail.deleteBotConfirmTitle', { name: confirmingDeleteBot?.name ?? '' })"
+        :message="$t('superadmin.companyDetail.deleteBotConfirmMessage')"
         :require-typed="confirmingDeleteBot?.name"
-        require-typed-label="To confirm, type the bot's name:"
-        confirm-label="Delete bot"
+        :require-typed-label="$t('superadmin.companyDetail.deleteBotConfirmTyped')"
+        :confirm-label="$t('superadmin.companyDetail.deleteBotConfirmAction')"
         @cancel="confirmingDeleteBot = null"
         @confirm="onConfirmDeleteBot"
       />

@@ -7,6 +7,7 @@ definePageMeta({
   middleware: 'superadmin-auth',
 })
 
+const { t } = useI18n()
 const route = useRoute()
 const tenantId = route.params.id as string
 const botId = route.params.botId as string
@@ -28,14 +29,21 @@ const form = reactive({
   isActive: true,
 })
 
-const TONE_PRESETS = ['Professional', 'Friendly', 'Formal', 'Casual', 'Playful', 'Empathetic']
-const DELAY_PRESETS: { label: string, value: number }[] = [
-  { label: 'Off', value: 0 },
+const TONE_PRESETS = computed(() => [
+  t('admin.botConfig.tonePresets.professional'),
+  t('admin.botConfig.tonePresets.friendly'),
+  t('admin.botConfig.tonePresets.formal'),
+  t('admin.botConfig.tonePresets.casual'),
+  t('admin.botConfig.tonePresets.playful'),
+  t('admin.botConfig.tonePresets.empathetic'),
+])
+const DELAY_PRESETS = computed<{ label: string, value: number }[]>(() => [
+  { label: t('admin.botConfig.modelTiming.delayOff'), value: 0 },
   { label: '1s', value: 1000 },
   { label: '2s', value: 2000 },
   { label: '3s', value: 3000 },
   { label: '5s', value: 5000 },
-]
+])
 const FOLLOWUP_HOUR_PRESETS: { label: string, value: number }[] = [
   { label: '12 h', value: 12 },
   { label: '24 h', value: 24 },
@@ -45,13 +53,15 @@ const FOLLOWUP_HOUR_PRESETS: { label: string, value: number }[] = [
 const FOLLOWUP_ATTEMPT_PRESETS: number[] = [1, 2, 3, 5]
 const followupSummary = computed(() => {
   if (!form.followupInactivityEnabled) {
-    return 'Off — if the customer stops replying, the bot won\'t follow up.'
+    return t('admin.botConfig.followup.summaryOff')
   }
   const h = form.followupInactivityHours
   const n = form.followupInactivityMaxCount
   const total = h * n
-  const totalLabel = total >= 24 ? `${Math.round((total / 24) * 10) / 10} days` : `${total} h`
-  return `After ${h} h of silence, the bot follows up with context. Up to ${n} attempt${n === 1 ? '' : 's'} (~${totalLabel} total).`
+  const totalLabel = total >= 24
+    ? t('admin.botConfig.followup.totalDays', { n: Math.round((total / 24) * 10) / 10 })
+    : t('admin.botConfig.followup.totalHours', { n: total })
+  return t('admin.botConfig.followup.summaryOn', { h, n, total: totalLabel })
 })
 const PROVIDERS: { value: string, label: string, models: string[] }[] = [
   {
@@ -130,7 +140,7 @@ async function onSubmit(): Promise<void> {
       aiModel: form.aiModel,
       isActive: form.isActive,
     })
-    success.value = 'Configuration saved'
+    success.value = t('admin.botConfig.successMessage')
     hydrate(updated)
   } catch (err) {
     error.value = (err as ApiError).message
@@ -144,7 +154,7 @@ await load()
 
 <template>
   <div>
-    <NuxtLink :to="`/superadmin/companies/${tenantId}/bots/${botId}`" class="text-sm text-slate-400 hover:text-slate-200">← Back to bot</NuxtLink>
+    <NuxtLink :to="`/superadmin/companies/${tenantId}/bots/${botId}`" class="text-sm text-slate-400 hover:text-slate-200">{{ $t('admin.botConfig.back') }}</NuxtLink>
     <div class="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
       <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-indigo-300 ring-1 ring-indigo-500/30">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3" aria-hidden="true">
@@ -152,13 +162,13 @@ await load()
           <line x1="9" y1="13" x2="9" y2="13" />
           <line x1="15" y1="13" x2="15" y2="13" />
         </svg>
-        Agent
+        {{ $t('admin.botConfig.agentBadge') }}
       </span>
-      <h1 class="text-2xl font-semibold text-slate-100 tracking-tight">Agent configuration</h1>
+      <h1 class="text-2xl font-semibold text-slate-100 tracking-tight">{{ $t('admin.botConfig.title') }}</h1>
       <span v-if="botName" class="text-slate-400 text-base">— {{ botName }}</span>
     </div>
     <p class="text-slate-400 text-sm mt-2 max-w-3xl">
-      Define how the AI agent <strong class="font-medium text-slate-200">thinks and speaks</strong>: tone, personality, response rules, welcome and fallback messages, and the underlying model.
+      {{ $t('admin.botConfig.subtitleBefore') }}<strong class="font-medium text-slate-200">{{ $t('admin.botConfig.subtitleEmph') }}</strong>{{ $t('admin.botConfig.subtitleAfter') }}
     </p>
 
     <!-- Scope helper: clarify what this page is vs. the WhatsApp integration. -->
@@ -169,9 +179,8 @@ await load()
         <line x1="12" y1="8" x2="12.01" y2="8" />
       </svg>
       <p class="leading-relaxed">
-        This page is <strong class="font-semibold text-slate-100">only</strong> the agent's brain — what it says and how it sounds.
-        For WhatsApp Business credentials (phone ID, access token, webhook), use
-        <NuxtLink :to="`/superadmin/companies/${tenantId}/bots/${botId}/edit`" class="font-semibold text-indigo-300 underline-offset-2 hover:underline">Edit bot →</NuxtLink>.
+        {{ $t('admin.botConfig.scopeNoteBefore') }}<strong class="font-semibold text-slate-100">{{ $t('admin.botConfig.scopeNoteEmph') }}</strong>{{ $t('admin.botConfig.scopeNoteMiddle') }}
+        <NuxtLink :to="`/superadmin/companies/${tenantId}/bots/${botId}/edit`" class="font-semibold text-indigo-300 underline-offset-2 hover:underline">{{ $t('admin.botConfig.scopeNoteLink') }}</NuxtLink>{{ $t('admin.botConfig.scopeNoteAfter') }}
       </p>
     </div>
 
@@ -199,62 +208,62 @@ await load()
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-slate-100">AI behavior</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Sent to the model on every conversation — shapes how it speaks.</p>
+            <h2 class="text-base font-semibold text-slate-100">{{ $t('admin.botConfig.aiBehavior.title') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.botConfig.aiBehavior.subtitle') }}</p>
           </div>
         </header>
 
         <div>
-          <label class="block text-sm font-medium text-slate-300">Tone</label>
+          <label class="block text-sm font-medium text-slate-300">{{ $t('admin.botConfig.aiBehavior.tone') }}</label>
           <input
             v-model="form.tone"
             type="text"
             maxlength="40"
             list="tone-presets"
-            placeholder="e.g. Professional, Friendly"
+            :placeholder="$t('admin.botConfig.aiBehavior.tonePlaceholder')"
             class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           >
           <datalist id="tone-presets">
-            <option v-for="t in TONE_PRESETS" :key="t" :value="t" />
+            <option v-for="tone in TONE_PRESETS" :key="tone" :value="tone" />
           </datalist>
           <div class="mt-2 flex flex-wrap gap-1.5">
             <button
-              v-for="t in TONE_PRESETS"
-              :key="t"
+              v-for="tone in TONE_PRESETS"
+              :key="tone"
               type="button"
               class="rounded-full px-2.5 py-1 text-xs font-medium ring-1 transition"
-              :class="form.tone === t
+              :class="form.tone === tone
                 ? 'bg-indigo-500 text-white ring-indigo-500'
                 : 'bg-slate-900 text-slate-300 ring-slate-700 hover:ring-slate-600'"
-              @click="form.tone = t"
+              @click="form.tone = tone"
             >
-              {{ t }}
+              {{ tone }}
             </button>
           </div>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-slate-300">Personality</label>
+          <label class="block text-sm font-medium text-slate-300">{{ $t('admin.botConfig.aiBehavior.personality') }}</label>
           <textarea
             v-model="form.personality"
             rows="3"
             maxlength="4000"
-            placeholder="Describe traits: empathetic, concise, uses emojis sparingly…"
+            :placeholder="$t('admin.botConfig.aiBehavior.personalityPlaceholder')"
             class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
           <p class="mt-1 text-xs text-slate-500">{{ form.personality.length }}/4000</p>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-slate-300">Response rules</label>
+          <label class="block text-sm font-medium text-slate-300">{{ $t('admin.botConfig.aiBehavior.responseRules') }}</label>
           <textarea
             v-model="form.responseRules"
             rows="4"
             maxlength="4000"
-            placeholder="Always greet by name. Never quote prices without confirming. Escalate to a human if customer is upset…"
+            :placeholder="$t('admin.botConfig.aiBehavior.responseRulesPlaceholder')"
             class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
-          <p class="mt-1 text-xs text-slate-500">Explicit do's and don'ts. {{ form.responseRules.length }}/4000</p>
+          <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botConfig.aiBehavior.responseRulesHelp') }} {{ form.responseRules.length }}/4000</p>
         </div>
       </section>
 
@@ -269,33 +278,33 @@ await load()
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-slate-100">Conversation messages</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Fixed copy used at key moments of the chat.</p>
+            <h2 class="text-base font-semibold text-slate-100">{{ $t('admin.botConfig.messages.title') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.botConfig.messages.subtitle') }}</p>
           </div>
         </header>
 
         <div>
-          <label class="block text-sm font-medium text-slate-300">Welcome message</label>
+          <label class="block text-sm font-medium text-slate-300">{{ $t('admin.botConfig.messages.welcome') }}</label>
           <textarea
             v-model="form.welcomeMessage"
             rows="2"
             maxlength="2000"
-            placeholder="Hi! I'm Kaibot, your assistant. How can I help today?"
+            :placeholder="$t('admin.botConfig.messages.welcomePlaceholder')"
             class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
-          <p class="mt-1 text-xs text-slate-500">Sent on the first message of a new conversation.</p>
+          <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botConfig.messages.welcomeHelp') }}</p>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-slate-300">Fallback message</label>
+          <label class="block text-sm font-medium text-slate-300">{{ $t('admin.botConfig.messages.fallback') }}</label>
           <textarea
             v-model="form.fallbackMessage"
             rows="2"
             maxlength="2000"
-            placeholder="I'm not sure I can help with that. Want me to connect you with a person?"
+            :placeholder="$t('admin.botConfig.messages.fallbackPlaceholder')"
             class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
-          <p class="mt-1 text-xs text-slate-500">Sent when the bot doesn't know how to answer.</p>
+          <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botConfig.messages.fallbackHelp') }}</p>
         </div>
       </section>
 
@@ -310,14 +319,14 @@ await load()
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-slate-100">Model &amp; timing</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Which AI generates the replies and how fast they're sent.</p>
+            <h2 class="text-base font-semibold text-slate-100">{{ $t('admin.botConfig.modelTiming.title') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.botConfig.modelTiming.subtitle') }}</p>
           </div>
         </header>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-slate-300">Provider</label>
+            <label class="block text-sm font-medium text-slate-300">{{ $t('admin.botConfig.modelTiming.provider') }}</label>
             <select
               v-model="form.aiProvider"
               class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
@@ -326,7 +335,7 @@ await load()
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-300">Model</label>
+            <label class="block text-sm font-medium text-slate-300">{{ $t('admin.botConfig.modelTiming.model') }}</label>
             <input
               v-model="form.aiModel"
               type="text"
@@ -337,13 +346,13 @@ await load()
             <datalist id="model-presets">
               <option v-for="m in availableModels" :key="m" :value="m" />
             </datalist>
-            <p class="mt-1 text-xs text-slate-500">Pick a suggestion or type a custom model ID.</p>
+            <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botConfig.modelTiming.modelHelp') }}</p>
           </div>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-slate-300">Human delay</label>
-          <p class="mt-0.5 text-xs text-slate-500">Pauses before each reply to feel more human. Pick a preset or set a custom value.</p>
+          <label class="block text-sm font-medium text-slate-300">{{ $t('admin.botConfig.modelTiming.humanDelay') }}</label>
+          <p class="mt-0.5 text-xs text-slate-500">{{ $t('admin.botConfig.modelTiming.humanDelayHelp') }}</p>
           <div class="mt-2 flex flex-wrap items-center gap-2">
             <button
               v-for="preset in DELAY_PRESETS"
@@ -366,7 +375,7 @@ await load()
                 step="100"
                 class="w-28 rounded-xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-sm text-slate-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               >
-              <span class="text-xs text-slate-500">ms</span>
+              <span class="text-xs text-slate-500">{{ $t('admin.botConfig.modelTiming.ms') }}</span>
             </div>
           </div>
         </div>
@@ -384,16 +393,16 @@ await load()
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-slate-100">Inactivity follow-up</h2>
-            <p class="text-xs text-slate-500 mt-0.5">When the customer stops replying, the bot re-engages with context from the latest topic.</p>
+            <h2 class="text-base font-semibold text-slate-100">{{ $t('admin.botConfig.followup.title') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.botConfig.followup.subtitle') }}</p>
           </div>
         </header>
 
         <!-- Main toggle -->
         <label class="flex items-center justify-between rounded-xl bg-slate-950 ring-1 ring-slate-800 px-4 py-3 cursor-pointer">
           <div>
-            <p class="text-sm font-medium text-slate-100">Enable automatic follow-up</p>
-            <p class="text-xs text-slate-500">The bot writes a contextual message with the LLM — never empty "how can I help?" greetings.</p>
+            <p class="text-sm font-medium text-slate-100">{{ $t('admin.botConfig.followup.enableLabel') }}</p>
+            <p class="text-xs text-slate-500">{{ $t('admin.botConfig.followup.enableHelp') }}</p>
           </div>
           <button
             type="button"
@@ -423,8 +432,8 @@ await load()
         <!-- Inputs (disabled when toggle is off) -->
         <fieldset :disabled="!form.followupInactivityEnabled" class="space-y-5" :class="{ 'opacity-50 pointer-events-none': !form.followupInactivityEnabled }">
           <div>
-            <label class="block text-sm font-medium text-slate-300">Hours between follow-ups</label>
-            <p class="mt-0.5 text-xs text-slate-500">How long the customer can stay silent before the bot sends each follow-up.</p>
+            <label class="block text-sm font-medium text-slate-300">{{ $t('admin.botConfig.followup.hoursLabel') }}</label>
+            <p class="mt-0.5 text-xs text-slate-500">{{ $t('admin.botConfig.followup.hoursHelp') }}</p>
             <div class="mt-2 flex flex-wrap items-center gap-2">
               <button
                 v-for="preset in FOLLOWUP_HOUR_PRESETS"
@@ -447,14 +456,14 @@ await load()
                   step="1"
                   class="w-24 rounded-xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-sm text-slate-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 >
-                <span class="text-xs text-slate-500">hours (1–168)</span>
+                <span class="text-xs text-slate-500">{{ $t('admin.botConfig.followup.hoursSuffix') }}</span>
               </div>
             </div>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-slate-300">Maximum attempts</label>
-            <p class="mt-0.5 text-xs text-slate-500">When the limit is reached without a reply, the bot stops following up. The counter resets when the customer writes back.</p>
+            <label class="block text-sm font-medium text-slate-300">{{ $t('admin.botConfig.followup.attemptsLabel') }}</label>
+            <p class="mt-0.5 text-xs text-slate-500">{{ $t('admin.botConfig.followup.attemptsHelp') }}</p>
             <div class="mt-2 flex flex-wrap items-center gap-2">
               <button
                 v-for="n in FOLLOWUP_ATTEMPT_PRESETS"
@@ -477,7 +486,7 @@ await load()
                   step="1"
                   class="w-24 rounded-xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-sm text-slate-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 >
-                <span class="text-xs text-slate-500">attempts (1–10)</span>
+                <span class="text-xs text-slate-500">{{ $t('admin.botConfig.followup.attemptsSuffix') }}</span>
               </div>
             </div>
           </div>
@@ -497,26 +506,26 @@ await load()
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-slate-100">Internal</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Notes for your team and runtime status. Not sent to the model.</p>
+            <h2 class="text-base font-semibold text-slate-100">{{ $t('admin.botConfig.internal.title') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.botConfig.internal.subtitle') }}</p>
           </div>
         </header>
 
         <div>
-          <label class="block text-sm font-medium text-slate-300">Description</label>
+          <label class="block text-sm font-medium text-slate-300">{{ $t('admin.botConfig.internal.description') }}</label>
           <input
             v-model="form.description"
             type="text"
             maxlength="280"
-            placeholder="What this bot is for, who owns it…"
+            :placeholder="$t('admin.botConfig.internal.descriptionPlaceholder')"
             class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           >
         </div>
 
         <label class="flex items-center justify-between rounded-xl bg-slate-950 ring-1 ring-slate-800 px-4 py-3">
           <div>
-            <p class="text-sm font-medium text-slate-100">Bot active</p>
-            <p class="text-xs text-slate-500">When off, the bot doesn't reply to incoming WhatsApp messages.</p>
+            <p class="text-sm font-medium text-slate-100">{{ $t('admin.botConfig.internal.botActive') }}</p>
+            <p class="text-xs text-slate-500">{{ $t('admin.botConfig.internal.botActiveHelp') }}</p>
           </div>
           <input v-model="form.isActive" type="checkbox" class="size-4 rounded border-slate-700 bg-slate-950 text-indigo-500 focus:ring-indigo-500">
         </label>
@@ -535,14 +544,14 @@ await load()
             :to="`/superadmin/companies/${tenantId}/bots/${botId}`"
             class="rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-800 transition"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </NuxtLink>
           <button
             type="submit"
             class="rounded-xl bg-white px-5 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60 transition"
             :disabled="saving"
           >
-            {{ saving ? 'Saving…' : 'Save configuration' }}
+            {{ saving ? $t('common.saving') : $t('admin.botConfig.saveConfig') }}
           </button>
         </div>
       </div>

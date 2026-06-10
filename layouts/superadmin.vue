@@ -1,15 +1,16 @@
 <script setup lang="ts">
+const { t } = useI18n()
 const auth = useSuperadminAuthStore()
 const router = useRouter()
 const route = useRoute()
 const { superadminLogout } = useAuth()
 const drawer = useNavDrawer()
 
-const links = [
-  { to: '/superadmin', label: 'Dashboard' },
-  { to: '/superadmin/companies', label: 'Companies' },
-  { to: '/superadmin/profile', label: 'My profile' },
-]
+const links = computed(() => [
+  { to: '/superadmin', label: t('nav.dashboard') },
+  { to: '/superadmin/companies', label: t('nav.companies') },
+  { to: '/superadmin/profile', label: t('nav.myProfile') },
+])
 
 async function onLogout(): Promise<void> {
   superadminLogout()
@@ -67,17 +68,17 @@ onMounted(() => {
     >
       <div class="flex items-center justify-between gap-2 px-2">
         <div class="flex items-center gap-2">
-          <span class="inline-flex size-8 items-center justify-center rounded-xl bg-white text-slate-900 text-xs font-bold tracking-tight">SA</span>
+          <span class="inline-flex size-8 items-center justify-center rounded-xl bg-white text-slate-900 text-xs font-bold tracking-tight">{{ $t('superadmin.chrome.brandShort') }}</span>
           <div>
-            <div class="text-xs uppercase tracking-wider text-slate-400 leading-none">Super Admin</div>
-            <div class="text-sm font-semibold text-slate-100 mt-1">Platform</div>
+            <div class="text-xs uppercase tracking-wider text-slate-400 leading-none">{{ $t('superadmin.chrome.brandLabel') }}</div>
+            <div class="text-sm font-semibold text-slate-100 mt-1">{{ $t('superadmin.chrome.brandSubtitle') }}</div>
           </div>
         </div>
         <!-- Close button only on mobile -->
         <button
           type="button"
           class="md:hidden -mr-1 flex size-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition"
-          aria-label="Close menu"
+          :aria-label="$t('nav.closeMenu')"
           @click="drawer.close()"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">
@@ -106,7 +107,7 @@ onMounted(() => {
           <button
             type="button"
             class="md:hidden flex size-9 shrink-0 items-center justify-center rounded-xl text-slate-300 hover:bg-slate-800/60 transition"
-            aria-label="Open menu"
+            :aria-label="$t('nav.openMenu')"
             @click="drawer.toggle()"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">
@@ -117,22 +118,22 @@ onMounted(() => {
           </button>
           <!-- Mobile brand -->
           <div class="md:hidden flex items-center gap-2 min-w-0">
-            <span class="inline-flex size-7 items-center justify-center rounded-lg bg-white text-slate-900 text-[10px] font-bold tracking-tight">SA</span>
-            <span class="text-sm font-semibold text-slate-100 truncate">Super Admin</span>
+            <span class="inline-flex size-7 items-center justify-center rounded-lg bg-white text-slate-900 text-[10px] font-bold tracking-tight">{{ $t('superadmin.chrome.brandShort') }}</span>
+            <span class="text-sm font-semibold text-slate-100 truncate">{{ $t('superadmin.chrome.brandLabel') }}</span>
           </div>
           <!-- Desktop subtitle -->
-          <h1 class="hidden md:block text-sm font-medium text-slate-300">Global administration</h1>
+          <h1 class="hidden md:block text-sm font-medium text-slate-300">{{ $t('superadmin.chrome.headerSubtitle') }}</h1>
         </div>
 
         <div v-if="auth.user" class="flex items-center gap-2 shrink-0">
           <NuxtLink
             to="/superadmin/profile"
             class="hidden sm:flex items-center gap-3 rounded-xl px-2.5 py-1.5 hover:bg-slate-800/60 transition"
-            title="My profile"
+            :title="$t('nav.myProfile')"
           >
             <div class="text-right">
               <div class="text-sm font-medium text-slate-100 truncate max-w-[160px]">{{ auth.user.email }}</div>
-              <div class="text-xs text-slate-400">Super admin</div>
+              <div class="text-xs text-slate-400">{{ $t('superadmin.chrome.userRole') }}</div>
             </div>
             <div class="flex size-9 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 text-white text-sm font-semibold ring-1 ring-slate-700">
               {{ auth.user.email.charAt(0).toUpperCase() }}
@@ -143,7 +144,7 @@ onMounted(() => {
             to="/superadmin/profile"
             class="sm:hidden flex size-9 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 text-white text-sm font-semibold ring-1 ring-slate-700"
             :title="auth.user.email"
-            aria-label="My profile"
+            :aria-label="$t('nav.myProfile')"
           >
             {{ auth.user.email.charAt(0).toUpperCase() }}
           </NuxtLink>
@@ -152,13 +153,13 @@ onMounted(() => {
             class="rounded-xl border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800 transition hidden sm:inline-flex"
             @click="onLogout"
           >
-            Log out
+            {{ $t('nav.signOut') }}
           </button>
           <!-- Mobile icon-only logout -->
           <button
             type="button"
             class="sm:hidden flex size-9 items-center justify-center rounded-xl text-slate-300 hover:bg-slate-800/60 transition"
-            aria-label="Log out"
+            :aria-label="$t('nav.signOut')"
             @click="onLogout"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">

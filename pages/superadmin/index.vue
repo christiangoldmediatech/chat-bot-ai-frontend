@@ -35,11 +35,11 @@ await load()
       <div>
         <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-indigo-300 ring-1 ring-indigo-500/30">
           <span class="size-1.5 rounded-full bg-indigo-400" />
-          Platform
+          {{ $t('superadmin.dashboard.kicker') }}
         </span>
-        <h1 class="mt-2 text-2xl font-semibold text-slate-100 tracking-tight">Global dashboard</h1>
+        <h1 class="mt-2 text-2xl font-semibold text-slate-100 tracking-tight">{{ $t('superadmin.dashboard.title') }}</h1>
         <p class="mt-1 text-sm text-slate-400 max-w-2xl">
-          Health and activity across every tenant on the platform.
+          {{ $t('superadmin.dashboard.subtitle') }}
         </p>
       </div>
       <div class="flex items-center gap-2">
@@ -54,13 +54,13 @@ await load()
             <polyline points="1 20 1 14 7 14" />
             <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
           </svg>
-          Reload
+          {{ $t('superadmin.dashboard.reload') }}
         </button>
         <NuxtLink
           to="/superadmin/companies"
           class="inline-flex items-center gap-1.5 rounded-xl bg-white px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-100 transition"
         >
-          All companies
+          {{ $t('superadmin.dashboard.allCompanies') }}
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
             <line x1="5" y1="12" x2="19" y2="12" />
             <polyline points="12 5 19 12 12 19" />
@@ -78,49 +78,49 @@ await load()
     <template v-else-if="data">
       <!-- Tenants group -->
       <section class="mt-6">
-        <h2 class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">Tenants</h2>
+        <h2 class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('superadmin.dashboard.groupTenants') }}</h2>
         <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <SuperadminStatCard
-            label="Companies"
+            :label="$t('superadmin.dashboard.stat.companies')"
             icon="companies"
             tone="indigo"
             :value="data.totalCompanies"
-            :hint="`${data.activeCompanies} active · ${data.suspendedCompanies} suspended`"
+            :hint="$t('superadmin.dashboard.stat.companiesHint', { active: data.activeCompanies, suspended: data.suspendedCompanies })"
           />
           <SuperadminStatCard
-            label="Users"
+            :label="$t('superadmin.dashboard.stat.users')"
             icon="users"
             tone="emerald"
             :value="data.totalUsers"
-            hint="Across all tenants"
+            :hint="$t('superadmin.dashboard.stat.usersHint')"
           />
         </div>
       </section>
 
       <!-- Activity group -->
       <section class="mt-6">
-        <h2 class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">Activity</h2>
+        <h2 class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('superadmin.dashboard.groupActivity') }}</h2>
         <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <SuperadminStatCard
-            label="Bots"
+            :label="$t('superadmin.dashboard.stat.bots')"
             icon="bots"
             tone="amber"
             :value="data.totalBots"
-            :hint="`${data.activeBots} active`"
+            :hint="$t('superadmin.dashboard.stat.botsHint', { n: data.activeBots })"
           />
           <SuperadminStatCard
-            label="Conversations"
+            :label="$t('superadmin.dashboard.stat.conversations')"
             icon="conversations"
             tone="indigo"
             :value="data.totalConversations"
-            hint="Total messages exchanged"
+            :hint="$t('superadmin.dashboard.stat.conversationsHint')"
           />
           <SuperadminStatCard
-            label="Documents"
+            :label="$t('superadmin.dashboard.stat.documents')"
             icon="documents"
             tone="rose"
             :value="data.totalDocuments"
-            hint="Knowledge base entries"
+            :hint="$t('superadmin.dashboard.stat.documentsHint')"
           />
         </div>
       </section>
@@ -129,11 +129,11 @@ await load()
       <section class="mt-8">
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-base font-semibold text-slate-100">Recent companies</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Most recently registered tenants.</p>
+            <h2 class="text-base font-semibold text-slate-100">{{ $t('superadmin.dashboard.recent.title') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('superadmin.dashboard.recent.subtitle') }}</p>
           </div>
           <NuxtLink to="/superadmin/companies" class="text-sm text-slate-400 hover:text-slate-200 inline-flex items-center gap-1">
-            View all
+            {{ $t('superadmin.dashboard.recent.viewAll') }}
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
@@ -184,8 +184,8 @@ await load()
               <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4" />
             </svg>
           </div>
-          <p class="mt-3 text-sm text-slate-300 font-medium">No companies registered yet</p>
-          <p class="mt-1 text-xs text-slate-500">Tenants will appear here once they self-register.</p>
+          <p class="mt-3 text-sm text-slate-300 font-medium">{{ $t('superadmin.dashboard.recent.emptyTitle') }}</p>
+          <p class="mt-1 text-xs text-slate-500">{{ $t('superadmin.dashboard.recent.emptyBody') }}</p>
         </div>
       </section>
     </template>

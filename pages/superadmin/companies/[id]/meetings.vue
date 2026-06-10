@@ -11,13 +11,13 @@ const tenantId = route.params.id as string
 <template>
   <div>
     <NuxtLink :to="`/superadmin/companies/${tenantId}`" class="text-sm text-slate-400 hover:text-slate-200">
-      ← Back to company
+      {{ $t('superadmin.companyMeetings.back') }}
     </NuxtLink>
 
     <header class="mt-2">
-      <h1 class="text-2xl font-semibold text-slate-100">Reuniones</h1>
+      <h1 class="text-2xl font-semibold text-slate-100">{{ $t('superadmin.companyMeetings.title') }}</h1>
       <p class="text-sm text-slate-400 mt-1">
-        Todas las reuniones que los bots de esta empresa han agendado.
+        {{ $t('superadmin.companyMeetings.subtitle') }}
       </p>
     </header>
 

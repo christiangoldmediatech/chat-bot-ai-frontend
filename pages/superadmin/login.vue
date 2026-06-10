@@ -5,6 +5,7 @@ definePageMeta({
   layout: 'default',
 })
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const auth = useSuperadminAuthStore()
@@ -30,7 +31,7 @@ function redirectTarget(): string {
 
 async function onSubmit(): Promise<void> {
   if (!email.value || !password.value) {
-    error.value = 'Email and password are required.'
+    error.value = t('superadmin.login.errorRequired')
     return
   }
   error.value = null
@@ -39,7 +40,7 @@ async function onSubmit(): Promise<void> {
     await superadminLogin(email.value, password.value)
     await router.replace(redirectTarget())
   } catch (err) {
-    error.value = (err as ApiError).message || 'Could not sign in.'
+    error.value = (err as ApiError).message || t('superadmin.login.errorGeneric')
   } finally {
     loading.value = false
   }
@@ -58,10 +59,10 @@ async function onSubmit(): Promise<void> {
 
     <div class="mt-5 rounded-3xl bg-white/70 backdrop-blur-2xl ring-1 ring-white/60 shadow-glass-lg p-8 sm:p-10">
       <div class="text-center">
-        <div class="text-xs uppercase tracking-wider text-slate-500">Super Admin</div>
-        <h1 class="mt-1 text-2xl font-semibold text-slate-900 tracking-tight">Sign in</h1>
+        <div class="text-xs uppercase tracking-wider text-slate-500">{{ $t('superadmin.login.kicker') }}</div>
+        <h1 class="mt-1 text-2xl font-semibold text-slate-900 tracking-tight">{{ $t('superadmin.login.title') }}</h1>
         <p class="mt-2 text-sm text-slate-500 max-w-xs mx-auto">
-          Global platform administration.
+          {{ $t('superadmin.login.subtitle') }}
         </p>
       </div>
 
@@ -76,7 +77,7 @@ async function onSubmit(): Promise<void> {
             type="email"
             required
             autocomplete="email"
-            placeholder="Email"
+            :placeholder="$t('superadmin.login.emailPlaceholder')"
             class="flex-1 bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
           >
         </label>
@@ -91,13 +92,13 @@ async function onSubmit(): Promise<void> {
             :type="showPassword ? 'text' : 'password'"
             required
             autocomplete="current-password"
-            placeholder="Password"
+            :placeholder="$t('superadmin.login.passwordPlaceholder')"
             class="flex-1 bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
           >
           <button
             type="button"
             class="text-slate-400 hover:text-slate-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 rounded-md"
-            :aria-label="showPassword ? 'Hide password' : 'Show password'"
+            :aria-label="showPassword ? $t('auth.login.hidePassword') : $t('auth.login.showPassword')"
             :aria-pressed="showPassword"
             @click="showPassword = !showPassword"
           >
@@ -123,18 +124,18 @@ async function onSubmit(): Promise<void> {
           class="w-full mt-2 rounded-2xl bg-slate-900 px-4 py-3 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 transition-colors shadow-glass"
           :disabled="loading"
         >
-          {{ loading ? 'Signing in…' : 'Sign in' }}
+          {{ loading ? $t('superadmin.login.submitting') : $t('superadmin.login.submit') }}
         </button>
       </form>
 
       <p class="mt-6 text-center text-xs text-slate-500">
-        To create the first super-admin, run in the backend:<br>
+        {{ $t('superadmin.login.seedNoteBefore') }}<br>
         <code class="font-mono text-[10px]">PLATFORM_ADMIN_EMAIL=… PLATFORM_ADMIN_PASSWORD=… npm run seed:platform-admin</code>
       </p>
 
       <p class="mt-3 text-center text-sm">
         <NuxtLink to="/login" class="text-slate-900 hover:underline">
-          ← Tenant login
+          {{ $t('superadmin.login.tenantLoginLink') }}
         </NuxtLink>
       </p>
     </div>

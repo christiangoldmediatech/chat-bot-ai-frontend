@@ -119,13 +119,13 @@ await load()
 <template>
   <div>
     <NuxtLink :to="`/superadmin/companies/${tenantId}`" class="text-sm text-slate-400 hover:text-slate-200">
-      ← Back to company
+      {{ $t('superadmin.companyCases.back') }}
     </NuxtLink>
 
     <header class="mt-2 flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h1 class="text-2xl font-semibold text-slate-100">Casos</h1>
-        <p class="text-sm text-slate-400 mt-1">Escalados a asesor humano para esta empresa.</p>
+        <h1 class="text-2xl font-semibold text-slate-100">{{ $t('superadmin.companyCases.title') }}</h1>
+        <p class="text-sm text-slate-400 mt-1">{{ $t('superadmin.companyCases.subtitle') }}</p>
       </div>
     </header>
 
@@ -136,7 +136,7 @@ await load()
         :class="statusFilter === 'OPEN' ? 'bg-white text-slate-900 border-white' : 'bg-slate-900/70 text-slate-100 border-slate-700 hover:bg-slate-800'"
         @click="statusFilter = 'OPEN'"
       >
-        <div class="text-xs uppercase tracking-wider opacity-70">Abiertos</div>
+        <div class="text-xs uppercase tracking-wider opacity-70">{{ $t('cases.stat.open') }}</div>
         <div class="text-2xl font-bold mt-1">{{ counts.pending + counts.attended }}</div>
       </button>
       <button
@@ -145,7 +145,7 @@ await load()
         :class="statusFilter === 'PENDING' ? 'bg-amber-500 text-slate-950 border-amber-500' : 'bg-slate-900/70 text-slate-100 border-slate-700 hover:bg-slate-800'"
         @click="statusFilter = 'PENDING'"
       >
-        <div class="text-xs uppercase tracking-wider opacity-70">Pendientes</div>
+        <div class="text-xs uppercase tracking-wider opacity-70">{{ $t('cases.stat.pending') }}</div>
         <div class="text-2xl font-bold mt-1">{{ counts.pending }}</div>
       </button>
       <button
@@ -154,7 +154,7 @@ await load()
         :class="statusFilter === 'ATTENDED' ? 'bg-sky-500 text-slate-950 border-sky-500' : 'bg-slate-900/70 text-slate-100 border-slate-700 hover:bg-slate-800'"
         @click="statusFilter = 'ATTENDED'"
       >
-        <div class="text-xs uppercase tracking-wider opacity-70">Atendidos</div>
+        <div class="text-xs uppercase tracking-wider opacity-70">{{ $t('cases.stat.attended') }}</div>
         <div class="text-2xl font-bold mt-1">{{ counts.attended }}</div>
       </button>
       <button
@@ -163,7 +163,7 @@ await load()
         :class="statusFilter === 'RESOLVED' ? 'bg-success-500 text-slate-950 border-success-500' : 'bg-slate-900/70 text-slate-100 border-slate-700 hover:bg-slate-800'"
         @click="statusFilter = 'RESOLVED'"
       >
-        <div class="text-xs uppercase tracking-wider opacity-70">Resueltos</div>
+        <div class="text-xs uppercase tracking-wider opacity-70">{{ $t('cases.stat.resolved') }}</div>
         <div class="text-2xl font-bold mt-1">{{ counts.resolved }}</div>
       </button>
     </div>
@@ -173,13 +173,13 @@ await load()
         v-model="botFilter"
         class="rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm text-slate-100"
       >
-        <option value="">Todos los bots</option>
+        <option value="">{{ $t('cases.filter.allBots') }}</option>
         <option v-for="b in bots" :key="b.id" :value="b.id">{{ b.name }}</option>
       </select>
       <input
         v-model="search"
         type="search"
-        placeholder="Buscar por cliente, teléfono o resumen…"
+        :placeholder="$t('cases.filter.searchPlaceholder')"
         class="flex-1 min-w-[16rem] rounded-md border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm text-slate-100 placeholder-slate-500"
       >
       <button
@@ -188,7 +188,7 @@ await load()
         :disabled="loading"
         @click="load"
       >
-        {{ loading ? 'Cargando…' : 'Recargar' }}
+        {{ loading ? $t('common.loading') : $t('common.reload') }}
       </button>
     </div>
 
@@ -202,7 +202,7 @@ await load()
       v-else-if="filtered.length === 0"
       class="mt-6 rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-10 text-center text-slate-400"
     >
-      {{ rows.length === 0 ? 'Aún no hay casos escalados.' : 'No hay casos que coincidan con los filtros.' }}
+      {{ rows.length === 0 ? $t('cases.list.empty') : $t('cases.list.noMatches') }}
     </div>
 
     <div v-else class="mt-4 space-y-3">
@@ -230,7 +230,7 @@ await load()
               v-if="c.followupCount > 0"
               class="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-800 text-slate-400"
             >
-              follow-up
+              {{ $t('cases.list.followupBadge') }}
             </span>
           </div>
           <p class="mt-2 text-sm text-slate-300 leading-relaxed">{{ c.summary }}</p>
@@ -238,12 +238,12 @@ await load()
             v-if="c.resolution && c.status === 'RESOLVED'"
             class="mt-2 rounded-md bg-slate-800/60 px-3 py-2 text-xs text-slate-400"
           >
-            <strong class="font-semibold">Resolución:</strong> {{ c.resolution }}
+            <strong class="font-semibold">{{ $t('cases.list.resolution') }}</strong> {{ c.resolution }}
           </div>
           <div class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-slate-500">
-            <span>Bot: {{ botMap.get(c.botId) ?? c.botId.slice(0, 8) }}</span>
-            <span>Creado: {{ new Date(c.createdAt).toLocaleString() }}</span>
-            <span v-if="c.resolvedAt">Resuelto: {{ new Date(c.resolvedAt).toLocaleString() }}</span>
+            <span>{{ $t('cases.list.bot') }} {{ botMap.get(c.botId) ?? c.botId.slice(0, 8) }}</span>
+            <span>{{ $t('cases.list.created') }} {{ new Date(c.createdAt).toLocaleString() }}</span>
+            <span v-if="c.resolvedAt">{{ $t('cases.list.resolved') }} {{ new Date(c.resolvedAt).toLocaleString() }}</span>
             <span class="font-mono">→ {{ c.advisorEmail }}</span>
           </div>
         </div>
@@ -256,7 +256,7 @@ await load()
             class="text-xs px-2.5 py-1.5 rounded-md font-medium bg-sky-500/20 text-sky-300 hover:bg-sky-500/30 disabled:opacity-50"
             @click="markAttended(c.id)"
           >
-            Atender
+            {{ $t('cases.action.attend') }}
           </button>
           <button
             type="button"
@@ -264,7 +264,7 @@ await load()
             class="text-xs px-2.5 py-1.5 rounded-md font-medium bg-success-500/20 text-success-300 hover:bg-success-500/30 disabled:opacity-50"
             @click="resolveModal = { id: c.id, note: '' }"
           >
-            Resolver
+            {{ $t('cases.action.resolve') }}
           </button>
         </div>
       </article>
@@ -276,15 +276,15 @@ await load()
       @click.self="resolveModal = null"
     >
       <div class="w-full max-w-md rounded-2xl bg-slate-900 ring-1 ring-slate-700 p-6 shadow-2xl">
-        <h3 class="text-base font-semibold text-slate-100">Marcar caso como resuelto</h3>
+        <h3 class="text-base font-semibold text-slate-100">{{ $t('cases.resolveModal.title') }}</h3>
         <p class="mt-1 text-sm text-slate-400">
-          Quedará registrado como <strong>resuelto por el asesor</strong>.
+          {{ $t('cases.resolveModal.noteBefore') }}<strong>{{ $t('cases.resolveModal.noteEmph') }}</strong>{{ $t('cases.resolveModal.noteAfter') }}
         </p>
         <textarea
           v-model="resolveModal.note"
           rows="3"
           maxlength="2000"
-          placeholder="Ej. Se ajustó la facturación."
+          :placeholder="$t('cases.resolveModal.placeholder')"
           class="mt-3 w-full rounded-md bg-slate-800 border border-slate-700 px-3 py-2 text-sm text-slate-100 placeholder-slate-500"
         />
         <div class="mt-4 flex justify-end gap-2">
@@ -293,7 +293,7 @@ await load()
             class="rounded-md border border-slate-700 px-3 py-1.5 text-sm font-medium text-slate-300 hover:bg-slate-800"
             @click="resolveModal = null"
           >
-            Cancelar
+            {{ $t('common.cancel') }}
           </button>
           <button
             type="button"
@@ -301,7 +301,7 @@ await load()
             class="rounded-md bg-success-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-success-400"
             @click="confirmResolve"
           >
-            {{ busyId ? 'Guardando…' : 'Marcar resuelto' }}
+            {{ busyId ? $t('common.saving') : $t('cases.resolveModal.submit') }}
           </button>
         </div>
       </div>
