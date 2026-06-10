@@ -163,19 +163,19 @@ function formatBytes(b: number): string {
 function typePill(t: MediaType): { label: string; classes: string } {
   switch (t) {
     case 'IMAGE':
-      return { label: 'Imagen', classes: 'bg-sky-50 text-sky-700 ring-sky-200' }
+      return { label: 'Image', classes: 'bg-sky-50 text-sky-700 ring-sky-200' }
     case 'DOCUMENT':
-      return { label: 'Documento', classes: 'bg-amber-50 text-amber-700 ring-amber-200' }
+      return { label: 'Document', classes: 'bg-amber-50 text-amber-700 ring-amber-200' }
     case 'VIDEO':
       return { label: 'Video', classes: 'bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200' }
     case 'AUDIO':
       return { label: 'Audio', classes: 'bg-teal-50 text-teal-700 ring-teal-200' }
     case 'VOICE':
-      return { label: 'Nota de voz', classes: 'bg-teal-50 text-teal-700 ring-teal-200' }
+      return { label: 'Voice note', classes: 'bg-teal-50 text-teal-700 ring-teal-200' }
     case 'STICKER':
       return { label: 'Sticker', classes: 'bg-pink-50 text-pink-700 ring-pink-200' }
     case 'LOCATION':
-      return { label: 'Ubicación', classes: 'bg-emerald-50 text-emerald-700 ring-emerald-200' }
+      return { label: 'Location', classes: 'bg-emerald-50 text-emerald-700 ring-emerald-200' }
   }
 }
 
@@ -196,10 +196,10 @@ onMounted(() => {
   <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
     <div class="flex items-start justify-between gap-3">
       <div class="min-w-0">
-        <h2 class="text-sm font-semibold text-slate-900">Recursos multimedia</h2>
+        <h2 class="text-sm font-semibold text-slate-900">Multimedia resources</h2>
         <p class="text-xs text-slate-500 mt-1">
-          Sube imágenes, PDFs, videos, audios o registra ubicaciones que el bot puede mandar de forma nativa por WhatsApp.
-          El modelo elige por <code class="font-mono bg-slate-100 px-1 rounded">key</code> según la descripción.
+          Upload images, PDFs, videos, audios, or register locations the bot can send natively over WhatsApp.
+          The model picks by <code class="font-mono bg-slate-100 px-1 rounded">key</code> using the description.
         </p>
       </div>
       <button
@@ -208,7 +208,7 @@ onMounted(() => {
         class="shrink-0 text-xs text-slate-500 hover:text-slate-700"
         @click="load"
       >
-        Recargar
+        Reload
       </button>
     </div>
 
@@ -226,7 +226,7 @@ onMounted(() => {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
           <path d="M12 5v14" /><path d="M5 12h14" />
         </svg>
-        Subir archivo
+        Upload file
       </button>
       <button
         type="button"
@@ -237,10 +237,10 @@ onMounted(() => {
           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
           <circle cx="12" cy="10" r="3" />
         </svg>
-        Agregar ubicación
+        Add location
       </button>
       <span class="text-xs text-slate-500 ml-auto">
-        Imágenes ≤ 5&nbsp;MB · PDFs ≤ 100&nbsp;MB · Audio/Video ≤ 16&nbsp;MB
+        Images ≤ 5&nbsp;MB · PDFs ≤ 100&nbsp;MB · Audio/Video ≤ 16&nbsp;MB
       </span>
     </div>
 
@@ -249,10 +249,10 @@ onMounted(() => {
       v-if="uploadOpen"
       class="mt-4 rounded-2xl bg-white/80 ring-1 ring-slate-200/70 p-4 space-y-3"
     >
-      <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">Nuevo archivo</h3>
+      <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">New file</h3>
 
       <div>
-        <label class="block text-xs font-medium text-slate-600 mb-1">Archivo</label>
+        <label class="block text-xs font-medium text-slate-600 mb-1">File</label>
         <input
           ref="fileInput"
           type="file"
@@ -261,30 +261,30 @@ onMounted(() => {
           @change="onFilePick"
         >
         <p v-if="file" class="mt-1 text-xs text-slate-500">
-          {{ file.name }} · {{ file.type || 'tipo desconocido' }} · {{ formatBytes(file.size) }}
+          {{ file.name }} · {{ file.type || 'unknown type' }} · {{ formatBytes(file.size) }}
         </p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Key (identificador único)</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Key (unique identifier)</label>
           <input
             v-model="fileKey"
             type="text"
-            placeholder="ej. catalogo-primavera.pdf"
+            placeholder="e.g. catalog-spring.pdf"
             class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
-          <p class="mt-1 text-[11px] text-slate-500">Solo a-z, 0-9, punto, guion. El bot lo usa para referenciar este recurso.</p>
+          <p class="mt-1 text-[11px] text-slate-500">Lowercase a–z, 0–9, dot, dash only. The bot uses this to reference the resource.</p>
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Descripción para el bot</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Description for the bot</label>
           <input
             v-model="fileDescription"
             type="text"
-            placeholder="ej. Catálogo completo de productos primavera 2026"
+            placeholder="e.g. Full Spring 2026 product catalog"
             class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
-          <p class="mt-1 text-[11px] text-slate-500">Esta línea le dice al bot cuándo usar este recurso.</p>
+          <p class="mt-1 text-[11px] text-slate-500">This line tells the bot when to use this resource.</p>
         </div>
       </div>
 
@@ -299,7 +299,7 @@ onMounted(() => {
           :disabled="uploading"
           @click="uploadOpen = false; resetUploadForm()"
         >
-          Cancelar
+          Cancel
         </button>
         <button
           type="button"
@@ -308,7 +308,7 @@ onMounted(() => {
           @click="onUpload"
         >
           <SpinnerInline v-if="uploading" class="!size-4" />
-          {{ uploading ? 'Subiendo…' : 'Subir' }}
+          {{ uploading ? 'Uploading…' : 'Upload' }}
         </button>
       </div>
     </div>
@@ -318,7 +318,7 @@ onMounted(() => {
       v-if="locationOpen"
       class="mt-4 rounded-2xl bg-white/80 ring-1 ring-slate-200/70 p-4 space-y-3"
     >
-      <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">Nueva ubicación</h3>
+      <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">New location</h3>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
@@ -326,21 +326,21 @@ onMounted(() => {
           <input
             v-model="locKey"
             type="text"
-            placeholder="ej. tienda-principal"
+            placeholder="e.g. main-store"
             class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Descripción para el bot</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Description for the bot</label>
           <input
             v-model="locDescription"
             type="text"
-            placeholder="ej. Sucursal centro"
+            placeholder="e.g. Downtown branch"
             class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Latitud</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Latitude</label>
           <input
             v-model.number="locLatitude"
             type="number"
@@ -350,7 +350,7 @@ onMounted(() => {
           >
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Longitud</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Longitude</label>
           <input
             v-model.number="locLongitude"
             type="number"
@@ -360,20 +360,20 @@ onMounted(() => {
           >
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Nombre del lugar (opcional)</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Place name (optional)</label>
           <input
             v-model="locName"
             type="text"
-            placeholder="ej. Tienda Centro"
+            placeholder="e.g. Downtown Store"
             class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Dirección (opcional)</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Address (optional)</label>
           <input
             v-model="locAddress"
             type="text"
-            placeholder="ej. Av. 9 de Octubre 123, Cuenca"
+            placeholder="e.g. 123 Main St, Cuenca"
             class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
         </div>
@@ -390,7 +390,7 @@ onMounted(() => {
           :disabled="creatingLocation"
           @click="locationOpen = false; resetLocationForm()"
         >
-          Cancelar
+          Cancel
         </button>
         <button
           type="button"
@@ -399,7 +399,7 @@ onMounted(() => {
           @click="onCreateLocation"
         >
           <SpinnerInline v-if="creatingLocation" class="!size-4" />
-          {{ creatingLocation ? 'Guardando…' : 'Guardar ubicación' }}
+          {{ creatingLocation ? 'Saving…' : 'Save location' }}
         </button>
       </div>
     </div>
@@ -415,8 +415,8 @@ onMounted(() => {
           <polyline points="21 15 16 10 5 21" />
         </svg>
       </div>
-      <p class="mt-3 text-sm font-medium text-slate-700">Sin recursos aún</p>
-      <p class="mt-1 text-xs text-slate-500">Sube tu primer archivo o registra una ubicación para que el bot pueda enviar contenido nativo.</p>
+      <p class="mt-3 text-sm font-medium text-slate-700">No resources yet</p>
+      <p class="mt-1 text-xs text-slate-500">Upload your first file or register a location so the bot can send native content.</p>
     </div>
 
     <ul v-else class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -450,10 +450,10 @@ onMounted(() => {
             <span
               v-if="a.hasMetaCache"
               class="inline-flex items-center gap-1 rounded-full bg-success-50 ring-1 ring-success-200 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-success-700"
-              title="Meta tiene el archivo cacheado — el siguiente envío es instantáneo"
+              title="Meta has this file cached — the next send is instant"
             >
               <span class="size-1.5 rounded-full bg-success-500" />
-              Listo en Meta
+              Cached at Meta
             </span>
           </div>
           <p class="mt-1 text-xs text-slate-600 line-clamp-2">{{ a.description }}</p>
@@ -474,13 +474,13 @@ onMounted(() => {
           :disabled="removing === a.id"
           @click="onRemove(a)"
         >
-          {{ removing === a.id ? '…' : 'Eliminar' }}
+          {{ removing === a.id ? '…' : 'Delete' }}
         </button>
       </li>
     </ul>
 
     <p v-if="isSuperadmin" class="mt-4 text-[11px] text-slate-400">
-      Estás administrando los recursos de un bot ajeno como super-admin.
+      Managing resources on a tenant's bot as super-admin.
     </p>
   </section>
 </template>
