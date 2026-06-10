@@ -136,42 +136,44 @@ onBeforeUnmount(() => {
             Create a free account
           </NuxtLink>
         </div>
+      </div>
 
-        <!-- Floating chat preview -->
-        <div
-          class="relative mx-auto mt-20 max-w-xl"
-          :style="parallax(-0.15)"
-        >
-          <div class="rounded-3xl bg-white/70 p-6 ring-1 ring-white/60 shadow-glass-lg backdrop-blur-xl">
-            <div class="flex items-center gap-3 border-b border-slate-200/60 pb-4">
-              <KaibotLogo :size="44" rounded="rounded-full" class="ring-2 ring-white shadow-glass bg-white" alt="Kaibot avatar" />
-              <div class="text-left">
-                <p class="text-sm font-semibold text-slate-900">Kaibot · Acme Co.</p>
-                <p class="flex items-center gap-1.5 text-xs text-success-600">
-                  <span class="size-1.5 rounded-full bg-success-500 animate-pulse" />
-                  online
-                </p>
+      <!-- Floating chat preview — intentionally OUTSIDE the fading hero wrapper
+           so it stays fully visible while the user scrolls. The headline + CTAs
+           still fade with `heroOpacity`; the chat preview is the product
+           showcase, so we don't want it to disappear before the user reaches
+           the features section. Mobile-first: no parallax (the fade-out and
+           upward drift on small screens made the card vanish too early). -->
+      <div class="relative mx-auto mt-12 max-w-xl px-6 sm:mt-20">
+        <div class="rounded-3xl bg-white/80 p-6 ring-1 ring-white/60 shadow-glass-lg backdrop-blur-xl">
+          <div class="flex items-center gap-3 border-b border-slate-200/60 pb-4">
+            <KaibotLogo :size="44" rounded="rounded-full" class="ring-2 ring-white shadow-glass bg-white" alt="Kaibot avatar" />
+            <div class="text-left">
+              <p class="text-sm font-semibold text-slate-900">Kaibot · Acme Co.</p>
+              <p class="flex items-center gap-1.5 text-xs text-success-600">
+                <span class="size-1.5 rounded-full bg-success-500 animate-pulse" />
+                online
+              </p>
+            </div>
+          </div>
+          <div class="mt-5 space-y-3 text-left">
+            <div class="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-success-500 px-4 py-2.5 text-sm text-white">
+              Hi! Do you ship to Mexico?
+            </div>
+            <div class="flex items-end gap-2 max-w-[85%]">
+              <KaibotLogo :size="24" rounded="rounded-full" class="shrink-0 ring-1 ring-white shadow-sm bg-white" alt="Kaibot" />
+              <div class="rounded-2xl rounded-tl-sm bg-slate-100 px-4 py-2.5 text-sm text-slate-800">
+                Yes, we ship across all of Mexico — usually 2-4 business days. Want me to pass you a shipping quote?
               </div>
             </div>
-            <div class="mt-5 space-y-3 text-left">
-              <div class="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-success-500 px-4 py-2.5 text-sm text-white">
-                Hi! Do you ship to Mexico?
-              </div>
-              <div class="flex items-end gap-2 max-w-[85%]">
-                <KaibotLogo :size="24" rounded="rounded-full" class="shrink-0 ring-1 ring-white shadow-sm bg-white" alt="Kaibot" />
-                <div class="rounded-2xl rounded-tl-sm bg-slate-100 px-4 py-2.5 text-sm text-slate-800">
-                  Yes, we ship across all of Mexico — usually 2-4 business days. Want me to pass you a shipping quote?
-                </div>
-              </div>
-              <div class="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-success-500 px-4 py-2.5 text-sm text-white">
-                Yes please
-              </div>
-              <div class="flex items-center gap-1.5 px-1 pt-1 text-xs text-slate-400">
-                <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.3s]" />
-                <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.15s]" />
-                <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400" />
-                <span class="ml-2">Kaibot is typing…</span>
-              </div>
+            <div class="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-success-500 px-4 py-2.5 text-sm text-white">
+              Yes please
+            </div>
+            <div class="flex items-center gap-1.5 px-1 pt-1 text-xs text-slate-400">
+              <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.3s]" />
+              <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.15s]" />
+              <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400" />
+              <span class="ml-2">Kaibot is typing…</span>
             </div>
           </div>
         </div>
