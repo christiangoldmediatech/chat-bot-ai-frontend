@@ -44,7 +44,9 @@
     "fileRequired": "Please pick a file first.",
     "fieldRequired": "This field is required.",
     "emailInvalid": "Enter a valid email.",
-    "passwordTooShort": "Password is too short."
+    "passwordTooShort": "Password is too short.",
+    "apiWithStatus": "Request failed (Error {status}). Please try again.",
+    "apiUnreachable": "Couldn't reach the server. Check your connection and try again."
   },
   "landing": {
     "navFeatures": "Features",
@@ -189,7 +191,20 @@
       "errorGeneric": "Could not change password.",
       "sessionTitle": "Session",
       "sessionSubtitle": "End your current session on this browser.",
-      "logout": "Log out"
+      "logout": "Log out",
+      "planSectionTitle": "Your plan",
+      "planSectionSubtitle": "Current subscription tied to your workspace. Plan limits apply to the whole tenant.",
+      "botsUsageLabel": "Bots in use",
+      "botsUsageUnlimited": "{used} created · unlimited",
+      "botsUsageWithLimit": "{used} of {limit}",
+      "botsAtLimitNote": "You've reached your plan's bot limit. Contact the platform team to upgrade.",
+      "loadPlanError": "Could not load your plan."
+    },
+    "planCard": {
+      "unlimitedBots": "Unlimited bots",
+      "oneBotIncluded": "1 bot included",
+      "upToBots": "Up to {count} bots",
+      "perMonth": "per month ({currency})"
     },
     "company": {
       "title": "My company",
@@ -217,6 +232,9 @@
       "submitting": "Creating…",
       "successTitle": "Bot created",
       "continueButton": "Continue to bot panel",
+      "limitTitle": "You can't add another bot",
+      "limitBody": "The {plan} plan includes {limit} bot(s), and you already have {used}. Contact the platform team to upgrade and add more.",
+      "limitBackButton": "Back to my bots",
       "metaGuide": {
         "title": "Meta setup guide",
         "subtitle": "Follow these steps in order.",
@@ -388,6 +406,10 @@
       "subtitleDocuments": "Documents",
       "subtitleCalendar": "Google Calendar",
       "createButton": "+ Create bot",
+      "createDisabledTitle": "Plan limit reached",
+      "limitReachedBanner": "You're using {used} of {limit} bots included in the {plan} plan. Contact the platform team to upgrade and add more.",
+      "usageUnlimited": "{used} bots created · unlimited on {plan}",
+      "usageWithRoom": "{used} of {limit} bots used · {plan} plan",
       "empty": {
         "title": "You don't have any bots yet",
         "description": "Create the first one to connect it to a WhatsApp number."
@@ -839,12 +861,6 @@
       "sectionPlanHelp": "Billing tier and feature access for this tenant.",
       "sectionAccess": "Access status",
       "sectionAccessHelp": "Controls whether users in this tenant can log in.",
-      "planFreeLabel": "Free",
-      "planFreeDesc": "Trial / starter tier",
-      "planProLabel": "Pro",
-      "planProDesc": "Standard paid tier",
-      "planEnterpriseLabel": "Enterprise",
-      "planEnterpriseDesc": "Custom contract, premium support",
       "statusActiveDesc": "Users can log in and operate normally.",
       "statusSuspendedDesc": "Login is blocked for everyone in this tenant.",
       "suspendedWarningBefore": "Suspending will ",

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
+import type { Tenant } from '~/types/company'
 
 definePageMeta({
   layout: 'admin',
@@ -10,6 +11,8 @@ const { t } = useI18n()
 const auth = useAuthStore()
 const router = useRouter()
 const { changePassword, logout } = useAuth()
+const tenant = useTenant()
+const bots = useBots()
 
 const form = reactive({
   currentPassword: '',
@@ -24,6 +27,34 @@ const showConfirm = ref(false)
 const saving = ref(false)
 const error = ref<string | null>(null)
 const success = ref<string | null>(null)
+
+// Plan + bot usage: surfaced here (next to the user's account) instead of on
+// the company page — this is "your" subscription view from the user's lens.
+const tenantData = ref<Tenant | null>(null)
+const botCount = ref<number>(0)
+const planLoading = ref(true)
+const planError = ref<string | null>(null)
+
+const botsLimit = computed(() => resolveBotsLimit(tenantData.value))
+const atBotLimit = computed(() =>
+  botsLimit.value !== null && botCount.value >= botsLimit.value,
+)
+
+async function loadPlan(): Promise<void> {
+  planLoading.value = true
+  planError.value = null
+  try {
+    const [me, list] = await Promise.all([tenant.me(), bots.list()])
+    tenantData.value = me
+    botCount.value = list.length
+  } catch (err) {
+    planError.value = (err as ApiError).message || t('admin.profile.loadPlanError')
+  } finally {
+    planLoading.value = false
+  }
+}
+
+loadPlan()
 
 const passwordsMatch = computed(() => form.newPassword === form.confirmPassword)
 const meetsMinLength = computed(() => form.newPassword.length >= 12)
@@ -100,6 +131,72 @@ async function onLogout(): Promise<void> {
       <p class="mt-4 text-xs text-slate-500">
         {{ $t('admin.profile.emailRoleNote') }}
       </p>
+    </section>
+
+    <!-- Plan card: subscription tied to the workspace, but surfaced here so
+         the user sees their plan and bot usage in their own profile view. -->
+    <section class="mt-4 max-w-2xl rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6">
+      <header class="flex items-start gap-3">
+        <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-violet-50 ring-1 ring-violet-100">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-violet-600" aria-hidden="true">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-base font-semibold text-slate-900">{{ $t('admin.profile.planSectionTitle') }}</h2>
+          <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.profile.planSectionSubtitle') }}</p>
+        </div>
+      </header>
+
+      <SpinnerInline v-if="planLoading" class="mt-4" />
+
+      <p v-else-if="planError" class="mt-4 rounded-xl border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">
+        {{ planError }}
+      </p>
+
+      <template v-else-if="tenantData">
+        <div class="mt-4">
+          <PlanCard :plan="tenantData.planDetails" />
+        </div>
+
+        <!-- Bot usage row: makes the BASIC plan's "1 bot" feel tangible. -->
+        <div
+          class="mt-4 rounded-xl p-3 ring-1"
+          :class="atBotLimit
+            ? 'bg-amber-50/70 ring-amber-200'
+            : 'bg-slate-50/80 ring-slate-200/70'"
+        >
+          <div class="flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <p class="text-[10px] uppercase tracking-wider font-semibold" :class="atBotLimit ? 'text-amber-700' : 'text-slate-500'">
+                {{ $t('admin.profile.botsUsageLabel') }}
+              </p>
+              <p class="mt-0.5 text-sm font-semibold" :class="atBotLimit ? 'text-amber-800' : 'text-slate-800'">
+                <template v-if="botsLimit === null">
+                  {{ $t('admin.profile.botsUsageUnlimited', { used: botCount }) }}
+                </template>
+                <template v-else>
+                  {{ $t('admin.profile.botsUsageWithLimit', { used: botCount, limit: botsLimit }) }}
+                </template>
+              </p>
+            </div>
+            <!-- Progress dots (used / limit) — small visual cue, only when there's a finite limit. -->
+            <div v-if="botsLimit !== null" class="flex items-center gap-1 shrink-0">
+              <span
+                v-for="i in botsLimit"
+                :key="i"
+                class="size-2 rounded-full"
+                :class="i <= botCount
+                  ? (atBotLimit ? 'bg-amber-500' : 'bg-primary-500')
+                  : 'bg-slate-200'"
+              />
+            </div>
+          </div>
+          <p v-if="atBotLimit" class="mt-2 text-xs text-amber-800/90 leading-relaxed">
+            {{ $t('admin.profile.botsAtLimitNote') }}
+          </p>
+        </div>
+      </template>
     </section>
 
     <!-- Change password card -->
