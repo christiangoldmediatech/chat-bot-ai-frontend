@@ -7,6 +7,7 @@ definePageMeta({
   middleware: 'auth',
 })
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const bots = useBots()
@@ -47,7 +48,7 @@ await load()
 
 <template>
   <div>
-    <NuxtLink to="/admin/bots" class="text-sm text-slate-500 hover:text-slate-700">← Back to bots</NuxtLink>
+    <NuxtLink to="/admin/bots" class="text-sm text-slate-500 hover:text-slate-700">{{ $t('admin.bot.backToBots') }}</NuxtLink>
 
     <p v-if="error" class="mt-4 rounded-2xl border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">
       {{ error }}
@@ -76,33 +77,33 @@ await load()
             :to="`/admin/bots/${bot.id}/edit`"
             class="rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
           >
-            WhatsApp
+            {{ $t('admin.bot.whatsapp') }}
           </NuxtLink>
           <NuxtLink
             :to="`/admin/bots/${bot.id}/config`"
             class="rounded-xl bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800 shadow-glass transition"
           >
-            Configure agent
+            {{ $t('admin.bot.configureAgent') }}
           </NuxtLink>
           <button
             type="button"
             class="rounded-xl border border-danger-200 bg-danger-50/40 px-3 py-1.5 text-sm font-medium text-danger-700 hover:bg-danger-50 transition"
             @click="confirmingDelete = true"
           >
-            Delete
+            {{ $t('admin.bot.deleteBot') }}
           </button>
         </div>
       </div>
 
       <!-- Quick-jump nav -->
       <nav class="mt-5 flex flex-wrap items-center gap-2 text-sm">
-        <a href="#overview" class="rounded-full bg-white/70 ring-1 ring-slate-200/70 px-3 py-1 text-slate-700 hover:bg-white hover:ring-slate-300 transition">Overview</a>
+        <a href="#overview" class="rounded-full bg-white/70 ring-1 ring-slate-200/70 px-3 py-1 text-slate-700 hover:bg-white hover:ring-slate-300 transition">{{ $t('admin.bot.sections.overview') }}</a>
         <a href="#documents" class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 ring-1 ring-amber-100 px-3 py-1 text-amber-700 hover:bg-amber-100 transition">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
             <polyline points="14 2 14 8 20 8" />
           </svg>
-          Documents
+          {{ $t('admin.bot.sections.documents') }}
         </a>
         <a href="#media" class="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 ring-1 ring-indigo-100 px-3 py-1 text-indigo-700 hover:bg-indigo-100 transition">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
@@ -110,7 +111,7 @@ await load()
             <circle cx="8.5" cy="8.5" r="1.5" />
             <polyline points="21 15 16 10 5 21" />
           </svg>
-          Multimedia
+          {{ $t('admin.bot.sections.media') }}
         </a>
         <a href="#calendar" class="inline-flex items-center gap-1.5 rounded-full bg-sky-50 ring-1 ring-sky-100 px-3 py-1 text-sky-700 hover:bg-sky-100 transition">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
@@ -119,40 +120,40 @@ await load()
             <line x1="8" y1="2" x2="8" y2="6" />
             <line x1="3" y1="10" x2="21" y2="10" />
           </svg>
-          Google Calendar
+          {{ $t('admin.bot.sections.calendar') }}
         </a>
       </nav>
 
       <!-- Overview: AI + WhatsApp summary, then system prompt -->
       <section id="overview" class="scroll-mt-24 mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
-          <h2 class="text-sm font-semibold text-slate-900">AI</h2>
+          <h2 class="text-sm font-semibold text-slate-900">{{ $t('admin.bot.ai') }}</h2>
           <dl class="mt-3 space-y-2 text-sm">
             <div class="flex justify-between">
-              <dt class="text-slate-500">Provider</dt>
+              <dt class="text-slate-500">{{ $t('admin.bot.aiProvider') }}</dt>
               <dd class="text-slate-900">{{ bot.aiProvider }}</dd>
             </div>
             <div class="flex justify-between">
-              <dt class="text-slate-500">Model</dt>
+              <dt class="text-slate-500">{{ $t('admin.bot.aiModel') }}</dt>
               <dd class="text-slate-900 font-mono">{{ bot.aiModel }}</dd>
             </div>
           </dl>
         </div>
 
         <div class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
-          <h2 class="text-sm font-semibold text-slate-900">WhatsApp</h2>
+          <h2 class="text-sm font-semibold text-slate-900">{{ $t('admin.bot.whatsapp') }}</h2>
           <dl class="mt-3 space-y-2 text-sm">
             <div class="flex justify-between">
-              <dt class="text-slate-500">Phone ID</dt>
+              <dt class="text-slate-500">{{ $t('admin.bot.whatsappPhoneId') }}</dt>
               <dd class="text-slate-900 font-mono text-xs">{{ bot.whatsappPhoneId }}</dd>
             </div>
             <div class="flex justify-between">
-              <dt class="text-slate-500">WABA ID</dt>
+              <dt class="text-slate-500">{{ $t('admin.bot.whatsappWabaId') }}</dt>
               <dd class="text-slate-900 font-mono text-xs">{{ bot.whatsappBusinessAccountId ?? '—' }}</dd>
             </div>
             <div class="flex justify-between">
-              <dt class="text-slate-500">App secret</dt>
-              <dd class="text-slate-900">{{ bot.hasAppSecret ? 'Configured' : 'Not configured' }}</dd>
+              <dt class="text-slate-500">{{ $t('admin.bot.whatsappAppSecret') }}</dt>
+              <dd class="text-slate-900">{{ bot.hasAppSecret ? $t('admin.bot.whatsappAppSecretConfigured') : $t('admin.bot.whatsappAppSecretMissing') }}</dd>
             </div>
           </dl>
 
@@ -160,8 +161,8 @@ await load()
           <div class="mt-4 pt-4 border-t border-slate-200/70 space-y-3">
             <div>
               <div class="flex items-center justify-between">
-                <p class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">Callback URL</p>
-                <CopyButton :value="callbackUrl" label="Copy" />
+                <p class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('admin.bot.callbackUrl') }}</p>
+                <CopyButton :value="callbackUrl" :label="$t('common.copy')" />
               </div>
               <code class="mt-1 block text-[11px] font-mono text-slate-700 break-all select-all bg-slate-50/80 ring-1 ring-slate-200/70 rounded-lg px-2 py-1.5">
                 {{ callbackUrl }}
@@ -169,21 +170,21 @@ await load()
             </div>
             <div>
               <div class="flex items-center justify-between">
-                <p class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">Verify token</p>
-                <CopyButton :value="bot.webhookVerifyToken" label="Copy" />
+                <p class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('admin.bot.verifyToken') }}</p>
+                <CopyButton :value="bot.webhookVerifyToken" :label="$t('common.copy')" />
               </div>
               <code class="mt-1 block text-[11px] font-mono text-slate-700 break-all select-all bg-slate-50/80 ring-1 ring-slate-200/70 rounded-lg px-2 py-1.5">
                 {{ bot.webhookVerifyToken }}
               </code>
             </div>
             <p class="text-[11px] text-slate-500">
-              Paste both in <span class="font-medium text-slate-600">Meta App → WhatsApp → Configuration → Webhook</span>.
+              {{ $t('admin.bot.pasteInMeta') }}
             </p>
           </div>
         </div>
 
         <div class="md:col-span-2 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
-          <h2 class="text-sm font-semibold text-slate-900">System prompt</h2>
+          <h2 class="text-sm font-semibold text-slate-900">{{ $t('admin.bot.systemPrompt') }}</h2>
           <pre class="mt-3 whitespace-pre-wrap text-sm text-slate-700 font-mono">{{ bot.systemPrompt }}</pre>
         </div>
       </section>
@@ -200,8 +201,8 @@ await load()
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-slate-900">Documents</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Upload .md, .txt or .pdf files — the bot uses them as knowledge context (RAG).</p>
+            <h2 class="text-base font-semibold text-slate-900">{{ $t('admin.bot.sections.documents') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.bot.sections.documentsDesc') }}</p>
           </div>
         </header>
         <BotDocumentsCard :bot-id="bot.id" />
@@ -218,8 +219,8 @@ await load()
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-slate-900">Multimedia resources</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Images, PDFs, videos, audios, or locations the bot sends as native WhatsApp attachments.</p>
+            <h2 class="text-base font-semibold text-slate-900">{{ $t('admin.bot.sections.media') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.bot.sections.mediaDesc') }}</p>
           </div>
         </header>
         <BotMediaAssetsCard :bot-id="bot.id" />
@@ -237,8 +238,8 @@ await load()
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-slate-900">Google Calendar</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Connect a Google account so the bot can read availability and book meetings.</p>
+            <h2 class="text-base font-semibold text-slate-900">{{ $t('admin.bot.sections.calendar') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.bot.sections.calendarDesc') }}</p>
           </div>
         </header>
         <BotCalendarCard :bot-id="bot.id" />
@@ -246,11 +247,11 @@ await load()
 
       <ConfirmDialog
         :open="confirmingDelete"
-        :title="`Delete bot ${bot.name}?`"
-        message="Its documents, conversations, customers, and integrations will also be permanently deleted. This action cannot be undone."
+        :title="$t('admin.bot.deleteConfirmTitle', { name: bot.name })"
+        :message="$t('admin.bot.deleteConfirmMessage')"
         :require-typed="bot.name"
-        require-typed-label="To confirm, type the bot's name:"
-        confirm-label="Delete bot"
+        :require-typed-label="$t('admin.bot.deleteConfirmTyped')"
+        :confirm-label="$t('admin.bot.deleteConfirmAction')"
         @cancel="confirmingDelete = false"
         @confirm="onConfirmDelete"
       />

@@ -163,54 +163,54 @@ onMounted(() => {
         <div class="flex items-center justify-between">
           <div>
             <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-600">
-              Escalate to advisor
+              {{ $t('admin.calendar.escalationTitle') }}
             </h3>
             <p class="text-xs text-slate-500 mt-0.5">
-              Advisor contact info and when the bot should follow up if the case stays pending.
+              {{ $t('admin.calendar.escalationSubtitle') }}
             </p>
           </div>
           <span
             v-if="escalationSavedAt"
             class="text-xs text-success-700 bg-success-50 border border-success-200 rounded-full px-2 py-0.5"
           >
-            Saved ✓
+            {{ $t('admin.calendar.saved') }}
           </span>
         </div>
 
         <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div class="sm:col-span-2">
-            <label class="block text-xs font-medium text-slate-700">Advisor email</label>
+            <label class="block text-xs font-medium text-slate-700">{{ $t('admin.calendar.advisorEmail') }}</label>
             <input
               v-model="form.advisorEmail"
               type="email"
               maxlength="254"
               placeholder="sales@company.com"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400"
             >
             <p class="mt-1 text-[11px] text-slate-500">
-              When the bot escalates, this address receives the notification. Leave empty to disable escalation.
+              {{ $t('admin.calendar.advisorEmailHelp') }}
             </p>
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-700">Advisor name</label>
+            <label class="block text-xs font-medium text-slate-700">{{ $t('admin.calendar.advisorName') }}</label>
             <input
               v-model="form.advisorName"
               type="text"
               maxlength="120"
-              placeholder="(optional)"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+              :placeholder="$t('common.optional')"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400"
             >
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-700">Follow-up after (hours)</label>
+            <label class="block text-xs font-medium text-slate-700">{{ $t('admin.calendar.followupHours') }}</label>
             <input
               v-model.number="form.followupHours"
               type="number"
               min="0"
               max="168"
-              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900"
             >
-            <p class="mt-1 text-[11px] text-slate-500">0 = no automatic follow-up.</p>
+            <p class="mt-1 text-[11px] text-slate-500">{{ $t('admin.calendar.followupHoursHelp') }}</p>
           </div>
         </div>
 
@@ -220,7 +220,7 @@ onMounted(() => {
           :disabled="saving"
           @click="onSaveEscalation"
         >
-          {{ saving ? 'Saving…' : 'Save escalation' }}
+          {{ saving ? $t('common.saving') : $t('admin.calendar.saveEscalation') }}
         </button>
       </div>
 

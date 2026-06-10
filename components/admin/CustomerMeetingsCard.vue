@@ -10,6 +10,7 @@ const props = defineProps<{
   tone?: 'light' | 'dark'
 }>()
 
+const { t } = useI18n()
 const tone = computed(() => props.tone ?? 'light')
 const customers = useCustomers(props.tenantId)
 
@@ -87,11 +88,21 @@ function fmtRelative(value: string): string {
   const diffMs = new Date(value).getTime() - now.value.getTime()
   const diffMin = Math.round(diffMs / 60_000)
   const abs = Math.abs(diffMin)
-  if (abs < 60) return diffMin >= 0 ? `en ${abs} min` : `hace ${abs} min`
+  if (abs < 60) {
+    return diffMin >= 0
+      ? t('meetings.card.relativeInMin', { n: abs })
+      : t('meetings.card.relativeAgoMin', { n: abs })
+  }
   const hours = Math.round(abs / 60)
-  if (hours < 24) return diffMin >= 0 ? `en ${hours} h` : `hace ${hours} h`
+  if (hours < 24) {
+    return diffMin >= 0
+      ? t('meetings.card.relativeInHr', { n: hours })
+      : t('meetings.card.relativeAgoHr', { n: hours })
+  }
   const days = Math.round(hours / 24)
-  return diffMin >= 0 ? `en ${days} d` : `hace ${days} d`
+  return diffMin >= 0
+    ? t('meetings.card.relativeInDay', { n: days })
+    : t('meetings.card.relativeAgoDay', { n: days })
 }
 
 onMounted(() => {
@@ -133,13 +144,13 @@ onMounted(() => {
             class="text-sm font-semibold"
             :class="tone === 'dark' ? 'text-slate-100' : 'text-slate-900'"
           >
-            Reuniones agendadas
+            {{ $t('meetings.card.title') }}
           </h2>
           <p
             class="text-xs mt-0.5"
             :class="tone === 'dark' ? 'text-slate-500' : 'text-slate-500'"
           >
-            Histórico de meets con este cliente
+            {{ $t('meetings.card.subtitle') }}
           </p>
         </div>
       </div>
@@ -166,7 +177,7 @@ onMounted(() => {
           :disabled="loading"
           @click="load"
         >
-          {{ loading ? 'Cargando…' : 'Recargar' }}
+          {{ loading ? $t('common.loading') : $t('common.reload') }}
         </button>
       </div>
     </header>
@@ -207,13 +218,13 @@ onMounted(() => {
         class="text-sm font-medium"
         :class="tone === 'dark' ? 'text-slate-300' : 'text-slate-700'"
       >
-        Sin reuniones agendadas
+        {{ $t('meetings.card.emptyTitle') }}
       </p>
       <p
         class="text-xs mt-1"
         :class="tone === 'dark' ? 'text-slate-500' : 'text-slate-500'"
       >
-        Cuando el bot agende una reunión con este cliente, aparecerá aquí.
+        {{ $t('meetings.card.emptyBody') }}
       </p>
     </div>
 
@@ -228,9 +239,9 @@ onMounted(() => {
                 : (tone === 'dark' ? 'bg-slate-900 text-slate-500' : 'bg-slate-50 text-slate-500')
             "
           >
-            <span v-if="group === 'upcoming'">Próximas ({{ list.length }})</span>
-            <span v-else-if="group === 'past'">Pasadas ({{ list.length }})</span>
-            <span v-else>Canceladas ({{ list.length }})</span>
+            <span v-if="group === 'upcoming'">{{ $t('meetings.card.groupUpcoming', { n: list.length }) }}</span>
+            <span v-else-if="group === 'past'">{{ $t('meetings.card.groupPast', { n: list.length }) }}</span>
+            <span v-else>{{ $t('meetings.card.groupCancelled', { n: list.length }) }}</span>
           </div>
 
           <article
@@ -269,13 +280,13 @@ onMounted(() => {
                       : (tone === 'dark' ? 'text-slate-100' : 'text-slate-900')
                   "
                 >
-                  {{ m.topic || 'Reunión' }}
+                  {{ m.topic || $t('meetings.card.fallbackTopic') }}
                 </h3>
                 <span
                   v-if="group === 'cancelled'"
                   class="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
                   :class="tone === 'dark' ? 'bg-danger-950 text-danger-300' : 'bg-danger-100 text-danger-700'"
-                >Cancelada</span>
+                >{{ $t('meetings.card.cancelled') }}</span>
                 <span
                   v-else-if="group === 'upcoming'"
                   class="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"

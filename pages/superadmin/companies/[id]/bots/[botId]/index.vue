@@ -306,8 +306,8 @@ await Promise.all([load(), loadActivity()])
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-slate-100">Multimedia resources</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Sendable assets (images, PDFs, videos, audios, locations) the bot can attach natively in WhatsApp.</p>
+            <h2 class="text-base font-semibold text-slate-100">{{ $t('superadmin.bot.sections.multimedia') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('superadmin.bot.sections.multimediaDesc') }}</p>
           </div>
         </header>
         <BotMediaAssetsCard :bot-id="bot.id" :tenant-id="tenantId" />

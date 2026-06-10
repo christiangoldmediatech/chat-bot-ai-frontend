@@ -75,7 +75,7 @@ function statusClass(s: ConversationStatus): string {
 
 <template>
   <div>
-    <NuxtLink to="/admin/conversations" class="text-sm text-slate-500 hover:text-slate-700">← Back to conversations</NuxtLink>
+    <NuxtLink to="/admin/conversations" class="text-sm text-slate-500 hover:text-slate-700">{{ $t('conversations.detail.back') }}</NuxtLink>
 
     <p v-if="error" class="mt-4 rounded-md border border-danger-200 bg-danger-50 p-3 text-sm text-danger-700">
       {{ error }}
@@ -105,7 +105,7 @@ function statusClass(s: ConversationStatus): string {
             class="rounded-md border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm text-amber-800 hover:bg-amber-100 disabled:opacity-50 disabled:cursor-not-allowed"
             @click="changeStatus('HUMAN')"
           >
-            Take over (HUMAN)
+            {{ $t('conversations.detail.takeOver') }}
           </button>
           <button
             type="button"
@@ -113,7 +113,7 @@ function statusClass(s: ConversationStatus): string {
             class="rounded-md border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-800 hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
             @click="changeStatus('BOT')"
           >
-            Hand back to bot
+            {{ $t('conversations.detail.handBack') }}
           </button>
           <button
             type="button"
@@ -121,7 +121,7 @@ function statusClass(s: ConversationStatus): string {
             class="rounded-md border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
             @click="changeStatus('CLOSED')"
           >
-            Close
+            {{ $t('conversations.detail.close') }}
           </button>
         </div>
       </header>
@@ -133,7 +133,7 @@ function statusClass(s: ConversationStatus): string {
       <section class="mt-6 rounded-2xl bg-white/60 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-4 max-h-[60vh] overflow-y-auto">
         <ChatMessages :messages="data.messages" :bot-id="data.botId" />
         <p v-if="data.messages.length === 0" class="text-sm text-slate-400 text-center py-6">
-          No messages
+          {{ $t('conversations.detail.noMessages') }}
         </p>
       </section>
 
@@ -142,26 +142,26 @@ function statusClass(s: ConversationStatus): string {
         v-if="data.status === 'HUMAN'"
         class="mt-4 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-4"
       >
-        <label class="block text-sm font-medium text-slate-700">Send as agent</label>
+        <label class="block text-sm font-medium text-slate-700">{{ $t('conversations.detail.sendAsAgent') }}</label>
         <form class="mt-2 flex gap-2" @submit.prevent="onSend">
           <textarea
             v-model="newMessage"
             rows="2"
             required
-            placeholder="Type your reply…"
-            class="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
+            :placeholder="$t('conversations.detail.composerPlaceholder')"
+            class="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400"
           />
           <button
             type="submit"
             class="self-end rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60"
             :disabled="sending || !newMessage.trim()"
           >
-            {{ sending ? 'Sending…' : 'Send' }}
+            {{ sending ? $t('conversations.detail.sending') : $t('conversations.detail.send') }}
           </button>
         </form>
         <p v-if="sendError" class="mt-2 text-sm text-danger-700">{{ sendError }}</p>
         <p class="mt-2 text-xs text-slate-500">
-          The message is stored and kept in the history. Outbound delivery to WhatsApp from the agent side is not wired up in the backend yet — confirm with the customer through another channel in the meantime.
+          {{ $t('conversations.detail.composerNote') }}
         </p>
       </section>
 
@@ -169,13 +169,13 @@ function statusClass(s: ConversationStatus): string {
         v-else-if="data.status === 'CLOSED'"
         class="mt-4 text-sm text-slate-500 italic"
       >
-        Conversation closed. It automatically returns to BOT status when the customer sends a new message.
+        {{ $t('conversations.detail.closedNote') }}
       </p>
       <p
         v-else
         class="mt-4 text-sm text-slate-500 italic"
       >
-        The bot is responding. Take over the conversation to reply as an agent.
+        {{ $t('conversations.detail.botActiveNote') }}
       </p>
     </template>
   </div>

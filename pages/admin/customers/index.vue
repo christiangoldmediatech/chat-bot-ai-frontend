@@ -47,16 +47,16 @@ await Promise.all([loadBots(), load()])
 <template>
   <div>
     <div class="flex items-center justify-between flex-wrap gap-3">
-      <h1 class="text-2xl font-semibold">Customers</h1>
+      <h1 class="text-2xl font-semibold">{{ $t('customers.title') }}</h1>
 
       <div>
-        <label class="text-xs text-slate-500 mr-2">Filter by bot</label>
+        <label class="text-xs text-slate-500 mr-2">{{ $t('customers.filterByBot') }}</label>
         <select
           v-model="filterBotId"
-          class="rounded-md border border-slate-300 px-3 py-1.5 text-sm"
+          class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-900"
           @change="onFilterChange"
         >
-          <option :value="undefined">All</option>
+          <option :value="undefined">{{ $t('customers.all') }}</option>
           <option v-for="b in bots" :key="b.id" :value="b.id">{{ b.name }}</option>
         </select>
       </div>
@@ -70,8 +70,8 @@ await Promise.all([loadBots(), load()])
 
     <EmptyState
       v-else-if="items.length === 0"
-      title="No customers yet"
-      description="Customers appear when someone messages one of your bots."
+      :title="$t('customers.empty.title')"
+      :description="$t('customers.empty.description')"
       class="mt-6"
     />
 
@@ -79,11 +79,11 @@ await Promise.all([loadBots(), load()])
       <table class="w-full text-sm">
         <thead class="bg-slate-50 text-slate-600">
           <tr>
-            <th class="text-left font-medium px-4 py-3">Customer</th>
-            <th class="text-left font-medium px-4 py-3">Phone</th>
-            <th class="text-right font-medium px-4 py-3">Conversations</th>
-            <th class="text-right font-medium px-4 py-3">Open</th>
-            <th class="text-left font-medium px-4 py-3">Last message</th>
+            <th class="text-left font-medium px-4 py-3">{{ $t('customers.table.customer') }}</th>
+            <th class="text-left font-medium px-4 py-3">{{ $t('customers.table.phone') }}</th>
+            <th class="text-right font-medium px-4 py-3">{{ $t('customers.table.conversations') }}</th>
+            <th class="text-right font-medium px-4 py-3">{{ $t('customers.table.open') }}</th>
+            <th class="text-left font-medium px-4 py-3">{{ $t('customers.table.lastMessage') }}</th>
           </tr>
         </thead>
         <tbody>

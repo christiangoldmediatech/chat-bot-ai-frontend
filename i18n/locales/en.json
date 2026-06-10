@@ -1,0 +1,469 @@
+{
+  "common": {
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleting": "Deleting…",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "loading": "Loading…",
+    "reload": "Reload",
+    "search": "Search",
+    "open": "Open",
+    "create": "Create",
+    "creating": "Creating…",
+    "upload": "Upload",
+    "uploading": "Uploading…",
+    "download": "Download",
+    "view": "View",
+    "copy": "Copy",
+    "copied": "Copied",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "actions": "Actions",
+    "status": "Status",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "description": "Description",
+    "required": "Required",
+    "optional": "(optional)",
+    "noData": "No data",
+    "comingSoon": "Coming soon"
+  },
+  "errors": {
+    "generic": "Something went wrong. Try again.",
+    "network": "Network error. Check your connection.",
+    "unauthorized": "Session expired — please sign in again.",
+    "forbidden": "You don't have access to that.",
+    "notFound": "Not found.",
+    "fileRequired": "Please pick a file first.",
+    "fieldRequired": "This field is required.",
+    "emailInvalid": "Enter a valid email.",
+    "passwordTooShort": "Password is too short."
+  },
+  "landing": {
+    "navFeatures": "Features",
+    "navHow": "How it works",
+    "navGetStarted": "Get started",
+    "goToDashboard": "Go to dashboard",
+    "createAccount": "Create account",
+    "signIn": "Sign in",
+    "hero": {
+      "badge": "AI assistant for WhatsApp",
+      "title1": "Meet",
+      "title2": ". Your business's tireless WhatsApp agent.",
+      "subtitle": "Kaibot replies to your customers on WhatsApp 24/7 — answering questions, qualifying leads, and handing off to a human only when it truly matters.",
+      "ctaSignIn": "Sign in to your company",
+      "ctaCreateFree": "Create a free account",
+      "chatPreviewTitle": "Kaibot · Acme Co.",
+      "chatPreviewOnline": "online",
+      "chatPreviewUser1": "Hi! Do you ship to Mexico?",
+      "chatPreviewBot1": "Yes, we ship across all of Mexico — usually 2-4 business days. Want me to pass you a shipping quote?",
+      "chatPreviewUser2": "Yes please",
+      "chatPreviewTyping": "Kaibot is typing…"
+    },
+    "features": {
+      "kicker": "Why Kaibot",
+      "title": "Built so customers never wait.",
+      "subtitle": "A focused set of capabilities — no fluff, no setup gymnastics.",
+      "alwaysOnTitle": "Always-on replies",
+      "alwaysOnBody": "Kaibot answers every message in seconds — at 3 AM, on weekends, during launches. No customer is left hanging.",
+      "nativeTitle": "Native WhatsApp",
+      "nativeBody": "Plugs into the channel your customers already use every day. No app to download, no new habits to learn.",
+      "trainedTitle": "Trained on your business",
+      "trainedBody": "Upload your docs, FAQs, and policies. Kaibot learns your voice and answers like part of your team."
+    },
+    "how": {
+      "kicker": "How it works",
+      "title": "Up and running in minutes.",
+      "step1Title": "Connect WhatsApp",
+      "step1Body": "Link your business number in a couple of clicks. No code, no complicated setup.",
+      "step2Title": "Teach Kaibot",
+      "step2Body": "Upload documents, pricing, and FAQs. Kaibot reads everything and is ready in under an hour.",
+      "step3Title": "Let it work",
+      "step3Body": "Kaibot replies on its own and pings a human only when the conversation truly needs one."
+    },
+    "cta": {
+      "title": "Give your business a 24/7 assistant.",
+      "subtitle": "Sign in to your company workspace and start replying faster than ever.",
+      "primary": "Company login",
+      "primaryAuth": "Open dashboard",
+      "secondary": "Create a free account"
+    },
+    "footer": {
+      "tagline": "WhatsApp AI for modern businesses",
+      "signIn": "Sign in",
+      "createAccount": "Create account"
+    }
+  },
+  "auth": {
+    "brandTagline": "WhatsApp AI for businesses",
+    "login": {
+      "title": "Sign in with email",
+      "subtitle": "Manage your bots, conversations, and customers in one place.",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "submit": "Get Started",
+      "submitting": "Signing in…",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Register a company",
+      "errorRequired": "Email and password are required.",
+      "errorGeneric": "Could not sign in."
+    },
+    "register": {
+      "title": "Register your company",
+      "subtitle": "Creates a tenant and an OWNER user to manage your bots.",
+      "companyNameLabel": "Company name",
+      "slugLabel": "Slug",
+      "slugHelp": "Unique identifier, kebab-case.",
+      "emailLabel": "OWNER email",
+      "passwordLabel": "Password",
+      "passwordHelp": "Minimum 12 characters.",
+      "submit": "Create company",
+      "submitting": "Creating…",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "errorPasswordLength": "Password must be at least 12 characters.",
+      "errorSlugFormat": "Slug must be kebab-case (lowercase letters, numbers, and hyphens).",
+      "errorGeneric": "Could not create the company."
+    }
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "bots": "Bots",
+    "documents": "Documents",
+    "conversations": "Conversations",
+    "customers": "Customers",
+    "meetings": "Meetings",
+    "cases": "Cases",
+    "company": "Company",
+    "myCompany": "My company",
+    "profile": "Profile",
+    "myProfile": "My profile",
+    "signOut": "Sign out",
+    "closeMenu": "Close menu",
+    "openMenu": "Open menu",
+    "superadmin": "Super admin",
+    "companies": "Companies"
+  },
+  "admin": {
+    "panelTitle": "Admin panel",
+    "bot": {
+      "backToBots": "← Back to bots",
+      "configureAgent": "Configure agent",
+      "whatsapp": "WhatsApp",
+      "deleteBot": "Delete",
+      "deleteConfirmTitle": "Delete bot {name}?",
+      "deleteConfirmMessage": "Its documents, conversations, customers, and integrations will also be permanently deleted. This action cannot be undone.",
+      "deleteConfirmTyped": "To confirm, type the bot's name:",
+      "deleteConfirmAction": "Delete bot",
+      "sections": {
+        "overview": "Overview",
+        "documents": "Documents",
+        "documentsDesc": "Upload .md, .txt or .pdf files — the bot uses them as knowledge context (RAG).",
+        "media": "Multimedia",
+        "mediaDesc": "Images, PDFs, videos, audios, or locations the bot sends as native WhatsApp attachments.",
+        "calendar": "Google Calendar",
+        "calendarDesc": "Connect a Google account so the bot can read availability and book meetings."
+      },
+      "ai": "AI",
+      "aiProvider": "Provider",
+      "aiModel": "Model",
+      "whatsappPhoneId": "Phone ID",
+      "whatsappWabaId": "WABA ID",
+      "whatsappAppSecret": "App secret",
+      "whatsappAppSecretConfigured": "Configured",
+      "whatsappAppSecretMissing": "Not configured",
+      "callbackUrl": "Callback URL",
+      "verifyToken": "Verify token",
+      "pasteInMeta": "Paste both in Meta App → WhatsApp → Configuration → Webhook.",
+      "systemPrompt": "System prompt"
+    },
+    "media": {
+      "cardTitle": "Multimedia resources",
+      "cardDescription": "Upload images, PDFs, videos, audios, or register locations the bot can send natively over WhatsApp. The model picks by {key} using the description.",
+      "actions": {
+        "uploadFile": "Upload file",
+        "addLocation": "Add location"
+      },
+      "sizeHint": "Images ≤ 5 MB · PDFs ≤ 100 MB · Audio/Video ≤ 16 MB",
+      "form": {
+        "newFile": "New file",
+        "newLocation": "New location",
+        "file": "File",
+        "unknownType": "unknown type",
+        "keyLabel": "Key (unique identifier)",
+        "keyPlaceholder": "e.g. catalog-spring.pdf",
+        "keyHelp": "Lowercase a–z, 0–9, dot, dash only. The bot uses this to reference the resource.",
+        "descriptionLabel": "Description for the bot",
+        "descriptionPlaceholder": "e.g. Full Spring 2026 product catalog",
+        "descriptionHelp": "This line tells the bot when to use this resource.",
+        "locationKeyPlaceholder": "e.g. main-store",
+        "locationDescriptionPlaceholder": "e.g. Downtown branch",
+        "latitudeLabel": "Latitude",
+        "longitudeLabel": "Longitude",
+        "placeNameLabel": "Place name (optional)",
+        "placeNamePlaceholder": "e.g. Downtown Store",
+        "addressLabel": "Address (optional)",
+        "addressPlaceholder": "e.g. 123 Main St, Cuenca",
+        "saveLocation": "Save location",
+        "fileRequired": "Pick a file first.",
+        "keyAndDescriptionRequired": "Key and description are required.",
+        "latLngRequired": "Latitude and longitude are required."
+      },
+      "list": {
+        "emptyTitle": "No resources yet",
+        "emptyBody": "Upload your first file or register a location so the bot can send native content.",
+        "cachedAtMeta": "Cached at Meta",
+        "cachedAtMetaTooltip": "Meta has this file cached — the next send is instant"
+      },
+      "type": {
+        "image": "Image",
+        "document": "Document",
+        "video": "Video",
+        "audio": "Audio",
+        "voice": "Voice note",
+        "sticker": "Sticker",
+        "location": "Location"
+      },
+      "superadminNotice": "Managing resources on a tenant's bot as super-admin."
+    },
+    "chat": {
+      "loadingImage": "Loading image…",
+      "image": "Image",
+      "document": "Document",
+      "video": "Video",
+      "customerVideo": "Customer video",
+      "audio": "Audio",
+      "voiceNote": "Voice note",
+      "location": "Location",
+      "file": "file",
+      "loading": "Loading…",
+      "receivedViaWhatsapp": "Received via WhatsApp",
+      "failedToLoad": "Failed to load.",
+      "imageFullView": "Image full view",
+      "closeEsc": "Close (Esc)"
+    },
+    "documents": {
+      "cardTitle": "Documents (RAG)",
+      "cardDescription": "Plain text (.txt) or Markdown (.md), up to 5 MB. The backend chunks them, embeds them, and uses them as context in every response.",
+      "uploadButton": "+ Upload document",
+      "addAnotherButton": "+ Add another document",
+      "moreEqualsBetter": "More documents = better answers.",
+      "noDocuments": "No documents uploaded yet.",
+      "chunksLabel": "chunks",
+      "view": "View",
+      "viewingAria": "Viewing {filename}",
+      "statusReady": "Ready",
+      "statusProcessing": "Processing",
+      "statusError": "Error",
+      "charsLabel": "chars",
+      "characters": "characters",
+      "copyDocumentText": "Copy document text",
+      "copyText": "Copy text",
+      "reconstructing": "Reconstructing document from chunks…",
+      "noTextContent": "This document has no extractable text content.",
+      "stillProcessing": "Document is still {status}. Try again once it shows READY."
+    },
+    "calendar": {
+      "escalationTitle": "Escalate to advisor",
+      "escalationSubtitle": "Advisor contact info and when the bot should follow up if the case stays pending.",
+      "saved": "Saved ✓",
+      "advisorEmail": "Advisor email",
+      "advisorEmailHelp": "When the bot escalates, this address receives the notification. Leave empty to disable escalation.",
+      "advisorName": "Advisor name",
+      "followupHours": "Follow-up after (hours)",
+      "followupHoursHelp": "0 = no automatic follow-up.",
+      "saveEscalation": "Save escalation",
+      "defaultDuration": "Default duration"
+    }
+  },
+  "cases": {
+    "title": "Cases",
+    "subtitle": "Escalated to a human advisor. Resolve each one from here or from the customer page.",
+    "stat": {
+      "open": "Open",
+      "pending": "Pending",
+      "attended": "Attended",
+      "resolved": "Resolved"
+    },
+    "filter": {
+      "allBots": "All bots",
+      "searchPlaceholder": "Search by customer, phone, or summary…"
+    },
+    "list": {
+      "empty": "No cases escalated yet.",
+      "noMatches": "No cases match the current filters.",
+      "followupBadge": "follow-up",
+      "resolution": "Resolution:",
+      "bot": "Bot:",
+      "created": "Created:",
+      "resolved": "Resolved:"
+    },
+    "action": {
+      "attend": "Attend",
+      "resolve": "Resolve"
+    },
+    "resolveModal": {
+      "title": "Mark case as resolved",
+      "noteBefore": "Add an optional note. It will be logged as ",
+      "noteEmph": "resolved by the advisor",
+      "noteAfter": ".",
+      "placeholder": "E.g. Billing was adjusted.",
+      "submit": "Mark resolved"
+    },
+    "card": {
+      "title": "Customer cases",
+      "subtitle": "Escalated to a human advisor",
+      "emptyTitle": "No cases escalated",
+      "emptyBody": "When the bot escalates a conversation to an advisor, it'll show up here.",
+      "followupTooltip": "The bot sent a follow-up to the customer",
+      "resolutionLabel": "Resolution",
+      "resolvedByBot": "by the bot",
+      "resolvedByCustomer": "by the customer",
+      "resolvedByAgent": "by the advisor",
+      "resolveModalBody": "Add a brief note on how it was resolved (optional). The case will be logged as ",
+      "resolveModalEmph": "resolved by the advisor",
+      "resolveModalPlaceholder": "E.g. Adjusted the May billing charge.",
+      "openCount": "{n} open",
+      "groupPending": "⏳ Pending ({n})",
+      "groupAttended": "👋 Attended ({n})",
+      "groupResolved": "✓ Resolved ({n})"
+    }
+  },
+  "customers": {
+    "title": "Customers",
+    "filterByBot": "Filter by bot",
+    "all": "All",
+    "empty": {
+      "title": "No customers yet",
+      "description": "Customers appear when someone messages one of your bots."
+    },
+    "table": {
+      "customer": "Customer",
+      "phone": "Phone",
+      "conversations": "Conversations",
+      "open": "Open",
+      "lastMessage": "Last message"
+    },
+    "detail": {
+      "back": "← Back to customers",
+      "stats": {
+        "conversations": "Conversations",
+        "open": "Open",
+        "lastMessage": "Last message"
+      },
+      "conversationsTitle": "Conversations",
+      "table": {
+        "bot": "Bot",
+        "status": "Status",
+        "lastMessage": "Last message",
+        "created": "Created"
+      }
+    }
+  },
+  "meetings": {
+    "title": "Meetings",
+    "subtitle": "All meetings booked by your bots. Filter by bot, customer, or reason, and group as you like.",
+    "explorer": {
+      "tabUpcoming": "Upcoming",
+      "tabPast": "Past",
+      "tabCancelled": "Cancelled",
+      "tabAll": "All",
+      "searchPlaceholder": "Search by customer, phone, email, topic, or bot…",
+      "allBots": "All bots",
+      "groupFlat": "List",
+      "groupByBot": "By bot",
+      "groupByCustomer": "By customer",
+      "emptyTitle": "No meetings booked yet.",
+      "emptyTitleFiltered": "No meetings match the filters.",
+      "emptyBody": "When one of your bots books a meeting, it'll show up here.",
+      "emptyBodyFiltered": "Try another search or clear the filters."
+    },
+    "card": {
+      "title": "Booked meetings",
+      "subtitle": "Meeting history with this customer",
+      "emptyTitle": "No meetings booked",
+      "emptyBody": "When the bot books a meeting with this customer, it'll show up here.",
+      "groupUpcoming": "Upcoming ({n})",
+      "groupPast": "Past ({n})",
+      "groupCancelled": "Cancelled ({n})",
+      "cancelled": "Cancelled",
+      "fallbackTopic": "Meeting",
+      "relativeInMin": "in {n} min",
+      "relativeAgoMin": "{n} min ago",
+      "relativeInHr": "in {n} h",
+      "relativeAgoHr": "{n} h ago",
+      "relativeInDay": "in {n} d",
+      "relativeAgoDay": "{n} d ago"
+    }
+  },
+  "conversations": {
+    "title": "Conversations",
+    "subtitle": "Inbound and outbound message volume across all your bots.",
+    "reloadStats": "Reload stats",
+    "activity": {
+      "daily": "Daily",
+      "dailySubtitle": "Last 14 days · grouped by day",
+      "weekly": "Weekly",
+      "weeklySubtitle": "Last 12 weeks · grouped by week",
+      "monthly": "Monthly",
+      "monthlySubtitle": "Last 12 months · grouped by month"
+    },
+    "filter": {
+      "search": "Search",
+      "searchPlaceholder": "Name or phone",
+      "bot": "Bot",
+      "all": "All",
+      "status": "Status",
+      "from": "From",
+      "to": "To",
+      "clear": "Clear",
+      "apply": "Apply"
+    },
+    "empty": {
+      "title": "No conversations",
+      "description": "Adjust the filters or wait for a customer to message you."
+    },
+    "table": {
+      "customer": "Customer",
+      "bot": "Bot",
+      "status": "Status",
+      "lastMessage": "Last message"
+    },
+    "pagination": {
+      "summary": "{total} conversations — page {page} / {totalPages}",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "detail": {
+      "back": "← Back to conversations",
+      "takeOver": "Take over (HUMAN)",
+      "handBack": "Hand back to bot",
+      "close": "Close",
+      "noMessages": "No messages",
+      "sendAsAgent": "Send as agent",
+      "composerPlaceholder": "Type your reply…",
+      "send": "Send",
+      "sending": "Sending…",
+      "composerNote": "The message is stored and kept in the history. Outbound delivery to WhatsApp from the agent side is not wired up in the backend yet — confirm with the customer through another channel in the meantime.",
+      "closedNote": "Conversation closed. It automatically returns to BOT status when the customer sends a new message.",
+      "botActiveNote": "The bot is responding. Take over the conversation to reply as an agent."
+    }
+  },
+  "superadmin": {
+    "bot": {
+      "sections": {
+        "multimedia": "Multimedia resources",
+        "multimediaDesc": "Sendable assets (images, PDFs, videos, audios, locations) the bot can attach natively in WhatsApp."
+      }
+    }
+  }
+}

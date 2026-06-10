@@ -1,14 +1,15 @@
 <script setup lang="ts">
-const links = [
-  { to: '/admin', label: 'Dashboard' },
-  { to: '/admin/company', label: 'My company' },
-  { to: '/admin/bots', label: 'Bots' },
-  { to: '/admin/conversations', label: 'Conversations' },
-  { to: '/admin/customers', label: 'Customers' },
-  { to: '/admin/meetings', label: 'Meetings' },
-  { to: '/admin/cases', label: 'Cases' },
-  { to: '/admin/profile', label: 'My profile' },
-]
+const { t } = useI18n()
+const links = computed(() => [
+  { to: '/admin', label: t('nav.dashboard') },
+  { to: '/admin/company', label: t('nav.myCompany') },
+  { to: '/admin/bots', label: t('nav.bots') },
+  { to: '/admin/conversations', label: t('nav.conversations') },
+  { to: '/admin/customers', label: t('nav.customers') },
+  { to: '/admin/meetings', label: t('nav.meetings') },
+  { to: '/admin/cases', label: t('nav.cases') },
+  { to: '/admin/profile', label: t('nav.myProfile') },
+])
 
 const drawer = useNavDrawer()
 const route = useRoute()
@@ -70,7 +71,7 @@ onMounted(() => {
       <button
         type="button"
         class="md:hidden -mr-1 flex size-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition"
-        aria-label="Close menu"
+        :aria-label="$t('nav.closeMenu')"
         @click="drawer.close()"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">

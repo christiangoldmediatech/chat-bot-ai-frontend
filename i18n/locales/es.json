@@ -1,0 +1,469 @@
+{
+  "common": {
+    "save": "Guardar",
+    "saving": "Guardando…",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "deleting": "Eliminando…",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "loading": "Cargando…",
+    "reload": "Recargar",
+    "search": "Buscar",
+    "open": "Abrir",
+    "create": "Crear",
+    "creating": "Creando…",
+    "upload": "Subir",
+    "uploading": "Subiendo…",
+    "download": "Descargar",
+    "view": "Ver",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "yes": "Sí",
+    "no": "No",
+    "confirm": "Confirmar",
+    "actions": "Acciones",
+    "status": "Estado",
+    "name": "Nombre",
+    "email": "Correo",
+    "password": "Contraseña",
+    "description": "Descripción",
+    "required": "Requerido",
+    "optional": "(opcional)",
+    "noData": "Sin datos",
+    "comingSoon": "Próximamente"
+  },
+  "errors": {
+    "generic": "Algo salió mal. Inténtalo de nuevo.",
+    "network": "Error de red. Revisa tu conexión.",
+    "unauthorized": "Tu sesión expiró — inicia sesión de nuevo.",
+    "forbidden": "No tienes acceso a esto.",
+    "notFound": "No encontrado.",
+    "fileRequired": "Selecciona un archivo primero.",
+    "fieldRequired": "Este campo es obligatorio.",
+    "emailInvalid": "Ingresa un correo válido.",
+    "passwordTooShort": "La contraseña es muy corta."
+  },
+  "landing": {
+    "navFeatures": "Características",
+    "navHow": "Cómo funciona",
+    "navGetStarted": "Empezar",
+    "goToDashboard": "Ir al panel",
+    "createAccount": "Crear cuenta",
+    "signIn": "Iniciar sesión",
+    "hero": {
+      "badge": "Asistente IA para WhatsApp",
+      "title1": "Conoce a",
+      "title2": ". El agente incansable de tu negocio en WhatsApp.",
+      "subtitle": "Kaibot responde a tus clientes en WhatsApp 24/7 — contesta preguntas, califica leads y deriva a una persona solo cuando realmente importa.",
+      "ctaSignIn": "Inicia sesión en tu empresa",
+      "ctaCreateFree": "Crea una cuenta gratis",
+      "chatPreviewTitle": "Kaibot · Acme Co.",
+      "chatPreviewOnline": "en línea",
+      "chatPreviewUser1": "¡Hola! ¿Envían a México?",
+      "chatPreviewBot1": "Sí, enviamos a todo México — normalmente 2-4 días hábiles. ¿Quieres que te pase una cotización?",
+      "chatPreviewUser2": "Sí, por favor",
+      "chatPreviewTyping": "Kaibot está escribiendo…"
+    },
+    "features": {
+      "kicker": "Por qué Kaibot",
+      "title": "Hecho para que tus clientes nunca esperen.",
+      "subtitle": "Un set enfocado de capacidades — sin relleno, sin configuración complicada.",
+      "alwaysOnTitle": "Siempre disponible",
+      "alwaysOnBody": "Kaibot responde cada mensaje en segundos — a las 3 AM, en fines de semana, durante lanzamientos. Ningún cliente queda sin respuesta.",
+      "nativeTitle": "WhatsApp nativo",
+      "nativeBody": "Se conecta al canal que tus clientes ya usan todos los días. Sin descargar nada, sin nuevos hábitos.",
+      "trainedTitle": "Entrenado con tu negocio",
+      "trainedBody": "Sube tus documentos, FAQs y políticas. Kaibot aprende tu voz y responde como parte de tu equipo."
+    },
+    "how": {
+      "kicker": "Cómo funciona",
+      "title": "Funcional en minutos.",
+      "step1Title": "Conecta WhatsApp",
+      "step1Body": "Vincula tu número de empresa en unos clics. Sin código, sin configuración complicada.",
+      "step2Title": "Enseña a Kaibot",
+      "step2Body": "Sube documentos, precios y FAQs. Kaibot los lee y queda listo en menos de una hora.",
+      "step3Title": "Déjalo trabajar",
+      "step3Body": "Kaibot responde solo y avisa a una persona solo cuando la conversación realmente lo necesita."
+    },
+    "cta": {
+      "title": "Dale a tu negocio un asistente 24/7.",
+      "subtitle": "Entra al workspace de tu empresa y empieza a responder más rápido que nunca.",
+      "primary": "Acceso de empresa",
+      "primaryAuth": "Abrir panel",
+      "secondary": "Crea una cuenta gratis"
+    },
+    "footer": {
+      "tagline": "IA en WhatsApp para empresas modernas",
+      "signIn": "Iniciar sesión",
+      "createAccount": "Crear cuenta"
+    }
+  },
+  "auth": {
+    "brandTagline": "IA en WhatsApp para empresas",
+    "login": {
+      "title": "Inicia sesión con tu correo",
+      "subtitle": "Administra tus bots, conversaciones y clientes en un solo lugar.",
+      "emailPlaceholder": "Correo",
+      "passwordPlaceholder": "Contraseña",
+      "showPassword": "Mostrar contraseña",
+      "hidePassword": "Ocultar contraseña",
+      "submit": "Entrar",
+      "submitting": "Entrando…",
+      "noAccount": "¿No tienes cuenta?",
+      "registerLink": "Registra una empresa",
+      "errorRequired": "Correo y contraseña son obligatorios.",
+      "errorGeneric": "No se pudo iniciar sesión."
+    },
+    "register": {
+      "title": "Registra tu empresa",
+      "subtitle": "Crea un tenant y un usuario OWNER para administrar tus bots.",
+      "companyNameLabel": "Nombre de la empresa",
+      "slugLabel": "Slug",
+      "slugHelp": "Identificador único, en kebab-case.",
+      "emailLabel": "Correo del OWNER",
+      "passwordLabel": "Contraseña",
+      "passwordHelp": "Mínimo 12 caracteres.",
+      "submit": "Crear empresa",
+      "submitting": "Creando…",
+      "hasAccount": "¿Ya tienes cuenta?",
+      "loginLink": "Inicia sesión",
+      "errorPasswordLength": "La contraseña debe tener al menos 12 caracteres.",
+      "errorSlugFormat": "El slug debe estar en kebab-case (minúsculas, números y guiones).",
+      "errorGeneric": "No se pudo crear la empresa."
+    }
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "bots": "Bots",
+    "documents": "Documentos",
+    "conversations": "Conversaciones",
+    "customers": "Clientes",
+    "meetings": "Reuniones",
+    "cases": "Casos",
+    "company": "Empresa",
+    "myCompany": "Mi empresa",
+    "profile": "Perfil",
+    "myProfile": "Mi perfil",
+    "signOut": "Cerrar sesión",
+    "closeMenu": "Cerrar menú",
+    "openMenu": "Abrir menú",
+    "superadmin": "Super admin",
+    "companies": "Empresas"
+  },
+  "admin": {
+    "panelTitle": "Panel admin",
+    "bot": {
+      "backToBots": "← Volver a bots",
+      "configureAgent": "Configurar agente",
+      "whatsapp": "WhatsApp",
+      "deleteBot": "Eliminar",
+      "deleteConfirmTitle": "¿Eliminar el bot {name}?",
+      "deleteConfirmMessage": "Sus documentos, conversaciones, clientes e integraciones también se eliminarán permanentemente. Esta acción no se puede deshacer.",
+      "deleteConfirmTyped": "Para confirmar, escribe el nombre del bot:",
+      "deleteConfirmAction": "Eliminar bot",
+      "sections": {
+        "overview": "Resumen",
+        "documents": "Documentos",
+        "documentsDesc": "Sube archivos .md, .txt o .pdf — el bot los usa como contexto de conocimiento (RAG).",
+        "media": "Multimedia",
+        "mediaDesc": "Imágenes, PDFs, videos, audios o ubicaciones que el bot envía como adjuntos nativos en WhatsApp.",
+        "calendar": "Google Calendar",
+        "calendarDesc": "Conecta una cuenta de Google para que el bot pueda ver disponibilidad y agendar reuniones."
+      },
+      "ai": "IA",
+      "aiProvider": "Proveedor",
+      "aiModel": "Modelo",
+      "whatsappPhoneId": "Phone ID",
+      "whatsappWabaId": "WABA ID",
+      "whatsappAppSecret": "App secret",
+      "whatsappAppSecretConfigured": "Configurado",
+      "whatsappAppSecretMissing": "Sin configurar",
+      "callbackUrl": "URL de callback",
+      "verifyToken": "Verify token",
+      "pasteInMeta": "Pega ambos en Meta App → WhatsApp → Configuration → Webhook.",
+      "systemPrompt": "System prompt"
+    },
+    "media": {
+      "cardTitle": "Recursos multimedia",
+      "cardDescription": "Sube imágenes, PDFs, videos, audios o registra ubicaciones que el bot puede enviar de forma nativa por WhatsApp. El modelo elige por {key} según la descripción.",
+      "actions": {
+        "uploadFile": "Subir archivo",
+        "addLocation": "Agregar ubicación"
+      },
+      "sizeHint": "Imágenes ≤ 5 MB · PDFs ≤ 100 MB · Audio/Video ≤ 16 MB",
+      "form": {
+        "newFile": "Nuevo archivo",
+        "newLocation": "Nueva ubicación",
+        "file": "Archivo",
+        "unknownType": "tipo desconocido",
+        "keyLabel": "Key (identificador único)",
+        "keyPlaceholder": "ej. catalogo-primavera.pdf",
+        "keyHelp": "Solo a–z, 0–9, punto, guion. El bot lo usa para referenciar este recurso.",
+        "descriptionLabel": "Descripción para el bot",
+        "descriptionPlaceholder": "ej. Catálogo completo de productos primavera 2026",
+        "descriptionHelp": "Esta línea le dice al bot cuándo usar este recurso.",
+        "locationKeyPlaceholder": "ej. tienda-principal",
+        "locationDescriptionPlaceholder": "ej. Sucursal centro",
+        "latitudeLabel": "Latitud",
+        "longitudeLabel": "Longitud",
+        "placeNameLabel": "Nombre del lugar (opcional)",
+        "placeNamePlaceholder": "ej. Tienda Centro",
+        "addressLabel": "Dirección (opcional)",
+        "addressPlaceholder": "ej. Av. 9 de Octubre 123, Cuenca",
+        "saveLocation": "Guardar ubicación",
+        "fileRequired": "Selecciona un archivo primero.",
+        "keyAndDescriptionRequired": "Key y descripción son obligatorios.",
+        "latLngRequired": "Latitud y longitud son obligatorios."
+      },
+      "list": {
+        "emptyTitle": "Aún no hay recursos",
+        "emptyBody": "Sube tu primer archivo o registra una ubicación para que el bot pueda enviar contenido nativo.",
+        "cachedAtMeta": "Listo en Meta",
+        "cachedAtMetaTooltip": "Meta tiene el archivo cacheado — el siguiente envío es instantáneo"
+      },
+      "type": {
+        "image": "Imagen",
+        "document": "Documento",
+        "video": "Video",
+        "audio": "Audio",
+        "voice": "Nota de voz",
+        "sticker": "Sticker",
+        "location": "Ubicación"
+      },
+      "superadminNotice": "Administrando recursos de un bot ajeno como super-admin."
+    },
+    "chat": {
+      "loadingImage": "Cargando imagen…",
+      "image": "Imagen",
+      "document": "Documento",
+      "video": "Video",
+      "customerVideo": "Video del cliente",
+      "audio": "Audio",
+      "voiceNote": "Nota de voz",
+      "location": "Ubicación",
+      "file": "archivo",
+      "loading": "Cargando…",
+      "receivedViaWhatsapp": "Recibido vía WhatsApp",
+      "failedToLoad": "No se pudo cargar.",
+      "imageFullView": "Vista ampliada de imagen",
+      "closeEsc": "Cerrar (Esc)"
+    },
+    "documents": {
+      "cardTitle": "Documentos (RAG)",
+      "cardDescription": "Texto plano (.txt) o Markdown (.md), hasta 5 MB. El backend los chunkea, los embebe y los usa como contexto en cada respuesta.",
+      "uploadButton": "+ Subir documento",
+      "addAnotherButton": "+ Agregar otro documento",
+      "moreEqualsBetter": "Más documentos = mejores respuestas.",
+      "noDocuments": "Aún no hay documentos subidos.",
+      "chunksLabel": "chunks",
+      "view": "Ver",
+      "viewingAria": "Viendo {filename}",
+      "statusReady": "Listo",
+      "statusProcessing": "Procesando",
+      "statusError": "Error",
+      "charsLabel": "caracteres",
+      "characters": "caracteres",
+      "copyDocumentText": "Copiar texto del documento",
+      "copyText": "Copiar texto",
+      "reconstructing": "Reconstruyendo documento desde los chunks…",
+      "noTextContent": "Este documento no tiene texto extraíble.",
+      "stillProcessing": "El documento sigue en estado {status}. Inténtalo cuando esté en READY."
+    },
+    "calendar": {
+      "escalationTitle": "Escalado a asesor",
+      "escalationSubtitle": "Datos del asesor y cuándo el bot debe hacer follow-up si el caso queda pendiente.",
+      "saved": "Guardado ✓",
+      "advisorEmail": "Correo del asesor",
+      "advisorEmailHelp": "Cuando el bot escale, este correo recibe la notificación. Déjalo vacío para deshabilitar el escalado.",
+      "advisorName": "Nombre del asesor",
+      "followupHours": "Follow-up tras (horas)",
+      "followupHoursHelp": "0 = sin follow-up automático.",
+      "saveEscalation": "Guardar escalado",
+      "defaultDuration": "Duración por defecto"
+    }
+  },
+  "cases": {
+    "title": "Casos",
+    "subtitle": "Escalados a un asesor humano. Resuelve cada uno desde aquí o desde la página del cliente.",
+    "stat": {
+      "open": "Abiertos",
+      "pending": "Pendientes",
+      "attended": "Atendidos",
+      "resolved": "Resueltos"
+    },
+    "filter": {
+      "allBots": "Todos los bots",
+      "searchPlaceholder": "Buscar por cliente, teléfono o resumen…"
+    },
+    "list": {
+      "empty": "Aún no hay casos escalados.",
+      "noMatches": "No hay casos que coincidan con los filtros.",
+      "followupBadge": "follow-up",
+      "resolution": "Resolución:",
+      "bot": "Bot:",
+      "created": "Creado:",
+      "resolved": "Resuelto:"
+    },
+    "action": {
+      "attend": "Atender",
+      "resolve": "Resolver"
+    },
+    "resolveModal": {
+      "title": "Marcar caso como resuelto",
+      "noteBefore": "Agrega una nota opcional. Quedará registrado como ",
+      "noteEmph": "resuelto por el asesor",
+      "noteAfter": ".",
+      "placeholder": "Ej. Se ajustó la facturación.",
+      "submit": "Marcar resuelto"
+    },
+    "card": {
+      "title": "Casos del cliente",
+      "subtitle": "Escalados a asesor humano",
+      "emptyTitle": "Sin casos escalados",
+      "emptyBody": "Cuando el bot escale una conversación a un asesor, aparecerá aquí.",
+      "followupTooltip": "El bot mandó un follow-up al cliente",
+      "resolutionLabel": "Resolución",
+      "resolvedByBot": "por el bot",
+      "resolvedByCustomer": "por el cliente",
+      "resolvedByAgent": "por el asesor",
+      "resolveModalBody": "Agrega una nota breve sobre cómo se resolvió (opcional). El caso quedará registrado como ",
+      "resolveModalEmph": "resuelto por el asesor",
+      "resolveModalPlaceholder": "Ej. Se ajustó el cargo en la facturación de mayo.",
+      "openCount": "{n} abierto | {n} abiertos",
+      "groupPending": "⏳ Pendientes ({n})",
+      "groupAttended": "👋 Atendidas ({n})",
+      "groupResolved": "✓ Resueltas ({n})"
+    }
+  },
+  "customers": {
+    "title": "Clientes",
+    "filterByBot": "Filtrar por bot",
+    "all": "Todos",
+    "empty": {
+      "title": "Aún no hay clientes",
+      "description": "Los clientes aparecen cuando alguien le escribe a uno de tus bots."
+    },
+    "table": {
+      "customer": "Cliente",
+      "phone": "Teléfono",
+      "conversations": "Conversaciones",
+      "open": "Abiertas",
+      "lastMessage": "Último mensaje"
+    },
+    "detail": {
+      "back": "← Volver a clientes",
+      "stats": {
+        "conversations": "Conversaciones",
+        "open": "Abiertas",
+        "lastMessage": "Último mensaje"
+      },
+      "conversationsTitle": "Conversaciones",
+      "table": {
+        "bot": "Bot",
+        "status": "Estado",
+        "lastMessage": "Último mensaje",
+        "created": "Creada"
+      }
+    }
+  },
+  "meetings": {
+    "title": "Reuniones",
+    "subtitle": "Todas las reuniones agendadas por los bots. Filtra por bot, cliente o motivo, y agrúpalas como prefieras.",
+    "explorer": {
+      "tabUpcoming": "Próximas",
+      "tabPast": "Pasadas",
+      "tabCancelled": "Canceladas",
+      "tabAll": "Todas",
+      "searchPlaceholder": "Buscar por cliente, teléfono, correo, motivo o bot…",
+      "allBots": "Todos los bots",
+      "groupFlat": "Lista",
+      "groupByBot": "Por bot",
+      "groupByCustomer": "Por cliente",
+      "emptyTitle": "Aún no hay reuniones agendadas.",
+      "emptyTitleFiltered": "No hay reuniones que coincidan con los filtros.",
+      "emptyBody": "Cuando uno de los bots agende, aparecerá aquí.",
+      "emptyBodyFiltered": "Prueba con otra búsqueda o quita los filtros."
+    },
+    "card": {
+      "title": "Reuniones agendadas",
+      "subtitle": "Histórico de meets con este cliente",
+      "emptyTitle": "Sin reuniones agendadas",
+      "emptyBody": "Cuando el bot agende una reunión con este cliente, aparecerá aquí.",
+      "groupUpcoming": "Próximas ({n})",
+      "groupPast": "Pasadas ({n})",
+      "groupCancelled": "Canceladas ({n})",
+      "cancelled": "Cancelada",
+      "fallbackTopic": "Reunión",
+      "relativeInMin": "en {n} min",
+      "relativeAgoMin": "hace {n} min",
+      "relativeInHr": "en {n} h",
+      "relativeAgoHr": "hace {n} h",
+      "relativeInDay": "en {n} d",
+      "relativeAgoDay": "hace {n} d"
+    }
+  },
+  "conversations": {
+    "title": "Conversaciones",
+    "subtitle": "Volumen de mensajes entrantes y salientes en todos tus bots.",
+    "reloadStats": "Recargar estadísticas",
+    "activity": {
+      "daily": "Diario",
+      "dailySubtitle": "Últimos 14 días · agrupado por día",
+      "weekly": "Semanal",
+      "weeklySubtitle": "Últimas 12 semanas · agrupado por semana",
+      "monthly": "Mensual",
+      "monthlySubtitle": "Últimos 12 meses · agrupado por mes"
+    },
+    "filter": {
+      "search": "Buscar",
+      "searchPlaceholder": "Nombre o teléfono",
+      "bot": "Bot",
+      "all": "Todos",
+      "status": "Estado",
+      "from": "Desde",
+      "to": "Hasta",
+      "clear": "Limpiar",
+      "apply": "Aplicar"
+    },
+    "empty": {
+      "title": "Sin conversaciones",
+      "description": "Ajusta los filtros o espera a que un cliente te escriba."
+    },
+    "table": {
+      "customer": "Cliente",
+      "bot": "Bot",
+      "status": "Estado",
+      "lastMessage": "Último mensaje"
+    },
+    "pagination": {
+      "summary": "{total} conversaciones — página {page} / {totalPages}",
+      "previous": "Anterior",
+      "next": "Siguiente"
+    },
+    "detail": {
+      "back": "← Volver a conversaciones",
+      "takeOver": "Tomar conversación (HUMAN)",
+      "handBack": "Devolver al bot",
+      "close": "Cerrar",
+      "noMessages": "Sin mensajes",
+      "sendAsAgent": "Enviar como agente",
+      "composerPlaceholder": "Escribe tu respuesta…",
+      "send": "Enviar",
+      "sending": "Enviando…",
+      "composerNote": "El mensaje se almacena y queda en el historial. La entrega saliente a WhatsApp desde el lado del agente aún no está cableada — confirma con el cliente por otro canal mientras tanto.",
+      "closedNote": "Conversación cerrada. Vuelve automáticamente al estado BOT cuando el cliente envíe un nuevo mensaje.",
+      "botActiveNote": "El bot está respondiendo. Toma la conversación para responder como agente."
+    }
+  },
+  "superadmin": {
+    "bot": {
+      "sections": {
+        "multimedia": "Recursos multimedia",
+        "multimediaDesc": "Activos enviables (imágenes, PDFs, videos, audios, ubicaciones) que el bot puede adjuntar nativamente en WhatsApp."
+      }
+    }
+  }
+}
