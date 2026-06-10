@@ -218,8 +218,8 @@ await load()
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-slate-900">Recursos multimedia</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Imágenes, PDFs, videos, audios o ubicaciones que el bot envía como adjuntos nativos en WhatsApp.</p>
+            <h2 class="text-base font-semibold text-slate-900">Multimedia resources</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Images, PDFs, videos, audios, or locations the bot sends as native WhatsApp attachments.</p>
           </div>
         </header>
         <BotMediaAssetsCard :bot-id="bot.id" />

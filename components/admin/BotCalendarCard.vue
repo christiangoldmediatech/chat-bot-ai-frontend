@@ -163,46 +163,46 @@ onMounted(() => {
         <div class="flex items-center justify-between">
           <div>
             <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-600">
-              Escalado a asesor
+              Escalate to advisor
             </h3>
             <p class="text-xs text-slate-500 mt-0.5">
-              Datos del asesor y cuándo el bot debe hacer follow-up si el caso queda pendiente.
+              Advisor contact info and when the bot should follow up if the case stays pending.
             </p>
           </div>
           <span
             v-if="escalationSavedAt"
             class="text-xs text-success-700 bg-success-50 border border-success-200 rounded-full px-2 py-0.5"
           >
-            Guardado ✓
+            Saved ✓
           </span>
         </div>
 
         <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div class="sm:col-span-2">
-            <label class="block text-xs font-medium text-slate-700">Correo del asesor</label>
+            <label class="block text-xs font-medium text-slate-700">Advisor email</label>
             <input
               v-model="form.advisorEmail"
               type="email"
               maxlength="254"
-              placeholder="ventas@empresa.com"
+              placeholder="sales@company.com"
               class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
             >
             <p class="mt-1 text-[11px] text-slate-500">
-              Cuando el bot escale, este correo recibe la notificación. Déjalo vacío para deshabilitar el escalado.
+              When the bot escalates, this address receives the notification. Leave empty to disable escalation.
             </p>
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-700">Nombre del asesor</label>
+            <label class="block text-xs font-medium text-slate-700">Advisor name</label>
             <input
               v-model="form.advisorName"
               type="text"
               maxlength="120"
-              placeholder="(opcional)"
+              placeholder="(optional)"
               class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
             >
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-700">Follow-up tras (horas)</label>
+            <label class="block text-xs font-medium text-slate-700">Follow-up after (hours)</label>
             <input
               v-model.number="form.followupHours"
               type="number"
@@ -210,7 +210,7 @@ onMounted(() => {
               max="168"
               class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
             >
-            <p class="mt-1 text-[11px] text-slate-500">0 = sin follow-up automático.</p>
+            <p class="mt-1 text-[11px] text-slate-500">0 = no automatic follow-up.</p>
           </div>
         </div>
 
@@ -220,7 +220,7 @@ onMounted(() => {
           :disabled="saving"
           @click="onSaveEscalation"
         >
-          {{ saving ? 'Guardando…' : 'Guardar escalado' }}
+          {{ saving ? 'Saving…' : 'Save escalation' }}
         </button>
       </div>
 

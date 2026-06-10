@@ -36,7 +36,7 @@ async function loadPreviewUrl(): Promise<void> {
     const res = await assets.getDownloadUrl(props.botId, props.message.mediaRef)
     previewUrl.value = res.url
   } catch (err) {
-    previewError.value = (err as { message?: string }).message ?? 'No se pudo cargar.'
+    previewError.value = (err as { message?: string }).message ?? 'Failed to load.'
   } finally {
     fetchingPreview.value = false
   }
@@ -117,7 +117,7 @@ function closeLightbox(): void {
       v-if="previewUrl"
       type="button"
       class="block overflow-hidden rounded-xl ring-1 ring-black/5 max-w-[280px] hover:ring-black/20 transition cursor-zoom-in"
-      :aria-label="message.content || 'Imagen'"
+      :aria-label="message.content || 'Image'"
       @click="openLightbox"
     >
       <img :src="previewUrl" class="block w-full h-auto" alt="">
@@ -129,7 +129,7 @@ function closeLightbox(): void {
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
         <rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" />
       </svg>
-      <span>{{ fetchingPreview ? 'Cargando imagen…' : previewError ? previewError : 'Imagen' }}</span>
+      <span>{{ fetchingPreview ? 'Loading image…' : previewError ? previewError : 'Image' }}</span>
     </div>
     <p v-if="message.content" class="whitespace-pre-wrap">{{ message.content }}</p>
   </div>
@@ -149,9 +149,9 @@ function closeLightbox(): void {
         </svg>
       </div>
       <div class="min-w-0 flex-1">
-        <p class="truncate text-xs font-medium">{{ filename ?? 'Documento' }}</p>
+        <p class="truncate text-xs font-medium">{{ filename ?? 'Document' }}</p>
         <p class="text-[10px] opacity-70">
-          {{ mimeType ?? 'archivo' }}<template v-if="sizeBytes"> · {{ formatBytes(sizeBytes) }}</template>
+          {{ mimeType ?? 'file' }}<template v-if="sizeBytes"> · {{ formatBytes(sizeBytes) }}</template>
         </p>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 opacity-60" aria-hidden="true">
@@ -168,8 +168,8 @@ function closeLightbox(): void {
         </svg>
       </div>
       <div class="min-w-0 flex-1">
-        <p class="truncate text-xs font-medium">{{ filename ?? 'Documento' }}</p>
-        <p class="text-[10px] opacity-70">{{ fetchingPreview ? 'Cargando…' : previewError ?? mimeType ?? 'archivo' }}</p>
+        <p class="truncate text-xs font-medium">{{ filename ?? 'Document' }}</p>
+        <p class="text-[10px] opacity-70">{{ fetchingPreview ? 'Loading…' : previewError ?? mimeType ?? 'file' }}</p>
       </div>
     </div>
     <p v-if="message.content" class="whitespace-pre-wrap">{{ message.content }}</p>
@@ -193,9 +193,9 @@ function closeLightbox(): void {
         </svg>
       </div>
       <div class="min-w-0 flex-1">
-        <p class="text-xs font-medium">{{ isUser ? 'Video del cliente' : 'Video' }}</p>
+        <p class="text-xs font-medium">{{ isUser ? 'Customer video' : 'Video' }}</p>
         <p class="text-[10px] opacity-70">
-          {{ fetchingPreview ? 'Cargando…' : previewError ?? (isUser ? 'Recibido vía WhatsApp' : (mimeType ?? 'video')) }}
+          {{ fetchingPreview ? 'Loading…' : previewError ?? (isUser ? 'Received via WhatsApp' : (mimeType ?? 'video')) }}
         </p>
       </div>
     </div>
@@ -220,9 +220,9 @@ function closeLightbox(): void {
         </svg>
       </div>
       <div class="min-w-0 flex-1">
-        <p class="text-xs font-medium">{{ kind === 'VOICE' ? 'Nota de voz' : 'Audio' }}</p>
+        <p class="text-xs font-medium">{{ kind === 'VOICE' ? 'Voice note' : 'Audio' }}</p>
         <p class="text-[10px] opacity-70">
-          {{ fetchingPreview ? 'Cargando…' : previewError ?? (isUser ? 'Recibido vía WhatsApp' : (mimeType ?? 'audio')) }}
+          {{ fetchingPreview ? 'Loading…' : previewError ?? (isUser ? 'Received via WhatsApp' : (mimeType ?? 'audio')) }}
         </p>
       </div>
     </div>
@@ -250,7 +250,7 @@ function closeLightbox(): void {
         </svg>
       </div>
       <div class="min-w-0 flex-1">
-        <p class="truncate text-xs font-medium">{{ locationLabel ?? 'Ubicación' }}</p>
+        <p class="truncate text-xs font-medium">{{ locationLabel ?? 'Location' }}</p>
         <p class="font-mono text-[10px] opacity-70">
           {{ locationCoords!.lat.toFixed(5) }}, {{ locationCoords!.lng.toFixed(5) }}
         </p>
@@ -279,13 +279,13 @@ function closeLightbox(): void {
         class="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-6"
         role="dialog"
         aria-modal="true"
-        aria-label="Vista ampliada de imagen"
+        aria-label="Image full view"
         @click="closeLightbox"
       >
         <button
           type="button"
           class="absolute top-4 right-4 flex size-9 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20 transition"
-          aria-label="Cerrar (Esc)"
+          aria-label="Close (Esc)"
           @click.stop="closeLightbox"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">
