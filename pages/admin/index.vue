@@ -31,14 +31,14 @@ await load()
 <template>
   <div>
     <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-semibold">Dashboard</h1>
+      <h1 class="text-2xl font-semibold">{{ $t('admin.dashboard.title') }}</h1>
       <button
         type="button"
         class="text-sm text-slate-500 hover:text-slate-700"
         :disabled="loading"
         @click="load"
       >
-        Reload
+        {{ $t('common.reload') }}
       </button>
     </div>
 
@@ -50,14 +50,14 @@ await load()
 
     <template v-else-if="data">
       <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Bots" :value="data.bots" :hint="`${data.activeBots} active`" />
-        <StatCard label="Conversations" :value="data.conversations" :hint="`${data.openConversations} open`" />
-        <StatCard label="Handled by humans" :value="data.humanConversations" hint="HUMAN status" />
-        <StatCard label="Customers" :value="data.customers" hint="Unique phone numbers" />
+        <StatCard :label="$t('admin.dashboard.stats.bots')" :value="data.bots" :hint="$t('admin.dashboard.stats.botsHint', { n: data.activeBots })" />
+        <StatCard :label="$t('admin.dashboard.stats.conversations')" :value="data.conversations" :hint="$t('admin.dashboard.stats.conversationsHint', { n: data.openConversations })" />
+        <StatCard :label="$t('admin.dashboard.stats.humanHandled')" :value="data.humanConversations" :hint="$t('admin.dashboard.stats.humanHandledHint')" />
+        <StatCard :label="$t('admin.dashboard.stats.customers')" :value="data.customers" :hint="$t('admin.dashboard.stats.customersHint')" />
       </div>
 
       <div class="mt-8">
-        <h2 class="text-base font-semibold text-slate-900">Recent conversations</h2>
+        <h2 class="text-base font-semibold text-slate-900">{{ $t('admin.dashboard.recentConversations') }}</h2>
         <div class="mt-3">
           <ConversationList :conversations="data.recentConversations" />
         </div>

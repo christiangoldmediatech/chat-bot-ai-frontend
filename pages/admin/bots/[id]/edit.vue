@@ -7,6 +7,7 @@ definePageMeta({
   middleware: 'auth',
 })
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const bots = useBots()
@@ -75,7 +76,7 @@ async function onSubmit(): Promise<void> {
       webhookVerifyToken: form.webhookVerifyToken,
       isActive: form.isActive,
     })
-    success.value = 'Changes saved'
+    success.value = t('admin.botEdit.successMessage')
     hydrate(updated)
   } catch (err) {
     error.value = (err as ApiError).message
@@ -93,10 +94,10 @@ await load()
 
 <template>
   <div>
-    <NuxtLink :to="`/admin/bots/${id}`" class="text-sm text-slate-500 hover:text-slate-700">← Back to bot</NuxtLink>
-    <h1 class="mt-2 text-2xl font-semibold tracking-tight">Edit bot</h1>
+    <NuxtLink :to="`/admin/bots/${id}`" class="text-sm text-slate-500 hover:text-slate-700">{{ $t('admin.botEdit.back') }}</NuxtLink>
+    <h1 class="mt-2 text-2xl font-semibold tracking-tight">{{ $t('admin.botEdit.title') }}</h1>
     <p class="text-slate-500 text-sm mt-1 max-w-2xl">
-      Update how your bot behaves and the WhatsApp Business credentials from Meta. Secrets stay unchanged unless you type a new value.
+      {{ $t('admin.botEdit.subtitle') }}
     </p>
 
     <SpinnerInline v-if="loading" class="mt-6" />
@@ -112,62 +113,58 @@ await load()
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
             </svg>
           </div>
-          <h2 class="text-sm font-semibold text-slate-900">Meta setup guide</h2>
+          <h2 class="text-sm font-semibold text-slate-900">{{ $t('admin.botCreate.metaGuide.title') }}</h2>
         </div>
-        <p class="mt-1 text-xs text-slate-500">Follow these steps in order.</p>
+        <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botCreate.metaGuide.subtitle') }}</p>
 
         <ol class="mt-4 space-y-3">
           <li class="flex gap-2.5">
             <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-slate-900 text-white text-[10px] font-bold">1</span>
             <div class="min-w-0">
-              <p class="text-xs font-semibold text-slate-900">Create app in Meta</p>
+              <p class="text-xs font-semibold text-slate-900">{{ $t('admin.botCreate.metaGuide.step1Title') }}</p>
               <p class="text-[11px] text-slate-500 mt-0.5">
-                <a href="https://developers.facebook.com/apps" target="_blank" rel="noreferrer" class="text-primary-600 hover:underline">developers.facebook.com</a> → New app → add the <span class="font-medium">WhatsApp</span> product.
+                <a href="https://developers.facebook.com/apps" target="_blank" rel="noreferrer" class="text-primary-600 hover:underline">developers.facebook.com</a>{{ ' ' + $t('admin.botCreate.metaGuide.step1Body') }}
               </p>
             </div>
           </li>
           <li class="flex gap-2.5">
             <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-slate-900 text-white text-[10px] font-bold">2</span>
             <div class="min-w-0">
-              <p class="text-xs font-semibold text-slate-900">Copy 4 values from Meta</p>
+              <p class="text-xs font-semibold text-slate-900">{{ $t('admin.botCreate.metaGuide.step2Title') }}</p>
               <ul class="mt-1 space-y-0.5 text-[11px] text-slate-500">
-                <li>• <span class="font-medium">App Secret</span> — App Settings → Basic</li>
-                <li>• <span class="font-medium">Phone Number ID</span> — WhatsApp → API Setup</li>
-                <li>• <span class="font-medium">Access Token</span> — WhatsApp → API Setup</li>
-                <li>• <span class="font-medium">WABA ID</span> — WhatsApp → API Setup</li>
+                <li>• {{ $t('admin.botCreate.metaGuide.step2AppSecret') }}</li>
+                <li>• {{ $t('admin.botCreate.metaGuide.step2PhoneId') }}</li>
+                <li>• {{ $t('admin.botCreate.metaGuide.step2Token') }}</li>
+                <li>• {{ $t('admin.botCreate.metaGuide.step2Waba') }}</li>
               </ul>
             </div>
           </li>
           <li class="flex gap-2.5">
             <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-slate-900 text-white text-[10px] font-bold">3</span>
             <div class="min-w-0">
-              <p class="text-xs font-semibold text-slate-900">Paste them here</p>
-              <p class="text-[11px] text-slate-500 mt-0.5">Fill the fields in the form on the right and click <span class="font-medium text-slate-700">Save changes</span>.</p>
+              <p class="text-xs font-semibold text-slate-900">{{ $t('admin.botCreate.metaGuide.step3Title') }}</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">{{ $t('admin.botEdit.step3PasteHere') }}<span class="font-medium text-slate-700">{{ $t('admin.botEdit.step3SaveEmph') }}</span>.</p>
             </div>
           </li>
           <li class="flex gap-2.5">
             <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-success-600 text-white text-[10px] font-bold">4</span>
             <div class="min-w-0">
-              <p class="text-xs font-semibold text-slate-900">Configure webhook in Meta</p>
-              <p class="text-[11px] text-slate-500 mt-0.5">
-                In Meta → WhatsApp → Configuration → Webhook → <span class="font-medium">Edit</span>. Paste the
-                <span class="font-medium text-slate-700">Callback URL</span> and
-                <span class="font-medium text-slate-700">Verify token</span> shown in the Webhook section on the right.
-              </p>
+              <p class="text-xs font-semibold text-slate-900">{{ $t('admin.botCreate.metaGuide.step4Title') }}</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">{{ $t('admin.botEdit.step4ConfigBody') }}</p>
             </div>
           </li>
           <li class="flex gap-2.5">
             <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-success-600 text-white text-[10px] font-bold">5</span>
             <div class="min-w-0">
-              <p class="text-xs font-semibold text-slate-900">Subscribe to <code class="font-mono text-[10px] bg-slate-100 px-1 rounded">messages</code></p>
-              <p class="text-[11px] text-slate-500 mt-0.5">In "Webhook fields" → Manage, check the <span class="font-medium">messages</span> event.</p>
+              <p class="text-xs font-semibold text-slate-900">{{ $t('admin.botCreate.metaGuide.step5Title') }}</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">{{ $t('admin.botCreate.metaGuide.step5Body') }}</p>
             </div>
           </li>
           <li class="flex gap-2.5">
             <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary-600 text-white text-[10px] font-bold">6</span>
             <div class="min-w-0">
-              <p class="text-xs font-semibold text-slate-900">Test it</p>
-              <p class="text-[11px] text-slate-500 mt-0.5">Send a real WhatsApp message to your business number — it should appear in <NuxtLink to="/admin/conversations" class="text-primary-600 hover:underline">Conversations</NuxtLink>.</p>
+              <p class="text-xs font-semibold text-slate-900">{{ $t('admin.botCreate.metaGuide.step6Title') }}</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">{{ $t('admin.botCreate.metaGuide.step6BodyBefore') }}<NuxtLink to="/admin/conversations" class="text-primary-600 hover:underline">{{ $t('admin.botCreate.metaGuide.step6Link') }}</NuxtLink>{{ $t('admin.botCreate.metaGuide.step6BodyAfter') }}</p>
             </div>
           </li>
         </ol>
@@ -179,7 +176,7 @@ await load()
             rel="noreferrer"
             class="inline-flex items-center gap-1 text-[11px] font-medium text-primary-600 hover:underline"
           >
-            Meta WhatsApp Cloud API docs
+            {{ $t('admin.botCreate.metaGuide.docsLink') }}
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3" aria-hidden="true">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
               <polyline points="15 3 21 3 21 9" />
@@ -216,37 +213,37 @@ await load()
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-slate-900">Bot details</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Identity and base behavior — only visible inside the admin.</p>
+            <h2 class="text-base font-semibold text-slate-900">{{ $t('admin.botCreate.section.detailsTitle') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.botCreate.section.detailsSubtitle') }}</p>
           </div>
         </header>
 
         <div>
-          <label class="block text-sm font-medium text-slate-700">Name</label>
+          <label class="block text-sm font-medium text-slate-700">{{ $t('admin.botCreate.section.nameLabel') }}</label>
           <input
             v-model="form.name"
             type="text"
             required
             minlength="2"
             maxlength="80"
-            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-slate-700">System prompt</label>
+          <label class="block text-sm font-medium text-slate-700">{{ $t('admin.botCreate.section.systemPromptLabel') }}</label>
           <textarea
             v-model="form.systemPrompt"
             required
             rows="5"
-            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
-          <p class="mt-1 text-xs text-slate-500">Base instructions the model will receive on every conversation.</p>
+          <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botCreate.section.systemPromptHelp') }}</p>
         </div>
 
         <div class="flex items-center gap-2">
           <input id="isActive" v-model="form.isActive" type="checkbox" class="size-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500">
-          <label for="isActive" class="text-sm text-slate-700">Bot active</label>
+          <label for="isActive" class="text-sm text-slate-700">{{ $t('admin.botEdit.botActiveLabel') }}</label>
         </div>
       </section>
 
@@ -261,41 +258,41 @@ await load()
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-slate-900">WhatsApp Business connection</h2>
+            <h2 class="text-base font-semibold text-slate-900">{{ $t('admin.botCreate.section.waConnectionTitle') }}</h2>
             <p class="text-xs text-slate-500 mt-0.5">
-              Credentials from
-              <a href="https://developers.facebook.com/apps" target="_blank" rel="noreferrer" class="font-medium text-primary-600 hover:underline">Meta App</a>
-              → WhatsApp → API Setup.
+              {{ $t('admin.botEdit.subtitleEdit') }}
+              <a href="https://developers.facebook.com/apps" target="_blank" rel="noreferrer" class="font-medium text-primary-600 hover:underline">{{ $t('admin.botCreate.section.waConnectionSubtitleLink') }}</a>
+              {{ $t('admin.botCreate.section.waConnectionSubtitleAfter') }}
             </p>
           </div>
         </header>
 
         <!-- Identifiers (public-ish) -->
         <div>
-          <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">Identifiers</h3>
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{{ $t('admin.botEdit.identifiers') }}</h3>
           <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-slate-700">Phone Number ID</label>
+              <label class="block text-sm font-medium text-slate-700">{{ $t('admin.botCreate.section.phoneIdLabel') }}</label>
               <input
                 v-model="form.whatsappPhoneId"
                 type="text"
                 required
                 placeholder="123456789012345"
-                class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               >
-              <p class="mt-1 text-xs text-slate-500">From the WhatsApp dashboard, next to the test number.</p>
+              <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botCreate.section.phoneIdHelp') }}</p>
             </div>
             <div>
               <label class="block text-sm font-medium text-slate-700">
-                WhatsApp Business Account ID <span class="text-slate-400 font-normal">(optional)</span>
+                {{ $t('admin.botCreate.section.wabaIdLabel') }} <span class="text-slate-400 font-normal">{{ $t('admin.botCreate.section.wabaIdOptional') }}</span>
               </label>
               <input
                 v-model="form.whatsappBusinessAccountId"
                 type="text"
                 placeholder="987654321098765"
-                class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               >
-              <p class="mt-1 text-xs text-slate-500">WABA ID — useful for templates and metrics.</p>
+              <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botCreate.section.wabaIdHelp') }}</p>
             </div>
           </div>
         </div>
@@ -305,43 +302,43 @@ await load()
         <!-- Secrets (write-only) -->
         <div>
           <div class="flex items-start gap-2">
-            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">Secrets</h3>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{{ $t('admin.botEdit.secrets') }}</h3>
             <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3" aria-hidden="true">
                 <rect x="3" y="11" width="18" height="11" rx="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
-              Encrypted at rest
+              {{ $t('admin.botEdit.encryptedAtRest') }}
             </span>
           </div>
-          <p class="mt-1 text-xs text-slate-500">For security, current values are never shown. Leave blank to keep the value already on the server.</p>
+          <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botEdit.secretsHelp') }}</p>
 
           <div class="mt-3 space-y-4">
             <div>
-              <label class="block text-sm font-medium text-slate-700">New access token</label>
+              <label class="block text-sm font-medium text-slate-700">{{ $t('admin.botEdit.newAccessToken') }}</label>
               <input
                 v-model="form.whatsappToken"
                 type="password"
                 pattern="EAA[A-Za-z0-9_-]+"
-                placeholder="EAA… (leave blank to keep current)"
+                :placeholder="$t('admin.botEdit.newTokenPlaceholder')"
                 autocomplete="off"
-                class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               >
             </div>
 
             <div>
               <label class="block text-sm font-medium text-slate-700">
-                New app secret <span class="text-slate-400 font-normal">(optional)</span>
+                {{ $t('admin.botEdit.newAppSecret') }} <span class="text-slate-400 font-normal">{{ $t('admin.botCreate.section.wabaIdOptional') }}</span>
               </label>
               <input
                 v-model="form.whatsappAppSecret"
                 type="password"
                 pattern="[a-fA-F0-9]+"
-                placeholder="hex string (leave blank to keep current)"
+                :placeholder="$t('admin.botEdit.newAppSecretPlaceholder')"
                 autocomplete="off"
-                class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               >
-              <p class="mt-1 text-xs text-slate-500">Enables HMAC validation for Meta's webhook payloads.</p>
+              <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botEdit.newAppSecretHelp') }}</p>
             </div>
           </div>
         </div>
@@ -350,33 +347,33 @@ await load()
 
         <!-- Webhook -->
         <div>
-          <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">Webhook</h3>
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{{ $t('admin.botEdit.webhookTitle') }}</h3>
           <p class="mt-1 text-xs text-slate-500">
-            Paste these two values in <span class="font-medium text-slate-600">Meta App → WhatsApp → Configuration → Webhook → Edit</span>.
+            {{ $t('admin.botEdit.webhookHelp') }}
           </p>
 
           <!-- Callback URL (read-only, derived from bot id) -->
           <div class="mt-3">
             <div class="flex items-center justify-between">
-              <label class="block text-sm font-medium text-slate-700">Callback URL</label>
-              <CopyButton :value="callbackUrl" label="Copy URL" />
+              <label class="block text-sm font-medium text-slate-700">{{ $t('admin.botEdit.callbackUrlLabel') }}</label>
+              <CopyButton :value="callbackUrl" :label="$t('admin.botEdit.copyUrl')" />
             </div>
             <div class="mt-1 flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-2 ring-1 ring-inset ring-slate-200/50">
               <code class="flex-1 text-xs font-mono text-slate-700 break-all select-all">{{ callbackUrl }}</code>
             </div>
             <p class="mt-1 text-xs text-slate-500">
-              Built from this bot's ID (<span class="font-mono">{{ id }}</span>). Don't share — paste it in Meta's Callback URL field.
+              {{ $t('admin.botEdit.callbackHelpBefore') }}<span class="font-mono">{{ id }}</span>{{ $t('admin.botEdit.callbackHelpAfter') }}
             </p>
           </div>
 
           <!-- Verify token (editable) -->
           <div class="mt-4">
             <div class="flex items-center justify-between">
-              <label class="block text-sm font-medium text-slate-700">Verify token</label>
+              <label class="block text-sm font-medium text-slate-700">{{ $t('admin.botEdit.verifyTokenLabel') }}</label>
               <CopyButton
                 v-if="form.webhookVerifyToken"
                 :value="form.webhookVerifyToken"
-                label="Copy token"
+                :label="$t('admin.botEdit.copyToken')"
               />
             </div>
             <input
@@ -384,10 +381,10 @@ await load()
               type="text"
               required
               minlength="16"
-              class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 font-mono focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
             >
             <p class="mt-1 text-xs text-slate-500">
-              Paste the same value in Meta's "Verify token" field. Meta uses it once to confirm you own the webhook endpoint.
+              {{ $t('admin.botEdit.verifyHelp') }}
             </p>
           </div>
         </div>
@@ -399,14 +396,14 @@ await load()
           class="rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
           @click="onCancel"
         >
-          Cancel
+          {{ $t('common.cancel') }}
         </button>
         <button
           type="submit"
           class="rounded-xl bg-slate-900 px-5 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 shadow-glass transition"
           :disabled="saving"
         >
-          {{ saving ? 'Saving…' : 'Save changes' }}
+          {{ saving ? $t('common.saving') : $t('admin.botEdit.saveChanges') }}
         </button>
       </div>
     </form>

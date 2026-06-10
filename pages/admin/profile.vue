@@ -6,6 +6,7 @@ definePageMeta({
   middleware: 'auth',
 })
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const router = useRouter()
 const { changePassword, logout } = useAuth()
@@ -38,12 +39,12 @@ async function onSubmit(): Promise<void> {
   success.value = null
   try {
     await changePassword(form.currentPassword, form.newPassword)
-    success.value = 'Password updated. Use the new password on your next sign-in.'
+    success.value = t('admin.profile.successMessage')
     form.currentPassword = ''
     form.newPassword = ''
     form.confirmPassword = ''
   } catch (err) {
-    error.value = (err as ApiError).message || 'Could not change password.'
+    error.value = (err as ApiError).message || t('admin.profile.errorGeneric')
   } finally {
     saving.value = false
   }
@@ -58,9 +59,9 @@ async function onLogout(): Promise<void> {
 <template>
   <div>
     <header>
-      <h1 class="text-2xl font-semibold tracking-tight">My profile</h1>
+      <h1 class="text-2xl font-semibold tracking-tight">{{ $t('admin.profile.title') }}</h1>
       <p class="text-slate-500 mt-1 text-sm max-w-2xl">
-        Account details and password for your user. Only you can change this — not even the platform team has access to your password.
+        {{ $t('admin.profile.subtitle') }}
       </p>
     </header>
 
@@ -80,24 +81,24 @@ async function onLogout(): Promise<void> {
               </svg>
               {{ auth.user.role }}
             </span>
-            <span class="text-xs text-slate-500">in this workspace</span>
+            <span class="text-xs text-slate-500">{{ $t('admin.profile.inThisWorkspace') }}</span>
           </div>
         </div>
       </div>
 
       <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div class="rounded-xl bg-slate-50/80 ring-1 ring-slate-200/70 px-3 py-2.5">
-          <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">Email</p>
+          <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('admin.profile.emailLabel') }}</p>
           <p class="mt-0.5 text-sm text-slate-700 truncate">{{ auth.user.email }}</p>
         </div>
         <div class="rounded-xl bg-slate-50/80 ring-1 ring-slate-200/70 px-3 py-2.5">
-          <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">Role</p>
+          <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('admin.profile.roleLabel') }}</p>
           <p class="mt-0.5 text-sm text-slate-700">{{ auth.user.role }}</p>
         </div>
       </div>
 
       <p class="mt-4 text-xs text-slate-500">
-        Email and role can only be changed by an OWNER from the tenant's user management screen.
+        {{ $t('admin.profile.emailRoleNote') }}
       </p>
     </section>
 
@@ -111,8 +112,8 @@ async function onLogout(): Promise<void> {
           </svg>
         </div>
         <div>
-          <h2 class="text-base font-semibold text-slate-900">Change password</h2>
-          <p class="text-xs text-slate-500 mt-0.5">You'll stay signed in. Use the new password on your next sign-in.</p>
+          <h2 class="text-base font-semibold text-slate-900">{{ $t('admin.profile.changePasswordTitle') }}</h2>
+          <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.profile.changePasswordSubtitle') }}</p>
         </div>
       </header>
 
@@ -125,7 +126,7 @@ async function onLogout(): Promise<void> {
 
       <!-- Current password -->
       <div>
-        <label class="block text-sm font-medium text-slate-700">Current password</label>
+        <label class="block text-sm font-medium text-slate-700">{{ $t('admin.profile.currentPassword') }}</label>
         <div class="mt-1 flex items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-3 py-2 focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-primary-500 transition">
           <input
             v-model="form.currentPassword"
@@ -137,7 +138,7 @@ async function onLogout(): Promise<void> {
           <button
             type="button"
             class="text-slate-400 hover:text-slate-700 transition"
-            :aria-label="showCurrent ? 'Hide password' : 'Show password'"
+            :aria-label="showCurrent ? $t('auth.login.hidePassword') : $t('auth.login.showPassword')"
             :aria-pressed="showCurrent"
             @click="showCurrent = !showCurrent"
           >
@@ -157,7 +158,7 @@ async function onLogout(): Promise<void> {
 
       <!-- New password -->
       <div>
-        <label class="block text-sm font-medium text-slate-700">New password</label>
+        <label class="block text-sm font-medium text-slate-700">{{ $t('admin.profile.newPassword') }}</label>
         <div class="mt-1 flex items-center gap-2 rounded-xl border bg-white/80 px-3 py-2 focus-within:ring-1 transition" :class="form.newPassword && !meetsMinLength ? 'border-danger-300 focus-within:border-danger-500 focus-within:ring-danger-500' : 'border-slate-200 focus-within:border-primary-500 focus-within:ring-primary-500'">
           <input
             v-model="form.newPassword"
@@ -170,7 +171,7 @@ async function onLogout(): Promise<void> {
           <button
             type="button"
             class="text-slate-400 hover:text-slate-700 transition"
-            :aria-label="showNew ? 'Hide password' : 'Show password'"
+            :aria-label="showNew ? $t('auth.login.hidePassword') : $t('auth.login.showPassword')"
             :aria-pressed="showNew"
             @click="showNew = !showNew"
           >
@@ -187,13 +188,13 @@ async function onLogout(): Promise<void> {
           </button>
         </div>
         <p class="mt-1 text-xs" :class="form.newPassword && !meetsMinLength ? 'text-danger-600' : 'text-slate-500'">
-          Minimum 12 characters. <span v-if="form.newPassword">{{ form.newPassword.length }}/12</span>
+          {{ $t('admin.profile.minChars') }} <span v-if="form.newPassword">{{ form.newPassword.length }}/12</span>
         </p>
       </div>
 
       <!-- Confirm new password -->
       <div>
-        <label class="block text-sm font-medium text-slate-700">Confirm new password</label>
+        <label class="block text-sm font-medium text-slate-700">{{ $t('admin.profile.confirmPassword') }}</label>
         <div class="mt-1 flex items-center gap-2 rounded-xl border bg-white/80 px-3 py-2 focus-within:ring-1 transition" :class="form.confirmPassword && !passwordsMatch ? 'border-danger-300 focus-within:border-danger-500 focus-within:ring-danger-500' : 'border-slate-200 focus-within:border-primary-500 focus-within:ring-primary-500'">
           <input
             v-model="form.confirmPassword"
@@ -205,7 +206,7 @@ async function onLogout(): Promise<void> {
           <button
             type="button"
             class="text-slate-400 hover:text-slate-700 transition"
-            :aria-label="showConfirm ? 'Hide password' : 'Show password'"
+            :aria-label="showConfirm ? $t('auth.login.hidePassword') : $t('auth.login.showPassword')"
             :aria-pressed="showConfirm"
             @click="showConfirm = !showConfirm"
           >
@@ -221,7 +222,7 @@ async function onLogout(): Promise<void> {
             </svg>
           </button>
         </div>
-        <p v-if="form.confirmPassword && !passwordsMatch" class="mt-1 text-xs text-danger-600">Passwords don't match.</p>
+        <p v-if="form.confirmPassword && !passwordsMatch" class="mt-1 text-xs text-danger-600">{{ $t('admin.profile.passwordsDontMatch') }}</p>
       </div>
 
       <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-200/70">
@@ -230,7 +231,7 @@ async function onLogout(): Promise<void> {
           class="rounded-xl bg-slate-900 px-5 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 shadow-glass transition"
           :disabled="saving || !canSubmit"
         >
-          {{ saving ? 'Updating…' : 'Update password' }}
+          {{ saving ? $t('admin.profile.updating') : $t('admin.profile.updatePassword') }}
         </button>
       </div>
     </form>
@@ -246,8 +247,8 @@ async function onLogout(): Promise<void> {
           </svg>
         </div>
         <div>
-          <h2 class="text-base font-semibold text-slate-900">Session</h2>
-          <p class="text-xs text-slate-500 mt-0.5">End your current session on this browser.</p>
+          <h2 class="text-base font-semibold text-slate-900">{{ $t('admin.profile.sessionTitle') }}</h2>
+          <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.profile.sessionSubtitle') }}</p>
         </div>
       </header>
       <div class="mt-4 flex justify-end">
@@ -256,7 +257,7 @@ async function onLogout(): Promise<void> {
           class="rounded-xl border border-danger-200 bg-danger-50/60 px-4 py-2 text-sm font-medium text-danger-700 hover:bg-danger-50 transition"
           @click="onLogout"
         >
-          Log out
+          {{ $t('admin.profile.logout') }}
         </button>
       </div>
     </section>
