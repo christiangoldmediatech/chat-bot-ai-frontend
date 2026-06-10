@@ -53,9 +53,22 @@ All request/response shapes live in `types/` (one file per domain). Backend enum
 
 Pages set their layout and middleware via `definePageMeta({ layout, middleware })`. Inside `<script setup>`, the typical flow is: declare a reactive `loading`/`error` pair, await the composable in setup or in a `load()` function, render `Loading…` / error / data branches in the template.
 
+### i18n (English + Spanish)
+
+The whole app is bilingual via `@nuxtjs/i18n` (v9). Locale files live in `i18n/locales/en.json` and `i18n/locales/es.json`. Strategy is `no_prefix` with browser detection + cookie persistence (`cbai.lang`); fallback locale is `en`.
+
+**Every new module, page, or component must keep both locales in sync.** No literal user-facing strings in templates or scripts. Concretely:
+
+- In templates use `{{ $t('key.path') }}` for text content and `:placeholder="$t(...)"`, `:title="$t(...)"`, `:aria-label="$t(...)"`, `:label="$t(...)"` for attributes. For interpolation: `$t('key', { name })`.
+- In `<script setup>` use `const { t } = useI18n()` for toast/success messages, dynamic strings, computed labels, and preset arrays.
+- Add the new key to **both** `en.json` and `es.json` in the same commit. Mirror the tree structure exactly — a missing key in one locale is a runtime bug.
+- Organize keys by domain (e.g. `admin.*`, `superadmin.*`, `cases.*`, `customers.*`, `common.*`, `errors.*`). Reuse `common.*` for generic verbs (`save`, `cancel`, `delete`, `loading`, `reload`, `copy`, `edit`).
+- Backend enum constants (`BOT`/`HUMAN`/`CLOSED`, `FREE`/`PRO`/`ENTERPRISE`, `ACTIVE`/`SUSPENDED`, case statuses, etc.) are **not** translated — they ship through as-is.
+- Server-authored content (LLM system prompts, bot personality, fallback messages stored in the DB) stays in whatever language the tenant configured it in. Only the chrome around it is translated.
+- Run `npm run typecheck` after adding keys — the type-safe `$t` will catch typos.
+
 ## Conventions to preserve
 
-- **UI language is English.** All user-facing strings (button labels, headings, placeholders, validation errors, toast messages, empty states, confirm dialogs) must be English. Backend enum constants are not translated. See `memory/project_ui_language_english.md` in the Claude memory dir.
 - **Don't introduce SSR-only code.** `ssr: false` is intentional (avoids tokens-in-cookies plumbing). Anything that reads `localStorage` or `window` should be inside a `.client.ts` file or guarded by `import.meta.client`.
 - **ESLint rule overrides** live in `eslint.config.mjs`. `vue/multi-word-component-names` is intentionally off so single-word page components are allowed.
 - **Tailwind `brand-*` palette** is defined in `tailwind.config.ts`; reuse it instead of hard-coding hexes.
