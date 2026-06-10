@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
 import type { Bot } from '~/types/bot'
+import type { Tenant } from '~/types/company'
 
 definePageMeta({
   layout: 'admin',
@@ -8,7 +9,34 @@ definePageMeta({
 })
 
 const bots = useBots()
+const tenant = useTenant()
 const router = useRouter()
+
+// Up-front limit check: even though the backend rejects creates beyond the
+// plan quota, the UI shouldn't waste the user's time on a form they can't
+// submit. If they're already at the cap, swap the whole form for a blocking
+// notice with a back link.
+const existingBots = ref<Bot[]>([])
+const tenantData = ref<Tenant | null>(null)
+const checkingLimit = ref(true)
+
+const botsLimit = computed(() => resolveBotsLimit(tenantData.value))
+const atLimit = computed(() =>
+  botsLimit.value !== null && existingBots.value.length >= botsLimit.value,
+)
+const planName = computed(() => tenantData.value?.planDetails.displayName ?? '')
+
+async function checkLimit(): Promise<void> {
+  try {
+    const [list, me] = await Promise.all([bots.list(), tenant.me()])
+    existingBots.value = list
+    tenantData.value = me
+  } finally {
+    checkingLimit.value = false
+  }
+}
+
+await checkLimit()
 
 const form = reactive({
   name: '',
@@ -70,7 +98,37 @@ async function onContinue(): Promise<void> {
       {{ $t('admin.botCreate.subtitle') }}
     </p>
 
-    <div v-if="!createdBot" class="mt-6 grid grid-cols-1 lg:grid-cols-[280px_minmax(0,40rem)] lg:items-start gap-6">
+    <!-- Plan-limit guard: shown instead of the form when the tenant is at quota. -->
+    <section
+      v-if="atLimit && !createdBot"
+      class="mt-6 max-w-2xl rounded-2xl border border-amber-200 bg-amber-50/70 backdrop-blur-xl p-6 shadow-glass"
+    >
+      <div class="flex items-start gap-3">
+        <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 ring-1 ring-amber-200">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-amber-700" aria-hidden="true">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <h2 class="text-base font-semibold text-amber-900">{{ $t('admin.botCreate.limitTitle') }}</h2>
+          <p class="mt-1 text-sm text-amber-900/90 leading-relaxed">
+            {{ $t('admin.botCreate.limitBody', { plan: planName, limit: botsLimit, used: existingBots.length }) }}
+          </p>
+          <div class="mt-4">
+            <NuxtLink
+              to="/admin/bots"
+              class="inline-block rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 shadow-glass transition"
+            >
+              {{ $t('admin.botCreate.limitBackButton') }}
+            </NuxtLink>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div v-else-if="!createdBot" class="mt-6 grid grid-cols-1 lg:grid-cols-[280px_minmax(0,40rem)] lg:items-start gap-6">
       <!-- ────────────────────────────────────────────────────────────────
            LEFT — Meta setup guide (sticky on desktop)
       ───────────────────────────────────────────────────────────────── -->

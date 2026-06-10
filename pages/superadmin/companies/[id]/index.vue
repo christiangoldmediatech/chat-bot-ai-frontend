@@ -153,10 +153,16 @@ await load()
       </header>
 
       <div class="mt-6 grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.plan')" :value="data.plan" />
+        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.plan')" :value="data.planDetails.displayName" />
         <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.users')" :value="data.userCount" />
         <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.bots')" :value="data.botCount" />
         <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.conversations')" :value="data.conversationCount" />
+      </div>
+
+      <!-- Plan details card: features + price, read-only snapshot here.
+           Edition lives in /edit. -->
+      <div class="mt-6 max-w-2xl">
+        <PlanCard :plan="data.planDetails" dark />
       </div>
 
       <section class="mt-8">

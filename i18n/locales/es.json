@@ -44,7 +44,9 @@
     "fileRequired": "Selecciona un archivo primero.",
     "fieldRequired": "Este campo es obligatorio.",
     "emailInvalid": "Ingresa un correo válido.",
-    "passwordTooShort": "La contraseña es muy corta."
+    "passwordTooShort": "La contraseña es muy corta.",
+    "apiWithStatus": "La solicitud falló (Error {status}). Inténtalo de nuevo.",
+    "apiUnreachable": "No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo."
   },
   "landing": {
     "navFeatures": "Características",
@@ -189,7 +191,20 @@
       "errorGeneric": "No se pudo cambiar la contraseña.",
       "sessionTitle": "Sesión",
       "sessionSubtitle": "Termina tu sesión actual en este navegador.",
-      "logout": "Cerrar sesión"
+      "logout": "Cerrar sesión",
+      "planSectionTitle": "Tu plan",
+      "planSectionSubtitle": "Suscripción actual asociada a tu workspace. Los límites del plan aplican a todo el tenant.",
+      "botsUsageLabel": "Bots en uso",
+      "botsUsageUnlimited": "{used} creados · ilimitados",
+      "botsUsageWithLimit": "{used} de {limit}",
+      "botsAtLimitNote": "Alcanzaste el límite de bots de tu plan. Contacta al equipo de la plataforma para subir de plan.",
+      "loadPlanError": "No se pudo cargar tu plan."
+    },
+    "planCard": {
+      "unlimitedBots": "Bots ilimitados",
+      "oneBotIncluded": "1 bot incluido",
+      "upToBots": "Hasta {count} bots",
+      "perMonth": "por mes ({currency})"
     },
     "company": {
       "title": "Mi empresa",
@@ -217,6 +232,9 @@
       "submitting": "Creando…",
       "successTitle": "Bot creado",
       "continueButton": "Continuar al panel del bot",
+      "limitTitle": "No puedes agregar otro bot",
+      "limitBody": "El plan {plan} incluye {limit} bot(s), y ya tienes {used}. Contacta al equipo de la plataforma para subir de plan y agregar más.",
+      "limitBackButton": "Volver a mis bots",
       "metaGuide": {
         "title": "Guía de configuración Meta",
         "subtitle": "Sigue estos pasos en orden.",
@@ -388,6 +406,10 @@
       "subtitleDocuments": "documentos",
       "subtitleCalendar": "Google Calendar",
       "createButton": "+ Crear bot",
+      "createDisabledTitle": "Límite del plan alcanzado",
+      "limitReachedBanner": "Estás usando {used} de {limit} bots incluidos en el plan {plan}. Contacta al equipo de la plataforma para subir de plan y agregar más.",
+      "usageUnlimited": "{used} bots creados · ilimitados en {plan}",
+      "usageWithRoom": "{used} de {limit} bots en uso · plan {plan}",
       "empty": {
         "title": "Aún no tienes bots",
         "description": "Crea el primero para conectarlo a un número de WhatsApp."
@@ -839,12 +861,6 @@
       "sectionPlanHelp": "Tier de facturación y acceso a features de este tenant.",
       "sectionAccess": "Estado de acceso",
       "sectionAccessHelp": "Controla si los usuarios del tenant pueden iniciar sesión.",
-      "planFreeLabel": "Free",
-      "planFreeDesc": "Trial / starter",
-      "planProLabel": "Pro",
-      "planProDesc": "Tier paga estándar",
-      "planEnterpriseLabel": "Enterprise",
-      "planEnterpriseDesc": "Contrato custom, soporte premium",
       "statusActiveDesc": "Los usuarios pueden iniciar sesión y operar normalmente.",
       "statusSuspendedDesc": "El login está bloqueado para todos en este tenant.",
       "suspendedWarningBefore": "Suspender ",

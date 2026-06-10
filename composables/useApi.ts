@@ -18,20 +18,26 @@ function isSuperadminPath(path: string): boolean {
   return path.startsWith('/superadmin')
 }
 
-function normalizeError(err: unknown): ApiError {
+function normalizeError(
+  err: unknown,
+  t: (key: string, named?: Record<string, unknown>) => string,
+): ApiError {
   // ofetch wraps non-2xx in a FetchError with `.response` and `.data` set.
+  // We deliberately ignore `fetchErr.message` because ofetch embeds the
+  // request URL in it — leaking endpoints to end users.
   const fetchErr = err as {
     response?: { status?: number }
     data?: NestErrorPayload
-    message?: string
   }
   const status = fetchErr.response?.status ?? 0
   const payload = fetchErr.data
-  let message = 'Unexpected error'
+  let message: string
   if (payload?.message) {
     message = Array.isArray(payload.message) ? payload.message.join(', ') : payload.message
-  } else if (fetchErr.message) {
-    message = fetchErr.message
+  } else if (status > 0) {
+    message = t('errors.apiWithStatus', { status })
+  } else {
+    message = t('errors.apiUnreachable')
   }
   return { status, message }
 }
@@ -45,6 +51,7 @@ export function useApi() {
   const config = useRuntimeConfig()
   const auth = useAuthStore()
   const superadminAuth = useSuperadminAuthStore()
+  const { t } = useI18n()
   const baseURL = config.public.apiBaseUrl
 
   async function request<T>(
@@ -71,7 +78,7 @@ export function useApi() {
         },
       })
     } catch (err) {
-      const apiError = normalizeError(err)
+      const apiError = normalizeError(err, t)
       if (apiError.status === 401) {
         if (superadmin) {
           superadminAuth.clear()

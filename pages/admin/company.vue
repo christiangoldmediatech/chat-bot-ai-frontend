@@ -82,16 +82,16 @@ await load()
               <!-- Plan pill -->
               <span
                 class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider ring-1"
-                :class="data.plan === 'ENTERPRISE'
-                  ? 'bg-indigo-50 text-indigo-700 ring-indigo-200'
-                  : data.plan === 'PRO'
-                    ? 'bg-primary-50 text-primary-700 ring-primary-200'
-                    : 'bg-slate-100 text-slate-600 ring-slate-200'"
+                :class="data.plan === 'PREMIUM'
+                  ? 'bg-violet-50 text-violet-700 ring-violet-200'
+                  : data.plan === 'PROFESSIONAL'
+                    ? 'bg-indigo-50 text-indigo-700 ring-indigo-200'
+                    : 'bg-emerald-50 text-emerald-700 ring-emerald-200'"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3" aria-hidden="true">
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                 </svg>
-                {{ data.plan }}
+                {{ data.planDetails.displayName }}
               </span>
               <!-- Status pill -->
               <span
@@ -115,7 +115,7 @@ await load()
           </div>
           <div class="rounded-xl bg-slate-50/80 ring-1 ring-slate-200/70 px-3 py-2.5">
             <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('admin.company.planLabel') }}</p>
-            <p class="mt-0.5 text-sm font-medium text-slate-700">{{ data.plan }}</p>
+            <p class="mt-0.5 text-sm font-medium text-slate-700">{{ data.planDetails.displayName }}</p>
           </div>
           <div class="rounded-xl bg-slate-50/80 ring-1 ring-slate-200/70 px-3 py-2.5">
             <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('admin.company.statusLabel') }}</p>

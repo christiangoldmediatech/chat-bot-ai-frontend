@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
 import type { Bot } from '~/types/bot'
+import type { Tenant } from '~/types/company'
 
 definePageMeta({
   layout: 'admin',
@@ -8,19 +9,33 @@ definePageMeta({
 })
 
 const bots = useBots()
+const tenant = useTenant()
 
 const items = ref<Bot[]>([])
+const tenantData = ref<Tenant | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
 const toggling = ref<string | null>(null)
 
 const confirmingDelete = ref<Bot | null>(null)
 
+// Plan limit derived from backend `planDetails.limits.bots`, with BASIC
+// forcibly capped at 1 by `resolveBotsLimit`. `null` = unlimited.
+const botsLimit = computed(() => resolveBotsLimit(tenantData.value))
+const atLimit = computed(() =>
+  botsLimit.value !== null && items.value.length >= botsLimit.value,
+)
+const planName = computed(() => tenantData.value?.planDetails.displayName ?? '')
+
 async function load(): Promise<void> {
   loading.value = true
   error.value = null
   try {
-    items.value = await bots.list()
+    // Fetched together so the create-button gate has tenant.planDetails ready
+    // on first paint — avoids a flash of "enabled" before the limit applies.
+    const [list, me] = await Promise.all([bots.list(), tenant.me()])
+    items.value = list
+    tenantData.value = me
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -70,17 +85,63 @@ await load()
           <span class="font-medium text-sky-700">{{ $t('admin.botsList.subtitleCalendar') }}</span>.
         </p>
       </div>
+      <!-- Create button gates on the plan limit. When at limit, render a
+           disabled-looking button with a tooltip instead of an active link. -->
       <NuxtLink
+        v-if="!atLimit"
         to="/admin/bots/create"
         class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 shadow-glass transition"
       >
         {{ $t('admin.botsList.createButton') }}
       </NuxtLink>
+      <button
+        v-else
+        type="button"
+        disabled
+        :title="$t('admin.botsList.createDisabledTitle')"
+        class="cursor-not-allowed rounded-xl bg-slate-200 px-4 py-2 text-sm font-medium text-slate-500 shadow-glass"
+      >
+        {{ $t('admin.botsList.createButton') }}
+      </button>
     </div>
+
+    <!-- Plan usage chip: visible whenever the plan has a finite bot quota. -->
+    <p
+      v-if="!loading && tenantData && botsLimit !== null"
+      class="mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider ring-1"
+      :class="atLimit
+        ? 'bg-amber-50 text-amber-700 ring-amber-200'
+        : 'bg-slate-50 text-slate-600 ring-slate-200'"
+    >
+      <span class="size-1.5 rounded-full" :class="atLimit ? 'bg-amber-500' : 'bg-slate-400'" />
+      {{ $t('admin.botsList.usageWithRoom', { used: items.length, limit: botsLimit, plan: planName }) }}
+    </p>
+    <p
+      v-else-if="!loading && tenantData && botsLimit === null"
+      class="mt-3 inline-flex items-center gap-1.5 rounded-full bg-slate-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-slate-600 ring-1 ring-slate-200"
+    >
+      <span class="size-1.5 rounded-full bg-slate-400" />
+      {{ $t('admin.botsList.usageUnlimited', { used: items.length, plan: planName }) }}
+    </p>
 
     <p v-if="error" class="mt-4 rounded-2xl border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">
       {{ error }}
     </p>
+
+    <!-- Soft, contextual banner — only shown once the limit is hit. -->
+    <div
+      v-if="atLimit && tenantData"
+      class="mt-4 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50/70 p-3"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 mt-0.5 shrink-0 text-amber-600" aria-hidden="true">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+        <line x1="12" y1="9" x2="12" y2="13" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+      <p class="text-sm leading-relaxed text-amber-900">
+        {{ $t('admin.botsList.limitReachedBanner', { used: items.length, limit: botsLimit, plan: planName }) }}
+      </p>
+    </div>
 
     <SpinnerInline v-if="loading" class="mt-6" />
 
@@ -91,6 +152,7 @@ await load()
       class="mt-6"
     >
       <NuxtLink
+        v-if="!atLimit"
         to="/admin/bots/create"
         class="inline-block rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 shadow-glass transition"
       >

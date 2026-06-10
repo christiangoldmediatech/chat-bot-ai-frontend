@@ -15,18 +15,24 @@ const id = route.params.id as string
 
 const data = ref<CompanyDetail | null>(null)
 const name = ref('')
-const plan = ref<Plan>('FREE')
+const plan = ref<Plan>('BASIC')
 const status = ref<TenantStatus>('ACTIVE')
 const loading = ref(true)
 const saving = ref(false)
 const error = ref<string | null>(null)
 const success = ref<string | null>(null)
 
-const planOptions = computed<{ value: Plan, label: string, description: string }[]>(() => [
-  { value: 'FREE', label: t('superadmin.companyEdit.planFreeLabel'), description: t('superadmin.companyEdit.planFreeDesc') },
-  { value: 'PRO', label: t('superadmin.companyEdit.planProLabel'), description: t('superadmin.companyEdit.planProDesc') },
-  { value: 'ENTERPRISE', label: t('superadmin.companyEdit.planEnterpriseLabel'), description: t('superadmin.companyEdit.planEnterpriseDesc') },
-])
+// Plan dropdown options come from the backend catalog so labels, prices, and
+// limits stay consistent with the source-of-truth in src/plans/plans.constants.ts.
+const plansApi = usePlans()
+const planCatalog = ref<{ code: Plan, displayName: string, monthlyPrice: number, currency: string }[]>([])
+const planOptions = computed<{ value: Plan, label: string, description: string }[]>(() =>
+  planCatalog.value.map((p) => ({
+    value: p.code,
+    label: p.displayName,
+    description: `${new Intl.NumberFormat('en-US', { style: 'currency', currency: p.currency }).format(p.monthlyPrice)} / mes`,
+  })),
+)
 const statusOptions = computed<{ value: TenantStatus, label: string, description: string }[]>(() => [
   { value: 'ACTIVE', label: t('superadmin.companyEdit.statusActive'), description: t('superadmin.companyEdit.statusActiveDesc') },
   { value: 'SUSPENDED', label: t('superadmin.companyEdit.statusSuspended'), description: t('superadmin.companyEdit.statusSuspendedDesc') },
@@ -90,6 +96,7 @@ async function onCancel(): Promise<void> {
 }
 
 await load()
+planCatalog.value = await plansApi.list()
 </script>
 
 <template>
@@ -136,8 +143,12 @@ await load()
               <span class="size-1.5 rounded-full" :class="data.status === 'ACTIVE' ? 'bg-emerald-400' : 'bg-amber-400'" />
               {{ data.status === 'ACTIVE' ? $t('superadmin.companyEdit.statusActive') : $t('superadmin.companyEdit.statusSuspended') }}
             </span>
-            <span class="text-[10px] uppercase tracking-wider font-medium text-slate-500">{{ $t('superadmin.companyEdit.currentPlanLabel', { plan: data.plan }) }}</span>
+            <span class="text-[10px] uppercase tracking-wider font-medium text-slate-500">{{ $t('superadmin.companyEdit.currentPlanLabel', { plan: data.planDetails.displayName }) }}</span>
           </div>
+        </div>
+        <!-- Current plan snapshot: features + price, sourced from backend catalog. -->
+        <div class="mt-4">
+          <PlanCard :plan="data.planDetails" dark />
         </div>
       </section>
 
