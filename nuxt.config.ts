@@ -11,7 +11,34 @@ export default defineNuxtConfig({
   devServer: {
     port: 8080,
   },
-  modules: ['@pinia/nuxt', '@nuxtjs/tailwindcss', '@nuxt/eslint'],
+  modules: ['@pinia/nuxt', '@nuxtjs/tailwindcss', '@nuxt/eslint', '@nuxtjs/i18n'],
+  // i18n: browser-language detection on first load, persisted in a cookie so
+  // the user can switch later without the next visit overriding it.
+  //
+  // Strategy `no_prefix` keeps URLs clean (no `/en/admin`, `/es/admin`) — the
+  // admin URLs already encode IDs and we don't want SEO surfaces for an
+  // authenticated app.
+  i18n: {
+    strategy: 'no_prefix',
+    defaultLocale: 'en',
+    locales: [
+      { code: 'en', name: 'English', file: 'en.json' },
+      { code: 'es', name: 'Español', file: 'es.json' },
+    ],
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'cbai.lang',
+      // The browser's Accept-Language is the source of truth on FIRST visit;
+      // afterwards the cookie wins (so a manual override sticks).
+      redirectOn: 'no prefix',
+      fallbackLocale: 'en',
+      alwaysRedirect: false,
+    },
+    bundle: {
+      // Smaller runtime (drops the legacy API surface).
+      optimizeTranslationDirective: false,
+    },
+  },
   // Don't prefix nested-folder components with the folder name. We organize
   // components by area (e.g. `components/admin/*`) but reference them by
   // their filename only (`<BotDocumentsCard>`, not `<AdminBotDocumentsCard>`).

@@ -5,6 +5,7 @@ definePageMeta({
   layout: 'default',
 })
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
@@ -31,7 +32,7 @@ function redirectTarget(): string {
 
 async function onSubmit(): Promise<void> {
   if (!email.value || !password.value) {
-    error.value = 'Email and password are required.'
+    error.value = t('auth.login.errorRequired')
     return
   }
   error.value = null
@@ -41,7 +42,7 @@ async function onSubmit(): Promise<void> {
     await router.replace(redirectTarget())
   } catch (err) {
     const apiError = err as ApiError
-    error.value = apiError.message || 'Could not sign in.'
+    error.value = apiError.message || t('auth.login.errorGeneric')
   } finally {
     loading.value = false
   }
@@ -54,7 +55,7 @@ async function onSubmit(): Promise<void> {
     <div class="mb-6 flex flex-col items-center">
       <KaibotLogo :size="72" rounded="rounded-3xl" class="bg-white ring-1 ring-white/70 shadow-glass-lg" />
       <p class="mt-3 text-base font-semibold tracking-tight text-slate-900">Kaibot</p>
-      <p class="text-xs text-slate-500">WhatsApp AI for businesses</p>
+      <p class="text-xs text-slate-500">{{ $t('auth.brandTagline') }}</p>
     </div>
     <!-- Glass card -->
     <div
@@ -69,9 +70,9 @@ async function onSubmit(): Promise<void> {
       <div class="pointer-events-none absolute -bottom-24 -right-16 size-60 rounded-full bg-sky-200/40 blur-3xl" aria-hidden="true" />
 
       <div class="relative z-10">
-      <h1 class="text-2xl font-semibold text-slate-900 text-center tracking-tight">Sign in with email</h1>
+      <h1 class="text-2xl font-semibold text-slate-900 text-center tracking-tight">{{ $t('auth.login.title') }}</h1>
       <p class="mt-2 text-sm text-slate-500 text-center max-w-xs mx-auto">
-        Manage your bots, conversations, and customers in one place.
+        {{ $t('auth.login.subtitle') }}
       </p>
 
       <form class="mt-8 space-y-3" @submit.prevent="onSubmit">
@@ -85,7 +86,7 @@ async function onSubmit(): Promise<void> {
             type="email"
             required
             autocomplete="email"
-            placeholder="Email"
+            :placeholder="$t('auth.login.emailPlaceholder')"
             class="flex-1 bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
           >
         </label>
@@ -100,13 +101,13 @@ async function onSubmit(): Promise<void> {
             :type="showPassword ? 'text' : 'password'"
             required
             autocomplete="current-password"
-            placeholder="Password"
+            :placeholder="$t('auth.login.passwordPlaceholder')"
             class="flex-1 bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
           >
           <button
             type="button"
             class="text-slate-400 hover:text-slate-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 rounded-md"
-            :aria-label="showPassword ? 'Hide password' : 'Show password'"
+            :aria-label="showPassword ? $t('auth.login.hidePassword') : $t('auth.login.showPassword')"
             :aria-pressed="showPassword"
             @click="showPassword = !showPassword"
           >
@@ -132,14 +133,14 @@ async function onSubmit(): Promise<void> {
           class="w-full mt-2 rounded-2xl bg-slate-900 px-4 py-3 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 transition-colors shadow-glass"
           :disabled="loading"
         >
-          {{ loading ? 'Signing in…' : 'Get Started' }}
+          {{ loading ? $t('auth.login.submitting') : $t('auth.login.submit') }}
         </button>
       </form>
 
       <p class="mt-6 text-center text-sm text-slate-500">
-        Don't have an account?
+        {{ $t('auth.login.noAccount') }}
         <NuxtLink to="/register" class="text-slate-900 hover:underline font-medium">
-          Register a company
+          {{ $t('auth.login.registerLink') }}
         </NuxtLink>
       </p>
       </div>

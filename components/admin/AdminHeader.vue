@@ -17,7 +17,7 @@ async function onLogout(): Promise<void> {
       <button
         type="button"
         class="md:hidden flex size-9 shrink-0 items-center justify-center rounded-xl text-slate-700 hover:bg-white/80 transition"
-        aria-label="Open menu"
+        :aria-label="$t('nav.openMenu')"
         @click="drawer.toggle()"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">
@@ -32,14 +32,14 @@ async function onLogout(): Promise<void> {
         <span class="text-sm font-semibold text-slate-900 truncate">Kaibot</span>
       </NuxtLink>
       <!-- Desktop subtitle -->
-      <div class="hidden md:block text-sm text-slate-500">Admin panel</div>
+      <div class="hidden md:block text-sm text-slate-500">{{ $t('admin.panelTitle') }}</div>
     </div>
 
     <div v-if="auth.user" class="flex items-center gap-2 shrink-0">
       <NuxtLink
         to="/admin/profile"
         class="hidden sm:flex items-center gap-3 rounded-xl px-2.5 py-1.5 hover:bg-white/60 transition"
-        title="My profile"
+        :title="$t('nav.myProfile')"
       >
         <div class="text-right">
           <div class="text-sm font-medium text-slate-900 truncate max-w-[160px]">{{ auth.user.email }}</div>
@@ -54,7 +54,7 @@ async function onLogout(): Promise<void> {
         to="/admin/profile"
         class="sm:hidden flex size-9 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-indigo-600 text-white text-sm font-semibold ring-1 ring-white/40"
         :title="auth.user.email"
-        aria-label="My profile"
+        :aria-label="$t('nav.myProfile')"
       >
         {{ auth.user.email.charAt(0).toUpperCase() }}
       </NuxtLink>
@@ -63,13 +63,13 @@ async function onLogout(): Promise<void> {
         class="rounded-xl border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50 transition hidden sm:inline-flex"
         @click="onLogout"
       >
-        Log out
+        {{ $t('nav.signOut') }}
       </button>
       <!-- Mobile: icon-only logout -->
       <button
         type="button"
         class="sm:hidden flex size-9 items-center justify-center rounded-xl text-slate-700 hover:bg-white/80 transition"
-        aria-label="Log out"
+        :aria-label="$t('nav.signOut')"
         @click="onLogout"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">

@@ -180,7 +180,7 @@ await load()
         ]"
         @click="tab = 'UPCOMING'"
       >
-        <div class="text-xs uppercase tracking-wider opacity-70">Próximas</div>
+        <div class="text-xs uppercase tracking-wider opacity-70">{{ $t('meetings.explorer.tabUpcoming') }}</div>
         <div class="mt-1 flex items-baseline gap-2">
           <span class="text-2xl font-bold">{{ counts.upcoming }}</span>
           <span class="text-xs opacity-60">/ {{ counts.total }}</span>
@@ -197,7 +197,7 @@ await load()
         ]"
         @click="tab = 'PAST'"
       >
-        <div class="text-xs uppercase tracking-wider opacity-70">Pasadas</div>
+        <div class="text-xs uppercase tracking-wider opacity-70">{{ $t('meetings.explorer.tabPast') }}</div>
         <div class="text-2xl font-bold mt-1">{{ counts.past }}</div>
       </button>
 
@@ -211,7 +211,7 @@ await load()
         ]"
         @click="tab = 'CANCELLED'"
       >
-        <div class="text-xs uppercase tracking-wider opacity-70">Canceladas</div>
+        <div class="text-xs uppercase tracking-wider opacity-70">{{ $t('meetings.explorer.tabCancelled') }}</div>
         <div class="text-2xl font-bold mt-1">{{ counts.cancelled }}</div>
       </button>
 
@@ -225,7 +225,7 @@ await load()
         ]"
         @click="tab = 'ALL'"
       >
-        <div class="text-xs uppercase tracking-wider opacity-70">Todas</div>
+        <div class="text-xs uppercase tracking-wider opacity-70">{{ $t('meetings.explorer.tabAll') }}</div>
         <div class="text-2xl font-bold mt-1">{{ counts.total }}</div>
       </button>
     </div>
@@ -258,7 +258,7 @@ await load()
         <input
           v-model="search"
           type="search"
-          placeholder="Buscar por cliente, teléfono, correo, motivo o bot…"
+          :placeholder="$t('meetings.explorer.searchPlaceholder')"
           class="w-full rounded-md pl-9 pr-3 py-1.5 text-sm"
           :class="
             tone === 'dark'
@@ -277,7 +277,7 @@ await load()
             : 'border border-slate-300 bg-white text-slate-900'
         "
       >
-        <option value="">Todos los bots</option>
+        <option value="">{{ $t('meetings.explorer.allBots') }}</option>
         <option v-for="b in bots" :key="b.id" :value="b.id">{{ b.name }}</option>
       </select>
 
@@ -298,9 +298,9 @@ await load()
           "
           @click="groupBy = g"
         >
-          <span v-if="g === 'flat'">Lista</span>
-          <span v-else-if="g === 'bot'">Por bot</span>
-          <span v-else>Por cliente</span>
+          <span v-if="g === 'flat'">{{ $t('meetings.explorer.groupFlat') }}</span>
+          <span v-else-if="g === 'bot'">{{ $t('meetings.explorer.groupByBot') }}</span>
+          <span v-else>{{ $t('meetings.explorer.groupByCustomer') }}</span>
         </button>
       </div>
 
@@ -315,7 +315,7 @@ await load()
         :disabled="loading"
         @click="load"
       >
-        {{ loading ? 'Cargando…' : '↻ Recargar' }}
+        {{ loading ? $t('common.loading') : '↻ ' + $t('common.reload') }}
       </button>
     </div>
 
@@ -355,10 +355,10 @@ await load()
         </svg>
       </div>
       <p class="text-sm font-medium" :class="tone === 'dark' ? 'text-slate-300' : 'text-slate-700'">
-        {{ rows.length === 0 ? 'Aún no hay reuniones agendadas.' : 'No hay reuniones que coincidan con los filtros.' }}
+        {{ rows.length === 0 ? $t('meetings.explorer.emptyTitle') : $t('meetings.explorer.emptyTitleFiltered') }}
       </p>
       <p class="text-xs mt-1">
-        {{ rows.length === 0 ? 'Cuando uno de los bots agende, aparecerá aquí.' : 'Prueba con otra búsqueda o quita los filtros.' }}
+        {{ rows.length === 0 ? $t('meetings.explorer.emptyBody') : $t('meetings.explorer.emptyBodyFiltered') }}
       </p>
     </div>
 
@@ -441,7 +441,7 @@ await load()
                       : (tone === 'dark' ? 'text-slate-100' : 'text-slate-900'),
                   ]"
                 >
-                  {{ m.topic || 'Reunión' }}
+                  {{ m.topic || $t('meetings.card.fallbackTopic') }}
                 </h3>
                 <span
                   v-if="statusBucket(m) === 'CANCELLED'"

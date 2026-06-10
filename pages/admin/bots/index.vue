@@ -61,20 +61,20 @@ await load()
     <!-- Page header -->
     <div class="flex flex-wrap items-start justify-between gap-3">
       <div>
-        <h1 class="text-2xl font-semibold tracking-tight">Bots</h1>
+        <h1 class="text-2xl font-semibold tracking-tight">{{ $t('admin.botsList.title') }}</h1>
         <p class="text-slate-500 text-sm mt-1 max-w-2xl">
-          Jump straight into any setting for each bot:
-          <span class="font-medium text-success-700">WhatsApp connection</span>,
-          <span class="font-medium text-primary-700">AI agent</span>,
-          <span class="font-medium text-amber-700">Documents</span>, or
-          <span class="font-medium text-sky-700">Google Calendar</span>.
+          {{ $t('admin.botsList.subtitleStart') }}
+          <span class="font-medium text-success-700">{{ $t('admin.botsList.subtitleWhatsapp') }}</span>,
+          <span class="font-medium text-primary-700">{{ $t('admin.botsList.subtitleAgent') }}</span>,
+          <span class="font-medium text-amber-700">{{ $t('admin.botsList.subtitleDocuments') }}</span>, or
+          <span class="font-medium text-sky-700">{{ $t('admin.botsList.subtitleCalendar') }}</span>.
         </p>
       </div>
       <NuxtLink
         to="/admin/bots/create"
         class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 shadow-glass transition"
       >
-        + Create bot
+        {{ $t('admin.botsList.createButton') }}
       </NuxtLink>
     </div>
 
@@ -86,15 +86,15 @@ await load()
 
     <EmptyState
       v-else-if="items.length === 0"
-      title="You don't have any bots yet"
-      description="Create the first one to connect it to a WhatsApp number."
+      :title="$t('admin.botsList.empty.title')"
+      :description="$t('admin.botsList.empty.description')"
       class="mt-6"
     >
       <NuxtLink
         to="/admin/bots/create"
         class="inline-block rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 shadow-glass transition"
       >
-        + Create bot
+        {{ $t('admin.botsList.createButton') }}
       </NuxtLink>
     </EmptyState>
 
@@ -122,7 +122,7 @@ await load()
             type="button"
             class="shrink-0"
             :disabled="toggling === bot.id"
-            :title="bot.isActive ? 'Click to deactivate' : 'Click to activate'"
+            :title="bot.isActive ? $t('admin.botsList.clickToDeactivate') : $t('admin.botsList.clickToActivate')"
             @click="onToggleActive(bot)"
           >
             <BotStatusBadge :is-active="bot.isActive" />
@@ -142,9 +142,9 @@ await load()
               </svg>
             </div>
             <div class="min-w-0 flex-1">
-              <p class="text-[11px] uppercase tracking-wider font-semibold text-success-700">WhatsApp connection</p>
+              <p class="text-[11px] uppercase tracking-wider font-semibold text-success-700">{{ $t('admin.botsList.card.whatsappTitle') }}</p>
               <p class="mt-0.5 text-xs text-slate-700 font-mono truncate">{{ bot.whatsappPhoneId }}</p>
-              <p class="mt-0.5 text-[11px] text-slate-500">Meta credentials &amp; webhook</p>
+              <p class="mt-0.5 text-[11px] text-slate-500">{{ $t('admin.botsList.card.whatsappSubtitle') }}</p>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-success-600 opacity-0 group-hover/card:opacity-100 self-center transition" aria-hidden="true">
               <line x1="5" y1="12" x2="19" y2="12" />
@@ -166,9 +166,9 @@ await load()
               </svg>
             </div>
             <div class="min-w-0 flex-1">
-              <p class="text-[11px] uppercase tracking-wider font-semibold text-primary-700">AI agent</p>
+              <p class="text-[11px] uppercase tracking-wider font-semibold text-primary-700">{{ $t('admin.botsList.card.agentTitle') }}</p>
               <p class="mt-0.5 text-xs text-slate-700 font-mono truncate">{{ bot.aiModel }}</p>
-              <p class="mt-0.5 text-[11px] text-slate-500">Tone, prompts &amp; model · {{ bot.aiProvider }}</p>
+              <p class="mt-0.5 text-[11px] text-slate-500">{{ $t('admin.botsList.card.agentSubtitle', { provider: bot.aiProvider }) }}</p>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-primary-600 opacity-0 group-hover/card:opacity-100 self-center transition" aria-hidden="true">
               <line x1="5" y1="12" x2="19" y2="12" />
@@ -190,9 +190,9 @@ await load()
               </svg>
             </div>
             <div class="min-w-0 flex-1">
-              <p class="text-[11px] uppercase tracking-wider font-semibold text-amber-700">Documents</p>
-              <p class="mt-0.5 text-xs text-slate-700">Knowledge base</p>
-              <p class="mt-0.5 text-[11px] text-slate-500">Upload .md / .txt / .pdf for RAG</p>
+              <p class="text-[11px] uppercase tracking-wider font-semibold text-amber-700">{{ $t('admin.botsList.card.documentsTitle') }}</p>
+              <p class="mt-0.5 text-xs text-slate-700">{{ $t('admin.botsList.card.documentsBody') }}</p>
+              <p class="mt-0.5 text-[11px] text-slate-500">{{ $t('admin.botsList.card.documentsSubtitle') }}</p>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-amber-600 opacity-0 group-hover/card:opacity-100 self-center transition" aria-hidden="true">
               <line x1="5" y1="12" x2="19" y2="12" />
@@ -214,9 +214,9 @@ await load()
               </svg>
             </div>
             <div class="min-w-0 flex-1">
-              <p class="text-[11px] uppercase tracking-wider font-semibold text-sky-700">Google Calendar</p>
-              <p class="mt-0.5 text-xs text-slate-700">Meeting bookings</p>
-              <p class="mt-0.5 text-[11px] text-slate-500">Connect &amp; manage availability</p>
+              <p class="text-[11px] uppercase tracking-wider font-semibold text-sky-700">{{ $t('admin.botsList.card.calendarTitle') }}</p>
+              <p class="mt-0.5 text-xs text-slate-700">{{ $t('admin.botsList.card.calendarBody') }}</p>
+              <p class="mt-0.5 text-[11px] text-slate-500">{{ $t('admin.botsList.card.calendarSubtitle') }}</p>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-sky-600 opacity-0 group-hover/card:opacity-100 self-center transition" aria-hidden="true">
               <line x1="5" y1="12" x2="19" y2="12" />
@@ -235,7 +235,7 @@ await load()
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
               <circle cx="12" cy="12" r="3" />
             </svg>
-            Open dashboard
+            {{ $t('admin.botsList.card.openDashboard') }}
           </NuxtLink>
           <button
             type="button"
@@ -246,7 +246,7 @@ await load()
               <polyline points="3 6 5 6 21 6" />
               <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
             </svg>
-            Delete
+            {{ $t('common.delete') }}
           </button>
         </footer>
       </article>
@@ -254,11 +254,11 @@ await load()
 
     <ConfirmDialog
       :open="!!confirmingDelete"
-      :title="`Delete bot ${confirmingDelete?.name ?? ''}?`"
-      message="Its documents, conversations, customers, and integrations will also be permanently deleted. This action cannot be undone."
+      :title="$t('admin.bot.deleteConfirmTitle', { name: confirmingDelete?.name ?? '' })"
+      :message="$t('admin.bot.deleteConfirmMessage')"
       :require-typed="confirmingDelete?.name"
-      require-typed-label="To confirm, type the bot's name:"
-      confirm-label="Delete bot"
+      :require-typed-label="$t('admin.bot.deleteConfirmTyped')"
+      :confirm-label="$t('admin.bot.deleteConfirmAction')"
       @cancel="confirmingDelete = null"
       @confirm="onConfirmDelete"
     />

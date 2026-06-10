@@ -8,9 +8,9 @@ definePageMeta({
 <template>
   <div>
     <header>
-      <h1 class="text-2xl font-semibold">Reuniones</h1>
+      <h1 class="text-2xl font-semibold">{{ $t('meetings.title') }}</h1>
       <p class="text-sm text-slate-500 mt-1">
-        Todas las reuniones agendadas por los bots. Filtra por bot, cliente o motivo, y agrúpalas como prefieras.
+        {{ $t('meetings.subtitle') }}
       </p>
     </header>
 

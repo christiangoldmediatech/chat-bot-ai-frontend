@@ -7,6 +7,7 @@ const props = defineProps<{
   tenantId?: string
 }>()
 
+const { t } = useI18n()
 const assets = useMediaAssets(props.tenantId)
 
 const items = ref<MediaAsset[]>([])
@@ -87,11 +88,11 @@ function resetLocationForm(): void {
 
 async function onUpload(): Promise<void> {
   if (!file.value) {
-    uploadError.value = 'Pick a file first.'
+    uploadError.value = t('admin.media.form.fileRequired')
     return
   }
   if (!fileKey.value.trim() || !fileDescription.value.trim()) {
-    uploadError.value = 'Key and description are required.'
+    uploadError.value = t('admin.media.form.keyAndDescriptionRequired')
     return
   }
   uploading.value = true
@@ -113,11 +114,11 @@ async function onUpload(): Promise<void> {
 
 async function onCreateLocation(): Promise<void> {
   if (!locKey.value.trim() || !locDescription.value.trim()) {
-    locationError.value = 'Key and description are required.'
+    locationError.value = t('admin.media.form.keyAndDescriptionRequired')
     return
   }
   if (locLatitude.value === null || locLongitude.value === null) {
-    locationError.value = 'Latitude and longitude are required.'
+    locationError.value = t('admin.media.form.latLngRequired')
     return
   }
   creatingLocation.value = true
@@ -160,22 +161,22 @@ function formatBytes(b: number): string {
   return `${(b / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1)} ${units[i]}`
 }
 
-function typePill(t: MediaType): { label: string; classes: string } {
-  switch (t) {
+function typePill(mediaType: MediaType): { label: string; classes: string } {
+  switch (mediaType) {
     case 'IMAGE':
-      return { label: 'Image', classes: 'bg-sky-50 text-sky-700 ring-sky-200' }
+      return { label: t('admin.media.type.image'), classes: 'bg-sky-50 text-sky-700 ring-sky-200' }
     case 'DOCUMENT':
-      return { label: 'Document', classes: 'bg-amber-50 text-amber-700 ring-amber-200' }
+      return { label: t('admin.media.type.document'), classes: 'bg-amber-50 text-amber-700 ring-amber-200' }
     case 'VIDEO':
-      return { label: 'Video', classes: 'bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200' }
+      return { label: t('admin.media.type.video'), classes: 'bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200' }
     case 'AUDIO':
-      return { label: 'Audio', classes: 'bg-teal-50 text-teal-700 ring-teal-200' }
+      return { label: t('admin.media.type.audio'), classes: 'bg-teal-50 text-teal-700 ring-teal-200' }
     case 'VOICE':
-      return { label: 'Voice note', classes: 'bg-teal-50 text-teal-700 ring-teal-200' }
+      return { label: t('admin.media.type.voice'), classes: 'bg-teal-50 text-teal-700 ring-teal-200' }
     case 'STICKER':
-      return { label: 'Sticker', classes: 'bg-pink-50 text-pink-700 ring-pink-200' }
+      return { label: t('admin.media.type.sticker'), classes: 'bg-pink-50 text-pink-700 ring-pink-200' }
     case 'LOCATION':
-      return { label: 'Location', classes: 'bg-emerald-50 text-emerald-700 ring-emerald-200' }
+      return { label: t('admin.media.type.location'), classes: 'bg-emerald-50 text-emerald-700 ring-emerald-200' }
   }
 }
 
@@ -196,10 +197,13 @@ onMounted(() => {
   <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
     <div class="flex items-start justify-between gap-3">
       <div class="min-w-0">
-        <h2 class="text-sm font-semibold text-slate-900">Multimedia resources</h2>
+        <h2 class="text-sm font-semibold text-slate-900">{{ $t('admin.media.cardTitle') }}</h2>
         <p class="text-xs text-slate-500 mt-1">
-          Upload images, PDFs, videos, audios, or register locations the bot can send natively over WhatsApp.
-          The model picks by <code class="font-mono bg-slate-100 px-1 rounded">key</code> using the description.
+          <i18n-t keypath="admin.media.cardDescription" tag="span">
+            <template #key>
+              <code class="font-mono bg-slate-100 px-1 rounded">key</code>
+            </template>
+          </i18n-t>
         </p>
       </div>
       <button
@@ -208,7 +212,7 @@ onMounted(() => {
         class="shrink-0 text-xs text-slate-500 hover:text-slate-700"
         @click="load"
       >
-        Reload
+        {{ $t('common.reload') }}
       </button>
     </div>
 
@@ -226,7 +230,7 @@ onMounted(() => {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
           <path d="M12 5v14" /><path d="M5 12h14" />
         </svg>
-        Upload file
+        {{ $t('admin.media.actions.uploadFile') }}
       </button>
       <button
         type="button"
@@ -237,10 +241,10 @@ onMounted(() => {
           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
           <circle cx="12" cy="10" r="3" />
         </svg>
-        Add location
+        {{ $t('admin.media.actions.addLocation') }}
       </button>
       <span class="text-xs text-slate-500 ml-auto">
-        Images ≤ 5&nbsp;MB · PDFs ≤ 100&nbsp;MB · Audio/Video ≤ 16&nbsp;MB
+        {{ $t('admin.media.sizeHint') }}
       </span>
     </div>
 
@@ -249,10 +253,10 @@ onMounted(() => {
       v-if="uploadOpen"
       class="mt-4 rounded-2xl bg-white/80 ring-1 ring-slate-200/70 p-4 space-y-3"
     >
-      <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">New file</h3>
+      <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{{ $t('admin.media.form.newFile') }}</h3>
 
       <div>
-        <label class="block text-xs font-medium text-slate-600 mb-1">File</label>
+        <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.file') }}</label>
         <input
           ref="fileInput"
           type="file"
@@ -261,30 +265,30 @@ onMounted(() => {
           @change="onFilePick"
         >
         <p v-if="file" class="mt-1 text-xs text-slate-500">
-          {{ file.name }} · {{ file.type || 'unknown type' }} · {{ formatBytes(file.size) }}
+          {{ file.name }} · {{ file.type || $t('admin.media.form.unknownType') }} · {{ formatBytes(file.size) }}
         </p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Key (unique identifier)</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.keyLabel') }}</label>
           <input
             v-model="fileKey"
             type="text"
-            placeholder="e.g. catalog-spring.pdf"
+            :placeholder="$t('admin.media.form.keyPlaceholder')"
             class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
-          <p class="mt-1 text-[11px] text-slate-500">Lowercase a–z, 0–9, dot, dash only. The bot uses this to reference the resource.</p>
+          <p class="mt-1 text-[11px] text-slate-500">{{ $t('admin.media.form.keyHelp') }}</p>
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Description for the bot</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.descriptionLabel') }}</label>
           <input
             v-model="fileDescription"
             type="text"
-            placeholder="e.g. Full Spring 2026 product catalog"
+            :placeholder="$t('admin.media.form.descriptionPlaceholder')"
             class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
-          <p class="mt-1 text-[11px] text-slate-500">This line tells the bot when to use this resource.</p>
+          <p class="mt-1 text-[11px] text-slate-500">{{ $t('admin.media.form.descriptionHelp') }}</p>
         </div>
       </div>
 
@@ -299,7 +303,7 @@ onMounted(() => {
           :disabled="uploading"
           @click="uploadOpen = false; resetUploadForm()"
         >
-          Cancel
+          {{ $t('common.cancel') }}
         </button>
         <button
           type="button"
@@ -308,7 +312,7 @@ onMounted(() => {
           @click="onUpload"
         >
           <SpinnerInline v-if="uploading" class="!size-4" />
-          {{ uploading ? 'Uploading…' : 'Upload' }}
+          {{ uploading ? $t('common.uploading') : $t('common.upload') }}
         </button>
       </div>
     </div>
@@ -318,29 +322,29 @@ onMounted(() => {
       v-if="locationOpen"
       class="mt-4 rounded-2xl bg-white/80 ring-1 ring-slate-200/70 p-4 space-y-3"
     >
-      <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">New location</h3>
+      <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{{ $t('admin.media.form.newLocation') }}</h3>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Key</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.keyLabel') }}</label>
           <input
             v-model="locKey"
             type="text"
-            placeholder="e.g. main-store"
+            :placeholder="$t('admin.media.form.locationKeyPlaceholder')"
             class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Description for the bot</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.descriptionLabel') }}</label>
           <input
             v-model="locDescription"
             type="text"
-            placeholder="e.g. Downtown branch"
+            :placeholder="$t('admin.media.form.locationDescriptionPlaceholder')"
             class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Latitude</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.latitudeLabel') }}</label>
           <input
             v-model.number="locLatitude"
             type="number"
@@ -350,7 +354,7 @@ onMounted(() => {
           >
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Longitude</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.longitudeLabel') }}</label>
           <input
             v-model.number="locLongitude"
             type="number"
@@ -360,20 +364,20 @@ onMounted(() => {
           >
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Place name (optional)</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.placeNameLabel') }}</label>
           <input
             v-model="locName"
             type="text"
-            placeholder="e.g. Downtown Store"
+            :placeholder="$t('admin.media.form.placeNamePlaceholder')"
             class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">Address (optional)</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.addressLabel') }}</label>
           <input
             v-model="locAddress"
             type="text"
-            placeholder="e.g. 123 Main St, Cuenca"
+            :placeholder="$t('admin.media.form.addressPlaceholder')"
             class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
           >
         </div>
@@ -390,7 +394,7 @@ onMounted(() => {
           :disabled="creatingLocation"
           @click="locationOpen = false; resetLocationForm()"
         >
-          Cancel
+          {{ $t('common.cancel') }}
         </button>
         <button
           type="button"
@@ -399,7 +403,7 @@ onMounted(() => {
           @click="onCreateLocation"
         >
           <SpinnerInline v-if="creatingLocation" class="!size-4" />
-          {{ creatingLocation ? 'Saving…' : 'Save location' }}
+          {{ creatingLocation ? $t('common.saving') : $t('admin.media.form.saveLocation') }}
         </button>
       </div>
     </div>
@@ -415,8 +419,8 @@ onMounted(() => {
           <polyline points="21 15 16 10 5 21" />
         </svg>
       </div>
-      <p class="mt-3 text-sm font-medium text-slate-700">No resources yet</p>
-      <p class="mt-1 text-xs text-slate-500">Upload your first file or register a location so the bot can send native content.</p>
+      <p class="mt-3 text-sm font-medium text-slate-700">{{ $t('admin.media.list.emptyTitle') }}</p>
+      <p class="mt-1 text-xs text-slate-500">{{ $t('admin.media.list.emptyBody') }}</p>
     </div>
 
     <ul v-else class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -450,10 +454,10 @@ onMounted(() => {
             <span
               v-if="a.hasMetaCache"
               class="inline-flex items-center gap-1 rounded-full bg-success-50 ring-1 ring-success-200 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-success-700"
-              title="Meta has this file cached — the next send is instant"
+              :title="$t('admin.media.list.cachedAtMetaTooltip')"
             >
               <span class="size-1.5 rounded-full bg-success-500" />
-              Cached at Meta
+              {{ $t('admin.media.list.cachedAtMeta') }}
             </span>
           </div>
           <p class="mt-1 text-xs text-slate-600 line-clamp-2">{{ a.description }}</p>
@@ -474,13 +478,13 @@ onMounted(() => {
           :disabled="removing === a.id"
           @click="onRemove(a)"
         >
-          {{ removing === a.id ? '…' : 'Delete' }}
+          {{ removing === a.id ? '…' : $t('common.delete') }}
         </button>
       </li>
     </ul>
 
     <p v-if="isSuperadmin" class="mt-4 text-[11px] text-slate-400">
-      Managing resources on a tenant's bot as super-admin.
+      {{ $t('admin.media.superadminNotice') }}
     </p>
   </section>
 </template>

@@ -45,12 +45,12 @@ await load()
 <template>
   <div>
     <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-semibold text-slate-100">Companies</h1>
+      <h1 class="text-2xl font-semibold text-slate-100">{{ $t('superadmin.companies.title') }}</h1>
       <NuxtLink
         to="/superadmin/companies/create"
         class="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
       >
-        + Create company
+        {{ $t('superadmin.companies.create') }}
       </NuxtLink>
     </div>
 
@@ -64,21 +64,21 @@ await load()
       v-else-if="items.length === 0"
       class="mt-6 rounded-2xl border border-dashed border-slate-700/60 bg-slate-900/40 backdrop-blur-xl p-12 text-center"
     >
-      <h3 class="text-base font-medium text-slate-200">No companies yet</h3>
-      <p class="mt-1 text-sm text-slate-500">Create the first one to start using the platform.</p>
+      <h3 class="text-base font-medium text-slate-200">{{ $t('superadmin.companies.empty.title') }}</h3>
+      <p class="mt-1 text-sm text-slate-500">{{ $t('superadmin.companies.empty.description') }}</p>
     </div>
 
     <div v-else class="mt-6 overflow-x-auto rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg">
       <table class="w-full text-sm">
         <thead class="bg-slate-950 text-slate-400">
           <tr>
-            <th class="text-left font-medium px-4 py-3">Company</th>
-            <th class="text-left font-medium px-4 py-3">Plan</th>
-            <th class="text-left font-medium px-4 py-3">Status</th>
-            <th class="text-right font-medium px-4 py-3">Users</th>
-            <th class="text-right font-medium px-4 py-3">Bots</th>
-            <th class="text-right font-medium px-4 py-3">Conversations</th>
-            <th class="text-right font-medium px-4 py-3">Actions</th>
+            <th class="text-left font-medium px-4 py-3">{{ $t('superadmin.companies.tableName') }}</th>
+            <th class="text-left font-medium px-4 py-3">{{ $t('superadmin.companies.tablePlan') }}</th>
+            <th class="text-left font-medium px-4 py-3">{{ $t('superadmin.companies.tableStatus') }}</th>
+            <th class="text-right font-medium px-4 py-3">{{ $t('superadmin.dashboard.stat.users') }}</th>
+            <th class="text-right font-medium px-4 py-3">{{ $t('nav.bots') }}</th>
+            <th class="text-right font-medium px-4 py-3">{{ $t('nav.conversations') }}</th>
+            <th class="text-right font-medium px-4 py-3">{{ $t('common.actions') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -113,14 +113,14 @@ await load()
             <td class="px-4 py-3 text-right text-slate-300">{{ c.botCount }}</td>
             <td class="px-4 py-3 text-right text-slate-300">{{ c.conversationCount }}</td>
             <td class="px-4 py-3 text-right space-x-3 text-sm">
-              <NuxtLink :to="`/superadmin/companies/${c.id}`" class="text-brand-300 hover:text-white">View</NuxtLink>
-              <NuxtLink :to="`/superadmin/companies/${c.id}/edit`" class="text-brand-300 hover:text-white">Edit</NuxtLink>
+              <NuxtLink :to="`/superadmin/companies/${c.id}`" class="text-brand-300 hover:text-white">{{ $t('common.view') }}</NuxtLink>
+              <NuxtLink :to="`/superadmin/companies/${c.id}/edit`" class="text-brand-300 hover:text-white">{{ $t('common.edit') }}</NuxtLink>
               <button
                 type="button"
                 class="text-danger-400 hover:text-danger-300"
                 @click="confirmingDelete = c"
               >
-                Delete
+                {{ $t('common.delete') }}
               </button>
             </td>
           </tr>
@@ -130,8 +130,8 @@ await load()
 
     <ConfirmDialog
       :open="!!confirmingDelete"
-      :title="`Delete company ${confirmingDelete?.name ?? ''}`"
-      message="All its users, bots, conversations, and documents will also be deleted. This action cannot be undone."
+      :title="$t('superadmin.companyEdit.deleteConfirmTitle', { name: confirmingDelete?.name ?? '' })"
+      :message="$t('superadmin.companyEdit.deleteConfirmMessage')"
       @cancel="confirmingDelete = null"
       @confirm="onConfirmDelete"
     />

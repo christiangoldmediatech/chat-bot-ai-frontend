@@ -44,21 +44,21 @@ await load()
 <template>
   <div>
     <NuxtLink :to="`/superadmin/companies/${tenantId}`" class="text-sm text-slate-400 hover:text-slate-200">
-      ← Back to company
+      {{ $t('superadmin.companyCustomers.back') }}
     </NuxtLink>
 
     <header class="mt-2 flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h1 class="text-2xl font-semibold text-slate-100">Customers</h1>
+        <h1 class="text-2xl font-semibold text-slate-100">{{ $t('superadmin.companyCustomers.title') }}</h1>
         <p class="text-sm text-slate-400 mt-1">
-          Personas que han escrito a algún bot de esta empresa.
+          {{ $t('superadmin.companyCustomers.subtitle') }}
         </p>
       </div>
       <div class="relative">
         <input
           v-model="query"
           type="search"
-          placeholder="Buscar por nombre o teléfono"
+          :placeholder="$t('customers.table.customer') + ' / ' + $t('customers.table.phone')"
           class="w-64 rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder-slate-500"
         >
       </div>
@@ -74,7 +74,7 @@ await load()
       v-else-if="filtered.length === 0"
       class="mt-6 rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-10 text-center text-slate-400"
     >
-      {{ query ? 'No hay coincidencias para tu búsqueda.' : 'Esta empresa aún no tiene clientes con conversaciones.' }}
+      {{ query ? $t('cases.list.noMatches') : $t('customers.empty.description') }}
     </div>
 
     <div
@@ -84,11 +84,11 @@ await load()
       <table class="w-full text-sm">
         <thead class="bg-slate-950 text-slate-400">
           <tr>
-            <th class="text-left font-medium px-4 py-3">Cliente</th>
-            <th class="text-left font-medium px-4 py-3">Teléfono</th>
-            <th class="text-left font-medium px-4 py-3">Conversaciones</th>
-            <th class="text-left font-medium px-4 py-3">Abiertas</th>
-            <th class="text-left font-medium px-4 py-3">Último mensaje</th>
+            <th class="text-left font-medium px-4 py-3">{{ $t('customers.table.customer') }}</th>
+            <th class="text-left font-medium px-4 py-3">{{ $t('customers.table.phone') }}</th>
+            <th class="text-left font-medium px-4 py-3">{{ $t('customers.table.conversations') }}</th>
+            <th class="text-left font-medium px-4 py-3">{{ $t('customers.table.open') }}</th>
+            <th class="text-left font-medium px-4 py-3">{{ $t('customers.table.lastMessage') }}</th>
           </tr>
         </thead>
         <tbody>

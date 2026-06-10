@@ -7,6 +7,7 @@ definePageMeta({
   middleware: 'auth',
 })
 
+const { t } = useI18n()
 const tenant = useTenant()
 
 const data = ref<Tenant | null>(null)
@@ -36,7 +37,7 @@ async function onSubmit(): Promise<void> {
   success.value = null
   try {
     data.value = await tenant.update({ name: name.value })
-    success.value = 'Changes saved'
+    success.value = t('admin.company.successMessage')
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -51,9 +52,9 @@ await load()
   <div>
     <!-- Page header -->
     <header>
-      <h1 class="text-2xl font-semibold tracking-tight">My company</h1>
+      <h1 class="text-2xl font-semibold tracking-tight">{{ $t('admin.company.title') }}</h1>
       <p class="text-slate-500 mt-1 text-sm max-w-2xl">
-        Workspace details for the tenant your user belongs to. Plan and status are managed by the platform team.
+        {{ $t('admin.company.subtitle') }}
       </p>
     </header>
 
@@ -100,7 +101,7 @@ await load()
                   : 'bg-amber-50 text-amber-700 ring-amber-200'"
               >
                 <span class="size-1.5 rounded-full" :class="data.status === 'ACTIVE' ? 'bg-success-500' : 'bg-amber-500'" />
-                {{ data.status === 'ACTIVE' ? 'Active' : 'Suspended' }}
+                {{ data.status === 'ACTIVE' ? $t('admin.company.statusActive') : $t('admin.company.statusSuspended') }}
               </span>
             </div>
           </div>
@@ -109,16 +110,16 @@ await load()
         <!-- Read-only quick facts grid -->
         <div class="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="rounded-xl bg-slate-50/80 ring-1 ring-slate-200/70 px-3 py-2.5">
-            <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">Slug</p>
+            <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('admin.company.slugLabel') }}</p>
             <p class="mt-0.5 text-sm font-mono text-slate-700 truncate">{{ data.slug }}</p>
           </div>
           <div class="rounded-xl bg-slate-50/80 ring-1 ring-slate-200/70 px-3 py-2.5">
-            <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">Plan</p>
+            <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('admin.company.planLabel') }}</p>
             <p class="mt-0.5 text-sm font-medium text-slate-700">{{ data.plan }}</p>
           </div>
           <div class="rounded-xl bg-slate-50/80 ring-1 ring-slate-200/70 px-3 py-2.5">
-            <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">Status</p>
-            <p class="mt-0.5 text-sm font-medium text-slate-700">{{ data.status === 'ACTIVE' ? 'Active' : 'Suspended' }}</p>
+            <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('admin.company.statusLabel') }}</p>
+            <p class="mt-0.5 text-sm font-medium text-slate-700">{{ data.status === 'ACTIVE' ? $t('admin.company.statusActive') : $t('admin.company.statusSuspended') }}</p>
           </div>
         </div>
 
@@ -130,7 +131,7 @@ await load()
             <line x1="12" y1="8" x2="12.01" y2="8" />
           </svg>
           <p class="leading-relaxed">
-            Plan, status and slug can only be changed by the platform team. To request a plan upgrade or change, contact support.
+            {{ $t('admin.company.platformNote') }}
           </p>
         </div>
       </section>
@@ -145,23 +146,23 @@ await load()
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-slate-900">Editable details</h2>
-            <p class="text-xs text-slate-500 mt-0.5">What you can change yourself as the workspace owner.</p>
+            <h2 class="text-base font-semibold text-slate-900">{{ $t('admin.company.editableTitle') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.company.editableSubtitle') }}</p>
           </div>
         </header>
 
         <div>
-          <label for="name" class="block text-sm font-medium text-slate-700">Company name</label>
+          <label for="name" class="block text-sm font-medium text-slate-700">{{ $t('admin.company.companyName') }}</label>
           <input
             id="name"
             v-model="name"
             type="text"
             required
             minlength="2"
-            placeholder="Your company name"
-            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            :placeholder="$t('admin.company.companyNamePlaceholder')"
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
-          <p class="mt-1 text-xs text-slate-500">Shown in the admin panel header and on customer-facing notifications.</p>
+          <p class="mt-1 text-xs text-slate-500">{{ $t('admin.company.companyNameHelp') }}</p>
         </div>
 
         <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-200/70">
@@ -171,14 +172,14 @@ await load()
             :disabled="saving || name === data.name"
             @click="name = data.name"
           >
-            Discard
+            {{ $t('admin.company.discard') }}
           </button>
           <button
             type="submit"
             class="rounded-xl bg-slate-900 px-5 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 shadow-glass transition"
             :disabled="saving || !name || name === data.name"
           >
-            {{ saving ? 'Saving…' : 'Save changes' }}
+            {{ saving ? $t('common.saving') : $t('admin.company.saveChanges') }}
           </button>
         </div>
       </form>

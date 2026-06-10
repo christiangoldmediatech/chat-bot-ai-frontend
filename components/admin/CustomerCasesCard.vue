@@ -11,6 +11,7 @@ const props = defineProps<{
   tone?: 'light' | 'dark'
 }>()
 
+const { t } = useI18n()
 const tone = computed(() => props.tone ?? 'light')
 const casesApi = useCases(props.tenantId)
 const botsApi = useBots(props.tenantId)
@@ -117,9 +118,9 @@ const priorityStyles = (priority: Case['priority']) => {
 }
 
 const resolvedByLabel = (rb: Case['resolvedBy']) => {
-  if (rb === 'BOT') return 'por el bot'
-  if (rb === 'CUSTOMER') return 'por el cliente'
-  if (rb === 'AGENT') return 'por el asesor'
+  if (rb === 'BOT') return t('cases.card.resolvedByBot')
+  if (rb === 'CUSTOMER') return t('cases.card.resolvedByCustomer')
+  if (rb === 'AGENT') return t('cases.card.resolvedByAgent')
   return ''
 }
 
@@ -160,13 +161,13 @@ onMounted(() => {
             class="text-sm font-semibold"
             :class="tone === 'dark' ? 'text-slate-100' : 'text-slate-900'"
           >
-            Casos del cliente
+            {{ $t('cases.card.title') }}
           </h2>
           <p
             class="text-xs mt-0.5"
             :class="tone === 'dark' ? 'text-slate-500' : 'text-slate-500'"
           >
-            Escalados a asesor humano
+            {{ $t('cases.card.subtitle') }}
           </p>
         </div>
       </div>
@@ -180,7 +181,7 @@ onMounted(() => {
               : 'bg-amber-100 text-amber-700'
           "
         >
-          {{ openCount }} abierto{{ openCount === 1 ? '' : 's' }}
+          {{ $t('cases.card.openCount', { n: openCount }, openCount) }}
         </span>
         <span
           v-if="!loading"
@@ -204,7 +205,7 @@ onMounted(() => {
           :disabled="loading"
           @click="load"
         >
-          {{ loading ? 'Cargando…' : 'Recargar' }}
+          {{ loading ? $t('common.loading') : $t('common.reload') }}
         </button>
       </div>
     </header>
@@ -243,13 +244,13 @@ onMounted(() => {
         class="text-sm font-medium"
         :class="tone === 'dark' ? 'text-slate-300' : 'text-slate-700'"
       >
-        Sin casos escalados
+        {{ $t('cases.card.emptyTitle') }}
       </p>
       <p
         class="text-xs mt-1"
         :class="tone === 'dark' ? 'text-slate-500' : 'text-slate-500'"
       >
-        Cuando el bot escale una conversación a un asesor, aparecerá aquí.
+        {{ $t('cases.card.emptyBody') }}
       </p>
     </div>
 
@@ -266,9 +267,9 @@ onMounted(() => {
                   : (tone === 'dark' ? 'bg-slate-900 text-slate-500' : 'bg-slate-50 text-slate-500')
             "
           >
-            <span v-if="group === 'pending'">⏳ Pendientes ({{ list.length }})</span>
-            <span v-else-if="group === 'attended'">👋 Atendidas ({{ list.length }})</span>
-            <span v-else>✓ Resueltas ({{ list.length }})</span>
+            <span v-if="group === 'pending'">{{ $t('cases.card.groupPending', { n: list.length }) }}</span>
+            <span v-else-if="group === 'attended'">{{ $t('cases.card.groupAttended', { n: list.length }) }}</span>
+            <span v-else>{{ $t('cases.card.groupResolved', { n: list.length }) }}</span>
           </div>
 
           <article
@@ -300,9 +301,9 @@ onMounted(() => {
                     v-if="c.followupCount > 0"
                     class="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
                     :class="tone === 'dark' ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'"
-                    title="El bot mandó un follow-up al cliente"
+                    :title="$t('cases.card.followupTooltip')"
                   >
-                    follow-up
+                    {{ $t('cases.list.followupBadge') }}
                   </span>
                 </div>
 
@@ -318,7 +319,7 @@ onMounted(() => {
                   class="mt-2 rounded-md px-3 py-2 text-xs"
                   :class="tone === 'dark' ? 'bg-slate-800/60 text-slate-400' : 'bg-slate-50 text-slate-600'"
                 >
-                  <strong class="font-semibold">Resolución{{ c.resolvedBy ? ` ${resolvedByLabel(c.resolvedBy)}` : '' }}:</strong>
+                  <strong class="font-semibold">{{ $t('cases.card.resolutionLabel') }}{{ c.resolvedBy ? ` ${resolvedByLabel(c.resolvedBy)}` : '' }}:</strong>
                   {{ c.resolution }}
                 </div>
 
@@ -332,13 +333,13 @@ onMounted(() => {
                   </span>
                   <span class="inline-flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-                    Creado {{ fmtDateLong(c.createdAt) }}
+                    {{ $t('cases.list.created') }} {{ fmtDateLong(c.createdAt) }}
                   </span>
                   <span v-if="c.attendedAt" class="inline-flex items-center gap-1">
-                    Atendido {{ fmtDateLong(c.attendedAt) }}
+                    {{ $t('cases.stat.attended') }} {{ fmtDateLong(c.attendedAt) }}
                   </span>
                   <span v-if="c.resolvedAt" class="inline-flex items-center gap-1">
-                    Resuelto {{ fmtDateLong(c.resolvedAt) }}
+                    {{ $t('cases.list.resolved') }} {{ fmtDateLong(c.resolvedAt) }}
                   </span>
                   <span class="inline-flex items-center gap-1 font-mono">
                     → {{ c.advisorEmail }}
@@ -359,7 +360,7 @@ onMounted(() => {
                   "
                   @click="markAttended(c.id)"
                 >
-                  {{ busyId === c.id ? '…' : 'Atender' }}
+                  {{ busyId === c.id ? '…' : $t('cases.action.attend') }}
                 </button>
                 <button
                   type="button"
@@ -372,7 +373,7 @@ onMounted(() => {
                   "
                   @click="resolveModal = { id: c.id, note: '' }"
                 >
-                  Resolver
+                  {{ $t('cases.action.resolve') }}
                 </button>
               </div>
             </div>
@@ -395,19 +396,19 @@ onMounted(() => {
           class="text-base font-semibold"
           :class="tone === 'dark' ? 'text-slate-100' : 'text-slate-900'"
         >
-          Marcar caso como resuelto
+          {{ $t('cases.resolveModal.title') }}
         </h3>
         <p
           class="mt-1 text-sm"
           :class="tone === 'dark' ? 'text-slate-400' : 'text-slate-600'"
         >
-          Agrega una nota breve sobre cómo se resolvió (opcional). El caso quedará registrado como <strong>resuelto por el asesor</strong>.
+          {{ $t('cases.card.resolveModalBody') }}<strong>{{ $t('cases.card.resolveModalEmph') }}</strong>.
         </p>
         <textarea
           v-model="resolveModal.note"
           rows="3"
           maxlength="2000"
-          placeholder="Ej. Se ajustó el cargo en la facturación de mayo."
+          :placeholder="$t('cases.card.resolveModalPlaceholder')"
           class="mt-3 w-full rounded-md px-3 py-2 text-sm"
           :class="
             tone === 'dark'
@@ -426,7 +427,7 @@ onMounted(() => {
             "
             @click="resolveModal = null"
           >
-            Cancelar
+            {{ $t('common.cancel') }}
           </button>
           <button
             type="button"
@@ -439,7 +440,7 @@ onMounted(() => {
             "
             @click="confirmResolve"
           >
-            {{ busyId ? 'Guardando…' : 'Marcar resuelto' }}
+            {{ busyId ? $t('common.saving') : $t('cases.resolveModal.submit') }}
           </button>
         </div>
       </div>

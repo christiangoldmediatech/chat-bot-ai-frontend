@@ -142,9 +142,9 @@ function formatDate(s: string): string {
   <div>
     <div class="flex items-end justify-between gap-3 flex-wrap">
       <div>
-        <h1 class="text-2xl font-semibold tracking-tight">Conversations</h1>
+        <h1 class="text-2xl font-semibold tracking-tight">{{ $t('conversations.title') }}</h1>
         <p class="text-slate-500 text-sm mt-1">
-          Inbound and outbound message volume across all your bots.
+          {{ $t('conversations.subtitle') }}
         </p>
       </div>
       <button
@@ -158,7 +158,7 @@ function formatDate(s: string): string {
           <polyline points="1 20 1 14 7 14" />
           <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
         </svg>
-        Reload stats
+        {{ $t('conversations.reloadStats') }}
       </button>
     </div>
 
@@ -168,24 +168,24 @@ function formatDate(s: string): string {
         :data="activity.day!"
         :loading="activityLoading"
         :error="activityError"
-        title="Daily"
-        subtitle="Last 14 days · grouped by day"
+        :title="$t('conversations.activity.daily')"
+        :subtitle="$t('conversations.activity.dailySubtitle')"
         tone="primary"
       />
       <MessagesActivityCard
         :data="activity.week!"
         :loading="activityLoading"
         :error="activityError"
-        title="Weekly"
-        subtitle="Last 12 weeks · grouped by week"
+        :title="$t('conversations.activity.weekly')"
+        :subtitle="$t('conversations.activity.weeklySubtitle')"
         tone="success"
       />
       <MessagesActivityCard
         :data="activity.month!"
         :loading="activityLoading"
         :error="activityError"
-        title="Monthly"
-        subtitle="Last 12 months · grouped by month"
+        :title="$t('conversations.activity.monthly')"
+        :subtitle="$t('conversations.activity.monthlySubtitle')"
         tone="amber"
       />
     </section>
@@ -196,48 +196,48 @@ function formatDate(s: string): string {
       @submit.prevent="onApplyFilters"
     >
       <div class="lg:col-span-2">
-        <label class="block text-xs font-medium text-slate-600">Search</label>
+        <label class="block text-xs font-medium text-slate-600">{{ $t('conversations.filter.search') }}</label>
         <input
           v-model="filters.q"
           type="text"
-          placeholder="Name or phone"
-          class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+          :placeholder="$t('conversations.filter.searchPlaceholder')"
+          class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400"
         >
       </div>
       <div>
-        <label class="block text-xs font-medium text-slate-600">Bot</label>
+        <label class="block text-xs font-medium text-slate-600">{{ $t('conversations.filter.bot') }}</label>
         <select
           v-model="filters.botId"
-          class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+          class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900"
         >
-          <option :value="undefined">All</option>
+          <option :value="undefined">{{ $t('conversations.filter.all') }}</option>
           <option v-for="b in bots" :key="b.id" :value="b.id">{{ b.name }}</option>
         </select>
       </div>
       <div>
-        <label class="block text-xs font-medium text-slate-600">Status</label>
+        <label class="block text-xs font-medium text-slate-600">{{ $t('conversations.filter.status') }}</label>
         <select
           v-model="filters.status"
-          class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+          class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900"
         >
-          <option :value="undefined">All</option>
+          <option :value="undefined">{{ $t('conversations.filter.all') }}</option>
           <option v-for="s in statusOptions" :key="s" :value="s">{{ s }}</option>
         </select>
       </div>
       <div>
-        <label class="block text-xs font-medium text-slate-600">From</label>
+        <label class="block text-xs font-medium text-slate-600">{{ $t('conversations.filter.from') }}</label>
         <input
           v-model="filters.dateFrom"
           type="date"
-          class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+          class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900"
         >
       </div>
       <div>
-        <label class="block text-xs font-medium text-slate-600">To</label>
+        <label class="block text-xs font-medium text-slate-600">{{ $t('conversations.filter.to') }}</label>
         <input
           v-model="filters.dateTo"
           type="date"
-          class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+          class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900"
         >
       </div>
 
@@ -247,13 +247,13 @@ function formatDate(s: string): string {
           class="rounded-md border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
           @click="onResetFilters"
         >
-          Clear
+          {{ $t('conversations.filter.clear') }}
         </button>
         <button
           type="submit"
           class="rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800"
         >
-          Apply
+          {{ $t('conversations.filter.apply') }}
         </button>
       </div>
     </form>
@@ -267,8 +267,8 @@ function formatDate(s: string): string {
     <template v-else-if="data">
       <EmptyState
         v-if="data.items.length === 0"
-        title="No conversations"
-        description="Adjust the filters or wait for a customer to message you."
+        :title="$t('conversations.empty.title')"
+        :description="$t('conversations.empty.description')"
         class="mt-6"
       />
 
@@ -276,10 +276,10 @@ function formatDate(s: string): string {
         <table class="w-full text-sm">
           <thead class="bg-slate-50 text-slate-600">
             <tr>
-              <th class="text-left font-medium px-4 py-3">Customer</th>
-              <th class="text-left font-medium px-4 py-3">Bot</th>
-              <th class="text-left font-medium px-4 py-3">Status</th>
-              <th class="text-left font-medium px-4 py-3">Last message</th>
+              <th class="text-left font-medium px-4 py-3">{{ $t('conversations.table.customer') }}</th>
+              <th class="text-left font-medium px-4 py-3">{{ $t('conversations.table.bot') }}</th>
+              <th class="text-left font-medium px-4 py-3">{{ $t('conversations.table.status') }}</th>
+              <th class="text-left font-medium px-4 py-3">{{ $t('conversations.table.lastMessage') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -310,7 +310,7 @@ function formatDate(s: string): string {
 
       <div class="mt-4 flex items-center justify-between text-sm text-slate-600">
         <div>
-          {{ data.total }} conversations — page {{ data.page }} / {{ totalPages }}
+          {{ $t('conversations.pagination.summary', { total: data.total, page: data.page, totalPages }) }}
         </div>
         <div class="flex gap-2">
           <button
@@ -319,7 +319,7 @@ function formatDate(s: string): string {
             :disabled="(filters.page ?? 1) <= 1"
             @click="onPage(-1)"
           >
-            Previous
+            {{ $t('conversations.pagination.previous') }}
           </button>
           <button
             type="button"
@@ -327,7 +327,7 @@ function formatDate(s: string): string {
             :disabled="(filters.page ?? 1) >= totalPages"
             @click="onPage(1)"
           >
-            Next
+            {{ $t('conversations.pagination.next') }}
           </button>
         </div>
       </div>

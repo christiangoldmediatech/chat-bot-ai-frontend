@@ -7,6 +7,7 @@ const props = defineProps<{
   tenantId?: string
 }>()
 
+const { t } = useI18n()
 const docs = useDocuments(props.tenantId)
 
 const items = ref<DocumentItem[]>([])
@@ -63,7 +64,7 @@ async function onRemove(doc: DocumentItem): Promise<void> {
 
 async function onView(doc: DocumentItem): Promise<void> {
   if (doc.status !== 'READY') {
-    viewError.value = `Document is still ${doc.status.toLowerCase()}. Try again once it shows READY.`
+    viewError.value = t('admin.documents.stillProcessing', { status: doc.status.toLowerCase() })
     viewingMeta.value = doc
     viewing.value = null
     return
@@ -128,9 +129,9 @@ onMounted(() => {
   <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
     <div class="flex items-start justify-between">
       <div>
-        <h2 class="text-sm font-semibold text-slate-900">Documents (RAG)</h2>
+        <h2 class="text-sm font-semibold text-slate-900">{{ $t('admin.documents.cardTitle') }}</h2>
         <p class="text-xs text-slate-500 mt-1">
-          Plain text (.txt) or Markdown (.md), up to 5&nbsp;MB. The backend chunks them, embeds them, and uses them as context in every response.
+          {{ $t('admin.documents.cardDescription') }}
         </p>
       </div>
       <button
@@ -139,7 +140,7 @@ onMounted(() => {
         class="text-xs text-slate-500 hover:text-slate-700"
         @click="load"
       >
-        Reload
+        {{ $t('common.reload') }}
       </button>
     </div>
 
@@ -152,7 +153,7 @@ onMounted(() => {
         class="inline-flex cursor-pointer items-center gap-2 rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800"
         :class="uploading && 'opacity-60 cursor-not-allowed'"
       >
-        <span>{{ uploading ? 'Uploading…' : items.length === 0 ? '+ Upload document' : '+ Add another document' }}</span>
+        <span>{{ uploading ? $t('common.uploading') : items.length === 0 ? $t('admin.documents.uploadButton') : $t('admin.documents.addAnotherButton') }}</span>
         <input
           ref="fileInput"
           type="file"
@@ -163,7 +164,7 @@ onMounted(() => {
         >
       </label>
       <span v-if="items.length > 0" class="text-xs text-slate-500">
-        More documents = better answers.
+        {{ $t('admin.documents.moreEqualsBetter') }}
       </span>
     </div>
 
@@ -173,7 +174,7 @@ onMounted(() => {
       v-else-if="items.length === 0"
       class="mt-4 text-sm text-slate-500"
     >
-      No documents uploaded yet.
+      {{ $t('admin.documents.noDocuments') }}
     </p>
 
     <ul v-else class="mt-4 divide-y divide-slate-100">
@@ -186,7 +187,7 @@ onMounted(() => {
           <div class="text-sm font-medium text-slate-900 truncate">{{ d.fileName }}</div>
           <div class="text-xs text-slate-500">
             {{ d.fileType }} · {{ new Date(d.createdAt).toLocaleString() }}
-            <span v-if="typeof d.chunkCount === 'number'"> · {{ d.chunkCount }} chunks</span>
+            <span v-if="typeof d.chunkCount === 'number'"> · {{ d.chunkCount }} {{ $t('admin.documents.chunksLabel') }}</span>
           </div>
         </div>
         <div class="flex items-center gap-3">
@@ -202,7 +203,7 @@ onMounted(() => {
             :disabled="fetchingContent === d.id"
             @click="onView(d)"
           >
-            {{ fetchingContent === d.id ? 'Loading…' : 'View' }}
+            {{ fetchingContent === d.id ? $t('common.loading') : $t('admin.documents.view') }}
           </button>
           <button
             type="button"
@@ -210,7 +211,7 @@ onMounted(() => {
             :disabled="removing === d.id"
             @click="onRemove(d)"
           >
-            Delete
+            {{ $t('common.delete') }}
           </button>
         </div>
       </li>
@@ -234,7 +235,7 @@ onMounted(() => {
           class="fixed inset-0 z-[100] bg-mist-light text-slate-900 flex flex-col"
           role="dialog"
           aria-modal="true"
-          :aria-label="`Viewing ${viewingMeta.fileName}`"
+          :aria-label="$t('admin.documents.viewingAria', { filename: viewingMeta.fileName })"
         >
         <!-- Header (glass, matches the platform's admin header) -->
         <header class="shrink-0 border-b border-white/60 bg-white/70 backdrop-blur-xl">
@@ -260,22 +261,22 @@ onMounted(() => {
                     class="inline-flex items-center gap-1 rounded-full bg-success-50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-success-700 ring-1 ring-success-200"
                   >
                     <span class="size-1.5 rounded-full bg-success-500" />
-                    Ready
+                    {{ $t('admin.documents.statusReady') }}
                   </span>
                   <span
                     v-else-if="viewingMeta.status === 'PROCESSING'"
                     class="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-blue-700 ring-1 ring-blue-200"
                   >
-                    Processing
+                    {{ $t('admin.documents.statusProcessing') }}
                   </span>
                   <span
                     v-else-if="viewingMeta.status === 'ERROR'"
                     class="inline-flex items-center rounded-full bg-danger-50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-danger-700 ring-1 ring-danger-200"
                   >
-                    Error
+                    {{ $t('admin.documents.statusError') }}
                   </span>
                   <span v-if="viewing" class="text-[11px] text-slate-500">
-                    · {{ viewing.chunkCount }} chunks · {{ viewing.content.length.toLocaleString() }} chars
+                    · {{ viewing.chunkCount }} {{ $t('admin.documents.chunksLabel') }} · {{ viewing.content.length.toLocaleString() }} {{ $t('admin.documents.charsLabel') }}
                   </span>
                 </div>
               </div>
@@ -284,14 +285,14 @@ onMounted(() => {
               <CopyButton
                 v-if="viewing?.content"
                 :value="viewing.content"
-                label="Copy"
-                aria-label="Copy document text"
+                :label="$t('common.copy')"
+                :aria-label="$t('admin.documents.copyDocumentText')"
               />
               <button
                 type="button"
                 class="flex size-9 items-center justify-center rounded-xl text-slate-500 hover:bg-white/80 hover:text-slate-900 transition"
-                aria-label="Close (Esc)"
-                title="Close (Esc)"
+                :aria-label="$t('admin.chat.closeEsc')"
+                :title="$t('admin.chat.closeEsc')"
                 @click="closeViewer"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">
@@ -320,12 +321,12 @@ onMounted(() => {
             <!-- Loading state -->
             <div v-else-if="fetchingContent" class="flex flex-col items-center justify-center py-16 text-center">
               <SpinnerInline />
-              <p class="mt-3 text-xs text-slate-500">Reconstructing document from chunks…</p>
+              <p class="mt-3 text-xs text-slate-500">{{ $t('admin.documents.reconstructing') }}</p>
             </div>
 
             <!-- Empty content -->
             <div v-else-if="viewing && !viewing.content" class="text-center py-16">
-              <p class="text-sm text-slate-500">This document has no extractable text content.</p>
+              <p class="text-sm text-slate-500">{{ $t('admin.documents.noTextContent') }}</p>
             </div>
 
             <!-- Content: glass card with high-contrast text for comfortable reading -->
@@ -339,17 +340,17 @@ onMounted(() => {
         <footer v-if="viewing?.content" class="shrink-0 border-t border-white/60 bg-white/70 backdrop-blur-xl">
           <div class="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 sm:px-6 py-3">
             <p class="text-xs text-slate-500">
-              {{ viewing.content.length.toLocaleString() }} characters
-              <span v-if="viewing.chunkCount"> · {{ viewing.chunkCount }} chunks</span>
+              {{ viewing.content.length.toLocaleString() }} {{ $t('admin.documents.characters') }}
+              <span v-if="viewing.chunkCount"> · {{ viewing.chunkCount }} {{ $t('admin.documents.chunksLabel') }}</span>
             </p>
             <div class="flex items-center gap-2">
-              <CopyButton :value="viewing.content" label="Copy text" />
+              <CopyButton :value="viewing.content" :label="$t('admin.documents.copyText')" />
               <button
                 type="button"
                 class="rounded-xl bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800 shadow-glass transition"
                 @click="closeViewer"
               >
-                Close
+                {{ $t('common.close') }}
               </button>
             </div>
           </div>

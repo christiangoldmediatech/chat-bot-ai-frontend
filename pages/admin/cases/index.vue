@@ -118,9 +118,9 @@ await load()
   <div>
     <header class="flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h1 class="text-2xl font-semibold">Casos</h1>
+        <h1 class="text-2xl font-semibold">{{ $t('cases.title') }}</h1>
         <p class="text-sm text-slate-500 mt-1">
-          Escalados a asesor humano. Resuelve cada uno desde aquí o desde la página del cliente.
+          {{ $t('cases.subtitle') }}
         </p>
       </div>
     </header>
@@ -133,7 +133,7 @@ await load()
         :class="statusFilter === 'OPEN' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white/70 border-white/60 hover:bg-white'"
         @click="statusFilter = 'OPEN'"
       >
-        <div class="text-xs uppercase tracking-wider opacity-70">Abiertos</div>
+        <div class="text-xs uppercase tracking-wider opacity-70">{{ $t('cases.stat.open') }}</div>
         <div class="text-2xl font-bold mt-1">{{ counts.pending + counts.attended }}</div>
       </button>
       <button
@@ -142,7 +142,7 @@ await load()
         :class="statusFilter === 'PENDING' ? 'bg-amber-500 text-white border-amber-500' : 'bg-white/70 border-white/60 hover:bg-white'"
         @click="statusFilter = 'PENDING'"
       >
-        <div class="text-xs uppercase tracking-wider opacity-70">Pendientes</div>
+        <div class="text-xs uppercase tracking-wider opacity-70">{{ $t('cases.stat.pending') }}</div>
         <div class="text-2xl font-bold mt-1">{{ counts.pending }}</div>
       </button>
       <button
@@ -151,7 +151,7 @@ await load()
         :class="statusFilter === 'ATTENDED' ? 'bg-sky-500 text-white border-sky-500' : 'bg-white/70 border-white/60 hover:bg-white'"
         @click="statusFilter = 'ATTENDED'"
       >
-        <div class="text-xs uppercase tracking-wider opacity-70">Atendidos</div>
+        <div class="text-xs uppercase tracking-wider opacity-70">{{ $t('cases.stat.attended') }}</div>
         <div class="text-2xl font-bold mt-1">{{ counts.attended }}</div>
       </button>
       <button
@@ -160,7 +160,7 @@ await load()
         :class="statusFilter === 'RESOLVED' ? 'bg-success-600 text-white border-success-600' : 'bg-white/70 border-white/60 hover:bg-white'"
         @click="statusFilter = 'RESOLVED'"
       >
-        <div class="text-xs uppercase tracking-wider opacity-70">Resueltos</div>
+        <div class="text-xs uppercase tracking-wider opacity-70">{{ $t('cases.stat.resolved') }}</div>
         <div class="text-2xl font-bold mt-1">{{ counts.resolved }}</div>
       </button>
     </div>
@@ -169,16 +169,16 @@ await load()
     <div class="mt-4 flex flex-wrap gap-2 items-center">
       <select
         v-model="botFilter"
-        class="rounded-md border border-slate-300 px-3 py-1.5 text-sm bg-white"
+        class="rounded-md border border-slate-300 px-3 py-1.5 text-sm bg-white text-slate-900"
       >
-        <option value="">Todos los bots</option>
+        <option value="">{{ $t('cases.filter.allBots') }}</option>
         <option v-for="b in bots" :key="b.id" :value="b.id">{{ b.name }}</option>
       </select>
       <input
         v-model="search"
         type="search"
-        placeholder="Buscar por cliente, teléfono o resumen…"
-        class="flex-1 min-w-[16rem] rounded-md border border-slate-300 px-3 py-1.5 text-sm"
+        :placeholder="$t('cases.filter.searchPlaceholder')"
+        class="flex-1 min-w-[16rem] rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-900 placeholder:text-slate-400"
       >
       <button
         type="button"
@@ -186,7 +186,7 @@ await load()
         :disabled="loading"
         @click="load"
       >
-        {{ loading ? 'Cargando…' : 'Recargar' }}
+        {{ loading ? $t('common.loading') : $t('common.reload') }}
       </button>
     </div>
 
@@ -200,7 +200,7 @@ await load()
       v-else-if="filtered.length === 0"
       class="mt-6 rounded-2xl bg-white/70 ring-1 ring-white/50 p-10 text-center text-slate-500"
     >
-      {{ rows.length === 0 ? 'Aún no hay casos escalados.' : 'No hay casos que coincidan con los filtros.' }}
+      {{ rows.length === 0 ? $t('cases.list.empty') : $t('cases.list.noMatches') }}
     </div>
 
     <div v-else class="mt-4 space-y-3">
@@ -228,7 +228,7 @@ await load()
               v-if="c.followupCount > 0"
               class="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-100 text-slate-500"
             >
-              follow-up
+              {{ $t('cases.list.followupBadge') }}
             </span>
           </div>
           <p class="mt-2 text-sm text-slate-700 leading-relaxed">{{ c.summary }}</p>
@@ -236,12 +236,12 @@ await load()
             v-if="c.resolution && c.status === 'RESOLVED'"
             class="mt-2 rounded-md bg-slate-50 px-3 py-2 text-xs text-slate-600"
           >
-            <strong class="font-semibold">Resolución:</strong> {{ c.resolution }}
+            <strong class="font-semibold">{{ $t('cases.list.resolution') }}</strong> {{ c.resolution }}
           </div>
           <div class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-slate-500">
-            <span>Bot: {{ botMap.get(c.botId) ?? c.botId.slice(0, 8) }}</span>
-            <span>Creado: {{ new Date(c.createdAt).toLocaleString() }}</span>
-            <span v-if="c.resolvedAt">Resuelto: {{ new Date(c.resolvedAt).toLocaleString() }}</span>
+            <span>{{ $t('cases.list.bot') }} {{ botMap.get(c.botId) ?? c.botId.slice(0, 8) }}</span>
+            <span>{{ $t('cases.list.created') }} {{ new Date(c.createdAt).toLocaleString() }}</span>
+            <span v-if="c.resolvedAt">{{ $t('cases.list.resolved') }} {{ new Date(c.resolvedAt).toLocaleString() }}</span>
             <span class="font-mono">→ {{ c.advisorEmail }}</span>
           </div>
         </div>
@@ -254,7 +254,7 @@ await load()
             class="text-xs px-2.5 py-1.5 rounded-md font-medium bg-sky-100 text-sky-700 hover:bg-sky-200 disabled:opacity-50"
             @click="markAttended(c.id)"
           >
-            Atender
+            {{ $t('cases.action.attend') }}
           </button>
           <button
             type="button"
@@ -262,7 +262,7 @@ await load()
             class="text-xs px-2.5 py-1.5 rounded-md font-medium bg-success-100 text-success-700 hover:bg-success-200 disabled:opacity-50"
             @click="resolveModal = { id: c.id, note: '' }"
           >
-            Resolver
+            {{ $t('cases.action.resolve') }}
           </button>
         </div>
       </article>
@@ -275,16 +275,16 @@ await load()
       @click.self="resolveModal = null"
     >
       <div class="w-full max-w-md rounded-2xl bg-white ring-1 ring-slate-200 p-6 shadow-2xl">
-        <h3 class="text-base font-semibold text-slate-900">Marcar caso como resuelto</h3>
+        <h3 class="text-base font-semibold text-slate-900">{{ $t('cases.resolveModal.title') }}</h3>
         <p class="mt-1 text-sm text-slate-600">
-          Agrega una nota opcional. Quedará registrado como <strong>resuelto por el asesor</strong>.
+          {{ $t('cases.resolveModal.noteBefore') }}<strong>{{ $t('cases.resolveModal.noteEmph') }}</strong>{{ $t('cases.resolveModal.noteAfter') }}
         </p>
         <textarea
           v-model="resolveModal.note"
           rows="3"
           maxlength="2000"
-          placeholder="Ej. Se ajustó la facturación."
-          class="mt-3 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+          :placeholder="$t('cases.resolveModal.placeholder')"
+          class="mt-3 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400"
         />
         <div class="mt-4 flex justify-end gap-2">
           <button
@@ -292,7 +292,7 @@ await load()
             class="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
             @click="resolveModal = null"
           >
-            Cancelar
+            {{ $t('common.cancel') }}
           </button>
           <button
             type="button"
@@ -300,7 +300,7 @@ await load()
             class="rounded-md bg-success-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-success-700"
             @click="confirmResolve"
           >
-            {{ busyId ? 'Guardando…' : 'Marcar resuelto' }}
+            {{ busyId ? $t('common.saving') : $t('cases.resolveModal.submit') }}
           </button>
         </div>
       </div>

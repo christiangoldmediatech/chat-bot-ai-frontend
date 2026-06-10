@@ -5,6 +5,7 @@ definePageMeta({
   layout: 'default',
 })
 
+const { t } = useI18n()
 const router = useRouter()
 const auth = useAuthStore()
 const { register } = useAuth()
@@ -41,11 +42,11 @@ function onSlugInput(): void {
 
 async function onSubmit(): Promise<void> {
   if (password.value.length < 12) {
-    error.value = 'Password must be at least 12 characters.'
+    error.value = t('auth.register.errorPasswordLength')
     return
   }
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(tenantSlug.value)) {
-    error.value = 'Slug must be kebab-case (lowercase letters, numbers, and hyphens).'
+    error.value = t('auth.register.errorSlugFormat')
     return
   }
   error.value = null
@@ -60,7 +61,7 @@ async function onSubmit(): Promise<void> {
     await router.replace('/admin')
   } catch (err) {
     const apiError = err as ApiError
-    error.value = apiError.message || 'Could not create the company.'
+    error.value = apiError.message || t('auth.register.errorGeneric')
   } finally {
     loading.value = false
   }
@@ -72,18 +73,18 @@ async function onSubmit(): Promise<void> {
     <div class="flex flex-col items-center">
       <KaibotLogo :size="72" rounded="rounded-3xl" class="bg-white ring-1 ring-white/70 shadow-glass-lg" />
       <p class="mt-3 text-base font-semibold tracking-tight text-slate-900">Kaibot</p>
-      <p class="text-xs text-slate-500">WhatsApp AI for businesses</p>
+      <p class="text-xs text-slate-500">{{ $t('auth.brandTagline') }}</p>
     </div>
 
     <div class="mt-5 rounded-3xl bg-white/70 backdrop-blur-2xl ring-1 ring-white/60 shadow-glass-lg p-8 sm:p-10">
-      <h1 class="text-2xl font-semibold text-slate-900 text-center tracking-tight">Register your company</h1>
+      <h1 class="text-2xl font-semibold text-slate-900 text-center tracking-tight">{{ $t('auth.register.title') }}</h1>
       <p class="mt-2 text-sm text-slate-500 text-center max-w-xs mx-auto">
-        Creates a tenant and an OWNER user to manage your bots.
+        {{ $t('auth.register.subtitle') }}
       </p>
 
       <form class="mt-8 space-y-3" @submit.prevent="onSubmit">
         <label class="block">
-          <span class="ml-1 text-xs font-medium text-slate-600">Company name</span>
+          <span class="ml-1 text-xs font-medium text-slate-600">{{ $t('auth.register.companyNameLabel') }}</span>
           <div class="mt-1 rounded-2xl bg-white/80 ring-1 ring-slate-200/80 px-4 py-3 focus-within:ring-2 focus-within:ring-slate-900 transition">
             <input
               v-model="tenantName"
@@ -96,7 +97,7 @@ async function onSubmit(): Promise<void> {
         </label>
 
         <label class="block">
-          <span class="ml-1 text-xs font-medium text-slate-600">Slug</span>
+          <span class="ml-1 text-xs font-medium text-slate-600">{{ $t('auth.register.slugLabel') }}</span>
           <div class="mt-1 rounded-2xl bg-white/80 ring-1 ring-slate-200/80 px-4 py-3 focus-within:ring-2 focus-within:ring-slate-900 transition">
             <input
               v-model="tenantSlug"
@@ -107,11 +108,11 @@ async function onSubmit(): Promise<void> {
               @input="onSlugInput"
             >
           </div>
-          <span class="ml-1 mt-1 block text-xs text-slate-500">Unique identifier, kebab-case.</span>
+          <span class="ml-1 mt-1 block text-xs text-slate-500">{{ $t('auth.register.slugHelp') }}</span>
         </label>
 
         <label class="block">
-          <span class="ml-1 text-xs font-medium text-slate-600">OWNER email</span>
+          <span class="ml-1 text-xs font-medium text-slate-600">{{ $t('auth.register.emailLabel') }}</span>
           <div class="mt-1 rounded-2xl bg-white/80 ring-1 ring-slate-200/80 px-4 py-3 focus-within:ring-2 focus-within:ring-slate-900 transition">
             <input
               v-model="email"
@@ -124,7 +125,7 @@ async function onSubmit(): Promise<void> {
         </label>
 
         <label class="block">
-          <span class="ml-1 text-xs font-medium text-slate-600">Password</span>
+          <span class="ml-1 text-xs font-medium text-slate-600">{{ $t('auth.register.passwordLabel') }}</span>
           <div class="mt-1 flex items-center gap-3 rounded-2xl bg-white/80 ring-1 ring-slate-200/80 px-4 py-3 focus-within:ring-2 focus-within:ring-slate-900 transition">
             <input
               v-model="password"
@@ -137,7 +138,7 @@ async function onSubmit(): Promise<void> {
             <button
               type="button"
               class="text-slate-400 hover:text-slate-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 rounded-md"
-              :aria-label="showPassword ? 'Hide password' : 'Show password'"
+              :aria-label="showPassword ? $t('auth.login.hidePassword') : $t('auth.login.showPassword')"
               :aria-pressed="showPassword"
               @click="showPassword = !showPassword"
             >
@@ -153,7 +154,7 @@ async function onSubmit(): Promise<void> {
               </svg>
             </button>
           </div>
-          <span class="ml-1 mt-1 block text-xs text-slate-500">Minimum 12 characters.</span>
+          <span class="ml-1 mt-1 block text-xs text-slate-500">{{ $t('auth.register.passwordHelp') }}</span>
         </label>
 
         <p v-if="error" class="rounded-2xl bg-danger-50/80 border border-danger-200/80 px-4 py-2.5 text-sm text-danger-700">
@@ -165,14 +166,14 @@ async function onSubmit(): Promise<void> {
           class="w-full mt-2 rounded-2xl bg-slate-900 px-4 py-3 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 transition-colors shadow-glass"
           :disabled="loading"
         >
-          {{ loading ? 'Creating…' : 'Create company' }}
+          {{ loading ? $t('auth.register.submitting') : $t('auth.register.submit') }}
         </button>
       </form>
 
       <p class="mt-6 text-center text-sm text-slate-500">
-        Already have an account?
+        {{ $t('auth.register.hasAccount') }}
         <NuxtLink to="/login" class="text-slate-900 hover:underline font-medium">
-          Sign in
+          {{ $t('auth.register.loginLink') }}
         </NuxtLink>
       </p>
     </div>

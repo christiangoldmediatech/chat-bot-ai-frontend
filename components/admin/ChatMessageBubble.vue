@@ -9,6 +9,7 @@ const props = defineProps<{
   tenantId?: string
 }>()
 
+const { t } = useI18n()
 const assets = useMediaAssets(props.tenantId)
 
 // Treat NULL as TEXT for legacy rows.
@@ -36,7 +37,7 @@ async function loadPreviewUrl(): Promise<void> {
     const res = await assets.getDownloadUrl(props.botId, props.message.mediaRef)
     previewUrl.value = res.url
   } catch (err) {
-    previewError.value = (err as { message?: string }).message ?? 'Failed to load.'
+    previewError.value = (err as { message?: string }).message ?? t('admin.chat.failedToLoad')
   } finally {
     fetchingPreview.value = false
   }
@@ -117,7 +118,7 @@ function closeLightbox(): void {
       v-if="previewUrl"
       type="button"
       class="block overflow-hidden rounded-xl ring-1 ring-black/5 max-w-[280px] hover:ring-black/20 transition cursor-zoom-in"
-      :aria-label="message.content || 'Image'"
+      :aria-label="message.content || $t('admin.chat.image')"
       @click="openLightbox"
     >
       <img :src="previewUrl" class="block w-full h-auto" alt="">
@@ -129,7 +130,7 @@ function closeLightbox(): void {
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
         <rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" />
       </svg>
-      <span>{{ fetchingPreview ? 'Loading image…' : previewError ? previewError : 'Image' }}</span>
+      <span>{{ fetchingPreview ? $t('admin.chat.loadingImage') : previewError ? previewError : $t('admin.chat.image') }}</span>
     </div>
     <p v-if="message.content" class="whitespace-pre-wrap">{{ message.content }}</p>
   </div>
@@ -149,9 +150,9 @@ function closeLightbox(): void {
         </svg>
       </div>
       <div class="min-w-0 flex-1">
-        <p class="truncate text-xs font-medium">{{ filename ?? 'Document' }}</p>
+        <p class="truncate text-xs font-medium">{{ filename ?? $t('admin.chat.document') }}</p>
         <p class="text-[10px] opacity-70">
-          {{ mimeType ?? 'file' }}<template v-if="sizeBytes"> · {{ formatBytes(sizeBytes) }}</template>
+          {{ mimeType ?? $t('admin.chat.file') }}<template v-if="sizeBytes"> · {{ formatBytes(sizeBytes) }}</template>
         </p>
       </div>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 opacity-60" aria-hidden="true">
@@ -168,8 +169,8 @@ function closeLightbox(): void {
         </svg>
       </div>
       <div class="min-w-0 flex-1">
-        <p class="truncate text-xs font-medium">{{ filename ?? 'Document' }}</p>
-        <p class="text-[10px] opacity-70">{{ fetchingPreview ? 'Loading…' : previewError ?? mimeType ?? 'file' }}</p>
+        <p class="truncate text-xs font-medium">{{ filename ?? $t('admin.chat.document') }}</p>
+        <p class="text-[10px] opacity-70">{{ fetchingPreview ? $t('admin.chat.loading') : previewError ?? mimeType ?? $t('admin.chat.file') }}</p>
       </div>
     </div>
     <p v-if="message.content" class="whitespace-pre-wrap">{{ message.content }}</p>
@@ -193,9 +194,9 @@ function closeLightbox(): void {
         </svg>
       </div>
       <div class="min-w-0 flex-1">
-        <p class="text-xs font-medium">{{ isUser ? 'Customer video' : 'Video' }}</p>
+        <p class="text-xs font-medium">{{ isUser ? $t('admin.chat.customerVideo') : $t('admin.chat.video') }}</p>
         <p class="text-[10px] opacity-70">
-          {{ fetchingPreview ? 'Loading…' : previewError ?? (isUser ? 'Received via WhatsApp' : (mimeType ?? 'video')) }}
+          {{ fetchingPreview ? $t('admin.chat.loading') : previewError ?? (isUser ? $t('admin.chat.receivedViaWhatsapp') : (mimeType ?? $t('admin.chat.video').toLowerCase())) }}
         </p>
       </div>
     </div>
@@ -220,9 +221,9 @@ function closeLightbox(): void {
         </svg>
       </div>
       <div class="min-w-0 flex-1">
-        <p class="text-xs font-medium">{{ kind === 'VOICE' ? 'Voice note' : 'Audio' }}</p>
+        <p class="text-xs font-medium">{{ kind === 'VOICE' ? $t('admin.chat.voiceNote') : $t('admin.chat.audio') }}</p>
         <p class="text-[10px] opacity-70">
-          {{ fetchingPreview ? 'Loading…' : previewError ?? (isUser ? 'Received via WhatsApp' : (mimeType ?? 'audio')) }}
+          {{ fetchingPreview ? $t('admin.chat.loading') : previewError ?? (isUser ? $t('admin.chat.receivedViaWhatsapp') : (mimeType ?? $t('admin.chat.audio').toLowerCase())) }}
         </p>
       </div>
     </div>
@@ -250,7 +251,7 @@ function closeLightbox(): void {
         </svg>
       </div>
       <div class="min-w-0 flex-1">
-        <p class="truncate text-xs font-medium">{{ locationLabel ?? 'Location' }}</p>
+        <p class="truncate text-xs font-medium">{{ locationLabel ?? $t('admin.chat.location') }}</p>
         <p class="font-mono text-[10px] opacity-70">
           {{ locationCoords!.lat.toFixed(5) }}, {{ locationCoords!.lng.toFixed(5) }}
         </p>
@@ -279,13 +280,13 @@ function closeLightbox(): void {
         class="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-6"
         role="dialog"
         aria-modal="true"
-        aria-label="Image full view"
+        :aria-label="$t('admin.chat.imageFullView')"
         @click="closeLightbox"
       >
         <button
           type="button"
           class="absolute top-4 right-4 flex size-9 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20 transition"
-          aria-label="Close (Esc)"
+          :aria-label="$t('admin.chat.closeEsc')"
           @click.stop="closeLightbox"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">
