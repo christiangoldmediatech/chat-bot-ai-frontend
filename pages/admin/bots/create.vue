@@ -42,6 +42,7 @@ const form = reactive({
   name: '',
   systemPrompt: '',
   whatsappPhoneId: '',
+  phoneNumber: '',
   whatsappBusinessAccountId: '',
   whatsappToken: '',
   webhookVerifyToken: '',
@@ -72,6 +73,7 @@ async function onSubmit(): Promise<void> {
       name: form.name,
       systemPrompt: form.systemPrompt,
       whatsappPhoneId: form.whatsappPhoneId,
+      phoneNumber: form.phoneNumber || undefined,
       whatsappBusinessAccountId: form.whatsappBusinessAccountId || undefined,
       whatsappToken: form.whatsappToken,
       webhookVerifyToken: form.webhookVerifyToken,
@@ -128,7 +130,7 @@ async function onContinue(): Promise<void> {
       </div>
     </section>
 
-    <div v-else-if="!createdBot" class="mt-6 grid grid-cols-1 lg:grid-cols-[280px_minmax(0,40rem)] lg:items-start gap-6">
+    <div v-else-if="!createdBot" class="mt-6 grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start gap-6">
       <!-- ────────────────────────────────────────────────────────────────
            LEFT — Meta setup guide (sticky on desktop)
       ───────────────────────────────────────────────────────────────── -->
@@ -313,6 +315,21 @@ async function onContinue(): Promise<void> {
             >
             <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botCreate.section.wabaIdHelp') }}</p>
           </div>
+        </div>
+
+        <div>
+          <label for="phoneNumber" class="block text-sm font-medium text-slate-700">
+            {{ $t('admin.botCreate.section.phoneNumberLabel') }} <span class="text-slate-400 font-normal">{{ $t('admin.botCreate.section.wabaIdOptional') }}</span>
+          </label>
+          <input
+            id="phoneNumber"
+            v-model="form.phoneNumber"
+            type="tel"
+            maxlength="32"
+            :placeholder="$t('admin.botCreate.section.phoneNumberPlaceholder')"
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          >
+          <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botCreate.section.phoneNumberHelp') }}</p>
         </div>
 
         <div>

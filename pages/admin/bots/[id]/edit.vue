@@ -22,6 +22,7 @@ const form = reactive({
   name: '',
   systemPrompt: '',
   whatsappPhoneId: '',
+  phoneNumber: '',
   whatsappBusinessAccountId: '',
   whatsappToken: '',
   whatsappAppSecret: '',
@@ -38,6 +39,7 @@ function hydrate(bot: Bot): void {
   form.name = bot.name
   form.systemPrompt = bot.systemPrompt
   form.whatsappPhoneId = bot.whatsappPhoneId
+  form.phoneNumber = bot.phoneNumber ?? ''
   form.whatsappBusinessAccountId = bot.whatsappBusinessAccountId ?? ''
   form.webhookVerifyToken = bot.webhookVerifyToken
   form.isActive = bot.isActive
@@ -68,6 +70,7 @@ async function onSubmit(): Promise<void> {
       name: form.name,
       systemPrompt: form.systemPrompt,
       whatsappPhoneId: form.whatsappPhoneId,
+      phoneNumber: form.phoneNumber || undefined,
       whatsappBusinessAccountId: form.whatsappBusinessAccountId || undefined,
       // Only send secrets if the user typed something — leaving them blank
       // keeps the value already on the server.
@@ -102,7 +105,7 @@ await load()
 
     <SpinnerInline v-if="loading" class="mt-6" />
 
-    <div v-else class="mt-6 grid grid-cols-1 lg:grid-cols-[280px_minmax(0,40rem)] lg:items-start gap-6">
+    <div v-else class="mt-6 grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start gap-6">
       <!-- ────────────────────────────────────────────────────────────────
            LEFT — Meta setup guide (sticky on desktop)
       ───────────────────────────────────────────────────────────────── -->
@@ -294,6 +297,20 @@ await load()
               >
               <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botCreate.section.wabaIdHelp') }}</p>
             </div>
+          </div>
+
+          <div class="mt-4">
+            <label class="block text-sm font-medium text-slate-700">
+              {{ $t('admin.botCreate.section.phoneNumberLabel') }} <span class="text-slate-400 font-normal">{{ $t('admin.botCreate.section.wabaIdOptional') }}</span>
+            </label>
+            <input
+              v-model="form.phoneNumber"
+              type="tel"
+              maxlength="32"
+              :placeholder="$t('admin.botCreate.section.phoneNumberPlaceholder')"
+              class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+            >
+            <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botCreate.section.phoneNumberHelp') }}</p>
           </div>
         </div>
 
