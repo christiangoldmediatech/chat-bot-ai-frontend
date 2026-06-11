@@ -4,6 +4,7 @@ export interface Bot {
   description: string | null
   systemPrompt: string
   whatsappPhoneId: string
+  phoneNumber: string | null
   whatsappBusinessAccountId: string | null
   webhookVerifyToken: string
   hasAppSecret: boolean
@@ -35,6 +36,7 @@ export interface CreateBotInput {
   name: string
   systemPrompt: string
   whatsappPhoneId: string
+  phoneNumber?: string
   whatsappBusinessAccountId?: string
   whatsappToken: string
   whatsappAppSecret?: string
@@ -46,6 +48,7 @@ export interface UpdateBotInput {
   name?: string
   systemPrompt?: string
   whatsappPhoneId?: string
+  phoneNumber?: string
   whatsappBusinessAccountId?: string
   whatsappToken?: string
   whatsappAppSecret?: string
