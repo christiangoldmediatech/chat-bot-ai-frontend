@@ -101,6 +101,10 @@
       "tagline": "WhatsApp AI for modern businesses",
       "signIn": "Sign in",
       "createAccount": "Create account"
+    },
+    "whatsappFloat": {
+      "label": "Chat with us on WhatsApp",
+      "ariaLabel": "Write to Kaibot on WhatsApp"
     }
   },
   "auth": {
