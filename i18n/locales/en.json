@@ -292,7 +292,12 @@
       "companyNameHelp": "Shown in the admin panel header and on customer-facing notifications.",
       "discard": "Discard",
       "saveChanges": "Save changes",
-      "successMessage": "Changes saved"
+      "successMessage": "Changes saved",
+      "billingBlocked": {
+        "title": "Activate your service to manage your workspace",
+        "body": "Your Kaibots account is set up, but it isn't active yet. Send your first bank transfer to switch on the bot — then you'll be able to update your company name and start configuring your bots.",
+        "cta": "View payment instructions"
+      }
     },
     "botCreate": {
       "back": "← Back to bots",
@@ -1161,13 +1166,16 @@
     "banner": {
       "sendReceipt": "Send proof of payment",
       "paymentInstructions": "View payment instructions",
+      "activateAccount": "Activate my account",
       "warningTitle": "Renewal needed soon",
       "warningTitleToday": "Renewal needed today",
       "pendingTitle": "Subscription expired",
+      "pendingFirstTitle": "Welcome to Kaibots — one step away from going live",
       "suspendedTitle": "Account suspended",
       "renewSoon": "Your subscription expires in {days} day. To keep your bot active, send your proof of payment to {email} before the cutoff. | Your subscription expires in {days} days. To keep your bot active, send your proof of payment to {email} before the cutoff.",
       "renewToday": "Your subscription expires today. Send your proof of payment to {email} now to avoid suspension.",
       "pendingPayment": "Your subscription has expired and some features are limited. Send your proof of payment to {email} to restore full access.",
+      "pendingFirst": "Your account is ready — make your first payment by bank transfer to activate your bot. Once you send the receipt to {email}, we'll switch your service on within a few business hours.",
       "suspended": "Your account is suspended and the bot has stopped replying. Send your proof of payment to {email} to reactivate it.",
       "contactSupport": "Contact support"
     }

@@ -292,7 +292,12 @@
       "companyNameHelp": "Se muestra en el header del admin panel y en notificaciones a clientes.",
       "discard": "Descartar",
       "saveChanges": "Guardar cambios",
-      "successMessage": "Cambios guardados"
+      "successMessage": "Cambios guardados",
+      "billingBlocked": {
+        "title": "Activa tu servicio para gestionar tu workspace",
+        "body": "Tu cuenta Kaibots ya está creada pero aún no está activa. Realiza tu primera transferencia para encender el bot — luego podrás editar el nombre de la empresa y empezar a configurar tus bots.",
+        "cta": "Ver instrucciones de pago"
+      }
     },
     "botCreate": {
       "back": "← Volver a bots",
@@ -1161,13 +1166,16 @@
     "banner": {
       "sendReceipt": "Enviar comprobante",
       "paymentInstructions": "Ver instrucciones de pago",
+      "activateAccount": "Activar mi cuenta",
       "warningTitle": "Renovación próxima",
       "warningTitleToday": "Tu suscripción vence hoy",
       "pendingTitle": "Suscripción vencida",
+      "pendingFirstTitle": "Bienvenido a Kaibots — un paso para activar tu servicio",
       "suspendedTitle": "Cuenta suspendida",
       "renewSoon": "Tu suscripción vence en {days} día. Para mantener tu bot activo, envía tu comprobante de pago a {email} antes del corte. | Tu suscripción vence en {days} días. Para mantener tu bot activo, envía tu comprobante de pago a {email} antes del corte.",
       "renewToday": "Tu suscripción vence hoy. Envía tu comprobante de pago a {email} ahora mismo para evitar la suspensión.",
       "pendingPayment": "Tu suscripción está vencida y algunas funciones están limitadas. Envía tu comprobante de pago a {email} para restablecer el acceso completo.",
+      "pendingFirst": "Tu cuenta está lista — realiza tu primer pago por transferencia bancaria para activar tu bot. Cuando envíes el comprobante a {email}, activamos tu servicio en pocas horas hábiles.",
       "suspended": "Tu cuenta está suspendida y el bot dejó de responder. Envía tu comprobante de pago a {email} para reactivarlo.",
       "contactSupport": "Contactar soporte"
     }
