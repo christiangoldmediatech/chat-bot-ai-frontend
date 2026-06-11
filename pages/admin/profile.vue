@@ -468,6 +468,35 @@ const cardShadow = {
                 </div>
               </div>
             </div>
+
+            <!-- Pay-by-transfer entry point — visually distinct so it doesn't
+                 read as part of the billing-cycle status. -->
+            <NuxtLink
+              to="/admin/payment"
+              class="relative mt-3 flex items-center justify-between gap-3 rounded-xl bg-white/90 ring-1 ring-slate-200/80 p-3 hover:bg-white hover:ring-amber-300 transition group"
+            >
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#FFDD00] text-slate-900 ring-1 ring-amber-300/60 shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                    <rect x="2" y="6" width="20" height="14" rx="2" />
+                    <path d="M2 10h20" />
+                    <path d="M6 14h4" />
+                  </svg>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-[10px] uppercase tracking-wider font-semibold text-amber-700">
+                    {{ $t('admin.profile.paymentLinkLabel') }}
+                  </p>
+                  <p class="mt-0.5 text-sm font-semibold text-slate-800 truncate">
+                    {{ $t('admin.profile.paymentLinkTitle') }}
+                  </p>
+                </div>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0 text-slate-400 group-hover:text-amber-600 group-hover:translate-x-0.5 transition" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </NuxtLink>
           </template>
         </section>
       </div>

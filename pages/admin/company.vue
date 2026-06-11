@@ -15,16 +15,27 @@ const name = ref('')
 const loading = ref(true)
 const saving = ref(false)
 const error = ref<string | null>(null)
+// Set when the load() call is blocked by the tenant-active guard (HTTP 402).
+// The global BillingBanner already explains the situation; here we render a
+// friendly "service inactive" card with a link to /admin/payment instead of
+// the alarming red error we used to show.
+const billingBlocked = ref(false)
 const success = ref<string | null>(null)
 
 async function load(): Promise<void> {
   loading.value = true
   error.value = null
+  billingBlocked.value = false
   try {
     data.value = await tenant.me()
     name.value = data.value.name
   } catch (err) {
-    error.value = (err as ApiError).message
+    const apiErr = err as ApiError
+    if (apiErr.status === 402) {
+      billingBlocked.value = true
+    } else {
+      error.value = apiErr.message
+    }
   } finally {
     loading.value = false
   }
@@ -67,6 +78,43 @@ await load()
     </p>
 
     <SpinnerInline v-if="loading" class="mt-6" />
+
+    <!-- Friendly billing-required card when the tenant-active guard blocks the
+         request (HTTP 402). Replaces the old rose error banner that made a
+         brand-new "needs first payment" tenant look broken. -->
+    <section
+      v-else-if="billingBlocked"
+      class="mt-6 max-w-3xl overflow-hidden rounded-2xl bg-gradient-to-br from-sky-50 via-white to-white ring-1 ring-sky-200/70 shadow-glass"
+    >
+      <div class="p-6 sm:p-7">
+        <div class="flex items-start gap-4">
+          <div class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white ring-1 ring-sky-300/60 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-6" aria-hidden="true">
+              <path d="M12 2l1.9 4.5L18.5 8 14.5 10.6 16 15l-4-2.8L8 15l1.5-4.4L5.5 8l4.6-1.5L12 2z" />
+            </svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <h2 class="text-lg font-semibold text-slate-900">{{ $t('admin.company.billingBlocked.title') }}</h2>
+            <p class="mt-1 text-sm text-slate-600 leading-relaxed">
+              {{ $t('admin.company.billingBlocked.body') }}
+            </p>
+            <div class="mt-4">
+              <NuxtLink
+                to="/admin/payment"
+                class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 shadow-glass transition"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                  <rect x="2" y="6" width="20" height="14" rx="2" />
+                  <path d="M2 10h20" />
+                  <path d="M6 14h4" />
+                </svg>
+                {{ $t('admin.company.billingBlocked.cta') }}
+              </NuxtLink>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <template v-else-if="data">
       <!-- Identity card with avatar + read-only quick facts -->

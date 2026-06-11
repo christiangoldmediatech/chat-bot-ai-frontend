@@ -44,11 +44,17 @@ async function load(): Promise<void> {
 
 onMounted(load)
 
-type Variant = 'suspended' | 'pending' | 'warning'
+type Variant = 'suspended' | 'pending' | 'pendingFirst' | 'warning'
 
 const variant = computed<Variant | null>(() => {
   if (isPlatformOwner.value) return null
   if (!state.value) return null
+  const hasEverPaid = state.value.payments.length > 0
+  // Brand-new tenant that hasn't paid yet — a non-active status here is the
+  // *initial* state, not an expiration. Show a welcoming activation prompt
+  // instead of the alarming "expired/suspended" tone reserved for returning
+  // customers whose paid cycle ran out.
+  if (state.value.tenantStatus !== 'ACTIVE' && !hasEverPaid) return 'pendingFirst'
   if (state.value.tenantStatus === 'SUSPENDED') return 'suspended'
   if (state.value.tenantStatus === 'PENDING_PAYMENT') return 'pending'
   const days = state.value.daysRemaining
@@ -66,6 +72,8 @@ const title = computed<string>(() => {
       return t('billing.banner.suspendedTitle')
     case 'pending':
       return t('billing.banner.pendingTitle')
+    case 'pendingFirst':
+      return t('billing.banner.pendingFirstTitle')
     case 'warning':
       return days.value === 0
         ? t('billing.banner.warningTitleToday')
@@ -82,6 +90,8 @@ const message = computed<string>(() => {
       return t('billing.banner.suspended', { email })
     case 'pending':
       return t('billing.banner.pendingPayment', { email })
+    case 'pendingFirst':
+      return t('billing.banner.pendingFirst', { email })
     case 'warning':
       return days.value === 0
         ? t('billing.banner.renewToday', { email })
@@ -89,11 +99,6 @@ const message = computed<string>(() => {
     default:
       return ''
   }
-})
-
-const mailtoHref = computed(() => {
-  const subject = encodeURIComponent(`[Kaibots] ${title.value}`)
-  return `mailto:${supportEmail.value}?subject=${subject}`
 })
 
 // Returns literal Tailwind classes (build-time resolvable) per variant.
@@ -128,6 +133,16 @@ const styles = computed(() => {
         body: 'text-amber-800/90',
         emailChip: 'bg-white/80 text-amber-800 ring-amber-200 hover:bg-white hover:ring-amber-300',
         cta: 'bg-amber-500 text-white hover:bg-amber-600 focus-visible:outline-amber-500',
+      }
+    case 'pendingFirst':
+      return {
+        wrapper: 'bg-gradient-to-r from-sky-50 via-indigo-50 to-white text-slate-900 border-b border-sky-200/80',
+        accent: 'bg-gradient-to-r from-sky-500 via-indigo-500 to-indigo-400',
+        iconRing: 'bg-white/90 text-indigo-700 ring-sky-200',
+        title: 'text-slate-900',
+        body: 'text-slate-700',
+        emailChip: 'bg-white/90 text-indigo-700 ring-sky-200 hover:bg-white hover:ring-indigo-300',
+        cta: 'bg-indigo-600 text-white hover:bg-indigo-700 focus-visible:outline-indigo-500',
       }
     default:
       return null
@@ -173,6 +188,19 @@ const styles = computed(() => {
           <polyline points="12 6 12 12 16 14" />
         </svg>
         <svg
+          v-else-if="variant === 'pendingFirst'"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="size-5"
+        >
+          <path d="M12 2l1.9 4.5L18.5 8 14.5 10.6 16 15l-4-2.8L8 15l1.5-4.4L5.5 8l4.6-1.5L12 2z" />
+        </svg>
+        <svg
           v-else
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -206,16 +234,19 @@ const styles = computed(() => {
         <p :class="['mt-0.5 text-[13px] leading-5', styles.body]">{{ message }}</p>
       </div>
 
-      <a
-        :href="mailtoHref"
+      <NuxtLink
+        to="/admin/payment"
         :class="['shrink-0 hidden sm:inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2', styles.cta]"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
-          <line x1="22" y1="2" x2="11" y2="13" />
-          <polygon points="22 2 15 22 11 13 2 9 22 2" />
+          <rect x="2" y="6" width="20" height="14" rx="2" />
+          <path d="M2 10h20" />
+          <path d="M6 14h4" />
         </svg>
-        {{ $t('billing.banner.sendReceipt') }}
-      </a>
+        {{ variant === 'pendingFirst'
+          ? $t('billing.banner.activateAccount')
+          : $t('billing.banner.paymentInstructions') }}
+      </NuxtLink>
     </div>
   </div>
 </template>
