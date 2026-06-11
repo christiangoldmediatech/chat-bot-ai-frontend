@@ -334,9 +334,11 @@ onBeforeUnmount(() => {
           <span class="text-slate-400">·</span>
           <span>{{ $t('landing.footer.tagline') }}</span>
         </div>
-        <div class="flex items-center gap-6 text-sm text-slate-600">
+        <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-600">
           <NuxtLink to="/login" class="transition hover:text-slate-900">{{ $t('landing.footer.signIn') }}</NuxtLink>
           <NuxtLink to="/register" class="transition hover:text-slate-900">{{ $t('landing.footer.createAccount') }}</NuxtLink>
+          <NuxtLink to="/privacy" class="transition hover:text-slate-900">{{ $t('legal.privacy.title') }}</NuxtLink>
+          <NuxtLink to="/terms" class="transition hover:text-slate-900">{{ $t('legal.terms.title') }}</NuxtLink>
         </div>
       </div>
     </footer>
