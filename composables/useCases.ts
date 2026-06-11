@@ -1,4 +1,10 @@
-import type { Case, CaseFilters, UpdateCasePayload } from '~/types/case'
+import type {
+  Case,
+  CaseFilters,
+  ListCasesOptions,
+  PaginatedCases,
+  UpdateCasePayload,
+} from '~/types/case'
 
 /**
  * Tenant-aware cases API.
@@ -27,9 +33,27 @@ export function useCases(tenantId?: string) {
   }
 
   return {
+    // Legacy unpaginated list — still used by the superadmin company-detail
+    // cases page, which keeps the array contract.
     list: (filters?: CaseFilters): Promise<Case[]> => {
       const query = buildQuery(filters)
       return api.get<Case[]>(
+        casesBase,
+        Object.keys(query).length > 0 ? { query } : undefined,
+      )
+    },
+
+    /**
+     * Paginated cases list for the admin (tenant owner) UI. Only call this
+     * without `tenantId` — the matching backend endpoint lives at `/cases`.
+     * The superadmin endpoint still returns a flat array via `list()`.
+     */
+    listPaginated: (opts: ListCasesOptions = {}): Promise<PaginatedCases> => {
+      const query = buildQuery(opts)
+      if (opts.search) query.search = opts.search
+      if (opts.page !== undefined) query.page = opts.page
+      if (opts.pageSize !== undefined) query.pageSize = opts.pageSize
+      return api.get<PaginatedCases>(
         casesBase,
         Object.keys(query).length > 0 ? { query } : undefined,
       )

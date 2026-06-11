@@ -159,6 +159,7 @@
     "panelTitle": "Admin panel",
     "dashboard": {
       "title": "Dashboard",
+      "subtitle": "Snapshot of your bots, conversations and customers.",
       "stats": {
         "bots": "Bots",
         "botsHint": "{n} active",
@@ -169,7 +170,10 @@
         "customers": "Customers",
         "customersHint": "Unique phone numbers"
       },
-      "recentConversations": "Recent conversations"
+      "recentConversations": "Recent conversations",
+      "recentConversationsHint": "Latest activity across all your bots.",
+      "viewAllConversations": "View all",
+      "noConversations": "No conversations yet."
     },
     "profile": {
       "title": "My profile",
@@ -581,6 +585,14 @@
       "allBots": "All bots",
       "searchPlaceholder": "Search by customer, phone, or summary…"
     },
+    "totalLabel": "Total cases",
+    "matchingLabel": "Matching",
+    "pagination": {
+      "summary": "Showing {from}–{to} of {total}",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page} of {total}"
+    },
     "list": {
       "empty": "No cases escalated yet.",
       "noMatches": "No cases match the current filters.",
@@ -623,11 +635,26 @@
   },
   "customers": {
     "title": "Customers",
+    "subtitle": "Everyone who has messaged any of your bots, ordered by most recent activity.",
     "filterByBot": "Filter by bot",
     "all": "All",
+    "searchPlaceholder": "Search by customer name…",
+    "searchHint": "Match on name (case-insensitive). Customers without a name won't appear in search results.",
+    "totalLabel": "Total customers",
+    "matchingLabel": "Matching",
+    "pagination": {
+      "summary": "Showing {from}–{to} of {total}",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page} of {total}"
+    },
     "empty": {
       "title": "No customers yet",
       "description": "Customers appear when someone messages one of your bots."
+    },
+    "emptyFiltered": {
+      "title": "No matches",
+      "description": "No customer name matches your search. Try a different term or clear the filters."
     },
     "table": {
       "customer": "Customer",
@@ -899,7 +926,22 @@
         "users": "Users",
         "navCases": "Cases",
         "navCustomers": "Customers",
-        "navMeetings": "Meetings"
+        "navMeetings": "Meetings",
+        "navBilling": "Billing"
+      },
+      "hero": {
+        "tenantId": "Tenant ID",
+        "copy": "Copy",
+        "copied": "Copied",
+        "createdOn": "Created {date}"
+      },
+      "quickNav": {
+        "title": "Sections",
+        "subtitle": "Jump to a specific area of this tenant.",
+        "customersHint": "Browse contacts across all bots",
+        "casesHint": "Escalations and human-handover",
+        "meetingsHint": "Bookings made through bots",
+        "billingHint": "Cycle, payments and deactivation"
       },
       "createBot": "+ Create bot",
       "addBot": "+ Add bot",
@@ -967,6 +1009,13 @@
       "back": "← Back to company",
       "title": "Customers",
       "subtitle": "Customers across this company's bots."
+    },
+    "companyBilling": {
+      "back": "← Back to company",
+      "title": "Billing",
+      "subtitle": "Active cycle, payment history and manual controls for this tenant.",
+      "planTitle": "Current plan",
+      "planSubtitle": "Read-only snapshot. Plan changes are made from the company edit page."
     },
     "companyBotCreate": {
       "back": "← Back to company",
@@ -1049,10 +1098,15 @@
   },
   "billing": {
     "banner": {
-      "renewSoon": "Your subscription expires in {days} day. Please contact support to renew before the cutoff. | Your subscription expires in {days} days. Please contact support to renew before the cutoff.",
-      "renewToday": "Your subscription expires today. Contact support to renew and avoid suspension.",
-      "pendingPayment": "Your subscription has expired. Some features are limited until payment is registered — please contact support.",
-      "suspended": "Your account has been suspended. Please contact support to reactivate.",
+      "sendReceipt": "Send proof of payment",
+      "warningTitle": "Renewal needed soon",
+      "warningTitleToday": "Renewal needed today",
+      "pendingTitle": "Subscription expired",
+      "suspendedTitle": "Account suspended",
+      "renewSoon": "Your subscription expires in {days} day. To keep your bot active, send your proof of payment to {email} before the cutoff. | Your subscription expires in {days} days. To keep your bot active, send your proof of payment to {email} before the cutoff.",
+      "renewToday": "Your subscription expires today. Send your proof of payment to {email} now to avoid suspension.",
+      "pendingPayment": "Your subscription has expired and some features are limited. Send your proof of payment to {email} to restore full access.",
+      "suspended": "Your account is suspended and the bot has stopped replying. Send your proof of payment to {email} to reactivate it.",
       "contactSupport": "Contact support"
     }
   }

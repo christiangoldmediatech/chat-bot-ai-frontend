@@ -30,6 +30,22 @@ export interface CaseFilters {
   dateTo?: string
 }
 
+export interface ListCasesOptions extends CaseFilters {
+  /** Case-insensitive substring match against customer name, phone or summary. */
+  search?: string
+  /** 1-indexed page. */
+  page?: number
+  /** Defaults to 50 on the backend. */
+  pageSize?: number
+}
+
+export interface PaginatedCases {
+  items: Case[]
+  total: number
+  page: number
+  pageSize: number
+}
+
 export interface UpdateCasePayload {
   status?: CaseStatus
   resolution?: string

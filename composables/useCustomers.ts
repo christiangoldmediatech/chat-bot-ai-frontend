@@ -1,5 +1,10 @@
 import type { Conversation } from '~/types/conversation'
-import type { CustomerDetail, CustomerSummary } from '~/types/customer'
+import type {
+  CustomerDetail,
+  CustomerSummary,
+  ListCustomersOptions,
+  PaginatedCustomers,
+} from '~/types/customer'
 import type { Meeting, MeetingFilters } from '~/types/meeting'
 
 /**
@@ -15,8 +20,30 @@ export function useCustomers(tenantId?: string) {
     : '/customers'
 
   return {
+    // Used by the superadmin company-detail customers list, which keeps the
+    // unpaginated contract. The admin (tenant-owner) UI should use
+    // `listPaginated` instead — the admin endpoint now returns a paginated
+    // envelope.
     list: (botId?: string): Promise<CustomerSummary[]> =>
       api.get<CustomerSummary[]>(base, botId ? { query: { botId } } : undefined),
+
+    /**
+     * Paginated customers list. ONLY valid when called without a `tenantId` in
+     * the parent composable — the matching backend endpoint lives at
+     * `/customers` (tenant owner context). The superadmin endpoint at
+     * `/superadmin/companies/:id/customers` still returns a flat array.
+     */
+    listPaginated: (opts: ListCustomersOptions = {}): Promise<PaginatedCustomers> => {
+      const query: Record<string, unknown> = {}
+      if (opts.botId) query.botId = opts.botId
+      if (opts.search) query.search = opts.search
+      if (opts.page !== undefined) query.page = opts.page
+      if (opts.pageSize !== undefined) query.pageSize = opts.pageSize
+      return api.get<PaginatedCustomers>(
+        base,
+        Object.keys(query).length > 0 ? { query } : undefined,
+      )
+    },
     get: (phone: string): Promise<CustomerDetail> =>
       api.get<CustomerDetail>(`${base}/${encodeURIComponent(phone)}`),
     conversations: (phone: string): Promise<Conversation[]> =>

@@ -159,6 +159,7 @@
     "panelTitle": "Panel admin",
     "dashboard": {
       "title": "Panel",
+      "subtitle": "Resumen de tus bots, conversaciones y clientes.",
       "stats": {
         "bots": "Bots",
         "botsHint": "{n} activos",
@@ -169,7 +170,10 @@
         "customers": "Clientes",
         "customersHint": "Números únicos"
       },
-      "recentConversations": "Conversaciones recientes"
+      "recentConversations": "Conversaciones recientes",
+      "recentConversationsHint": "Última actividad a través de todos tus bots.",
+      "viewAllConversations": "Ver todas",
+      "noConversations": "Aún no hay conversaciones."
     },
     "profile": {
       "title": "Mi perfil",
@@ -581,6 +585,14 @@
       "allBots": "Todos los bots",
       "searchPlaceholder": "Buscar por cliente, teléfono o resumen…"
     },
+    "totalLabel": "Casos totales",
+    "matchingLabel": "Coincidencias",
+    "pagination": {
+      "summary": "Mostrando {from}–{to} de {total}",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página {page} de {total}"
+    },
     "list": {
       "empty": "Aún no hay casos escalados.",
       "noMatches": "No hay casos que coincidan con los filtros.",
@@ -623,11 +635,26 @@
   },
   "customers": {
     "title": "Clientes",
+    "subtitle": "Todas las personas que han escrito a tus bots, ordenadas por actividad más reciente.",
     "filterByBot": "Filtrar por bot",
     "all": "Todos",
+    "searchPlaceholder": "Buscar por nombre del cliente…",
+    "searchHint": "Coincidencia por nombre (sin distinguir mayúsculas). Los clientes sin nombre no aparecen en la búsqueda.",
+    "totalLabel": "Clientes totales",
+    "matchingLabel": "Coincidencias",
+    "pagination": {
+      "summary": "Mostrando {from}–{to} de {total}",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página {page} de {total}"
+    },
     "empty": {
       "title": "Aún no hay clientes",
       "description": "Los clientes aparecen cuando alguien le escribe a uno de tus bots."
+    },
+    "emptyFiltered": {
+      "title": "Sin coincidencias",
+      "description": "Ningún cliente coincide con tu búsqueda. Prueba otro término o limpia los filtros."
     },
     "table": {
       "customer": "Cliente",
@@ -899,7 +926,22 @@
         "users": "Usuarios",
         "navCases": "Casos",
         "navCustomers": "Clientes",
-        "navMeetings": "Reuniones"
+        "navMeetings": "Reuniones",
+        "navBilling": "Facturación"
+      },
+      "hero": {
+        "tenantId": "ID del tenant",
+        "copy": "Copiar",
+        "copied": "Copiado",
+        "createdOn": "Creado el {date}"
+      },
+      "quickNav": {
+        "title": "Secciones",
+        "subtitle": "Salta a un área específica de este tenant.",
+        "customersHint": "Contactos a través de todos los bots",
+        "casesHint": "Escalaciones y transferencia a humano",
+        "meetingsHint": "Reservas hechas por los bots",
+        "billingHint": "Ciclo, pagos y desactivación"
       },
       "createBot": "+ Crear bot",
       "addBot": "+ Agregar bot",
@@ -967,6 +1009,13 @@
       "back": "← Volver a la empresa",
       "title": "Clientes",
       "subtitle": "Clientes a través de los bots de esta empresa."
+    },
+    "companyBilling": {
+      "back": "← Volver a la empresa",
+      "title": "Facturación",
+      "subtitle": "Ciclo activo, historial de pagos y controles manuales para este tenant.",
+      "planTitle": "Plan actual",
+      "planSubtitle": "Solo lectura. Los cambios de plan se realizan desde la edición de la empresa."
     },
     "companyBotCreate": {
       "back": "← Volver a la empresa",
@@ -1049,10 +1098,15 @@
   },
   "billing": {
     "banner": {
-      "renewSoon": "Tu suscripción vence en {days} día. Contacta a soporte para renovar antes del corte. | Tu suscripción vence en {days} días. Contacta a soporte para renovar antes del corte.",
-      "renewToday": "Tu suscripción vence hoy. Contacta a soporte para renovar y evitar la suspensión.",
-      "pendingPayment": "Tu suscripción está vencida. Algunas funciones están limitadas hasta registrar el pago — contacta a soporte.",
-      "suspended": "Tu cuenta fue suspendida. Contacta a soporte para reactivar.",
+      "sendReceipt": "Enviar comprobante",
+      "warningTitle": "Renovación próxima",
+      "warningTitleToday": "Tu suscripción vence hoy",
+      "pendingTitle": "Suscripción vencida",
+      "suspendedTitle": "Cuenta suspendida",
+      "renewSoon": "Tu suscripción vence en {days} día. Para mantener tu bot activo, envía tu comprobante de pago a {email} antes del corte. | Tu suscripción vence en {days} días. Para mantener tu bot activo, envía tu comprobante de pago a {email} antes del corte.",
+      "renewToday": "Tu suscripción vence hoy. Envía tu comprobante de pago a {email} ahora mismo para evitar la suspensión.",
+      "pendingPayment": "Tu suscripción está vencida y algunas funciones están limitadas. Envía tu comprobante de pago a {email} para restablecer el acceso completo.",
+      "suspended": "Tu cuenta está suspendida y el bot dejó de responder. Envía tu comprobante de pago a {email} para reactivarlo.",
       "contactSupport": "Contactar soporte"
     }
   }
