@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
+import type { BillingState } from '~/types/billing'
 import type { Tenant } from '~/types/company'
 
 definePageMeta({
@@ -13,6 +14,7 @@ const router = useRouter()
 const { changePassword, logout } = useAuth()
 const tenant = useTenant()
 const bots = useBots()
+const billing = useBilling()
 
 const form = reactive({
   currentPassword: '',
@@ -34,19 +36,48 @@ const tenantData = ref<Tenant | null>(null)
 const botCount = ref<number>(0)
 const planLoading = ref(true)
 const planError = ref<string | null>(null)
+const billingState = ref<BillingState | null>(null)
 
 const botsLimit = computed(() => resolveBotsLimit(tenantData.value))
 const atBotLimit = computed(() =>
   botsLimit.value !== null && botCount.value >= botsLimit.value,
 )
 
+const activeUntilFormatted = computed<string | null>(() => {
+  const ends = billingState.value?.activeCycle?.endsAt
+  if (!ends) return null
+  return new Date(ends).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+})
+
+const cycleTone = computed<'trial' | 'warning' | 'expired' | 'ok'>(() => {
+  if (!billingState.value) return 'ok'
+  if (billingState.value.tenantStatus !== 'ACTIVE') return 'expired'
+  if (billingState.value.activeCycle?.isTrial) return 'trial'
+  const days = billingState.value.daysRemaining
+  if (days !== null && days <= 10) return 'warning'
+  return 'ok'
+})
+
 async function loadPlan(): Promise<void> {
   planLoading.value = true
   planError.value = null
   try {
-    const [me, list] = await Promise.all([tenant.me(), bots.list()])
+    // `/billing/me` works even when the tenant is suspended (it's whitelisted
+    // by `@SkipBillingCheck()` server-side), so it's safe to call alongside
+    // the bot list — if the tenant has been suspended, this page is still
+    // reachable and should accurately reflect the situation.
+    const [me, list, bs] = await Promise.all([
+      tenant.me(),
+      bots.list(),
+      billing.me(),
+    ])
     tenantData.value = me
     botCount.value = list.length
+    billingState.value = bs
   } catch (err) {
     planError.value = (err as ApiError).message || t('admin.profile.loadPlanError')
   } finally {
@@ -195,6 +226,76 @@ async function onLogout(): Promise<void> {
           <p v-if="atBotLimit" class="mt-2 text-xs text-amber-800/90 leading-relaxed">
             {{ $t('admin.profile.botsAtLimitNote') }}
           </p>
+        </div>
+
+        <!-- Billing cycle: when does the bot stop working if no new payment? -->
+        <div
+          v-if="billingState"
+          class="mt-3 rounded-xl p-3 ring-1"
+          :class="{
+            'bg-emerald-50/70 ring-emerald-200': cycleTone === 'ok',
+            'bg-sky-50/70 ring-sky-200': cycleTone === 'trial',
+            'bg-amber-50/70 ring-amber-200': cycleTone === 'warning',
+            'bg-rose-50/70 ring-rose-200': cycleTone === 'expired',
+          }"
+        >
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <p
+                class="text-[10px] uppercase tracking-wider font-semibold"
+                :class="{
+                  'text-emerald-700': cycleTone === 'ok',
+                  'text-sky-700': cycleTone === 'trial',
+                  'text-amber-700': cycleTone === 'warning',
+                  'text-rose-700': cycleTone === 'expired',
+                }"
+              >
+                {{ $t('admin.profile.cycleLabel') }}
+              </p>
+              <template v-if="cycleTone === 'expired'">
+                <p class="mt-0.5 text-sm font-semibold text-rose-800">
+                  {{ billingState.tenantStatus === 'SUSPENDED'
+                    ? $t('admin.profile.cycleSuspended')
+                    : $t('admin.profile.cycleExpired') }}
+                </p>
+              </template>
+              <template v-else-if="activeUntilFormatted">
+                <p
+                  class="mt-0.5 text-sm font-semibold"
+                  :class="{
+                    'text-emerald-800': cycleTone === 'ok',
+                    'text-sky-800': cycleTone === 'trial',
+                    'text-amber-800': cycleTone === 'warning',
+                  }"
+                >
+                  <template v-if="billingState.activeCycle?.isTrial">
+                    {{ $t('admin.profile.cycleTrialUntil', { date: activeUntilFormatted }) }}
+                  </template>
+                  <template v-else>
+                    {{ $t('admin.profile.cycleActiveUntil', { date: activeUntilFormatted }) }}
+                  </template>
+                </p>
+                <p
+                  v-if="billingState.daysRemaining !== null"
+                  class="mt-0.5 text-xs"
+                  :class="{
+                    'text-emerald-700/80': cycleTone === 'ok',
+                    'text-sky-700/80': cycleTone === 'trial',
+                    'text-amber-700/90': cycleTone === 'warning',
+                  }"
+                >
+                  {{ billingState.daysRemaining === 0
+                    ? $t('admin.profile.cycleDaysToday')
+                    : $t('admin.profile.cycleDaysRemaining', { days: billingState.daysRemaining }, billingState.daysRemaining) }}
+                </p>
+              </template>
+              <template v-else>
+                <p class="mt-0.5 text-sm font-semibold text-rose-800">
+                  {{ $t('admin.profile.cycleNoActive') }}
+                </p>
+              </template>
+            </div>
+          </div>
         </div>
       </template>
     </section>

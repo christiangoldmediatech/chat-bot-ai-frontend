@@ -1,5 +1,5 @@
 export type Plan = 'BASIC' | 'PROFESSIONAL' | 'PREMIUM'
-export type TenantStatus = 'ACTIVE' | 'SUSPENDED'
+export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'PENDING_PAYMENT'
 
 // Mirrors backend PlanResponseDto. Always present on Tenant / Company payloads
 // — the frontend should consume `planDetails` instead of hard-coding labels.

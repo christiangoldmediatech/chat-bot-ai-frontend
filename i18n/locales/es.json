@@ -198,6 +198,14 @@
       "botsUsageUnlimited": "{used} creados · ilimitados",
       "botsUsageWithLimit": "{used} de {limit}",
       "botsAtLimitNote": "Alcanzaste el límite de bots de tu plan. Contacta al equipo de la plataforma para subir de plan.",
+      "cycleLabel": "Vigencia del bot",
+      "cycleActiveUntil": "Activo hasta el {date}",
+      "cycleTrialUntil": "Periodo de prueba hasta el {date}",
+      "cycleSuspended": "Tu cuenta está suspendida.",
+      "cycleExpired": "Tu suscripción está vencida — registra un nuevo pago para reactivar.",
+      "cycleNoActive": "Sin ciclo activo.",
+      "cycleDaysToday": "Vence hoy.",
+      "cycleDaysRemaining": "Queda {days} día. | Quedan {days} días.",
       "loadPlanError": "No se pudo cargar tu plan."
     },
     "planCard": {
@@ -762,6 +770,7 @@
       "allCompanies": "Todas las empresas",
       "groupTenants": "Tenants",
       "groupActivity": "Actividad",
+      "groupOperations": "Operaciones",
       "stat": {
         "companies": "Empresas",
         "companiesHint": "{active} activas · {suspended} suspendidas",
@@ -989,6 +998,62 @@
         "multimedia": "Recursos multimedia",
         "multimediaDesc": "Activos enviables (imágenes, PDFs, videos, audios, ubicaciones) que el bot puede adjuntar nativamente en WhatsApp."
       }
+    },
+    "billing": {
+      "sweepTitle": "Sweep de facturación",
+      "sweepDescription": "Cierra los ciclos vencidos y marca los tenants como PENDING_PAYMENT. Este job corre automáticamente todos los días a las 3:00 (hora del servidor).",
+      "sweepButton": "Ejecutar sweep ahora",
+      "sweepRunning": "Ejecutando…",
+      "sweepDone": "Sweep completado: {count} ciclo(s) cerrado(s).",
+      "sweepNoneClosed": "Sweep completado: no hay ciclos vencidos.",
+      "sweepError": "No se pudo ejecutar el sweep.",
+      "cardTitle": "Facturación",
+      "cardSubtitle": "Ciclo de facturación actual e historial de pagos manuales.",
+      "registerButton": "Registrar pago",
+      "deactivateButton": "Desactivar manualmente",
+      "cycleLabel": "Ciclo activo",
+      "activeUntil": "Activo hasta el {date}",
+      "trialUntil": "Periodo de prueba hasta el {date}",
+      "daysToday": "Vence hoy.",
+      "daysRemaining": "Queda {days} día. | Quedan {days} días.",
+      "noActiveCycle": "No hay un ciclo activo.",
+      "statusSuspended": "Cuenta suspendida.",
+      "statusPending": "Suscripción vencida — registra un pago para reactivar.",
+      "cycleStarted": "Inició el {date}",
+      "cycleMonths": "Cubre {n} mes(es)",
+      "historyTitle": "Historial de pagos",
+      "historyEmpty": "Aún no hay pagos registrados.",
+      "paymentMonths": "{n} mes(es)",
+      "viewReceipt": "Ver comprobante",
+      "dialogTitle": "Registrar pago — {name}",
+      "fieldMonths": "Meses a cubrir",
+      "fieldMonthsHint": "Selecciona cuántos meses cubre este pago (1–12). El monto se calcula automáticamente desde el plan del tenant.",
+      "monthOne": "1 mes",
+      "monthMany": "{count} meses",
+      "fieldFile": "Comprobante de depósito",
+      "fieldFileHint": "Imagen del depósito (JPG, PNG, WEBP) o PDF. Máx. 10 MB.",
+      "fieldPaidAt": "Fecha del pago",
+      "fieldPaidAtHint": "Opcional. Solo para auditoría — no modifica las fechas del ciclo.",
+      "fieldNote": "Nota",
+      "fieldNotePlaceholder": "Referencia del depósito, banco, transferencia, etc.",
+      "submit": "Registrar pago",
+      "submitting": "Registrando…",
+      "registerSuccess": "Pago registrado correctamente. El nuevo ciclo está activo.",
+      "registerError": "No se pudo registrar el pago.",
+      "deactivateConfirmTitle": "¿Desactivar {name}?",
+      "deactivateConfirmMessage": "Cierra el ciclo activo y marca el tenant como SUSPENDED. El bot dejará de responder y los usuarios verán un mensaje de cuenta suspendida hasta que registres un nuevo pago.",
+      "deactivateConfirmAction": "Sí, desactivar",
+      "deactivateSuccess": "Tenant desactivado.",
+      "deactivateError": "No se pudo desactivar el tenant."
+    }
+  },
+  "billing": {
+    "banner": {
+      "renewSoon": "Tu suscripción vence en {days} día. Contacta a soporte para renovar antes del corte. | Tu suscripción vence en {days} días. Contacta a soporte para renovar antes del corte.",
+      "renewToday": "Tu suscripción vence hoy. Contacta a soporte para renovar y evitar la suspensión.",
+      "pendingPayment": "Tu suscripción está vencida. Algunas funciones están limitadas hasta registrar el pago — contacta a soporte.",
+      "suspended": "Tu cuenta fue suspendida. Contacta a soporte para reactivar.",
+      "contactSupport": "Contactar soporte"
     }
   }
 }

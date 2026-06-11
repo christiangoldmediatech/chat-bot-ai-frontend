@@ -198,6 +198,14 @@
       "botsUsageUnlimited": "{used} created · unlimited",
       "botsUsageWithLimit": "{used} of {limit}",
       "botsAtLimitNote": "You've reached your plan's bot limit. Contact the platform team to upgrade.",
+      "cycleLabel": "Bot validity",
+      "cycleActiveUntil": "Active until {date}",
+      "cycleTrialUntil": "Trial until {date}",
+      "cycleSuspended": "Your account is suspended.",
+      "cycleExpired": "Your subscription has expired — register a new payment to reactivate.",
+      "cycleNoActive": "No active cycle.",
+      "cycleDaysToday": "Expires today.",
+      "cycleDaysRemaining": "{days} day remaining. | {days} days remaining.",
       "loadPlanError": "Could not load your plan."
     },
     "planCard": {
@@ -762,6 +770,7 @@
       "allCompanies": "All companies",
       "groupTenants": "Tenants",
       "groupActivity": "Activity",
+      "groupOperations": "Operations",
       "stat": {
         "companies": "Companies",
         "companiesHint": "{active} active · {suspended} suspended",
@@ -989,6 +998,62 @@
         "multimedia": "Multimedia resources",
         "multimediaDesc": "Sendable assets (images, PDFs, videos, audios, locations) the bot can attach natively in WhatsApp."
       }
+    },
+    "billing": {
+      "sweepTitle": "Billing sweep",
+      "sweepDescription": "Closes overdue cycles and moves tenants to PENDING_PAYMENT. This job runs automatically every day at 03:00 (server time).",
+      "sweepButton": "Run sweep now",
+      "sweepRunning": "Running…",
+      "sweepDone": "Sweep completed: {count} cycle(s) closed.",
+      "sweepNoneClosed": "Sweep completed: no overdue cycles.",
+      "sweepError": "Could not run the sweep.",
+      "cardTitle": "Billing",
+      "cardSubtitle": "Current billing cycle and manual payment history.",
+      "registerButton": "Register payment",
+      "deactivateButton": "Deactivate manually",
+      "cycleLabel": "Active cycle",
+      "activeUntil": "Active until {date}",
+      "trialUntil": "Trial until {date}",
+      "daysToday": "Expires today.",
+      "daysRemaining": "{days} day remaining. | {days} days remaining.",
+      "noActiveCycle": "No active cycle.",
+      "statusSuspended": "Account suspended.",
+      "statusPending": "Subscription expired — register a payment to reactivate.",
+      "cycleStarted": "Started on {date}",
+      "cycleMonths": "Covers {n} month(s)",
+      "historyTitle": "Payment history",
+      "historyEmpty": "No payments registered yet.",
+      "paymentMonths": "{n} month(s)",
+      "viewReceipt": "View receipt",
+      "dialogTitle": "Register payment — {name}",
+      "fieldMonths": "Months to cover",
+      "fieldMonthsHint": "Select how many months this payment covers (1–12). The amount is computed automatically from the tenant's plan.",
+      "monthOne": "1 month",
+      "monthMany": "{count} months",
+      "fieldFile": "Deposit receipt",
+      "fieldFileHint": "Deposit image (JPG, PNG, WEBP) or PDF. Max 10 MB.",
+      "fieldPaidAt": "Payment date",
+      "fieldPaidAtHint": "Optional. Audit-only — does not shift the cycle dates.",
+      "fieldNote": "Note",
+      "fieldNotePlaceholder": "Deposit reference, bank, wire id, etc.",
+      "submit": "Register payment",
+      "submitting": "Registering…",
+      "registerSuccess": "Payment registered. The new cycle is active.",
+      "registerError": "Could not register the payment.",
+      "deactivateConfirmTitle": "Deactivate {name}?",
+      "deactivateConfirmMessage": "Closes the active cycle and marks the tenant as SUSPENDED. The bot will stop replying and users will see an account-suspended message until you register a new payment.",
+      "deactivateConfirmAction": "Yes, deactivate",
+      "deactivateSuccess": "Tenant deactivated.",
+      "deactivateError": "Could not deactivate the tenant."
+    }
+  },
+  "billing": {
+    "banner": {
+      "renewSoon": "Your subscription expires in {days} day. Please contact support to renew before the cutoff. | Your subscription expires in {days} days. Please contact support to renew before the cutoff.",
+      "renewToday": "Your subscription expires today. Contact support to renew and avoid suspension.",
+      "pendingPayment": "Your subscription has expired. Some features are limited until payment is registered — please contact support.",
+      "suspended": "Your account has been suspended. Please contact support to reactivate.",
+      "contactSupport": "Contact support"
     }
   }
 }

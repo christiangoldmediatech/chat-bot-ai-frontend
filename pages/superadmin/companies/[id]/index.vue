@@ -165,6 +165,15 @@ await load()
         <PlanCard :plan="data.planDetails" dark />
       </div>
 
+      <!-- Billing: register manual payment, deactivate, history. -->
+      <div class="mt-6">
+        <SuperadminBillingCard
+          :tenant-id="data.id"
+          :tenant-name="data.name"
+          :plan-summary="`${data.planDetails.displayName} · ${data.planDetails.currency} ${data.planDetails.monthlyPrice}/mo`"
+        />
+      </div>
+
       <section class="mt-8">
         <h2 class="text-base font-semibold text-slate-200">{{ $t('superadmin.companyDetail.users.title') }}</h2>
         <p
