@@ -52,6 +52,7 @@ export interface CompanyUser {
 export interface CompanyBot {
   id: string
   name: string
+  phoneNumber: string | null
   isActive: boolean
   createdAt: string
 }
