@@ -1109,5 +1109,130 @@
       "suspended": "Tu cuenta está suspendida y el bot dejó de responder. Envía tu comprobante de pago a {email} para reactivarlo.",
       "contactSupport": "Contactar soporte"
     }
+  },
+  "legal": {
+    "backHome": "Volver al inicio",
+    "lastUpdated": "Última actualización",
+    "lastUpdatedDate": "11 de junio de 2026",
+    "contactLabel": "Contacto",
+    "company": "Kaibots",
+    "privacy": {
+      "title": "Política de Privacidad",
+      "subtitle": "Cómo recopilamos, usamos y protegemos tu información cuando utilizas Kaibots.",
+      "intro": "Esta Política de Privacidad describe cómo Kaibots («nosotros», «nuestro») recopila, utiliza, comparte y protege la información personal cuando usas nuestra plataforma de asistentes con IA para WhatsApp (el «Servicio»). Al crear una cuenta o usar el Servicio aceptas las prácticas descritas aquí.",
+      "collect": {
+        "title": "1. Información que recopilamos",
+        "body": "Recopilamos datos de la cuenta (nombre, nombre de empresa, correo electrónico, contraseña en hash, número de teléfono), el contenido de los mensajes de WhatsApp intercambiados a través de tu asistente (texto, multimedia, marcas de tiempo y números de teléfono del usuario final), registros y métricas de uso (IP, dispositivo, idioma, navegación), los documentos de entrenamiento que cargues, y los datos de facturación procesados por nuestro proveedor de pagos. No almacenamos los números completos de tarjetas de crédito."
+      },
+      "use": {
+        "title": "2. Cómo utilizamos la información",
+        "body": "Procesamos los datos para operar y prestar el Servicio, configurar y mejorar el asistente de tu cuenta (tenant), generar analíticas y reportes para tu negocio, brindar soporte, prevenir fraude o abuso, y cumplir obligaciones legales. Nunca usamos los datos de tu tenant para entrenar modelos de IA compartidos con otros clientes."
+      },
+      "sharing": {
+        "title": "3. Compartición con terceros",
+        "body": "Compartimos datos estrictamente para operar el Servicio con: (a) Meta Platforms (API de WhatsApp Business), imprescindible para enviar y recibir mensajes en tu nombre, sujeto a los términos y la política de privacidad de Meta; (b) proveedores de modelos de lenguaje de IA (como OpenAI o Anthropic), para generar respuestas, sujetos a sus términos de procesamiento de datos; (c) proveedores de infraestructura en la nube (hosting, almacenamiento, logs); (d) procesadores de pagos; (e) autoridades, únicamente cuando lo exija la ley. No vendemos datos personales."
+      },
+      "retention": {
+        "title": "4. Retención de datos",
+        "body": "Conservamos los datos de las conversaciones mientras tu cuenta esté activa o lo necesario para prestar el Servicio. Puedes solicitar la eliminación de conversaciones específicas o de tu cuenta completa en cualquier momento escribiendo a info{'@'}kaibots.com. Las copias de seguridad cifradas pueden conservarse hasta 90 días después de la eliminación. Los registros que estamos legalmente obligados a conservar (facturación, impuestos) se mantendrán por el plazo exigido por la ley."
+      },
+      "security": {
+        "title": "5. Seguridad",
+        "body": "Aplicamos medidas técnicas y organizativas que incluyen HTTPS/TLS en tránsito, cifrado en reposo, control de acceso basado en roles, registros de auditoría, autenticación segura y revisiones periódicas. Ningún sistema es 100% seguro; no podemos garantizar una protección absoluta, pero notificaremos a los usuarios afectados ante cualquier incidente conforme a la ley aplicable."
+      },
+      "rights": {
+        "title": "6. Tus derechos",
+        "body": "Sujeto a la legislación aplicable, puedes acceder a tus datos personales, solicitar correcciones o eliminación, restringir u oponerte al procesamiento, solicitar portabilidad y retirar tu consentimiento en cualquier momento. Para ejercer estos derechos escríbenos a info{'@'}kaibots.com. También tienes derecho a presentar una queja ante la autoridad de protección de datos de tu país."
+      },
+      "endUser": {
+        "title": "7. Responsabilidad sobre tus usuarios finales",
+        "body": "Si despliegas un asistente con IA usando nuestro Servicio, actúas como responsable del tratamiento de los datos personales de tus usuarios finales. Eres responsable de informarles que sus mensajes son procesados por un sistema automatizado de IA y de obtener los consentimientos que exija la ley de protección de datos aplicable antes de iniciar conversaciones automatizadas."
+      },
+      "children": {
+        "title": "8. Menores de edad",
+        "body": "El Servicio no está dirigido a menores de 16 años. No recopilamos a sabiendas datos de menores. Si tomas conocimiento de que un menor nos ha proporcionado datos personales, contáctanos para eliminarlos."
+      },
+      "international": {
+        "title": "9. Transferencias internacionales",
+        "body": "Los datos pueden procesarse en países distintos al tuyo, incluidos Estados Unidos y la Unión Europea. Cuando corresponde, nos apoyamos en cláusulas contractuales tipo o salvaguardas equivalentes aprobadas por la ley aplicable."
+      },
+      "cookies": {
+        "title": "10. Cookies",
+        "body": "Usamos cookies y tecnologías similares únicamente para funciones esenciales: autenticación, estado de sesión y preferencia de idioma. No utilizamos cookies publicitarias de terceros ni seguimiento entre sitios."
+      },
+      "changes": {
+        "title": "11. Cambios a esta Política",
+        "body": "Podemos actualizar esta Política de Privacidad periódicamente. Los cambios sustanciales se notificarán por correo electrónico o a través del Servicio con al menos 15 días de antelación. El uso continuado del Servicio después de la fecha efectiva constituye aceptación de la Política actualizada."
+      },
+      "contact": {
+        "title": "12. Contacto",
+        "body": "Si tienes preguntas sobre esta Política o deseas ejercer tus derechos, escríbenos a info{'@'}kaibots.com."
+      }
+    },
+    "terms": {
+      "title": "Condiciones del Servicio",
+      "subtitle": "Las reglas para utilizar la plataforma Kaibots.",
+      "intro": "Estas Condiciones del Servicio («Condiciones») regulan tu acceso y uso de la plataforma Kaibots (el «Servicio»). Al crear una cuenta o usar el Servicio aceptas estas Condiciones. Si no estás de acuerdo, no utilices el Servicio.",
+      "service": {
+        "title": "1. Descripción del Servicio",
+        "body": "Kaibots es una plataforma multi-tenant que permite a las empresas operar asistentes conversacionales con IA sobre la API de WhatsApp Business, incluyendo paneles, analíticas, entrenamiento por documentos, recursos multimedia, traspaso a operador humano e integraciones con sistemas de terceros."
+      },
+      "account": {
+        "title": "2. Registro de la cuenta",
+        "body": "Para usar el Servicio debes crear una cuenta y proporcionar información veraz, completa y actualizada. Eres responsable de proteger tus credenciales y de toda la actividad que ocurra bajo tu cuenta. Debes tener al menos 18 años o la mayoría de edad legal en tu jurisdicción para usar el Servicio."
+      },
+      "acceptable": {
+        "title": "3. Uso aceptable",
+        "body": "Aceptas cumplir estas Condiciones, la legislación aplicable, la Política de WhatsApp Business, la Política de Comercio de WhatsApp y cualquier normativa de protección de datos que aplique a tus usuarios finales. Debes obtener los consentimientos que exija tu ley local antes de iniciar conversaciones automatizadas y respetar cualquier solicitud de baja por parte de tus usuarios finales."
+      },
+      "prohibited": {
+        "title": "4. Usos prohibidos",
+        "body": "No puedes utilizar el Servicio para enviar mensajes masivos no solicitados (spam), suplantar a cualquier persona o entidad, transmitir contenido ilegal, infractor, difamatorio o nocivo, acosar o dañar a personas, distribuir malware, extraer datos sin autorización, vulnerar propiedad intelectual de terceros, hacer ingeniería inversa del Servicio o eludir límites de uso, cuotas o medidas de seguridad."
+      },
+      "content": {
+        "title": "5. Tu contenido",
+        "body": "Conservas la propiedad del contenido que cargues al Servicio (documentos de entrenamiento, personalidad del bot, multimedia, mensajes de respaldo). Otorgas a Kaibots una licencia mundial, no exclusiva y sin regalías para alojar, procesar y transmitir ese contenido estrictamente para operar el Servicio en tu beneficio. Declaras y garantizas que cuentas con los derechos sobre todo el contenido que cargues."
+      },
+      "ai": {
+        "title": "6. Respuestas generadas por IA",
+        "body": "El Servicio utiliza modelos de lenguaje de IA de terceros. Las respuestas generadas por IA pueden ser inexactas, incompletas o inapropiadas para un contexto determinado. Eres el único responsable de revisar y supervisar las conversaciones automatizadas y de configurar tu asistente conforme a las necesidades de tu negocio. Kaibots no es responsable del contenido ni de las consecuencias de los mensajes generados por IA enviados a través de tu cuenta."
+      },
+      "billing": {
+        "title": "7. Suscripciones y facturación",
+        "body": "El Servicio se ofrece bajo distintos planes (como Free, Pro y Enterprise) con diferentes límites y funciones. Los planes de pago se renuevan automáticamente al final de cada ciclo de facturación salvo cancelación anticipada. Las tarifas ya pagadas no son reembolsables salvo cuando la ley lo exija. Podemos cambiar los precios en cualquier momento con al menos 30 días de aviso."
+      },
+      "suspension": {
+        "title": "8. Suspensión y terminación",
+        "body": "Podemos suspender o terminar tu cuenta de inmediato si incumples estas Condiciones, la Política de WhatsApp Business o la ley aplicable, o si el uso continuado pone en riesgo el Servicio, a otros clientes o a usuarios finales. Puedes cancelar tu cuenta en cualquier momento desde el panel. Tras la terminación, cesa tu acceso al Servicio y tus datos pueden eliminarse en un plazo razonable, sujeto a las reglas de retención de nuestra Política de Privacidad."
+      },
+      "disclaimer": {
+        "title": "9. Exención de garantías",
+        "body": "El Servicio se proporciona «tal cual» y «según disponibilidad». En la máxima medida permitida por la ley, Kaibots renuncia a toda garantía, expresa o implícita, incluidas las de comerciabilidad, idoneidad para un fin particular y no infracción. No garantizamos que el Servicio será ininterrumpido, libre de errores, seguro o que las respuestas de IA serán exactas."
+      },
+      "liability": {
+        "title": "10. Limitación de responsabilidad",
+        "body": "En la máxima medida permitida por la ley, Kaibots no será responsable por daños indirectos, incidentales, especiales, consecuentes ni punitivos, incluidos lucro cesante, pérdida de ingresos, datos, oportunidades comerciales o reputación. Nuestra responsabilidad total agregada bajo estas Condiciones se limita al monto efectivamente pagado por el Servicio durante los doce (12) meses inmediatamente anteriores al hecho que origine la reclamación."
+      },
+      "indemnity": {
+        "title": "11. Indemnización",
+        "body": "Aceptas indemnizar, defender y mantener indemne a Kaibots, sus directivos, empleados y socios, frente a cualquier reclamación, demanda, pérdida o gasto (incluyendo honorarios razonables de abogados) derivado de tu uso del Servicio, tu contenido o tu incumplimiento de estas Condiciones o de derechos de terceros."
+      },
+      "ip": {
+        "title": "12. Propiedad intelectual",
+        "body": "El Servicio —incluyendo software, diseño, marca, logos, documentación y marcas comerciales— es propiedad de Kaibots o sus licenciantes y está protegido por la legislación de propiedad intelectual. Estas Condiciones no te otorgan ningún derecho sobre la propiedad intelectual de Kaibots distinto del derecho limitado a usar el Servicio conforme a estas Condiciones."
+      },
+      "changes": {
+        "title": "13. Cambios a estas Condiciones",
+        "body": "Podemos modificar estas Condiciones periódicamente. Los cambios sustanciales se notificarán a través del Servicio o por correo electrónico con al menos 15 días de antelación. El uso continuado del Servicio tras la fecha efectiva constituye aceptación de las Condiciones actualizadas. Si no estás de acuerdo, debes dejar de usar el Servicio antes de que entren en vigor."
+      },
+      "law": {
+        "title": "14. Ley aplicable",
+        "body": "Estas Condiciones se regirán por las leyes aplicables en la jurisdicción donde opera Kaibots, sin perjuicio de los derechos imperativos de protección al consumidor que te confiera la ley de tu país de residencia."
+      },
+      "contact": {
+        "title": "15. Contacto",
+        "body": "Para consultas sobre estas Condiciones escríbenos a info{'@'}kaibots.com."
+      }
+    }
   }
 }
