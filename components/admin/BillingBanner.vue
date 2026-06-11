@@ -91,11 +91,6 @@ const message = computed<string>(() => {
   }
 })
 
-const mailtoHref = computed(() => {
-  const subject = encodeURIComponent(`[Kaibots] ${title.value}`)
-  return `mailto:${supportEmail.value}?subject=${subject}`
-})
-
 // Returns literal Tailwind classes (build-time resolvable) per variant.
 const styles = computed(() => {
   switch (variant.value) {
@@ -206,16 +201,17 @@ const styles = computed(() => {
         <p :class="['mt-0.5 text-[13px] leading-5', styles.body]">{{ message }}</p>
       </div>
 
-      <a
-        :href="mailtoHref"
+      <NuxtLink
+        to="/admin/payment"
         :class="['shrink-0 hidden sm:inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2', styles.cta]"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
-          <line x1="22" y1="2" x2="11" y2="13" />
-          <polygon points="22 2 15 22 11 13 2 9 22 2" />
+          <rect x="2" y="6" width="20" height="14" rx="2" />
+          <path d="M2 10h20" />
+          <path d="M6 14h4" />
         </svg>
-        {{ $t('billing.banner.sendReceipt') }}
-      </a>
+        {{ $t('billing.banner.paymentInstructions') }}
+      </NuxtLink>
     </div>
   </div>
 </template>

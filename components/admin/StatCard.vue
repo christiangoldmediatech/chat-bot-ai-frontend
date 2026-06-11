@@ -8,6 +8,7 @@ const props = withDefaults(defineProps<{
   hint?: string
   tone?: Tone
   icon?: IconKey
+  to?: string
 }>(), {
   tone: 'default',
 })
@@ -105,9 +106,11 @@ const palette = computed(() => toneClasses.value[props.tone])
 </script>
 
 <template>
-  <div
+  <component
+    :is="to ? 'NuxtLink' : 'div'"
+    :to="to"
     class="group relative overflow-hidden rounded-2xl ring-1 p-5 transition-all duration-200 hover:-translate-y-0.5"
-    :class="[palette.card, palette.ring, palette.shadow, palette.ringHover, palette.shadowHover]"
+    :class="[palette.card, palette.ring, palette.shadow, palette.ringHover, palette.shadowHover, to ? 'cursor-pointer block focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-400' : '']"
   >
     <!-- Soft halo behind the icon corner -->
     <span
@@ -157,5 +160,5 @@ const palette = computed(() => toneClasses.value[props.tone])
         </svg>
       </div>
     </div>
-  </div>
+  </component>
 </template>

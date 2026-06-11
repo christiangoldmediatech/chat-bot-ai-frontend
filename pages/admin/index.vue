@@ -79,6 +79,7 @@ await load()
           :hint="$t('admin.dashboard.stats.botsHint', { n: data.activeBots })"
           icon="bots"
           tone="indigo"
+          to="/admin/bots"
         />
         <StatCard
           :label="$t('admin.dashboard.stats.conversations')"
@@ -86,6 +87,7 @@ await load()
           :hint="$t('admin.dashboard.stats.conversationsHint', { n: data.openConversations })"
           icon="conversations"
           tone="emerald"
+          to="/admin/conversations"
         />
         <StatCard
           :label="$t('admin.dashboard.stats.humanHandled')"
@@ -93,6 +95,7 @@ await load()
           :hint="$t('admin.dashboard.stats.humanHandledHint')"
           icon="humans"
           tone="amber"
+          to="/admin/cases"
         />
         <StatCard
           :label="$t('admin.dashboard.stats.customers')"
@@ -100,6 +103,7 @@ await load()
           :hint="$t('admin.dashboard.stats.customersHint')"
           icon="customers"
           tone="sky"
+          to="/admin/customers"
         />
       </div>
 
