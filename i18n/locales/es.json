@@ -101,6 +101,10 @@
       "tagline": "IA en WhatsApp para empresas modernas",
       "signIn": "Iniciar sesión",
       "createAccount": "Crear cuenta"
+    },
+    "whatsappFloat": {
+      "label": "Escríbenos por WhatsApp",
+      "ariaLabel": "Escribir a Kaibot por WhatsApp"
     }
   },
   "auth": {
