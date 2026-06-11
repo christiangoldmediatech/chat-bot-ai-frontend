@@ -159,6 +159,7 @@
     "panelTitle": "Panel admin",
     "dashboard": {
       "title": "Panel",
+      "subtitle": "Resumen de tus bots, conversaciones y clientes.",
       "stats": {
         "bots": "Bots",
         "botsHint": "{n} activos",
@@ -169,7 +170,10 @@
         "customers": "Clientes",
         "customersHint": "Números únicos"
       },
-      "recentConversations": "Conversaciones recientes"
+      "recentConversations": "Conversaciones recientes",
+      "recentConversationsHint": "Última actividad a través de todos tus bots.",
+      "viewAllConversations": "Ver todas",
+      "noConversations": "Aún no hay conversaciones."
     },
     "profile": {
       "title": "Mi perfil",
@@ -198,6 +202,14 @@
       "botsUsageUnlimited": "{used} creados · ilimitados",
       "botsUsageWithLimit": "{used} de {limit}",
       "botsAtLimitNote": "Alcanzaste el límite de bots de tu plan. Contacta al equipo de la plataforma para subir de plan.",
+      "cycleLabel": "Vigencia del bot",
+      "cycleActiveUntil": "Activo hasta el {date}",
+      "cycleTrialUntil": "Periodo de prueba hasta el {date}",
+      "cycleSuspended": "Tu cuenta está suspendida.",
+      "cycleExpired": "Tu suscripción está vencida — registra un nuevo pago para reactivar.",
+      "cycleNoActive": "Sin ciclo activo.",
+      "cycleDaysToday": "Vence hoy.",
+      "cycleDaysRemaining": "Queda {days} día. | Quedan {days} días.",
       "loadPlanError": "No se pudo cargar tu plan."
     },
     "planCard": {
@@ -573,6 +585,14 @@
       "allBots": "Todos los bots",
       "searchPlaceholder": "Buscar por cliente, teléfono o resumen…"
     },
+    "totalLabel": "Casos totales",
+    "matchingLabel": "Coincidencias",
+    "pagination": {
+      "summary": "Mostrando {from}–{to} de {total}",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página {page} de {total}"
+    },
     "list": {
       "empty": "Aún no hay casos escalados.",
       "noMatches": "No hay casos que coincidan con los filtros.",
@@ -615,11 +635,26 @@
   },
   "customers": {
     "title": "Clientes",
+    "subtitle": "Todas las personas que han escrito a tus bots, ordenadas por actividad más reciente.",
     "filterByBot": "Filtrar por bot",
     "all": "Todos",
+    "searchPlaceholder": "Buscar por nombre del cliente…",
+    "searchHint": "Coincidencia por nombre (sin distinguir mayúsculas). Los clientes sin nombre no aparecen en la búsqueda.",
+    "totalLabel": "Clientes totales",
+    "matchingLabel": "Coincidencias",
+    "pagination": {
+      "summary": "Mostrando {from}–{to} de {total}",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página {page} de {total}"
+    },
     "empty": {
       "title": "Aún no hay clientes",
       "description": "Los clientes aparecen cuando alguien le escribe a uno de tus bots."
+    },
+    "emptyFiltered": {
+      "title": "Sin coincidencias",
+      "description": "Ningún cliente coincide con tu búsqueda. Prueba otro término o limpia los filtros."
     },
     "table": {
       "customer": "Cliente",
@@ -762,6 +797,7 @@
       "allCompanies": "Todas las empresas",
       "groupTenants": "Tenants",
       "groupActivity": "Actividad",
+      "groupOperations": "Operaciones",
       "stat": {
         "companies": "Empresas",
         "companiesHint": "{active} activas · {suspended} suspendidas",
@@ -890,7 +926,22 @@
         "users": "Usuarios",
         "navCases": "Casos",
         "navCustomers": "Clientes",
-        "navMeetings": "Reuniones"
+        "navMeetings": "Reuniones",
+        "navBilling": "Facturación"
+      },
+      "hero": {
+        "tenantId": "ID del tenant",
+        "copy": "Copiar",
+        "copied": "Copiado",
+        "createdOn": "Creado el {date}"
+      },
+      "quickNav": {
+        "title": "Secciones",
+        "subtitle": "Salta a un área específica de este tenant.",
+        "customersHint": "Contactos a través de todos los bots",
+        "casesHint": "Escalaciones y transferencia a humano",
+        "meetingsHint": "Reservas hechas por los bots",
+        "billingHint": "Ciclo, pagos y desactivación"
       },
       "createBot": "+ Crear bot",
       "addBot": "+ Agregar bot",
@@ -959,6 +1010,13 @@
       "title": "Clientes",
       "subtitle": "Clientes a través de los bots de esta empresa."
     },
+    "companyBilling": {
+      "back": "← Volver a la empresa",
+      "title": "Facturación",
+      "subtitle": "Ciclo activo, historial de pagos y controles manuales para este tenant.",
+      "planTitle": "Plan actual",
+      "planSubtitle": "Solo lectura. Los cambios de plan se realizan desde la edición de la empresa."
+    },
     "companyBotCreate": {
       "back": "← Volver a la empresa",
       "title": "Crear bot para esta empresa",
@@ -989,6 +1047,67 @@
         "multimedia": "Recursos multimedia",
         "multimediaDesc": "Activos enviables (imágenes, PDFs, videos, audios, ubicaciones) que el bot puede adjuntar nativamente en WhatsApp."
       }
+    },
+    "billing": {
+      "sweepTitle": "Sweep de facturación",
+      "sweepDescription": "Cierra los ciclos vencidos y marca los tenants como PENDING_PAYMENT. Este job corre automáticamente todos los días a las 3:00 (hora del servidor).",
+      "sweepButton": "Ejecutar sweep ahora",
+      "sweepRunning": "Ejecutando…",
+      "sweepDone": "Sweep completado: {count} ciclo(s) cerrado(s).",
+      "sweepNoneClosed": "Sweep completado: no hay ciclos vencidos.",
+      "sweepError": "No se pudo ejecutar el sweep.",
+      "cardTitle": "Facturación",
+      "cardSubtitle": "Ciclo de facturación actual e historial de pagos manuales.",
+      "registerButton": "Registrar pago",
+      "deactivateButton": "Desactivar manualmente",
+      "cycleLabel": "Ciclo activo",
+      "activeUntil": "Activo hasta el {date}",
+      "trialUntil": "Periodo de prueba hasta el {date}",
+      "daysToday": "Vence hoy.",
+      "daysRemaining": "Queda {days} día. | Quedan {days} días.",
+      "noActiveCycle": "No hay un ciclo activo.",
+      "statusSuspended": "Cuenta suspendida.",
+      "statusPending": "Suscripción vencida — registra un pago para reactivar.",
+      "cycleStarted": "Inició el {date}",
+      "cycleMonths": "Cubre {n} mes(es)",
+      "historyTitle": "Historial de pagos",
+      "historyEmpty": "Aún no hay pagos registrados.",
+      "paymentMonths": "{n} mes(es)",
+      "viewReceipt": "Ver comprobante",
+      "dialogTitle": "Registrar pago — {name}",
+      "fieldMonths": "Meses a cubrir",
+      "fieldMonthsHint": "Selecciona cuántos meses cubre este pago (1–12). El monto se calcula automáticamente desde el plan del tenant.",
+      "monthOne": "1 mes",
+      "monthMany": "{count} meses",
+      "fieldFile": "Comprobante de depósito",
+      "fieldFileHint": "Imagen del depósito (JPG, PNG, WEBP) o PDF. Máx. 10 MB.",
+      "fieldPaidAt": "Fecha del pago",
+      "fieldPaidAtHint": "Opcional. Solo para auditoría — no modifica las fechas del ciclo.",
+      "fieldNote": "Nota",
+      "fieldNotePlaceholder": "Referencia del depósito, banco, transferencia, etc.",
+      "submit": "Registrar pago",
+      "submitting": "Registrando…",
+      "registerSuccess": "Pago registrado correctamente. El nuevo ciclo está activo.",
+      "registerError": "No se pudo registrar el pago.",
+      "deactivateConfirmTitle": "¿Desactivar {name}?",
+      "deactivateConfirmMessage": "Cierra el ciclo activo y marca el tenant como SUSPENDED. El bot dejará de responder y los usuarios verán un mensaje de cuenta suspendida hasta que registres un nuevo pago.",
+      "deactivateConfirmAction": "Sí, desactivar",
+      "deactivateSuccess": "Tenant desactivado.",
+      "deactivateError": "No se pudo desactivar el tenant."
+    }
+  },
+  "billing": {
+    "banner": {
+      "sendReceipt": "Enviar comprobante",
+      "warningTitle": "Renovación próxima",
+      "warningTitleToday": "Tu suscripción vence hoy",
+      "pendingTitle": "Suscripción vencida",
+      "suspendedTitle": "Cuenta suspendida",
+      "renewSoon": "Tu suscripción vence en {days} día. Para mantener tu bot activo, envía tu comprobante de pago a {email} antes del corte. | Tu suscripción vence en {days} días. Para mantener tu bot activo, envía tu comprobante de pago a {email} antes del corte.",
+      "renewToday": "Tu suscripción vence hoy. Envía tu comprobante de pago a {email} ahora mismo para evitar la suspensión.",
+      "pendingPayment": "Tu suscripción está vencida y algunas funciones están limitadas. Envía tu comprobante de pago a {email} para restablecer el acceso completo.",
+      "suspended": "Tu cuenta está suspendida y el bot dejó de responder. Envía tu comprobante de pago a {email} para reactivarlo.",
+      "contactSupport": "Contactar soporte"
     }
   }
 }

@@ -125,6 +125,14 @@ await load()
         </div>
       </section>
 
+      <!-- Operations -->
+      <section class="mt-8">
+        <h2 class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('superadmin.dashboard.groupOperations') }}</h2>
+        <div class="mt-2">
+          <SuperadminBillingSweepCard />
+        </div>
+      </section>
+
       <!-- Recent companies -->
       <section class="mt-8">
         <div class="flex items-center justify-between">

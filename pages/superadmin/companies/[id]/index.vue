@@ -23,6 +23,7 @@ const resettingPasswordFor = ref<CompanyUser | null>(null)
 const resetPasswordLoading = ref(false)
 const resetPasswordError = ref<string | null>(null)
 const resetPasswordSuccess = ref<string | null>(null)
+const slugCopied = ref(false)
 
 async function load(): Promise<void> {
   loading.value = true
@@ -85,6 +86,59 @@ function onCancelResetPassword(): void {
   resetPasswordError.value = null
 }
 
+async function copySlug(): Promise<void> {
+  if (!data.value || !import.meta.client) return
+  try {
+    await navigator.clipboard.writeText(data.value.slug)
+    slugCopied.value = true
+    setTimeout(() => { slugCopied.value = false }, 1800)
+  } catch {
+    // ignore — clipboard may be unavailable
+  }
+}
+
+const quickNav = computed(() => {
+  if (!data.value) return []
+  const base = `/superadmin/companies/${data.value.id}`
+  return [
+    {
+      key: 'customers',
+      to: `${base}/customers`,
+      label: t('superadmin.companyDetail.sections.navCustomers'),
+      hint: t('superadmin.companyDetail.quickNav.customersHint'),
+      tone: 'indigo',
+    },
+    {
+      key: 'cases',
+      to: `${base}/cases`,
+      label: t('superadmin.companyDetail.sections.navCases'),
+      hint: t('superadmin.companyDetail.quickNav.casesHint'),
+      tone: 'amber',
+    },
+    {
+      key: 'meetings',
+      to: `${base}/meetings`,
+      label: t('superadmin.companyDetail.sections.navMeetings'),
+      hint: t('superadmin.companyDetail.quickNav.meetingsHint'),
+      tone: 'sky',
+    },
+    {
+      key: 'billing',
+      to: `${base}/billing`,
+      label: t('superadmin.companyDetail.sections.navBilling'),
+      hint: t('superadmin.companyDetail.quickNav.billingHint'),
+      tone: 'emerald',
+    },
+  ] as const
+})
+
+const navToneClasses: Record<string, string> = {
+  indigo: 'bg-indigo-500/5 ring-indigo-500/20 hover:bg-indigo-500/10 hover:ring-indigo-500/40 text-indigo-300',
+  amber: 'bg-amber-500/5 ring-amber-500/20 hover:bg-amber-500/10 hover:ring-amber-500/40 text-amber-300',
+  sky: 'bg-sky-500/5 ring-sky-500/20 hover:bg-sky-500/10 hover:ring-sky-500/40 text-sky-300',
+  emerald: 'bg-emerald-500/5 ring-emerald-500/20 hover:bg-emerald-500/10 hover:ring-emerald-500/40 text-emerald-300',
+}
+
 await load()
 </script>
 
@@ -99,72 +153,145 @@ await load()
     <SpinnerInline v-if="loading" class="mt-6" tone="dark" />
 
     <template v-else-if="data">
-      <header class="mt-2 flex items-start justify-between flex-wrap gap-3">
-        <div>
-          <h1 class="text-2xl font-semibold text-slate-100 flex items-center gap-3">
-            {{ data.name }}
-            <span
-              class="inline-block rounded-full border px-2 py-0.5 text-xs font-medium"
-              :class="
-                data.status === 'ACTIVE'
-                  ? 'bg-success-950 text-success-300 border-success-800'
-                  : 'bg-amber-950 text-amber-300 border-amber-800'
-              "
+      <!-- Hero card: identity, status, slug and primary actions in one slab -->
+      <section class="mt-3 rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg overflow-hidden">
+        <div class="relative p-6">
+          <div
+            class="pointer-events-none absolute inset-x-0 top-0 h-px"
+            :class="data.status === 'ACTIVE'
+              ? 'bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent'
+              : 'bg-gradient-to-r from-transparent via-amber-500/40 to-transparent'"
+          />
+          <div class="flex items-start gap-5 flex-wrap">
+            <div
+              class="flex size-14 shrink-0 items-center justify-center rounded-2xl text-white font-semibold text-xl ring-1 ring-slate-700 shadow-inner"
+              :class="data.status === 'ACTIVE'
+                ? 'bg-gradient-to-br from-indigo-500 to-violet-600'
+                : 'bg-gradient-to-br from-slate-600 to-slate-800'"
             >
-              {{ data.status }}
-            </span>
-          </h1>
-          <p class="mt-1 text-sm text-slate-500 font-mono">{{ data.slug }}</p>
-        </div>
+              {{ data.name.charAt(0).toUpperCase() }}
+            </div>
 
-        <div class="flex gap-2">
-          <NuxtLink
-            :to="`/superadmin/companies/${data.id}/customers`"
-            class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800"
-          >
-            {{ $t('superadmin.companyDetail.sections.navCustomers') }}
-          </NuxtLink>
-          <NuxtLink
-            :to="`/superadmin/companies/${data.id}/meetings`"
-            class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800"
-          >
-            {{ $t('superadmin.companyDetail.sections.navMeetings') }}
-          </NuxtLink>
-          <NuxtLink
-            :to="`/superadmin/companies/${data.id}/cases`"
-            class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800"
-          >
-            {{ $t('superadmin.companyDetail.sections.navCases') }}
-          </NuxtLink>
-          <NuxtLink
-            :to="`/superadmin/companies/${data.id}/edit`"
-            class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800"
-          >
-            {{ $t('common.edit') }}
-          </NuxtLink>
-          <button
-            type="button"
-            class="rounded-md border border-danger-800 px-3 py-1.5 text-sm text-danger-300 hover:bg-danger-950"
-            @click="confirmingDelete = true"
-          >
-            {{ $t('common.delete') }}
-          </button>
-        </div>
-      </header>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <h1 class="text-2xl font-semibold text-slate-100 truncate">{{ data.name }}</h1>
+                <span
+                  class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium ring-1"
+                  :class="data.status === 'ACTIVE'
+                    ? 'bg-emerald-500/10 text-emerald-300 ring-emerald-500/30'
+                    : 'bg-amber-500/10 text-amber-300 ring-amber-500/30'"
+                >
+                  <span class="size-1.5 rounded-full" :class="data.status === 'ACTIVE' ? 'bg-emerald-400' : 'bg-amber-400'" />
+                  {{ data.status }}
+                </span>
+                <span class="inline-flex items-center rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-[11px] font-medium text-indigo-200 ring-1 ring-indigo-500/30">
+                  {{ data.planDetails.displayName }}
+                </span>
+              </div>
 
-      <div class="mt-6 grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.plan')" :value="data.planDetails.displayName" />
-        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.users')" :value="data.userCount" />
-        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.bots')" :value="data.botCount" />
-        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.conversations')" :value="data.conversationCount" />
+              <div class="mt-2 flex items-center gap-3 flex-wrap text-xs text-slate-400">
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-1.5 rounded-md font-mono text-slate-300 hover:text-slate-100 hover:underline decoration-dotted underline-offset-2 transition"
+                  :title="$t('superadmin.companyDetail.hero.copy')"
+                  @click="copySlug"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5 text-slate-500" aria-hidden="true">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                  {{ data.slug }}
+                  <span v-if="slugCopied" class="text-emerald-300 not-italic font-medium">
+                    {{ $t('superadmin.companyDetail.hero.copied') }}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <NuxtLink
+                :to="`/superadmin/companies/${data.id}/edit`"
+                class="inline-flex items-center gap-1.5 rounded-xl border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800 transition"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+                {{ $t('common.edit') }}
+              </NuxtLink>
+              <button
+                type="button"
+                class="inline-flex items-center gap-1.5 rounded-xl border border-danger-800 px-3 py-1.5 text-sm text-danger-300 hover:bg-danger-950 transition"
+                @click="confirmingDelete = true"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+                {{ $t('common.delete') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats -->
+      <div class="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.plan')" :value="data.planDetails.displayName" icon="companies" tone="indigo" />
+        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.users')" :value="data.userCount" icon="users" tone="emerald" />
+        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.bots')" :value="data.botCount" icon="bots" tone="amber" />
+        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.conversations')" :value="data.conversationCount" icon="conversations" tone="default" />
       </div>
 
-      <!-- Plan details card: features + price, read-only snapshot here.
-           Edition lives in /edit. -->
-      <div class="mt-6 max-w-2xl">
-        <PlanCard :plan="data.planDetails" dark />
-      </div>
+      <!-- Quick navigation to subsections (Customers / Cases / Meetings / Billing) -->
+      <section class="mt-6">
+        <div class="mb-3">
+          <h2 class="text-base font-semibold text-slate-200">{{ $t('superadmin.companyDetail.quickNav.title') }}</h2>
+          <p class="text-xs text-slate-500 mt-1">{{ $t('superadmin.companyDetail.quickNav.subtitle') }}</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <NuxtLink
+            v-for="item in quickNav"
+            :key="item.key"
+            :to="item.to"
+            class="group flex items-center gap-3 rounded-xl ring-1 p-4 transition"
+            :class="navToneClasses[item.tone]"
+          >
+            <div class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-slate-950/80 ring-1 ring-inset ring-white/5">
+              <svg v-if="item.key === 'customers'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              <svg v-else-if="item.key === 'cases'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12" y2="17" />
+              </svg>
+              <svg v-else-if="item.key === 'meetings'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <svg v-else-if="item.key === 'billing'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                <rect x="2" y="5" width="20" height="14" rx="2" ry="2" />
+                <line x1="2" y1="10" x2="22" y2="10" />
+              </svg>
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-medium text-slate-100">{{ item.label }}</p>
+              <p class="text-[11px] text-slate-400 mt-0.5 truncate">{{ item.hint }}</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 opacity-0 group-hover:opacity-100 transition" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </NuxtLink>
+        </div>
+      </section>
 
+      <!-- Users -->
       <section class="mt-8">
         <h2 class="text-base font-semibold text-slate-200">{{ $t('superadmin.companyDetail.users.title') }}</h2>
         <p
@@ -235,19 +362,16 @@ await load()
           </NuxtLink>
         </div>
 
-        <!-- Empty state -->
         <div v-if="data.bots.length === 0" class="mt-3 rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-8 text-center">
           <p class="text-sm text-slate-400">{{ $t('superadmin.companyDetail.noBots') }}</p>
         </div>
 
-        <!-- Cards grid: two clearly-labeled config entry points per bot. -->
         <div v-else class="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-4">
           <article
             v-for="b in data.bots"
             :key="b.id"
             class="group relative flex flex-col rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg p-5 hover:ring-slate-600 transition"
           >
-            <!-- Header: avatar + name + status -->
             <header class="flex items-start gap-3">
               <div class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 text-white font-semibold text-base ring-1 ring-slate-700 shadow-inner">
                 {{ b.name.charAt(0).toUpperCase() }}
@@ -274,9 +398,7 @@ await load()
               </span>
             </header>
 
-            <!-- Four config panels: deep-link straight into each setting bucket. -->
             <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <!-- WhatsApp connection card -->
               <NuxtLink
                 :to="`/superadmin/companies/${id}/bots/${b.id}/edit`"
                 class="group/card flex items-start gap-3 rounded-xl bg-emerald-500/5 ring-1 ring-emerald-500/20 p-3 hover:bg-emerald-500/10 hover:ring-emerald-500/40 transition"
@@ -297,7 +419,6 @@ await load()
                 </svg>
               </NuxtLink>
 
-              <!-- Agent behavior card -->
               <NuxtLink
                 :to="`/superadmin/companies/${id}/bots/${b.id}/config`"
                 class="group/card flex items-start gap-3 rounded-xl bg-indigo-500/5 ring-1 ring-indigo-500/20 p-3 hover:bg-indigo-500/10 hover:ring-indigo-500/40 transition"
@@ -321,7 +442,6 @@ await load()
                 </svg>
               </NuxtLink>
 
-              <!-- Documents (RAG) card -->
               <NuxtLink
                 :to="`/superadmin/companies/${id}/bots/${b.id}#documents`"
                 class="group/card flex items-start gap-3 rounded-xl bg-amber-500/5 ring-1 ring-amber-500/20 p-3 hover:bg-amber-500/10 hover:ring-amber-500/40 transition"
@@ -345,7 +465,6 @@ await load()
                 </svg>
               </NuxtLink>
 
-              <!-- Google Calendar card -->
               <NuxtLink
                 :to="`/superadmin/companies/${id}/bots/${b.id}#calendar`"
                 class="group/card flex items-start gap-3 rounded-xl bg-sky-500/5 ring-1 ring-sky-500/20 p-3 hover:bg-sky-500/10 hover:ring-sky-500/40 transition"
@@ -370,7 +489,6 @@ await load()
               </NuxtLink>
             </div>
 
-            <!-- Footer actions -->
             <footer class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-sm">
               <NuxtLink
                 :to="`/superadmin/companies/${id}/bots/${b.id}`"
