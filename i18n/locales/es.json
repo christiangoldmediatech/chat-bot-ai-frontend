@@ -646,6 +646,8 @@
       "advisorEmail": "Correo del asesor",
       "advisorEmailHelp": "Cuando el bot escale, este correo recibe la notificación. Déjalo vacío para deshabilitar el escalado.",
       "advisorName": "Nombre del asesor",
+      "advisorWhatsapp": "WhatsApp del asesor (con lada, ej. +5215512345678)",
+      "advisorWhatsappHelp": "Formato E.164: empieza con \"+\" seguido del código del país, sin espacios ni guiones. Ejemplo: +5215512345678. Cuando el correo y este número están configurados, cada escalado y cada reunión agendada también notifican a este WhatsApp. Déjalo vacío para no enviar por WhatsApp.",
       "followupHours": "Follow-up tras (horas)",
       "followupHoursHelp": "0 = sin follow-up automático.",
       "saveEscalation": "Guardar escalado",

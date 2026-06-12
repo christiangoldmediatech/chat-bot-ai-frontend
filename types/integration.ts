@@ -11,6 +11,7 @@ export interface Integration {
   workingHoursEnd: string
   advisorEmail: string | null
   advisorName: string | null
+  advisorWhatsapp: string | null
   followupHours: number
   createdAt: string
 }
@@ -18,6 +19,7 @@ export interface Integration {
 export interface UpdateIntegrationPayload {
   advisorEmail?: string | null
   advisorName?: string | null
+  advisorWhatsapp?: string | null
   followupHours?: number
 }
 
