@@ -19,6 +19,7 @@ const error = ref<string | null>(null)
 const form = reactive({
   advisorEmail: '',
   advisorName: '',
+  advisorWhatsapp: '',
   followupHours: 24,
 })
 const saving = ref(false)
@@ -27,6 +28,7 @@ const escalationSavedAt = ref<number | null>(null)
 function hydrateForm(value: Integration | null): void {
   form.advisorEmail = value?.advisorEmail ?? ''
   form.advisorName = value?.advisorName ?? ''
+  form.advisorWhatsapp = value?.advisorWhatsapp ?? ''
   form.followupHours = value?.followupHours ?? 24
 }
 
@@ -37,6 +39,8 @@ async function onSaveEscalation(): Promise<void> {
     const updated = await calendar.update(props.botId, {
       advisorEmail: form.advisorEmail.trim() === '' ? null : form.advisorEmail.trim(),
       advisorName: form.advisorName.trim() === '' ? null : form.advisorName.trim(),
+      advisorWhatsapp:
+        form.advisorWhatsapp.trim() === '' ? null : form.advisorWhatsapp.trim(),
       followupHours: form.followupHours,
     })
     integration.value = updated
@@ -200,6 +204,23 @@ onMounted(() => {
               :placeholder="$t('common.optional')"
               class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400"
             >
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-medium text-slate-700">
+              {{ $t('admin.calendar.advisorWhatsapp') }}
+            </label>
+            <input
+              v-model="form.advisorWhatsapp"
+              type="tel"
+              maxlength="20"
+              inputmode="tel"
+              autocomplete="off"
+              placeholder="+5215512345678"
+              class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 font-mono"
+            >
+            <p class="mt-1 text-[11px] text-slate-500">
+              {{ $t('admin.calendar.advisorWhatsappHelp') }}
+            </p>
           </div>
           <div>
             <label class="block text-xs font-medium text-slate-700">{{ $t('admin.calendar.followupHours') }}</label>

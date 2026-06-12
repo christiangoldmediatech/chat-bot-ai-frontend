@@ -646,6 +646,8 @@
       "advisorEmail": "Advisor email",
       "advisorEmailHelp": "When the bot escalates, this address receives the notification. Leave empty to disable escalation.",
       "advisorName": "Advisor name",
+      "advisorWhatsapp": "Advisor WhatsApp number (with country code, e.g. +5215512345678)",
+      "advisorWhatsappHelp": "E.164 format: start with \"+\" then country code, no spaces or dashes. Example: +5215512345678. When both the email and this number are set, every escalation and every scheduled meeting will also notify this WhatsApp. Leave empty to skip the WhatsApp notification.",
       "followupHours": "Follow-up after (hours)",
       "followupHoursHelp": "0 = no automatic follow-up.",
       "saveEscalation": "Save escalation",
