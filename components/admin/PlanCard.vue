@@ -13,13 +13,19 @@ const props = withDefaults(defineProps<{
 })
 
 const { t } = useI18n()
+const pricing = usePricing()
 
-const formattedPrice = computed(() => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: props.plan.currency,
-    minimumFractionDigits: 2,
-  }).format(props.plan.monthlyPrice)
+const formattedPrice = computed(() =>
+  pricing.formatMoney(props.plan.monthlyPrice, props.plan.currency),
+)
+
+const priceBreakdown = computed(() => {
+  const { subtotal, iva, total } = pricing.breakdown(props.plan.monthlyPrice)
+  return {
+    subtotal: pricing.formatMoney(subtotal, props.plan.currency),
+    iva: pricing.formatMoney(iva, props.plan.currency),
+    total: pricing.formatMoney(total, props.plan.currency),
+  }
 })
 
 // Plan-specific accent so the card visually communicates tier.
@@ -98,6 +104,53 @@ const botsLimitLabel = computed(() => {
           </p>
         </div>
       </header>
+
+      <!-- Pricing breakdown: subtotal + IVA + total. IVA rate is driven by
+           `NUXT_PUBLIC_IVA_RATE` via `usePricing` (no hardcoded "15%" here). -->
+      <dl
+        class="mt-4 rounded-xl ring-1 p-3 text-xs space-y-1.5"
+        :class="dark ? 'bg-slate-800/60 ring-slate-700/60' : 'bg-slate-50/80 ring-slate-200/70'"
+      >
+        <div class="flex items-center justify-between gap-2">
+          <dt :class="dark ? 'text-slate-400' : 'text-slate-500'">
+            {{ $t('admin.planCard.priceSubtotal') }}
+          </dt>
+          <dd
+            class="font-mono font-medium tabular-nums"
+            :class="dark ? 'text-slate-200' : 'text-slate-800'"
+          >
+            {{ priceBreakdown.subtotal }}
+          </dd>
+        </div>
+        <div class="flex items-center justify-between gap-2">
+          <dt :class="dark ? 'text-slate-400' : 'text-slate-500'">
+            {{ $t('admin.planCard.priceIva', { percent: pricing.ivaPercentLabel.value }) }}
+          </dt>
+          <dd
+            class="font-mono font-medium tabular-nums"
+            :class="dark ? 'text-slate-200' : 'text-slate-800'"
+          >
+            {{ priceBreakdown.iva }}
+          </dd>
+        </div>
+        <div
+          class="flex items-center justify-between gap-2 pt-1.5 border-t"
+          :class="dark ? 'border-slate-700/60' : 'border-slate-200'"
+        >
+          <dt
+            class="text-[11px] uppercase tracking-wider font-semibold"
+            :class="dark ? accent.iconDark : accent.icon"
+          >
+            {{ $t('admin.planCard.priceTotal') }}
+          </dt>
+          <dd
+            class="font-mono text-sm font-semibold tabular-nums"
+            :class="dark ? 'text-slate-100' : 'text-slate-900'"
+          >
+            {{ priceBreakdown.total }}
+          </dd>
+        </div>
+      </dl>
 
       <ul v-if="!compact" class="mt-4 space-y-1.5 text-sm" :class="dark ? 'text-slate-300' : 'text-slate-700'">
         <li v-for="feature in plan.features" :key="feature" class="flex items-start gap-2">

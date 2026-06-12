@@ -183,6 +183,17 @@
       "back": "← Volver al panel",
       "title": "Instrucciones de pago",
       "subtitle": "Paga tu suscripción por transferencia bancaria a la cuenta oficial de Kaibots. Luego envíanos el comprobante por correo para activar o extender tu acceso.",
+      "amount": {
+        "title": "Monto a depositar",
+        "subtitle": "Este es el valor exacto que debes transferir a la cuenta mostrada abajo.",
+        "planLabel": "Plan {plan}",
+        "planHelper": "Suscripción mensual",
+        "ivaLabel": "IVA ({percent}%)",
+        "ivaHelper": "Impuesto exigido por la ley tributaria ecuatoriana",
+        "totalLabel": "Total a depositar",
+        "totalHelper": "Transfiere exactamente este valor",
+        "disclaimer": "Los precios están en la moneda de tu plan. El total ya incluye el {percent}% de IVA — transfiere el valor exacto para evitar demoras en la activación de tu servicio."
+      },
       "bank": {
         "kicker": "Transferencia bancaria",
         "visitWebsite": "Ir a Banco Pichincha",
@@ -274,7 +285,10 @@
       "unlimitedBots": "Bots ilimitados",
       "oneBotIncluded": "1 bot incluido",
       "upToBots": "Hasta {count} bots",
-      "perMonth": "por mes ({currency})"
+      "perMonth": "por mes ({currency})",
+      "priceSubtotal": "Precio del plan",
+      "priceIva": "IVA ({percent}%)",
+      "priceTotal": "Total con IVA"
     },
     "company": {
       "title": "Mi empresa",
@@ -1015,6 +1029,9 @@
       "noUsers": "Sin usuarios",
       "stats": {
         "plan": "Plan",
+        "planPrice": "Precio del plan",
+        "planIva": "IVA ({percent}%)",
+        "planTotal": "Total con IVA",
         "users": "Usuarios",
         "bots": "Bots",
         "conversations": "Conversaciones"
@@ -1177,6 +1194,7 @@
       "pendingPayment": "Tu suscripción está vencida y algunas funciones están limitadas. Envía tu comprobante de pago a {email} para restablecer el acceso completo.",
       "pendingFirst": "Tu cuenta está lista — realiza tu primer pago por transferencia bancaria para activar tu bot. Cuando envíes el comprobante a {email}, activamos tu servicio en pocas horas hábiles.",
       "suspended": "Tu cuenta está suspendida y el bot dejó de responder. Envía tu comprobante de pago a {email} para reactivarlo.",
+      "depositLine": "Monto a depositar: {total} (incluye {percent}% de IVA).",
       "contactSupport": "Contactar soporte"
     }
   },

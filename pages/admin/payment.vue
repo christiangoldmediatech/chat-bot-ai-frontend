@@ -10,6 +10,7 @@ definePageMeta({
 const { t } = useI18n()
 const auth = useAuthStore()
 const tenant = useTenant()
+const pricing = usePricing()
 
 const tenantData = ref<Tenant | null>(null)
 const loading = ref(true)
@@ -44,6 +45,15 @@ const SUPPORT_EMAIL = 'info@kaibots.com'
 
 const companyName = computed(() => tenantData.value?.name ?? '')
 const userEmail = computed(() => auth.user?.email ?? '')
+
+const planDetails = computed(() => tenantData.value?.planDetails ?? null)
+const planCurrency = computed(() => planDetails.value?.currency ?? 'USD')
+const planDisplayName = computed(() => planDetails.value?.displayName ?? '')
+const planBreakdown = computed(() => pricing.breakdown(planDetails.value?.monthlyPrice ?? 0))
+
+function formatMoney(n: number): string {
+  return pricing.formatMoney(n, planCurrency.value)
+}
 
 const emailSubject = computed(() => companyName.value
   ? companyName.value
@@ -82,6 +92,71 @@ const mailtoHref = computed(() => {
       <p v-if="error" class="mt-4 rounded-2xl border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">
         {{ error }}
       </p>
+
+      <!-- ────────────────────────────────────────────────────────────────
+           0. Amount to deposit (plan + IVA 15% breakdown)
+      ───────────────────────────────────────────────────────────────── -->
+      <section v-if="planDetails" class="mt-6 overflow-hidden rounded-3xl bg-white/80 backdrop-blur-xl ring-1 ring-white/60 shadow-glass-lg">
+        <div class="p-6 sm:p-7">
+          <header class="flex items-start gap-3">
+            <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-100 text-primary-700 ring-1 ring-primary-200">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">
+                <line x1="12" y1="1" x2="12" y2="23" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <h2 class="text-lg font-semibold text-slate-900">{{ $t('admin.payment.amount.title') }}</h2>
+              <p class="mt-0.5 text-sm text-slate-500">{{ $t('admin.payment.amount.subtitle') }}</p>
+            </div>
+          </header>
+
+          <dl class="mt-5 overflow-hidden rounded-2xl ring-1 ring-slate-200/70 divide-y divide-slate-200">
+            <!-- Plan subtotal -->
+            <div class="flex items-center justify-between gap-4 bg-slate-50/80 p-4">
+              <dt class="min-w-0">
+                <p class="text-sm font-medium text-slate-700">
+                  {{ $t('admin.payment.amount.planLabel', { plan: planDisplayName }) }}
+                </p>
+                <p class="mt-0.5 text-xs text-slate-500">{{ $t('admin.payment.amount.planHelper') }}</p>
+              </dt>
+              <dd class="font-mono text-base font-semibold text-slate-900 whitespace-nowrap">
+                {{ formatMoney(planBreakdown.subtotal) }}
+              </dd>
+            </div>
+
+            <!-- IVA -->
+            <div class="flex items-center justify-between gap-4 bg-slate-50/80 p-4">
+              <dt class="min-w-0">
+                <p class="text-sm font-medium text-slate-700">
+                  {{ $t('admin.payment.amount.ivaLabel', { percent: pricing.ivaPercentLabel.value }) }}
+                </p>
+                <p class="mt-0.5 text-xs text-slate-500">{{ $t('admin.payment.amount.ivaHelper') }}</p>
+              </dt>
+              <dd class="font-mono text-base font-semibold text-slate-900 whitespace-nowrap">
+                {{ formatMoney(planBreakdown.iva) }}
+              </dd>
+            </div>
+
+            <!-- Total -->
+            <div class="flex items-center justify-between gap-4 bg-slate-900 p-4 text-white">
+              <dt class="min-w-0">
+                <p class="text-[11px] uppercase tracking-wider font-semibold text-slate-300">
+                  {{ $t('admin.payment.amount.totalLabel') }}
+                </p>
+                <p class="mt-1 text-sm font-medium text-white/90">{{ $t('admin.payment.amount.totalHelper') }}</p>
+              </dt>
+              <dd class="font-mono text-2xl sm:text-3xl font-bold whitespace-nowrap">
+                {{ formatMoney(planBreakdown.total) }}
+              </dd>
+            </div>
+          </dl>
+
+          <p class="mt-3 text-xs text-slate-500">
+            {{ $t('admin.payment.amount.disclaimer', { percent: pricing.ivaPercentLabel.value }) }}
+          </p>
+        </div>
+      </section>
 
       <!-- ────────────────────────────────────────────────────────────────
            1. Bank account card (Pichincha brand: yellow + dark)

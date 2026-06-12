@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { BillingState } from '~/types/billing'
+import type { PlanDetails } from '~/types/company'
 
 import { BILLING_WARNING_DAYS } from '~/composables/useBilling'
 
@@ -20,8 +21,11 @@ import { BILLING_WARNING_DAYS } from '~/composables/useBilling'
  */
 const { t } = useI18n()
 const billing = useBilling()
+const plans = usePlans()
+const pricing = usePricing()
 const auth = useAuthStore()
 const state = ref<BillingState | null>(null)
+const planCatalog = ref<PlanDetails[] | null>(null)
 const error = ref<string | null>(null)
 
 // The platform owner account (info@kaibots.com) is exempt: it's the company's
@@ -33,13 +37,25 @@ const isPlatformOwner = computed(() =>
 )
 
 async function load(): Promise<void> {
-  try {
-    state.value = await billing.me()
+  // Fetch billing state + plan catalog in parallel. The catalog is public
+  // (no billing guard) so it works even when the tenant is suspended /
+  // pending — `tenant.me()` would 402 in those states, but `state.value.plan`
+  // gives us the plan code, and we resolve the price from the catalog.
+  const [billingResult, plansResult] = await Promise.allSettled([
+    billing.me(),
+    plans.list(),
+  ])
+
+  if (billingResult.status === 'fulfilled') {
+    state.value = billingResult.value
     error.value = null
-  } catch (err) {
+  } else {
     state.value = null
+    const err = billingResult.reason
     error.value = err instanceof Error ? err.message : String(err)
   }
+
+  planCatalog.value = plansResult.status === 'fulfilled' ? plansResult.value : null
 }
 
 onMounted(load)
@@ -65,6 +81,34 @@ const variant = computed<Variant | null>(() => {
 const days = computed(() => state.value?.daysRemaining ?? 0)
 const SUPPORT_EMAIL = 'info@kaibots.com'
 const supportEmail = computed(() => SUPPORT_EMAIL)
+
+// Deposit breakdown (plan price + IVA). Shown inline in the banner so the
+// customer knows the exact amount before clicking through to /admin/payment.
+// The IVA rate is parametrized via `usePricing` — change `NUXT_PUBLIC_IVA_RATE`
+// if Ecuador's rate moves, no edits needed here.
+//
+// Price source is the public `/plans` catalog (not `tenant.me()`): the tenant
+// endpoint 402s for suspended / pending-first accounts, which is exactly when
+// we most need to show the deposit amount.
+const planPriceDetails = computed<PlanDetails | null>(() => {
+  if (!state.value || !planCatalog.value) return null
+  return planCatalog.value.find(p => p.code === state.value!.plan) ?? null
+})
+const depositBreakdown = computed(() => {
+  if (!planPriceDetails.value) return null
+  return pricing.breakdown(planPriceDetails.value.monthlyPrice)
+})
+const depositTotalFormatted = computed(() => {
+  if (!planPriceDetails.value || !depositBreakdown.value) return null
+  return pricing.formatMoney(depositBreakdown.value.total, planPriceDetails.value.currency)
+})
+const depositLine = computed(() => {
+  if (!depositTotalFormatted.value) return ''
+  return t('billing.banner.depositLine', {
+    total: depositTotalFormatted.value,
+    percent: pricing.ivaPercentLabel.value,
+  })
+})
 
 const title = computed<string>(() => {
   switch (variant.value) {
@@ -232,6 +276,12 @@ const styles = computed(() => {
           </a>
         </div>
         <p :class="['mt-0.5 text-[13px] leading-5', styles.body]">{{ message }}</p>
+        <p
+          v-if="depositLine && (variant === 'suspended' || variant === 'pending' || variant === 'pendingFirst')"
+          :class="['mt-1 text-[13px] leading-5 font-semibold', styles.title]"
+        >
+          {{ depositLine }}
+        </p>
       </div>
 
       <NuxtLink
