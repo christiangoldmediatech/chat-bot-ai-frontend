@@ -58,6 +58,10 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBaseUrl: 'http://localhost:3000/api/v1',
+      // VAT / IVA rate applied on top of the plan's monthly price. Single
+      // source of truth across the payment page and billing banner — override
+      // with `NUXT_PUBLIC_IVA_RATE=0.12` (etc.) if Ecuador's rate changes.
+      ivaRate: 0.15,
     },
   },
   app: {

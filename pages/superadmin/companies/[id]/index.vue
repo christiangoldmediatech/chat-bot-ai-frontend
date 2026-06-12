@@ -13,6 +13,7 @@ const router = useRouter()
 const companiesApi = useCompanies()
 const id = route.params.id as string
 const bots = useBots(id)
+const pricing = usePricing()
 
 const data = ref<CompanyDetail | null>(null)
 const loading = ref(true)
@@ -24,6 +25,18 @@ const resetPasswordLoading = ref(false)
 const resetPasswordError = ref<string | null>(null)
 const resetPasswordSuccess = ref<string | null>(null)
 const slugCopied = ref(false)
+
+const planBreakdown = computed(() => {
+  if (!data.value) return null
+  const subtotal = data.value.planDetails.monthlyPrice
+  const { iva, total } = pricing.breakdown(subtotal)
+  const currency = data.value.planDetails.currency
+  return {
+    subtotalFormatted: pricing.formatMoney(subtotal, currency),
+    ivaFormatted: pricing.formatMoney(iva, currency),
+    totalFormatted: pricing.formatMoney(total, currency),
+  }
+})
 
 async function load(): Promise<void> {
   loading.value = true
@@ -237,7 +250,44 @@ await load()
 
       <!-- Stats -->
       <div class="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.plan')" :value="data.planDetails.displayName" icon="companies" tone="indigo" />
+        <!-- Plan + pricing breakdown card -->
+        <div class="rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-indigo-500/30 shadow-glass-lg p-5">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <div class="text-[11px] uppercase tracking-wider text-slate-400 font-medium">
+                {{ $t('superadmin.companyDetail.stats.plan') }}
+              </div>
+              <div class="mt-2 text-2xl font-semibold text-slate-100 tracking-tight truncate">
+                {{ data.planDetails.displayName }}
+              </div>
+            </div>
+            <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 ring-1 ring-indigo-500/30">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-indigo-300" aria-hidden="true">
+                <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4" />
+              </svg>
+            </div>
+          </div>
+
+          <dl v-if="planBreakdown" class="mt-4 space-y-1.5 border-t border-slate-700/60 pt-3 text-xs">
+            <div class="flex items-center justify-between gap-2">
+              <dt class="text-slate-400">{{ $t('superadmin.companyDetail.stats.planPrice') }}</dt>
+              <dd class="font-mono font-medium text-slate-200 tabular-nums">{{ planBreakdown.subtotalFormatted }}</dd>
+            </div>
+            <div class="flex items-center justify-between gap-2">
+              <dt class="text-slate-400">{{ $t('superadmin.companyDetail.stats.planIva', { percent: pricing.ivaPercentLabel.value }) }}</dt>
+              <dd class="font-mono font-medium text-slate-200 tabular-nums">{{ planBreakdown.ivaFormatted }}</dd>
+            </div>
+            <div class="flex items-center justify-between gap-2 pt-1.5 mt-1.5 border-t border-slate-700/60">
+              <dt class="text-[11px] uppercase tracking-wider font-semibold text-indigo-300">
+                {{ $t('superadmin.companyDetail.stats.planTotal') }}
+              </dt>
+              <dd class="font-mono text-sm font-semibold text-slate-100 tabular-nums">
+                {{ planBreakdown.totalFormatted }}
+              </dd>
+            </div>
+          </dl>
+        </div>
+
         <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.users')" :value="data.userCount" icon="users" tone="emerald" />
         <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.bots')" :value="data.botCount" icon="bots" tone="amber" />
         <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.conversations')" :value="data.conversationCount" icon="conversations" tone="default" />

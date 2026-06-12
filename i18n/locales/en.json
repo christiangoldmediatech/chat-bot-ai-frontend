@@ -183,6 +183,17 @@
       "back": "← Back to dashboard",
       "title": "Payment instructions",
       "subtitle": "Pay your subscription by bank transfer to the official Kaibots account. Then send us your proof of payment by email so we can activate or extend your access.",
+      "amount": {
+        "title": "Amount to deposit",
+        "subtitle": "This is the exact amount you must transfer to the account shown below.",
+        "planLabel": "{plan} plan",
+        "planHelper": "Monthly subscription",
+        "ivaLabel": "VAT ({percent}%)",
+        "ivaHelper": "Required by Ecuadorian tax law",
+        "totalLabel": "Total to deposit",
+        "totalHelper": "Transfer exactly this amount",
+        "disclaimer": "Prices are in your plan's currency. The total already includes {percent}% VAT — transfer the exact amount to avoid delays in activating your service."
+      },
       "bank": {
         "kicker": "Bank transfer",
         "visitWebsite": "Go to Banco Pichincha",
@@ -274,7 +285,10 @@
       "unlimitedBots": "Unlimited bots",
       "oneBotIncluded": "1 bot included",
       "upToBots": "Up to {count} bots",
-      "perMonth": "per month ({currency})"
+      "perMonth": "per month ({currency})",
+      "priceSubtotal": "Plan price",
+      "priceIva": "VAT ({percent}%)",
+      "priceTotal": "Total with VAT"
     },
     "company": {
       "title": "My company",
@@ -1015,6 +1029,9 @@
       "noUsers": "No users",
       "stats": {
         "plan": "Plan",
+        "planPrice": "Plan price",
+        "planIva": "VAT ({percent}%)",
+        "planTotal": "Total with VAT",
         "users": "Users",
         "bots": "Bots",
         "conversations": "Conversations"
@@ -1177,6 +1194,7 @@
       "pendingPayment": "Your subscription has expired and some features are limited. Send your proof of payment to {email} to restore full access.",
       "pendingFirst": "Your account is ready — make your first payment by bank transfer to activate your bot. Once you send the receipt to {email}, we'll switch your service on within a few business hours.",
       "suspended": "Your account is suspended and the bot has stopped replying. Send your proof of payment to {email} to reactivate it.",
+      "depositLine": "Amount to deposit: {total} (includes {percent}% VAT).",
       "contactSupport": "Contact support"
     }
   },
