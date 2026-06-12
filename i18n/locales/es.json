@@ -600,7 +600,9 @@
         "sticker": "Sticker",
         "location": "Ubicación"
       },
-      "superadminNotice": "Administrando recursos de un bot ajeno como super-admin."
+      "superadminNotice": "Administrando recursos de un bot ajeno como super-admin.",
+      "deleteConfirmTitle": "¿Eliminar este recurso?",
+      "deleteConfirmMessage": "\"{key}\" se eliminará del bot. Si las instrucciones del bot referencian esta clave, dejará de encontrarla. Esta acción no se puede deshacer."
     },
     "chat": {
       "loadingImage": "Cargando imagen…",
@@ -637,7 +639,12 @@
       "copyText": "Copiar texto",
       "reconstructing": "Reconstruyendo documento desde los chunks…",
       "noTextContent": "Este documento no tiene texto extraíble.",
-      "stillProcessing": "El documento sigue en estado {status}. Inténtalo cuando esté en READY."
+      "stillProcessing": "El documento sigue en estado {status}. Inténtalo cuando esté en READY.",
+      "countOfMax": "{count} de {max} documentos",
+      "countOnly": "{count} documentos",
+      "limitReached": "Alcanzaste el máximo de {max} documentos. Elimina uno para subir otro.",
+      "deleteConfirmTitle": "¿Eliminar este documento?",
+      "deleteConfirmMessage": "\"{name}\" se eliminará de la base de conocimiento del bot. El bot dejará de usarlo como contexto en sus próximas respuestas. Esta acción no se puede deshacer."
     },
     "calendar": {
       "escalationTitle": "Escalado a asesor",

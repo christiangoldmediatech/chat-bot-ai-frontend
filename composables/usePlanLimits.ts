@@ -15,3 +15,17 @@ export function resolveBotsLimit(tenant: Tenant | null | undefined): number | nu
   }
   return backendLimit
 }
+
+/**
+ * RAG documents per bot. Pure pass-through to the backend-reported plan
+ * limit — no hard-coded numbers on the frontend. Returns `null` when the
+ * tenant is missing or when the payload predates the `documentsPerBot` field;
+ * callers should treat `null` as "don't know, let the backend decide" and not
+ * block the UI proactively.
+ */
+export function resolveDocumentsPerBotLimit(
+  tenant: Tenant | null | undefined,
+): number | null {
+  if (!tenant) return null
+  return tenant.planDetails.limits.documentsPerBot ?? null
+}

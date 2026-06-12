@@ -6,6 +6,8 @@ export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'PENDING_PAYMENT'
 export interface PlanLimits {
   /** Max bots allowed by this plan. null = unlimited. */
   bots: number | null
+  /** Max RAG documents per bot allowed by this plan. null = unlimited. */
+  documentsPerBot: number | null
 }
 
 export interface PlanDetails {

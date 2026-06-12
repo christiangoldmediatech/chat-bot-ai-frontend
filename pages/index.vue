@@ -1,6 +1,25 @@
 <script setup lang="ts">
 definePageMeta({ layout: false })
 
+// Google Analytics (gtag.js) — solo en la landing. Nuxt inyecta estos tags
+// vía useHead y los retira al navegar a otra ruta (la app es SPA con
+// ssr:false). El primer script carga el SDK async; el segundo bootea
+// dataLayer y dispara la config con el measurement id.
+useHead({
+  script: [
+    {
+      src: 'https://www.googletagmanager.com/gtag/js?id=G-3CNB35H723',
+      async: true,
+    },
+    {
+      innerHTML: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3CNB35H723');`,
+    },
+  ],
+})
+
 const { t } = useI18n()
 const auth = useAuthStore()
 const isAuthenticated = computed(() => auth.isAuthenticated)

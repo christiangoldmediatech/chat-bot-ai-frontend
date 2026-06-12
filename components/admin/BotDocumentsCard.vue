@@ -9,6 +9,8 @@ const props = defineProps<{
 
 const { t } = useI18n()
 const docs = useDocuments(props.tenantId)
+const tenant = useTenant()
+const companies = useCompanies()
 
 const items = ref<DocumentItem[]>([])
 const loading = ref(true)
@@ -16,6 +18,17 @@ const uploading = ref(false)
 const error = ref<string | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
 const removing = ref<string | null>(null)
+const confirmingRemove = ref<DocumentItem | null>(null)
+
+// El tope por bot lo dicta el backend (`planDetails.limits.documentsPerBot`).
+// Empieza en `null` (= aún no sabemos) y se llena en `loadDocsLimit()`. Mientras
+// es null no bloqueamos la UI — el backend sigue siendo el guardia final con
+// HTTP 409 si se intenta pasar del cap. `null` también puede significar "sin
+// cap" si en algún momento se introduce un plan ilimitado.
+const maxDocuments = ref<number | null>(null)
+const atLimit = computed(() =>
+  maxDocuments.value === null ? false : items.value.length >= maxDocuments.value,
+)
 const viewing = ref<DocumentContent | null>(null)
 const viewingMeta = ref<DocumentItem | null>(null)
 const fetchingContent = ref<string | null>(null)
@@ -37,6 +50,13 @@ async function onFileChange(ev: Event): Promise<void> {
   const target = ev.target as HTMLInputElement
   const file = target.files?.[0]
   if (!file) return
+  if (atLimit.value) {
+    // Doble guarda — el label ya está deshabilitado, pero si llegase a
+    // dispararse igual (drag&drop futuro, etc.) mostramos el motivo.
+    error.value = t('admin.documents.limitReached', { max: maxDocuments.value })
+    if (fileInput.value) fileInput.value.value = ''
+    return
+  }
   uploading.value = true
   error.value = null
   try {
@@ -50,7 +70,14 @@ async function onFileChange(ev: Event): Promise<void> {
   }
 }
 
-async function onRemove(doc: DocumentItem): Promise<void> {
+function askRemove(doc: DocumentItem): void {
+  confirmingRemove.value = doc
+}
+
+async function onConfirmRemove(): Promise<void> {
+  const doc = confirmingRemove.value
+  if (!doc) return
+  confirmingRemove.value = null
   removing.value = doc.id
   try {
     await docs.remove(doc.id, props.botId)
@@ -116,12 +143,30 @@ function statusClass(s: DocumentStatus): string {
   }[s]
 }
 
+// Trae el tope `documentsPerBot` del plan del tenant desde el backend. En la
+// vista de admin (sin `tenantId` prop) consulta `/tenants/me`; en superadmin,
+// baja por `/superadmin/companies/:id`. El frontend NO conoce los números —
+// son responsabilidad del catálogo de planes en el backend (`plans.constants.ts`).
+// Si la llamada falla mantenemos `null` (UI permisiva) y dejamos que el
+// backend rechace con 409 si corresponde.
+async function loadDocsLimit(): Promise<void> {
+  try {
+    const planDetails = props.tenantId
+      ? (await companies.get(props.tenantId)).planDetails
+      : (await tenant.me()).planDetails
+    maxDocuments.value = planDetails?.limits?.documentsPerBot ?? null
+  } catch {
+    // No hard-fail: el backend sigue siendo la guardia dura.
+  }
+}
+
 // Load inside onMounted (not top-level await) so the card UI shows up
 // immediately with a spinner — even if the backend is unreachable or slow,
 // the upload button and the empty-state remain visible and the user gets a
 // clear error banner instead of a missing component.
 onMounted(() => {
   void load()
+  void loadDocsLimit()
 })
 </script>
 
@@ -148,10 +193,12 @@ onMounted(() => {
       {{ error }}
     </p>
 
-    <div class="mt-3 flex items-center gap-3">
+    <div class="mt-3 flex flex-wrap items-center gap-3">
       <label
-        class="inline-flex cursor-pointer items-center gap-2 rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800"
-        :class="uploading && 'opacity-60 cursor-not-allowed'"
+        class="inline-flex items-center gap-2 rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800"
+        :class="(uploading || atLimit) ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'"
+        :aria-disabled="uploading || atLimit"
+        :title="atLimit ? $t('admin.documents.limitReached', { max: maxDocuments }) : undefined"
       >
         <span>{{ uploading ? $t('common.uploading') : items.length === 0 ? $t('admin.documents.uploadButton') : $t('admin.documents.addAnotherButton') }}</span>
         <input
@@ -159,11 +206,20 @@ onMounted(() => {
           type="file"
           class="hidden"
           accept=".txt,.md,.markdown,text/plain,text/markdown"
-          :disabled="uploading"
+          :disabled="uploading || atLimit"
           @change="onFileChange"
         >
       </label>
-      <span v-if="items.length > 0" class="text-xs text-slate-500">
+      <span v-if="maxDocuments !== null" class="text-xs text-slate-500">
+        {{ $t('admin.documents.countOfMax', { count: items.length, max: maxDocuments }) }}
+      </span>
+      <span v-else class="text-xs text-slate-500">
+        {{ $t('admin.documents.countOnly', { count: items.length }) }}
+      </span>
+      <span v-if="atLimit && maxDocuments !== null" class="text-xs text-amber-700">
+        {{ $t('admin.documents.limitReached', { max: maxDocuments }) }}
+      </span>
+      <span v-else-if="items.length > 0" class="text-xs text-slate-500">
         {{ $t('admin.documents.moreEqualsBetter') }}
       </span>
     </div>
@@ -209,9 +265,9 @@ onMounted(() => {
             type="button"
             class="text-xs text-danger-600 hover:text-danger-700 disabled:opacity-50"
             :disabled="removing === d.id"
-            @click="onRemove(d)"
+            @click="askRemove(d)"
           >
-            {{ $t('common.delete') }}
+            {{ removing === d.id ? $t('common.deleting') : $t('common.delete') }}
           </button>
         </div>
       </li>
@@ -358,5 +414,15 @@ onMounted(() => {
         </div>
       </Transition>
     </Teleport>
+
+    <ConfirmDialog
+      :open="!!confirmingRemove"
+      :title="$t('admin.documents.deleteConfirmTitle')"
+      :message="$t('admin.documents.deleteConfirmMessage', { name: confirmingRemove?.fileName ?? '' })"
+      :confirm-label="$t('common.delete')"
+      tone="danger"
+      @cancel="confirmingRemove = null"
+      @confirm="onConfirmRemove"
+    />
   </section>
 </template>

@@ -600,7 +600,9 @@
         "sticker": "Sticker",
         "location": "Location"
       },
-      "superadminNotice": "Managing resources on a tenant's bot as super-admin."
+      "superadminNotice": "Managing resources on a tenant's bot as super-admin.",
+      "deleteConfirmTitle": "Delete this resource?",
+      "deleteConfirmMessage": "\"{key}\" will be removed from the bot. If the bot's instructions reference this key, it will no longer find it. This action cannot be undone."
     },
     "chat": {
       "loadingImage": "Loading image…",
@@ -637,7 +639,12 @@
       "copyText": "Copy text",
       "reconstructing": "Reconstructing document from chunks…",
       "noTextContent": "This document has no extractable text content.",
-      "stillProcessing": "Document is still {status}. Try again once it shows READY."
+      "stillProcessing": "Document is still {status}. Try again once it shows READY.",
+      "countOfMax": "{count} of {max} documents",
+      "countOnly": "{count} documents",
+      "limitReached": "Maximum {max} documents reached. Delete one to upload another.",
+      "deleteConfirmTitle": "Delete this document?",
+      "deleteConfirmMessage": "\"{name}\" will be removed from the bot's knowledge base. The bot will stop using it as context in future replies. This action cannot be undone."
     },
     "calendar": {
       "escalationTitle": "Escalate to advisor",
