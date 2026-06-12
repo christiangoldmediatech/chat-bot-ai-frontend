@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
 import type { Bot } from '~/types/bot'
+import type { Plan, Tenant } from '~/types/company'
 
 definePageMeta({
   layout: 'admin',
@@ -11,21 +12,27 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const bots = useBots()
+const tenants = useTenant()
 const config = useRuntimeConfig()
 const id = route.params.id as string
 
 const callbackUrl = computed(() => `${config.public.apiBaseUrl}/webhooks/whatsapp/${id}`)
 
 const bot = ref<Bot | null>(null)
+const tenant = ref<Tenant | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
 const confirmingDelete = ref(false)
+
+const tenantPlan = computed<Plan>(() => tenant.value?.plan ?? 'BASIC')
 
 async function load(): Promise<void> {
   loading.value = true
   error.value = null
   try {
-    bot.value = await bots.get(id)
+    const [b, t] = await Promise.all([bots.get(id), tenants.me()])
+    bot.value = b
+    tenant.value = t
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -121,6 +128,15 @@ await load()
             <line x1="3" y1="10" x2="21" y2="10" />
           </svg>
           {{ $t('admin.bot.sections.calendar') }}
+        </a>
+        <a href="#crm" class="inline-flex items-center gap-1.5 rounded-full bg-violet-50 ring-1 ring-violet-100 px-3 py-1 text-violet-700 hover:bg-violet-100 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="8.5" cy="7" r="4" />
+            <line x1="20" y1="8" x2="20" y2="14" />
+            <line x1="23" y1="11" x2="17" y2="11" />
+          </svg>
+          {{ $t('admin.crm.navChip') }}
         </a>
       </nav>
 
@@ -243,6 +259,25 @@ await load()
           </div>
         </header>
         <BotCalendarCard :bot-id="bot.id" />
+      </section>
+
+      <!-- CRM (lead push on escalation) -->
+      <section id="crm" class="scroll-mt-24 mt-6">
+        <header class="flex items-start gap-3 mb-3">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-violet-50 ring-1 ring-violet-100">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-violet-600" aria-hidden="true">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="8.5" cy="7" r="4" />
+              <line x1="20" y1="8" x2="20" y2="14" />
+              <line x1="23" y1="11" x2="17" y2="11" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-slate-900">{{ $t('admin.bot.sections.crm') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.bot.sections.crmDesc') }}</p>
+          </div>
+        </header>
+        <BotCrmCard :bot-id="bot.id" :plan="tenantPlan" />
       </section>
 
       <ConfirmDialog

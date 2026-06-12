@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
 import type { Bot } from '~/types/bot'
+import type { CompanyDetail, Plan } from '~/types/company'
 import type { MessagesActivity, MessagesActivityRange } from '~/types/dashboard'
 
 definePageMeta({
@@ -14,6 +15,10 @@ const config = useRuntimeConfig()
 const tenantId = route.params.id as string
 const botId = route.params.botId as string
 const bots = useBots(tenantId)
+const companies = useCompanies()
+
+const company = ref<CompanyDetail | null>(null)
+const companyPlan = computed<Plan>(() => company.value?.plan ?? 'BASIC')
 
 const callbackUrl = computed(() => `${config.public.apiBaseUrl}/webhooks/whatsapp/${botId}`)
 
@@ -54,7 +59,9 @@ async function load(): Promise<void> {
   loading.value = true
   error.value = null
   try {
-    bot.value = await bots.get(botId)
+    const [b, c] = await Promise.all([bots.get(botId), companies.get(tenantId)])
+    bot.value = b
+    company.value = c
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -156,6 +163,15 @@ await Promise.all([load(), loadActivity()])
             <line x1="3" y1="10" x2="21" y2="10" />
           </svg>
           {{ $t('superadmin.companyBotDetail.nav.calendar') }}
+        </a>
+        <a href="#crm" class="inline-flex items-center gap-1.5 rounded-full bg-violet-500/10 ring-1 ring-violet-500/30 px-3 py-1 text-violet-300 hover:bg-violet-500/20 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="8.5" cy="7" r="4" />
+            <line x1="20" y1="8" x2="20" y2="14" />
+            <line x1="23" y1="11" x2="17" y2="11" />
+          </svg>
+          {{ $t('admin.crm.navChip') }}
         </a>
       </nav>
 
@@ -330,6 +346,25 @@ await Promise.all([load(), loadActivity()])
           </div>
         </header>
         <BotCalendarCard :bot-id="bot.id" :tenant-id="tenantId" />
+      </section>
+
+      <!-- CRM (lead push on escalation) -->
+      <section id="crm" class="scroll-mt-24 mt-6">
+        <header class="flex items-start gap-3 mb-3">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-violet-500/10 ring-1 ring-violet-500/30">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-violet-300" aria-hidden="true">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="8.5" cy="7" r="4" />
+              <line x1="20" y1="8" x2="20" y2="14" />
+              <line x1="23" y1="11" x2="17" y2="11" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-slate-100">{{ $t('admin.bot.sections.crm') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.bot.sections.crmDesc') }}</p>
+          </div>
+        </header>
+        <BotCrmCard :bot-id="bot.id" :plan="companyPlan" :tenant-id="tenantId" />
       </section>
 
       <ConfirmDialog
