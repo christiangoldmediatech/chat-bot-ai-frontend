@@ -14,6 +14,7 @@ const items = ref<MediaAsset[]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
 const removing = ref<string | null>(null)
+const confirmingRemove = ref<MediaAsset | null>(null)
 
 // File upload form
 const uploadOpen = ref(false)
@@ -142,7 +143,14 @@ async function onCreateLocation(): Promise<void> {
   }
 }
 
-async function onRemove(asset: MediaAsset): Promise<void> {
+function askRemove(asset: MediaAsset): void {
+  confirmingRemove.value = asset
+}
+
+async function onConfirmRemove(): Promise<void> {
+  const asset = confirmingRemove.value
+  if (!asset) return
+  confirmingRemove.value = null
   removing.value = asset.id
   try {
     await assets.remove(props.botId, asset.id)
@@ -476,9 +484,9 @@ onMounted(() => {
           type="button"
           class="shrink-0 text-xs text-danger-600 hover:text-danger-700 disabled:opacity-50"
           :disabled="removing === a.id"
-          @click="onRemove(a)"
+          @click="askRemove(a)"
         >
-          {{ removing === a.id ? '…' : $t('common.delete') }}
+          {{ removing === a.id ? $t('common.deleting') : $t('common.delete') }}
         </button>
       </li>
     </ul>
@@ -486,5 +494,15 @@ onMounted(() => {
     <p v-if="isSuperadmin" class="mt-4 text-[11px] text-slate-400">
       {{ $t('admin.media.superadminNotice') }}
     </p>
+
+    <ConfirmDialog
+      :open="!!confirmingRemove"
+      :title="$t('admin.media.deleteConfirmTitle')"
+      :message="$t('admin.media.deleteConfirmMessage', { key: confirmingRemove?.key ?? '' })"
+      :confirm-label="$t('common.delete')"
+      tone="danger"
+      @cancel="confirmingRemove = null"
+      @confirm="onConfirmRemove"
+    />
   </section>
 </template>
