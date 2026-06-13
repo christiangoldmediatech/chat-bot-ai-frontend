@@ -233,7 +233,7 @@ onMounted(() => {
       <button
         type="button"
         class="inline-flex items-center gap-1.5 rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800 transition shadow-glass"
-        @click="uploadOpen = !uploadOpen; if (uploadOpen) locationOpen = false"
+        @click="uploadOpen = true"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
           <path d="M12 5v14" /><path d="M5 12h14" />
@@ -243,7 +243,7 @@ onMounted(() => {
       <button
         type="button"
         class="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white/80 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
-        @click="locationOpen = !locationOpen; if (locationOpen) uploadOpen = false"
+        @click="locationOpen = true"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -256,165 +256,175 @@ onMounted(() => {
       </span>
     </div>
 
-    <!-- Upload file form -->
-    <div
-      v-if="uploadOpen"
-      class="mt-4 rounded-2xl bg-white/80 ring-1 ring-slate-200/70 p-4 space-y-3"
+    <!-- Upload file modal -->
+    <Modal
+      :open="uploadOpen"
+      :title="$t('admin.media.form.newFile')"
+      :subtitle="$t('admin.media.actions.uploadFile')"
+      size="lg"
+      @close="uploadOpen = false; resetUploadForm()"
     >
-      <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{{ $t('admin.media.form.newFile') }}</h3>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.file') }}</label>
+          <input
+            ref="fileInput"
+            type="file"
+            class="block w-full text-sm text-slate-700 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-slate-900 file:text-white hover:file:bg-slate-800 file:cursor-pointer"
+            accept="image/*,video/*,audio/*,application/pdf,.pdf"
+            @change="onFilePick"
+          >
+          <p v-if="file" class="mt-1.5 text-xs text-slate-500 truncate">
+            {{ file.name }} · {{ file.type || $t('admin.media.form.unknownType') }} · {{ formatBytes(file.size) }}
+          </p>
+        </div>
 
-      <div>
-        <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.file') }}</label>
-        <input
-          ref="fileInput"
-          type="file"
-          class="block w-full text-sm text-slate-700 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-slate-900 file:text-white hover:file:bg-slate-800 file:cursor-pointer"
-          accept="image/*,video/*,audio/*,application/pdf,.pdf"
-          @change="onFilePick"
-        >
-        <p v-if="file" class="mt-1 text-xs text-slate-500">
-          {{ file.name }} · {{ file.type || $t('admin.media.form.unknownType') }} · {{ formatBytes(file.size) }}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.keyLabel') }}</label>
+            <input
+              v-model="fileKey"
+              type="text"
+              :placeholder="$t('admin.media.form.keyPlaceholder')"
+              class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            >
+            <p class="mt-1 text-[11px] text-slate-500">{{ $t('admin.media.form.keyHelp') }}</p>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.descriptionLabel') }}</label>
+            <input
+              v-model="fileDescription"
+              type="text"
+              :placeholder="$t('admin.media.form.descriptionPlaceholder')"
+              class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            >
+            <p class="mt-1 text-[11px] text-slate-500">{{ $t('admin.media.form.descriptionHelp') }}</p>
+          </div>
+        </div>
+
+        <p v-if="uploadError" class="rounded-md border border-danger-200 bg-danger-50 px-3 py-2 text-xs text-danger-700">
+          {{ uploadError }}
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.keyLabel') }}</label>
-          <input
-            v-model="fileKey"
-            type="text"
-            :placeholder="$t('admin.media.form.keyPlaceholder')"
-            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+      <template #footer>
+        <div class="flex items-center justify-end gap-2">
+          <button
+            type="button"
+            class="rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-slate-900"
+            :disabled="uploading"
+            @click="uploadOpen = false; resetUploadForm()"
           >
-          <p class="mt-1 text-[11px] text-slate-500">{{ $t('admin.media.form.keyHelp') }}</p>
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.descriptionLabel') }}</label>
-          <input
-            v-model="fileDescription"
-            type="text"
-            :placeholder="$t('admin.media.form.descriptionPlaceholder')"
-            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            {{ $t('common.cancel') }}
+          </button>
+          <button
+            type="button"
+            class="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed transition"
+            :disabled="uploading || !file"
+            @click="onUpload"
           >
-          <p class="mt-1 text-[11px] text-slate-500">{{ $t('admin.media.form.descriptionHelp') }}</p>
+            <SpinnerInline v-if="uploading" class="!size-4" />
+            {{ uploading ? $t('common.uploading') : $t('common.upload') }}
+          </button>
         </div>
-      </div>
+      </template>
+    </Modal>
 
-      <p v-if="uploadError" class="rounded-md border border-danger-200 bg-danger-50 px-3 py-2 text-xs text-danger-700">
-        {{ uploadError }}
-      </p>
-
-      <div class="flex items-center justify-end gap-2 pt-1">
-        <button
-          type="button"
-          class="rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-slate-900"
-          :disabled="uploading"
-          @click="uploadOpen = false; resetUploadForm()"
-        >
-          {{ $t('common.cancel') }}
-        </button>
-        <button
-          type="button"
-          class="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed transition"
-          :disabled="uploading || !file"
-          @click="onUpload"
-        >
-          <SpinnerInline v-if="uploading" class="!size-4" />
-          {{ uploading ? $t('common.uploading') : $t('common.upload') }}
-        </button>
-      </div>
-    </div>
-
-    <!-- Location form -->
-    <div
-      v-if="locationOpen"
-      class="mt-4 rounded-2xl bg-white/80 ring-1 ring-slate-200/70 p-4 space-y-3"
+    <!-- Location modal -->
+    <Modal
+      :open="locationOpen"
+      :title="$t('admin.media.form.newLocation')"
+      :subtitle="$t('admin.media.actions.addLocation')"
+      size="lg"
+      @close="locationOpen = false; resetLocationForm()"
     >
-      <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">{{ $t('admin.media.form.newLocation') }}</h3>
+      <div class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.keyLabel') }}</label>
+            <input
+              v-model="locKey"
+              type="text"
+              :placeholder="$t('admin.media.form.locationKeyPlaceholder')"
+              class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.descriptionLabel') }}</label>
+            <input
+              v-model="locDescription"
+              type="text"
+              :placeholder="$t('admin.media.form.locationDescriptionPlaceholder')"
+              class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.latitudeLabel') }}</label>
+            <input
+              v-model.number="locLatitude"
+              type="number"
+              step="any"
+              placeholder="-2.90055"
+              class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm font-mono focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.longitudeLabel') }}</label>
+            <input
+              v-model.number="locLongitude"
+              type="number"
+              step="any"
+              placeholder="-79.00453"
+              class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm font-mono focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.placeNameLabel') }}</label>
+            <input
+              v-model="locName"
+              type="text"
+              :placeholder="$t('admin.media.form.placeNamePlaceholder')"
+              class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.addressLabel') }}</label>
+            <input
+              v-model="locAddress"
+              type="text"
+              :placeholder="$t('admin.media.form.addressPlaceholder')"
+              class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+            >
+          </div>
+        </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.keyLabel') }}</label>
-          <input
-            v-model="locKey"
-            type="text"
-            :placeholder="$t('admin.media.form.locationKeyPlaceholder')"
-            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
-          >
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.descriptionLabel') }}</label>
-          <input
-            v-model="locDescription"
-            type="text"
-            :placeholder="$t('admin.media.form.locationDescriptionPlaceholder')"
-            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
-          >
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.latitudeLabel') }}</label>
-          <input
-            v-model.number="locLatitude"
-            type="number"
-            step="any"
-            placeholder="-2.90055"
-            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm font-mono focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
-          >
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.longitudeLabel') }}</label>
-          <input
-            v-model.number="locLongitude"
-            type="number"
-            step="any"
-            placeholder="-79.00453"
-            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm font-mono focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
-          >
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.placeNameLabel') }}</label>
-          <input
-            v-model="locName"
-            type="text"
-            :placeholder="$t('admin.media.form.placeNamePlaceholder')"
-            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
-          >
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.addressLabel') }}</label>
-          <input
-            v-model="locAddress"
-            type="text"
-            :placeholder="$t('admin.media.form.addressPlaceholder')"
-            class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
-          >
-        </div>
+        <p v-if="locationError" class="rounded-md border border-danger-200 bg-danger-50 px-3 py-2 text-xs text-danger-700">
+          {{ locationError }}
+        </p>
       </div>
 
-      <p v-if="locationError" class="rounded-md border border-danger-200 bg-danger-50 px-3 py-2 text-xs text-danger-700">
-        {{ locationError }}
-      </p>
-
-      <div class="flex items-center justify-end gap-2 pt-1">
-        <button
-          type="button"
-          class="rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-slate-900"
-          :disabled="creatingLocation"
-          @click="locationOpen = false; resetLocationForm()"
-        >
-          {{ $t('common.cancel') }}
-        </button>
-        <button
-          type="button"
-          class="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed transition"
-          :disabled="creatingLocation"
-          @click="onCreateLocation"
-        >
-          <SpinnerInline v-if="creatingLocation" class="!size-4" />
-          {{ creatingLocation ? $t('common.saving') : $t('admin.media.form.saveLocation') }}
-        </button>
-      </div>
-    </div>
+      <template #footer>
+        <div class="flex items-center justify-end gap-2">
+          <button
+            type="button"
+            class="rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-slate-900"
+            :disabled="creatingLocation"
+            @click="locationOpen = false; resetLocationForm()"
+          >
+            {{ $t('common.cancel') }}
+          </button>
+          <button
+            type="button"
+            class="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed transition"
+            :disabled="creatingLocation"
+            @click="onCreateLocation"
+          >
+            <SpinnerInline v-if="creatingLocation" class="!size-4" />
+            {{ creatingLocation ? $t('common.saving') : $t('admin.media.form.saveLocation') }}
+          </button>
+        </div>
+      </template>
+    </Modal>
 
     <!-- List -->
     <SpinnerInline v-if="loading" class="mt-5" />

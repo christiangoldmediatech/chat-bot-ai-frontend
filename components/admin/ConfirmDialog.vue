@@ -74,25 +74,40 @@ onMounted(() => {
 </script>
 
 <template>
-  <Transition
-    enter-active-class="transition duration-150 ease-out"
-    enter-from-class="opacity-0"
-    enter-to-class="opacity-100"
-    leave-active-class="transition duration-100 ease-in"
-    leave-from-class="opacity-100"
-    leave-to-class="opacity-0"
-  >
-    <div
-      v-if="open"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
-      role="dialog"
-      aria-modal="true"
-      :aria-labelledby="`confirm-title-${title}`"
-      @click="onBackdrop"
+  <!--
+    Teleported to <body> so the dialog escapes ancestors that establish a
+    containing block via `backdrop-filter` (admin cards use `backdrop-blur-xl`,
+    which would otherwise trap `position: fixed` and pin the backdrop to the
+    parent card instead of the viewport).
+  -->
+  <Teleport to="body">
+    <Transition
+      enter-active-class="transition duration-200 ease-out"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition duration-150 ease-in"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
     >
-      <div class="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-900/5">
-        <div class="h-1 w-full" :class="accentClasses.bar" aria-hidden="true" />
-        <div class="p-6">
+      <div
+        v-if="open"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 backdrop-blur-md p-4 overflow-y-auto"
+        role="dialog"
+        aria-modal="true"
+        :aria-labelledby="`confirm-title-${title}`"
+        @click="onBackdrop"
+      >
+        <Transition
+          enter-active-class="transition duration-200 ease-out"
+          enter-from-class="opacity-0 scale-95"
+          enter-to-class="opacity-100 scale-100"
+          leave-active-class="transition duration-150 ease-in"
+          leave-from-class="opacity-100 scale-100"
+          leave-to-class="opacity-0 scale-95"
+        >
+          <div v-if="open" class="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-900/5 my-auto">
+            <div class="h-1 w-full" :class="accentClasses.bar" aria-hidden="true" />
+            <div class="p-6">
           <div class="flex items-start gap-3">
             <div
               class="flex size-10 shrink-0 items-center justify-center rounded-xl ring-1"
@@ -130,26 +145,28 @@ onMounted(() => {
             </p>
           </div>
 
-          <div class="mt-6 flex items-center justify-end gap-2">
-            <button
-              type="button"
-              class="rounded-xl px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition"
-              @click="$emit('cancel')"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              class="rounded-xl px-4 py-2 text-sm font-medium text-white disabled:opacity-50 disabled:cursor-not-allowed transition shadow-glass"
-              :class="accentClasses.btn"
-              :disabled="!canConfirm"
-              @click="onConfirm"
-            >
-              {{ confirmLabel ?? 'Delete' }}
-            </button>
+            <div class="mt-6 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                class="rounded-xl px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition"
+                @click="$emit('cancel')"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                class="rounded-xl px-4 py-2 text-sm font-medium text-white disabled:opacity-50 disabled:cursor-not-allowed transition shadow-glass"
+                :class="accentClasses.btn"
+                :disabled="!canConfirm"
+                @click="onConfirm"
+              >
+                {{ confirmLabel ?? 'Delete' }}
+              </button>
+            </div>
           </div>
         </div>
+        </Transition>
       </div>
-    </div>
-  </Transition>
+    </Transition>
+  </Teleport>
 </template>
