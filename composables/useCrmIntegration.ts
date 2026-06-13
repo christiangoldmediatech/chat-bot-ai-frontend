@@ -65,5 +65,15 @@ export function useCrmIntegration(tenantId?: string) {
       const qs = isSandbox ? '?sandbox=true' : ''
       return api.get<{ url: string }>(`${base(botId)}/salesforce/oauth/start${qs}`)
     },
+
+    /** Get the Zoho OAuth consent URL. Region picks the data center. */
+    zohoConnectUrl: (
+      botId: string,
+      region: 'us' | 'eu' | 'in' | 'au' | 'jp' | 'cn',
+    ): Promise<{ url: string }> => {
+      return api.get<{ url: string }>(
+        `${base(botId)}/zoho/oauth/start?region=${region}`,
+      )
+    },
   }
 }

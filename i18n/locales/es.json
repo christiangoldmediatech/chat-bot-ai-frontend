@@ -633,7 +633,7 @@
         },
         "zohoCrm": {
           "label": "Zoho CRM",
-          "description": "OAuth nativo — próximamente."
+          "description": "OAuth nativo — envía el lead a tu org de Zoho CRM como un Lead. Multi-DC (US/EU/IN/AU/JP/CN)."
         },
         "comingSoon": "Próximamente"
       },
@@ -751,6 +751,31 @@
         "disconnect": "Desconectar Salesforce",
         "disconnecting": "Desconectando...",
         "confirmDisconnect": "¿Desconectar Salesforce? Los leads existentes permanecen en tu org; los nuevos envíos se detendrán hasta reconectar."
+      },
+      "zoho": {
+        "connectButton": "Conectar Zoho CRM",
+        "connecting": "Abriendo Zoho...",
+        "connected": "Conectado a Zoho CRM",
+        "accountLabel": "Cuenta",
+        "apiDomainLabel": "Dominio API",
+        "regionLabel": "Región",
+        "regionToggleLabel": "Data center de Zoho (región)",
+        "regionHint": "Elige el data center donde vive tu Zoho CRM. Zoho opera regiones independientes; elegir la incorrecta fallará la autenticación.",
+        "regions": {
+          "us": "US (.com)",
+          "eu": "EU (.eu)",
+          "in": "India (.in)",
+          "au": "Australia (.com.au)",
+          "jp": "Japón (.jp)",
+          "cn": "China (.com.cn)"
+        },
+        "connectError": "No se pudo iniciar la conexión con Zoho.",
+        "callbackError": "Falló la conexión con Zoho: {reason}",
+        "callbackSuccess": "Zoho conectado exitosamente.",
+        "disconnect": "Desconectar Zoho",
+        "disconnecting": "Desconectando...",
+        "confirmDisconnect": "¿Desconectar Zoho? Los leads existentes permanecen en tu CRM; los nuevos envíos se detendrán hasta reconectar.",
+        "reauthorizeNotice": "Si reconectas después, revoca primero esta app en la configuración de tu cuenta Zoho — de lo contrario Zoho no devolverá un nuevo refresh token."
       }
     },
     "chat": {

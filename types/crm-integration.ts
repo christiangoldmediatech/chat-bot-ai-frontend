@@ -3,6 +3,8 @@ import type { IntegrationProvider } from '~/types/integration'
 export type CrmWebhookMethod = 'POST' | 'PUT' | 'PATCH'
 export type CrmCustomAuthType = 'NONE' | 'BEARER' | 'BASIC' | 'API_KEY_HEADER'
 
+export type ZohoRegion = 'us' | 'eu' | 'in' | 'au' | 'jp' | 'cn'
+
 /**
  * Mirrors `CrmIntegrationResponseDto` in the backend. The encrypted secrets
  * (`refreshToken`, `customAuthSecret`) are NOT exposed — `hasRefreshToken`

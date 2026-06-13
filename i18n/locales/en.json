@@ -633,7 +633,7 @@
         },
         "zohoCrm": {
           "label": "Zoho CRM",
-          "description": "Native OAuth — coming soon."
+          "description": "Native OAuth — pushes the lead to your Zoho CRM org as a Lead. Multi-DC (US/EU/IN/AU/JP/CN)."
         },
         "comingSoon": "Coming soon"
       },
@@ -751,6 +751,31 @@
         "disconnect": "Disconnect Salesforce",
         "disconnecting": "Disconnecting...",
         "confirmDisconnect": "Disconnect Salesforce? Existing leads stay in your org; future pushes stop until you reconnect."
+      },
+      "zoho": {
+        "connectButton": "Connect Zoho CRM",
+        "connecting": "Opening Zoho...",
+        "connected": "Connected to Zoho CRM",
+        "accountLabel": "Account",
+        "apiDomainLabel": "API domain",
+        "regionLabel": "Region",
+        "regionToggleLabel": "Zoho data center (region)",
+        "regionHint": "Pick the data center where your Zoho CRM lives. Zoho operates independent regions; picking the wrong one will fail to authenticate.",
+        "regions": {
+          "us": "US (.com)",
+          "eu": "EU (.eu)",
+          "in": "India (.in)",
+          "au": "Australia (.com.au)",
+          "jp": "Japan (.jp)",
+          "cn": "China (.com.cn)"
+        },
+        "connectError": "Could not start the Zoho connection.",
+        "callbackError": "Zoho connection failed: {reason}",
+        "callbackSuccess": "Zoho connected successfully.",
+        "disconnect": "Disconnect Zoho",
+        "disconnecting": "Disconnecting...",
+        "confirmDisconnect": "Disconnect Zoho? Existing leads stay in your CRM; future pushes stop until you reconnect.",
+        "reauthorizeNotice": "If you reconnect later, revoke this app first at your Zoho account settings — otherwise Zoho will not return a new refresh token."
       }
     },
     "chat": {

@@ -7,6 +7,7 @@ import type {
   CrmWebhookMethod,
   TestPushResult,
   UpsertCustomWebhookInput,
+  ZohoRegion,
 } from '~/types/crm-integration'
 import type { IntegrationProvider } from '~/types/integration'
 
@@ -65,6 +66,12 @@ const salesforceConnectError = ref<string | null>(null)
 const salesforceCallbackBanner = ref<{ kind: 'success' | 'error'; message: string } | null>(null)
 const salesforceSandbox = ref(false)
 
+// Zoho connect flow
+const zohoConnecting = ref(false)
+const zohoConnectError = ref<string | null>(null)
+const zohoCallbackBanner = ref<{ kind: 'success' | 'error'; message: string } | null>(null)
+const zohoRegion = ref<ZohoRegion>('us')
+
 const isPremium = computed(() => props.plan === 'PREMIUM')
 
 const customWebhookIntegration = computed<CrmIntegration | null>(() => {
@@ -79,9 +86,14 @@ const salesforceIntegration = computed<CrmIntegration | null>(() => {
   return integrations.value.find((i) => i.provider === 'SALESFORCE') ?? null
 })
 
+const zohoIntegration = computed<CrmIntegration | null>(() => {
+  return integrations.value.find((i) => i.provider === 'ZOHO_CRM') ?? null
+})
+
 const hasIntegration = computed(() => customWebhookIntegration.value !== null)
 const hasHubSpot = computed(() => hubspotIntegration.value !== null)
 const hasSalesforce = computed(() => salesforceIntegration.value !== null)
+const hasZoho = computed(() => zohoIntegration.value !== null)
 
 const submitLabel = computed(() =>
   hasIntegration.value
@@ -159,6 +171,15 @@ function loadFormFrom(integ: CrmIntegration | null): void {
   form.isActive = integ.isActive
 }
 
+function inferZohoRegionFromApiDomain(apiDomain: string): ZohoRegion {
+  if (apiDomain.includes('zohoapis.eu')) return 'eu'
+  if (apiDomain.includes('zohoapis.in')) return 'in'
+  if (apiDomain.includes('zohoapis.com.au')) return 'au'
+  if (apiDomain.includes('zohoapis.jp')) return 'jp'
+  if (apiDomain.includes('zohoapis.com.cn')) return 'cn'
+  return 'us'
+}
+
 async function load(): Promise<void> {
   loading.value = true
   loadError.value = null
@@ -184,6 +205,10 @@ async function load(): Promise<void> {
       if (mostRecent.provider === 'SALESFORCE') {
         salesforceSandbox.value = mostRecent.isSandbox
       }
+    }
+    // Pre-seed Zoho region from existing integration's apiDomain, if any.
+    if (zohoIntegration.value?.apiDomain) {
+      zohoRegion.value = inferZohoRegionFromApiDomain(zohoIntegration.value.apiDomain)
     }
   } catch (err) {
     loadError.value = (err as ApiError).message
@@ -406,13 +431,45 @@ async function onTestPushSalesforce(): Promise<void> {
   }
 }
 
+async function onConnectZoho(): Promise<void> {
+  zohoConnectError.value = null
+  zohoConnecting.value = true
+  try {
+    const { url } = await crm.zohoConnectUrl(props.botId, zohoRegion.value)
+    window.location.href = url
+  } catch (err) {
+    zohoConnectError.value = (err as ApiError).message
+    zohoConnecting.value = false
+  }
+}
+
+async function onTestPushZoho(): Promise<void> {
+  const integ = zohoIntegration.value
+  if (!integ) return
+  testing.value = true
+  testResult.value = null
+  try {
+    testResult.value = await crm.testPush(props.botId, integ.id)
+  } catch (err) {
+    testResult.value = {
+      ok: false,
+      leadId: null,
+      leadUrl: null,
+      error: (err as ApiError).message,
+      durationMs: null,
+    }
+  } finally {
+    testing.value = false
+  }
+}
+
 /**
  * Reads the OAuth callback hints from the query string. The backend's
  * redirect includes `?crm=success|error&provider=hubspot|salesforce` so we
  * know exactly which provider just completed (or failed) the dance and can
  * surface the right banner AND auto-select its tab.
  */
-const callbackProvider = ref<'HUBSPOT' | 'SALESFORCE' | null>(null)
+const callbackProvider = ref<'HUBSPOT' | 'SALESFORCE' | 'ZOHO_CRM' | null>(null)
 
 function handleCallbackQuery(): void {
   const route = useRoute()
@@ -437,6 +494,14 @@ function handleCallbackQuery(): void {
       message: isSuccess
         ? t('admin.crm.salesforce.callbackSuccess')
         : t('admin.crm.salesforce.callbackError', { reason: reason || '—' }),
+    }
+  } else if (provider === 'zoho') {
+    callbackProvider.value = 'ZOHO_CRM'
+    zohoCallbackBanner.value = {
+      kind: isSuccess ? 'success' : 'error',
+      message: isSuccess
+        ? t('admin.crm.zoho.callbackSuccess')
+        : t('admin.crm.zoho.callbackError', { reason: reason || '—' }),
     }
   }
 }
@@ -560,13 +625,17 @@ onMounted(() => {
 
           <button
             type="button"
-            disabled
-            class="text-left rounded-xl border border-slate-200 bg-slate-50 p-3 opacity-60 cursor-not-allowed"
+            :class="selectedProvider === 'ZOHO_CRM' ? 'border-red-400 bg-red-50' : 'border-slate-200 hover:border-slate-300 bg-white'"
+            class="text-left rounded-xl border p-3 transition"
+            @click="selectedProvider = 'ZOHO_CRM'"
           >
             <div class="flex items-center justify-between">
               <span class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.providers.zohoCrm.label') }}</span>
-              <span class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-slate-200 text-slate-600">
-                {{ $t('admin.crm.providers.comingSoon') }}
+              <span
+                v-if="hasZoho"
+                class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200"
+              >
+                {{ $t('admin.crm.status.connected') }}
               </span>
             </div>
             <p class="text-xs text-slate-500 mt-1">{{ $t('admin.crm.providers.zohoCrm.description') }}</p>
@@ -851,6 +920,153 @@ onMounted(() => {
         </div>
       </div>
 
+      <!-- Zoho OAuth panel -->
+      <div v-if="selectedProvider === 'ZOHO_CRM'" class="mt-6">
+        <div
+          v-if="zohoCallbackBanner"
+          :class="zohoCallbackBanner.kind === 'success' ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-danger-200 bg-danger-50 text-danger-700'"
+          class="mb-4 rounded-lg border p-3 text-xs"
+        >
+          {{ zohoCallbackBanner.message }}
+        </div>
+
+        <!-- Connected state -->
+        <div v-if="hasZoho" class="rounded-xl border border-red-200 bg-red-50/60 p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.zoho.connected') }}</p>
+              <dl class="mt-2 grid grid-cols-1 gap-1 text-xs">
+                <div class="flex gap-2">
+                  <dt class="text-slate-500 w-24 shrink-0">{{ $t('admin.crm.zoho.accountLabel') }}</dt>
+                  <dd class="text-slate-900 font-mono break-all">{{ zohoIntegration?.accountEmail || '—' }}</dd>
+                </div>
+                <div class="flex gap-2">
+                  <dt class="text-slate-500 w-24 shrink-0">{{ $t('admin.crm.zoho.apiDomainLabel') }}</dt>
+                  <dd class="text-slate-900 font-mono break-all">{{ zohoIntegration?.apiDomain || '—' }}</dd>
+                </div>
+                <div class="flex gap-2">
+                  <dt class="text-slate-500 w-24 shrink-0">{{ $t('admin.crm.zoho.regionLabel') }}</dt>
+                  <dd class="text-slate-900 font-mono">{{ zohoRegion.toUpperCase() }}</dd>
+                </div>
+              </dl>
+              <p
+                v-if="zohoIntegration?.lastSyncError"
+                class="mt-2 text-[11px] text-danger-700 bg-danger-50 ring-1 ring-danger-200 rounded-md px-2 py-1"
+              >
+                {{ zohoIntegration.lastSyncError }}
+              </p>
+            </div>
+            <span
+              :class="zohoIntegration?.isActive ? 'bg-emerald-100 text-emerald-700 ring-emerald-200' : 'bg-slate-100 text-slate-600 ring-slate-200'"
+              class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 ring-1"
+            >
+              {{ zohoIntegration?.isActive ? $t('admin.crm.status.active') : $t('admin.crm.status.paused') }}
+            </span>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-2 items-center">
+            <button
+              type="button"
+              :disabled="testing"
+              class="inline-flex items-center gap-1.5 rounded-lg bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-xs font-semibold px-3.5 py-2 shadow-sm transition"
+              @click="onTestPushZoho"
+            >
+              <SpinnerInline v-if="testing" />
+              <span>{{ testing ? $t('admin.crm.testPush.running') : $t('admin.crm.testPush.button') }}</span>
+            </button>
+            <button
+              type="button"
+              :disabled="disconnecting"
+              class="ml-auto inline-flex items-center gap-1.5 rounded-lg bg-white hover:bg-danger-50 disabled:opacity-60 text-danger-700 text-xs font-semibold px-3.5 py-2 ring-1 ring-danger-200 transition"
+              @click="askDisconnect('ZOHO_CRM')"
+            >
+              {{ disconnecting ? $t('admin.crm.zoho.disconnecting') : $t('admin.crm.zoho.disconnect') }}
+            </button>
+          </div>
+
+          <div
+            v-if="testResult"
+            :class="testResult.ok ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-danger-200 bg-danger-50 text-danger-700'"
+            class="mt-4 rounded-lg border p-3 text-xs"
+          >
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0">
+                <p class="font-semibold">{{ testResult.ok ? $t('admin.crm.testPush.success') : $t('admin.crm.testPush.failure') }}</p>
+                <p v-if="testResult.ok && testResult.leadId" class="mt-0.5 font-mono break-all">
+                  {{ $t('admin.crm.testPush.successWithLead', { leadId: testResult.leadId, duration: testResult.durationMs ?? '?' }) }}
+                </p>
+                <p v-else-if="testResult.ok" class="mt-0.5">
+                  {{ $t('admin.crm.testPush.successNoLead', { duration: testResult.durationMs ?? '?' }) }}
+                </p>
+                <p v-else class="mt-0.5 font-mono break-words">{{ testResult.error }}</p>
+                <a
+                  v-if="testResult.ok && testResult.leadUrl"
+                  :href="testResult.leadUrl"
+                  target="_blank"
+                  rel="noopener"
+                  class="mt-1 inline-flex items-center gap-1 text-[11px] font-semibold underline"
+                >
+                  {{ testResult.leadUrl }}
+                </a>
+              </div>
+              <button
+                type="button"
+                class="text-[11px] text-slate-500 hover:text-slate-700"
+                @click="testResult = null"
+              >
+                {{ $t('admin.crm.testPush.dismiss') }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Disconnected state — region selector + connect button -->
+        <div v-else class="rounded-xl border border-red-200 bg-red-50/60 p-4">
+          <p class="text-sm text-slate-700">{{ $t('admin.crm.providers.zohoCrm.description') }}</p>
+
+          <fieldset class="mt-4">
+            <legend class="text-xs font-semibold text-slate-700">
+              {{ $t('admin.crm.zoho.regionToggleLabel') }}
+            </legend>
+            <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
+              <label
+                v-for="r in (['us','eu','in','au','jp','cn'] as const)"
+                :key="r"
+                class="inline-flex items-center gap-2 text-xs rounded-lg border px-2.5 py-1.5 cursor-pointer"
+                :class="zohoRegion === r ? 'border-red-400 bg-red-100/60' : 'border-slate-200 bg-white hover:border-slate-300'"
+              >
+                <input
+                  v-model="zohoRegion"
+                  :value="r"
+                  type="radio"
+                  name="zoho-region"
+                  class="text-red-600 focus:ring-red-400"
+                >
+                <span>{{ $t(`admin.crm.zoho.regions.${r}`) }}</span>
+              </label>
+            </div>
+            <p class="mt-2 text-[11px] text-slate-500">{{ $t('admin.crm.zoho.regionHint') }}</p>
+            <p class="mt-1 text-[11px] text-amber-700">{{ $t('admin.crm.zoho.reauthorizeNotice') }}</p>
+          </fieldset>
+
+          <button
+            type="button"
+            :disabled="zohoConnecting"
+            class="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-xs font-semibold px-3.5 py-2 shadow-sm transition"
+            @click="onConnectZoho"
+          >
+            <SpinnerInline v-if="zohoConnecting" />
+            <span>{{ zohoConnecting ? $t('admin.crm.zoho.connecting') : $t('admin.crm.zoho.connectButton') }}</span>
+          </button>
+          <p
+            v-if="zohoConnectError"
+            class="mt-2 text-xs text-danger-700 bg-danger-50 ring-1 ring-danger-200 rounded-md px-2 py-1"
+          >
+            {{ zohoConnectError }}
+          </p>
+        </div>
+      </div>
+
       <!-- Custom webhook form -->
       <div v-if="selectedProvider === 'CUSTOM_WEBHOOK'" class="mt-6">
         <div class="flex items-center justify-between mb-3">
@@ -1094,9 +1310,9 @@ onMounted(() => {
 
     <ConfirmDialog
       :open="confirmingDisconnect"
-      :title="confirmingDisconnectProvider === 'HUBSPOT' ? $t('admin.crm.hubspot.disconnect') : confirmingDisconnectProvider === 'SALESFORCE' ? $t('admin.crm.salesforce.disconnect') : $t('admin.crm.customWebhook.disconnect')"
-      :message="confirmingDisconnectProvider === 'HUBSPOT' ? $t('admin.crm.hubspot.confirmDisconnect') : confirmingDisconnectProvider === 'SALESFORCE' ? $t('admin.crm.salesforce.confirmDisconnect') : $t('admin.crm.customWebhook.confirmDisconnect')"
-      :confirm-label="confirmingDisconnectProvider === 'HUBSPOT' ? $t('admin.crm.hubspot.disconnect') : confirmingDisconnectProvider === 'SALESFORCE' ? $t('admin.crm.salesforce.disconnect') : $t('admin.crm.customWebhook.disconnect')"
+      :title="confirmingDisconnectProvider === 'HUBSPOT' ? $t('admin.crm.hubspot.disconnect') : confirmingDisconnectProvider === 'SALESFORCE' ? $t('admin.crm.salesforce.disconnect') : confirmingDisconnectProvider === 'ZOHO_CRM' ? $t('admin.crm.zoho.disconnect') : $t('admin.crm.customWebhook.disconnect')"
+      :message="confirmingDisconnectProvider === 'HUBSPOT' ? $t('admin.crm.hubspot.confirmDisconnect') : confirmingDisconnectProvider === 'SALESFORCE' ? $t('admin.crm.salesforce.confirmDisconnect') : confirmingDisconnectProvider === 'ZOHO_CRM' ? $t('admin.crm.zoho.confirmDisconnect') : $t('admin.crm.customWebhook.confirmDisconnect')"
+      :confirm-label="confirmingDisconnectProvider === 'HUBSPOT' ? $t('admin.crm.hubspot.disconnect') : confirmingDisconnectProvider === 'SALESFORCE' ? $t('admin.crm.salesforce.disconnect') : confirmingDisconnectProvider === 'ZOHO_CRM' ? $t('admin.crm.zoho.disconnect') : $t('admin.crm.customWebhook.disconnect')"
       @confirm="onConfirmDisconnect"
       @cancel="confirmingDisconnect = false; confirmingDisconnectProvider = null"
     />
