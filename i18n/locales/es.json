@@ -629,7 +629,7 @@
         },
         "salesforce": {
           "label": "Salesforce",
-          "description": "OAuth nativo — próximamente."
+          "description": "OAuth nativo — envía el lead a tu org de Salesforce como objeto Lead."
         },
         "zohoCrm": {
           "label": "Zoho CRM",
@@ -732,6 +732,25 @@
         "confirmDisconnect": "¿Desconectar HubSpot? Los escalamientos existentes se mantienen; los nuevos envíos se detendrán hasta reconectar.",
         "pauseLabel": "Pausar envíos",
         "pauseHint": "Si está activo, los nuevos leads no se disparan sin perder las credenciales."
+      },
+      "salesforce": {
+        "connectButton": "Conectar Salesforce",
+        "connecting": "Abriendo Salesforce...",
+        "connected": "Conectado a Salesforce",
+        "accountLabel": "Cuenta",
+        "instanceLabel": "Instancia",
+        "sandboxBadge": "Sandbox",
+        "productionBadge": "Producción",
+        "envToggleLabel": "Ambiente de Salesforce",
+        "envProduction": "Producción",
+        "envSandbox": "Sandbox",
+        "envHint": "Producción usa login.salesforce.com. Sandbox usa test.salesforce.com — para orgs sandbox creadas desde una org producción padre.",
+        "connectError": "No se pudo iniciar la conexión con Salesforce.",
+        "callbackError": "Falló la conexión con Salesforce: {reason}",
+        "callbackSuccess": "Salesforce conectado exitosamente.",
+        "disconnect": "Desconectar Salesforce",
+        "disconnecting": "Desconectando...",
+        "confirmDisconnect": "¿Desconectar Salesforce? Los leads existentes permanecen en tu org; los nuevos envíos se detendrán hasta reconectar."
       }
     },
     "chat": {

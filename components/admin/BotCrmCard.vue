@@ -59,6 +59,12 @@ const hubspotConnecting = ref(false)
 const hubspotConnectError = ref<string | null>(null)
 const hubspotCallbackBanner = ref<{ kind: 'success' | 'error'; message: string } | null>(null)
 
+// Salesforce connect flow
+const salesforceConnecting = ref(false)
+const salesforceConnectError = ref<string | null>(null)
+const salesforceCallbackBanner = ref<{ kind: 'success' | 'error'; message: string } | null>(null)
+const salesforceSandbox = ref(false)
+
 const isPremium = computed(() => props.plan === 'PREMIUM')
 
 const customWebhookIntegration = computed<CrmIntegration | null>(() => {
@@ -69,8 +75,13 @@ const hubspotIntegration = computed<CrmIntegration | null>(() => {
   return integrations.value.find((i) => i.provider === 'HUBSPOT') ?? null
 })
 
+const salesforceIntegration = computed<CrmIntegration | null>(() => {
+  return integrations.value.find((i) => i.provider === 'SALESFORCE') ?? null
+})
+
 const hasIntegration = computed(() => customWebhookIntegration.value !== null)
 const hasHubSpot = computed(() => hubspotIntegration.value !== null)
+const hasSalesforce = computed(() => salesforceIntegration.value !== null)
 
 const submitLabel = computed(() =>
   hasIntegration.value
@@ -154,12 +165,25 @@ async function load(): Promise<void> {
   try {
     integrations.value = await crm.list(props.botId)
     loadFormFrom(customWebhookIntegration.value)
-    // Auto-select the provider that already has an integration so the user
-    // lands on the connected state instead of an empty form.
-    if (hubspotIntegration.value) {
-      selectedProvider.value = 'HUBSPOT'
-    } else if (customWebhookIntegration.value) {
-      selectedProvider.value = 'CUSTOM_WEBHOOK'
+    // Auto-select tab:
+    //   1. If the URL says we just came back from an OAuth callback, prefer
+    //      the provider that triggered it — that's what the user expects
+    //      to see right after pressing "Connect".
+    //   2. Otherwise pick the integration most recently updated (so the
+    //      last one the user touched is on top).
+    if (callbackProvider.value) {
+      selectedProvider.value = callbackProvider.value
+      if (callbackProvider.value === 'SALESFORCE' && salesforceIntegration.value) {
+        salesforceSandbox.value = salesforceIntegration.value.isSandbox
+      }
+    } else if (integrations.value.length > 0) {
+      const mostRecent = [...integrations.value].sort(
+        (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+      )[0]
+      selectedProvider.value = mostRecent.provider
+      if (mostRecent.provider === 'SALESFORCE') {
+        salesforceSandbox.value = mostRecent.isSandbox
+      }
     }
   } catch (err) {
     loadError.value = (err as ApiError).message
@@ -350,19 +374,69 @@ async function onTestPushHubSpot(): Promise<void> {
   }
 }
 
+async function onConnectSalesforce(): Promise<void> {
+  salesforceConnectError.value = null
+  salesforceConnecting.value = true
+  try {
+    const { url } = await crm.salesforceConnectUrl(props.botId, salesforceSandbox.value)
+    window.location.href = url
+  } catch (err) {
+    salesforceConnectError.value = (err as ApiError).message
+    salesforceConnecting.value = false
+  }
+}
+
+async function onTestPushSalesforce(): Promise<void> {
+  const integ = salesforceIntegration.value
+  if (!integ) return
+  testing.value = true
+  testResult.value = null
+  try {
+    testResult.value = await crm.testPush(props.botId, integ.id)
+  } catch (err) {
+    testResult.value = {
+      ok: false,
+      leadId: null,
+      leadUrl: null,
+      error: (err as ApiError).message,
+      durationMs: null,
+    }
+  } finally {
+    testing.value = false
+  }
+}
+
+/**
+ * Reads the OAuth callback hints from the query string. The backend's
+ * redirect includes `?crm=success|error&provider=hubspot|salesforce` so we
+ * know exactly which provider just completed (or failed) the dance and can
+ * surface the right banner AND auto-select its tab.
+ */
+const callbackProvider = ref<'HUBSPOT' | 'SALESFORCE' | null>(null)
+
 function handleCallbackQuery(): void {
   const route = useRoute()
   const crmParam = route.query.crm
-  if (crmParam === 'success') {
+  if (crmParam !== 'success' && crmParam !== 'error') return
+  const isSuccess = crmParam === 'success'
+  const reason = (route.query.reason as string | undefined) ?? ''
+  const provider = (route.query.provider as string | undefined)?.toLowerCase() ?? ''
+
+  if (provider === 'hubspot') {
+    callbackProvider.value = 'HUBSPOT'
     hubspotCallbackBanner.value = {
-      kind: 'success',
-      message: t('admin.crm.hubspot.callbackSuccess'),
+      kind: isSuccess ? 'success' : 'error',
+      message: isSuccess
+        ? t('admin.crm.hubspot.callbackSuccess')
+        : t('admin.crm.hubspot.callbackError', { reason: reason || '—' }),
     }
-  } else if (crmParam === 'error') {
-    const reason = (route.query.reason as string | undefined) ?? ''
-    hubspotCallbackBanner.value = {
-      kind: 'error',
-      message: t('admin.crm.hubspot.callbackError', { reason: reason || '—' }),
+  } else if (provider === 'salesforce') {
+    callbackProvider.value = 'SALESFORCE'
+    salesforceCallbackBanner.value = {
+      kind: isSuccess ? 'success' : 'error',
+      message: isSuccess
+        ? t('admin.crm.salesforce.callbackSuccess')
+        : t('admin.crm.salesforce.callbackError', { reason: reason || '—' }),
     }
   }
 }
@@ -468,13 +542,17 @@ onMounted(() => {
 
           <button
             type="button"
-            disabled
-            class="text-left rounded-xl border border-slate-200 bg-slate-50 p-3 opacity-60 cursor-not-allowed"
+            :class="selectedProvider === 'SALESFORCE' ? 'border-sky-400 bg-sky-50' : 'border-slate-200 hover:border-slate-300 bg-white'"
+            class="text-left rounded-xl border p-3 transition"
+            @click="selectedProvider = 'SALESFORCE'"
           >
             <div class="flex items-center justify-between">
               <span class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.providers.salesforce.label') }}</span>
-              <span class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-slate-200 text-slate-600">
-                {{ $t('admin.crm.providers.comingSoon') }}
+              <span
+                v-if="hasSalesforce"
+                class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200"
+              >
+                {{ $t('admin.crm.status.connected') }}
               </span>
             </div>
             <p class="text-xs text-slate-500 mt-1">{{ $t('admin.crm.providers.salesforce.description') }}</p>
@@ -614,6 +692,161 @@ onMounted(() => {
             class="mt-2 text-xs text-danger-700 bg-danger-50 ring-1 ring-danger-200 rounded-md px-2 py-1"
           >
             {{ hubspotConnectError }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Salesforce OAuth panel -->
+      <div v-if="selectedProvider === 'SALESFORCE'" class="mt-6">
+        <div
+          v-if="salesforceCallbackBanner"
+          :class="salesforceCallbackBanner.kind === 'success' ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-danger-200 bg-danger-50 text-danger-700'"
+          class="mb-4 rounded-lg border p-3 text-xs"
+        >
+          {{ salesforceCallbackBanner.message }}
+        </div>
+
+        <!-- Connected state -->
+        <div v-if="hasSalesforce" class="rounded-xl border border-sky-200 bg-sky-50/60 p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.salesforce.connected') }}</p>
+              <dl class="mt-2 grid grid-cols-1 gap-1 text-xs">
+                <div class="flex gap-2">
+                  <dt class="text-slate-500 w-24 shrink-0">{{ $t('admin.crm.salesforce.accountLabel') }}</dt>
+                  <dd class="text-slate-900 font-mono break-all">{{ salesforceIntegration?.accountEmail || '—' }}</dd>
+                </div>
+                <div class="flex gap-2">
+                  <dt class="text-slate-500 w-24 shrink-0">{{ $t('admin.crm.salesforce.instanceLabel') }}</dt>
+                  <dd class="text-slate-900 font-mono break-all">{{ salesforceIntegration?.instanceUrl || '—' }}</dd>
+                </div>
+              </dl>
+              <p
+                v-if="salesforceIntegration?.lastSyncError"
+                class="mt-2 text-[11px] text-danger-700 bg-danger-50 ring-1 ring-danger-200 rounded-md px-2 py-1"
+              >
+                {{ salesforceIntegration.lastSyncError }}
+              </p>
+            </div>
+            <div class="flex flex-col gap-1 items-end">
+              <span
+                :class="salesforceIntegration?.isActive ? 'bg-emerald-100 text-emerald-700 ring-emerald-200' : 'bg-slate-100 text-slate-600 ring-slate-200'"
+                class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 ring-1"
+              >
+                {{ salesforceIntegration?.isActive ? $t('admin.crm.status.active') : $t('admin.crm.status.paused') }}
+              </span>
+              <span
+                :class="salesforceIntegration?.isSandbox ? 'bg-amber-100 text-amber-700 ring-amber-200' : 'bg-sky-100 text-sky-700 ring-sky-200'"
+                class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 ring-1"
+              >
+                {{ salesforceIntegration?.isSandbox ? $t('admin.crm.salesforce.sandboxBadge') : $t('admin.crm.salesforce.productionBadge') }}
+              </span>
+            </div>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-2 items-center">
+            <button
+              type="button"
+              :disabled="testing"
+              class="inline-flex items-center gap-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 disabled:opacity-60 text-white text-xs font-semibold px-3.5 py-2 shadow-sm transition"
+              @click="onTestPushSalesforce"
+            >
+              <SpinnerInline v-if="testing" />
+              <span>{{ testing ? $t('admin.crm.testPush.running') : $t('admin.crm.testPush.button') }}</span>
+            </button>
+            <button
+              type="button"
+              :disabled="disconnecting"
+              class="ml-auto inline-flex items-center gap-1.5 rounded-lg bg-white hover:bg-danger-50 disabled:opacity-60 text-danger-700 text-xs font-semibold px-3.5 py-2 ring-1 ring-danger-200 transition"
+              @click="askDisconnect('SALESFORCE')"
+            >
+              {{ disconnecting ? $t('admin.crm.salesforce.disconnecting') : $t('admin.crm.salesforce.disconnect') }}
+            </button>
+          </div>
+
+          <div
+            v-if="testResult"
+            :class="testResult.ok ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-danger-200 bg-danger-50 text-danger-700'"
+            class="mt-4 rounded-lg border p-3 text-xs"
+          >
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0">
+                <p class="font-semibold">{{ testResult.ok ? $t('admin.crm.testPush.success') : $t('admin.crm.testPush.failure') }}</p>
+                <p v-if="testResult.ok && testResult.leadId" class="mt-0.5 font-mono break-all">
+                  {{ $t('admin.crm.testPush.successWithLead', { leadId: testResult.leadId, duration: testResult.durationMs ?? '?' }) }}
+                </p>
+                <p v-else-if="testResult.ok" class="mt-0.5">
+                  {{ $t('admin.crm.testPush.successNoLead', { duration: testResult.durationMs ?? '?' }) }}
+                </p>
+                <p v-else class="mt-0.5 font-mono break-words">{{ testResult.error }}</p>
+                <a
+                  v-if="testResult.ok && testResult.leadUrl"
+                  :href="testResult.leadUrl"
+                  target="_blank"
+                  rel="noopener"
+                  class="mt-1 inline-flex items-center gap-1 text-[11px] font-semibold underline"
+                >
+                  {{ testResult.leadUrl }}
+                </a>
+              </div>
+              <button
+                type="button"
+                class="text-[11px] text-slate-500 hover:text-slate-700"
+                @click="testResult = null"
+              >
+                {{ $t('admin.crm.testPush.dismiss') }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Disconnected state — sandbox toggle + connect button -->
+        <div v-else class="rounded-xl border border-sky-200 bg-sky-50/60 p-4">
+          <p class="text-sm text-slate-700">{{ $t('admin.crm.providers.salesforce.description') }}</p>
+
+          <fieldset class="mt-4">
+            <legend class="text-xs font-semibold text-slate-700">
+              {{ $t('admin.crm.salesforce.envToggleLabel') }}
+            </legend>
+            <div class="mt-2 flex gap-3">
+              <label class="inline-flex items-center gap-2 text-xs">
+                <input
+                  v-model="salesforceSandbox"
+                  :value="false"
+                  type="radio"
+                  name="sf-env"
+                  class="text-sky-600 focus:ring-sky-400"
+                >
+                <span>{{ $t('admin.crm.salesforce.envProduction') }}</span>
+              </label>
+              <label class="inline-flex items-center gap-2 text-xs">
+                <input
+                  v-model="salesforceSandbox"
+                  :value="true"
+                  type="radio"
+                  name="sf-env"
+                  class="text-amber-600 focus:ring-amber-400"
+                >
+                <span>{{ $t('admin.crm.salesforce.envSandbox') }}</span>
+              </label>
+            </div>
+            <p class="mt-2 text-[11px] text-slate-500">{{ $t('admin.crm.salesforce.envHint') }}</p>
+          </fieldset>
+
+          <button
+            type="button"
+            :disabled="salesforceConnecting"
+            class="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 disabled:opacity-60 text-white text-xs font-semibold px-3.5 py-2 shadow-sm transition"
+            @click="onConnectSalesforce"
+          >
+            <SpinnerInline v-if="salesforceConnecting" />
+            <span>{{ salesforceConnecting ? $t('admin.crm.salesforce.connecting') : $t('admin.crm.salesforce.connectButton') }}</span>
+          </button>
+          <p
+            v-if="salesforceConnectError"
+            class="mt-2 text-xs text-danger-700 bg-danger-50 ring-1 ring-danger-200 rounded-md px-2 py-1"
+          >
+            {{ salesforceConnectError }}
           </p>
         </div>
       </div>
@@ -861,9 +1094,9 @@ onMounted(() => {
 
     <ConfirmDialog
       :open="confirmingDisconnect"
-      :title="confirmingDisconnectProvider === 'HUBSPOT' ? $t('admin.crm.hubspot.disconnect') : $t('admin.crm.customWebhook.disconnect')"
-      :message="confirmingDisconnectProvider === 'HUBSPOT' ? $t('admin.crm.hubspot.confirmDisconnect') : $t('admin.crm.customWebhook.confirmDisconnect')"
-      :confirm-label="confirmingDisconnectProvider === 'HUBSPOT' ? $t('admin.crm.hubspot.disconnect') : $t('admin.crm.customWebhook.disconnect')"
+      :title="confirmingDisconnectProvider === 'HUBSPOT' ? $t('admin.crm.hubspot.disconnect') : confirmingDisconnectProvider === 'SALESFORCE' ? $t('admin.crm.salesforce.disconnect') : $t('admin.crm.customWebhook.disconnect')"
+      :message="confirmingDisconnectProvider === 'HUBSPOT' ? $t('admin.crm.hubspot.confirmDisconnect') : confirmingDisconnectProvider === 'SALESFORCE' ? $t('admin.crm.salesforce.confirmDisconnect') : $t('admin.crm.customWebhook.confirmDisconnect')"
+      :confirm-label="confirmingDisconnectProvider === 'HUBSPOT' ? $t('admin.crm.hubspot.disconnect') : confirmingDisconnectProvider === 'SALESFORCE' ? $t('admin.crm.salesforce.disconnect') : $t('admin.crm.customWebhook.disconnect')"
       @confirm="onConfirmDisconnect"
       @cancel="confirmingDisconnect = false; confirmingDisconnectProvider = null"
     />

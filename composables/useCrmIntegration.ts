@@ -56,5 +56,14 @@ export function useCrmIntegration(tenantId?: string) {
     hubspotConnectUrl: (botId: string): Promise<{ url: string }> => {
       return api.get<{ url: string }>(`${base(botId)}/hubspot/oauth/start`)
     },
+
+    /** Get the Salesforce OAuth consent URL. `isSandbox=true` uses test.salesforce.com. */
+    salesforceConnectUrl: (
+      botId: string,
+      isSandbox: boolean,
+    ): Promise<{ url: string }> => {
+      const qs = isSandbox ? '?sandbox=true' : ''
+      return api.get<{ url: string }>(`${base(botId)}/salesforce/oauth/start${qs}`)
+    },
   }
 }
