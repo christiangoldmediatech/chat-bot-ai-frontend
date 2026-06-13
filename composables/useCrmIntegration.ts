@@ -51,5 +51,10 @@ export function useCrmIntegration(tenantId?: string) {
     testPush: (botId: string, id: string): Promise<TestPushResult> => {
       return api.post<TestPushResult>(`${base(botId)}/${id}/test-push`, {})
     },
+
+    /** Get the HubSpot OAuth consent URL the user should be redirected to. */
+    hubspotConnectUrl: (botId: string): Promise<{ url: string }> => {
+      return api.get<{ url: string }>(`${base(botId)}/hubspot/oauth/start`)
+    },
   }
 }

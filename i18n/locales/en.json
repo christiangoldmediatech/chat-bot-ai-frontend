@@ -625,7 +625,7 @@
         },
         "hubspot": {
           "label": "HubSpot",
-          "description": "Native OAuth — coming soon."
+          "description": "Native OAuth — pushes the lead as a HubSpot Contact with lifecycle = lead."
         },
         "salesforce": {
           "label": "Salesforce",
@@ -717,6 +717,21 @@
         "requiredEndpoint": "Endpoint URL is required",
         "requiredTemplate": "Payload template is required",
         "generic": "Something went wrong"
+      },
+      "hubspot": {
+        "connectButton": "Connect HubSpot",
+        "connecting": "Opening HubSpot...",
+        "connected": "Connected to HubSpot",
+        "accountLabel": "Account",
+        "portalLabel": "Portal id",
+        "connectError": "Could not start the HubSpot connection.",
+        "callbackError": "HubSpot connection failed: {reason}",
+        "callbackSuccess": "HubSpot connected successfully.",
+        "disconnect": "Disconnect HubSpot",
+        "disconnecting": "Disconnecting...",
+        "confirmDisconnect": "Disconnect HubSpot? Existing escalations stay; future pushes stop until you reconnect.",
+        "pauseLabel": "Pause pushes",
+        "pauseHint": "If on, future leads stop firing without losing the saved credentials."
       }
     },
     "chat": {

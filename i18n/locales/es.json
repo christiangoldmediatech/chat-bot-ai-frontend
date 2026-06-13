@@ -625,7 +625,7 @@
         },
         "hubspot": {
           "label": "HubSpot",
-          "description": "OAuth nativo — próximamente."
+          "description": "OAuth nativo — envía el lead como un Contact de HubSpot con lifecycle = lead."
         },
         "salesforce": {
           "label": "Salesforce",
@@ -717,6 +717,21 @@
         "requiredEndpoint": "La URL del endpoint es obligatoria",
         "requiredTemplate": "La plantilla del payload es obligatoria",
         "generic": "Algo salió mal"
+      },
+      "hubspot": {
+        "connectButton": "Conectar HubSpot",
+        "connecting": "Abriendo HubSpot...",
+        "connected": "Conectado a HubSpot",
+        "accountLabel": "Cuenta",
+        "portalLabel": "Portal id",
+        "connectError": "No se pudo iniciar la conexión con HubSpot.",
+        "callbackError": "Falló la conexión con HubSpot: {reason}",
+        "callbackSuccess": "HubSpot conectado exitosamente.",
+        "disconnect": "Desconectar HubSpot",
+        "disconnecting": "Desconectando...",
+        "confirmDisconnect": "¿Desconectar HubSpot? Los escalamientos existentes se mantienen; los nuevos envíos se detendrán hasta reconectar.",
+        "pauseLabel": "Pausar envíos",
+        "pauseHint": "Si está activo, los nuevos leads no se disparan sin perder las credenciales."
       }
     },
     "chat": {
