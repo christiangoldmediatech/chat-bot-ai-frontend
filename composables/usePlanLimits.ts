@@ -2,18 +2,22 @@ import type { Tenant } from '~/types/company'
 
 /**
  * Frontend safety net for plan quotas. The backend's `planDetails.limits`
- * is the source of truth, but we cap BASIC at 1 bot here too so the UX
- * stays correct even if the catalog drifts (e.g. a staging seed accidentally
- * leaves BASIC's limit as null) — a paying-tier limit is never silently
- * relaxed to "unlimited" in the admin UI.
+ * is the source of truth, but we clamp each plan to its known ceiling here
+ * so the UX stays correct even if the catalog drifts — a paying-tier limit
+ * is never silently relaxed to "unlimited" in the admin UI.
  */
+const PLAN_BOT_FALLBACK: Record<string, number> = {
+  BASIC: 1,
+  PROFESSIONAL: 3,
+  PREMIUM: 10,
+}
+
 export function resolveBotsLimit(tenant: Tenant | null | undefined): number | null {
   if (!tenant) return null
   const backendLimit = tenant.planDetails.limits.bots
-  if (tenant.plan === 'BASIC') {
-    return backendLimit === null ? 1 : Math.min(backendLimit, 1)
-  }
-  return backendLimit
+  const fallback = PLAN_BOT_FALLBACK[tenant.plan]
+  if (fallback === undefined) return backendLimit
+  return backendLimit === null ? fallback : Math.min(backendLimit, fallback)
 }
 
 /**
