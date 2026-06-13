@@ -538,7 +538,9 @@
         "media": "Multimedia",
         "mediaDesc": "Images, PDFs, videos, audios, or locations the bot sends as native WhatsApp attachments.",
         "calendar": "Google Calendar",
-        "calendarDesc": "Connect a Google account so the bot can read availability and book meetings."
+        "calendarDesc": "Connect a Google account so the bot can read availability and book meetings.",
+        "crm": "CRM connection",
+        "crmDesc": "Push leads to your CRM when a customer escalates to a human advisor."
       },
       "ai": "AI",
       "aiProvider": "Provider",
@@ -603,6 +605,186 @@
       "superadminNotice": "Managing resources on a tenant's bot as super-admin.",
       "deleteConfirmTitle": "Delete this resource?",
       "deleteConfirmMessage": "\"{key}\" will be removed from the bot. If the bot's instructions reference this key, it will no longer find it. This action cannot be undone."
+    },
+    "crm": {
+      "sectionTitle": "CRM connection",
+      "sectionDescription": "Push leads to your CRM when a customer escalates to a human advisor. Available on the Premium plan.",
+      "navChip": "CRM",
+      "loading": "Loading...",
+      "loadError": "Could not load the CRM configuration.",
+      "upsell": {
+        "title": "Premium feature",
+        "description": "Connect your CRM (Salesforce, Zoho, HubSpot, or a custom webhook) to automatically receive a lead when a customer asks to talk to an advisor.",
+        "cta": "Upgrade plan"
+      },
+      "providers": {
+        "label": "Choose a provider",
+        "customWebhook": {
+          "label": "Custom webhook",
+          "description": "Send leads to any CRM via HTTP request templated by you."
+        },
+        "hubspot": {
+          "label": "HubSpot",
+          "description": "Native OAuth — pushes the lead as a HubSpot Contact with lifecycle = lead."
+        },
+        "salesforce": {
+          "label": "Salesforce",
+          "description": "Native OAuth — pushes the lead to your Salesforce org as a Lead object."
+        },
+        "zohoCrm": {
+          "label": "Zoho CRM",
+          "description": "Native OAuth — pushes the lead to your Zoho CRM org as a Lead. Multi-DC (US/EU/IN/AU/JP/CN)."
+        },
+        "comingSoon": "Coming soon"
+      },
+      "status": {
+        "connected": "Configured",
+        "notConnected": "Not configured",
+        "active": "Active",
+        "paused": "Paused",
+        "lastSyncNever": "No pushes recorded yet",
+        "lastSyncAt": "Last push: {date}",
+        "lastError": "Last error: {message}"
+      },
+      "customWebhook": {
+        "formTitle": "Configure custom webhook",
+        "formDescription": "Tell us how to call your CRM. The configuration is stored encrypted and only used when a customer escalates.",
+        "customNameLabel": "Display name",
+        "customNamePlaceholder": "e.g. Internal HubSpot",
+        "customNameHint": "Only shown in this admin panel.",
+        "endpointLabel": "Endpoint URL",
+        "endpointPlaceholder": "https://your-crm.example.com/leads",
+        "methodLabel": "HTTP method",
+        "authTypeLabel": "Authentication",
+        "authNone": "None",
+        "authBearer": "Bearer token",
+        "authBasic": "Basic (user:password)",
+        "authApiKey": "API key header",
+        "authSecretLabel": "Secret",
+        "authSecretPlaceholder": "Token, password, or API key",
+        "authSecretHint": "Stored encrypted with AES-256-GCM. Leave blank when editing to keep the current secret.",
+        "authSecretMasked": "Secret already stored — leave blank to keep it.",
+        "authHeaderNameLabel": "Header name",
+        "authHeaderNamePlaceholder": "X-Api-Key",
+        "customHeadersLabel": "Extra headers (JSON object)",
+        "customHeadersPlaceholder": "{'{'}\"X-Source\": \"ChatBotAI\"{'}'}",
+        "payloadTemplateLabel": "Payload template (JSON)",
+        "payloadTemplateHint": "Use {placeholder} markers. Available placeholders: {list}.",
+        "successCodesLabel": "Success status codes",
+        "successCodesPlaceholder": "200, 201, 202",
+        "successCodesHint": "Comma-separated. Default: 200, 201, 202.",
+        "leadIdPathLabel": "JSONPath to extract lead id (optional)",
+        "leadIdPathPlaceholder": "$.data.id",
+        "leadUrlTemplateLabel": "Lead URL template (optional)",
+        "leadUrlTemplatePlaceholder": "https://your-crm.example.com/leads/{'{'}leadId{'}'}",
+        "leadUrlTemplateHint": "Use {leadIdPlaceholder} as placeholder.",
+        "isActiveLabel": "Active",
+        "isActiveHint": "If off, the integration stays saved but no pushes fire.",
+        "submitCreate": "Save configuration",
+        "submitUpdate": "Update configuration",
+        "saving": "Saving...",
+        "disconnect": "Disconnect",
+        "disconnecting": "Disconnecting...",
+        "confirmDisconnect": "Disconnect the CRM integration? The configuration will be deleted permanently."
+      },
+      "placeholders": {
+        "phone": "Customer phone (E.164)",
+        "name": "Customer name (or 'WhatsApp Customer')",
+        "email": "Customer email if captured",
+        "summary": "LLM-distilled summary of the conversation",
+        "botName": "Bot name",
+        "tenantName": "Tenant name (works as 'Company')",
+        "tenantSlug": "Tenant slug",
+        "conversationUrl": "Deep link to the admin conversation",
+        "caseId": "Local case id",
+        "customerProfileJson": "Customer profile JSON",
+        "lastMessages": "Last messages of the conversation",
+        "timestamp": "ISO timestamp of the push"
+      },
+      "testPush": {
+        "button": "Test connection",
+        "running": "Sending test push...",
+        "success": "Test push successful",
+        "successWithLead": "Lead id: {leadId} · {duration} ms",
+        "successNoLead": "Webhook accepted the request · {duration} ms",
+        "failure": "Test push failed",
+        "failureDetails": "{error}",
+        "notice": "Sends a fake lead payload to validate your configuration. Safe to delete the resulting lead on your CRM.",
+        "dismiss": "Dismiss"
+      },
+      "errors": {
+        "invalidJson": "Invalid JSON — check syntax",
+        "requiredEndpoint": "Endpoint URL is required",
+        "requiredTemplate": "Payload template is required",
+        "generic": "Something went wrong"
+      },
+      "hubspot": {
+        "connectButton": "Connect HubSpot",
+        "connecting": "Opening HubSpot...",
+        "connected": "Connected to HubSpot",
+        "accountLabel": "Account",
+        "portalLabel": "Portal id",
+        "connectError": "Could not start the HubSpot connection.",
+        "callbackError": "HubSpot connection failed: {reason}",
+        "callbackSuccess": "HubSpot connected successfully.",
+        "disconnect": "Disconnect HubSpot",
+        "disconnecting": "Disconnecting...",
+        "confirmDisconnect": "Disconnect HubSpot? Existing escalations stay; future pushes stop until you reconnect.",
+        "pauseLabel": "Pause pushes",
+        "pauseHint": "If on, future leads stop firing without losing the saved credentials."
+      },
+      "salesforce": {
+        "connectButton": "Connect Salesforce",
+        "connecting": "Opening Salesforce...",
+        "connected": "Connected to Salesforce",
+        "accountLabel": "Account",
+        "instanceLabel": "Instance",
+        "sandboxBadge": "Sandbox",
+        "productionBadge": "Production",
+        "envToggleLabel": "Salesforce environment",
+        "envProduction": "Production",
+        "envSandbox": "Sandbox",
+        "envHint": "Production uses login.salesforce.com. Sandbox uses test.salesforce.com — for sandbox orgs you spun up from a parent prod org.",
+        "connectError": "Could not start the Salesforce connection.",
+        "callbackError": "Salesforce connection failed: {reason}",
+        "callbackSuccess": "Salesforce connected successfully.",
+        "disconnect": "Disconnect Salesforce",
+        "disconnecting": "Disconnecting...",
+        "confirmDisconnect": "Disconnect Salesforce? Existing leads stay in your org; future pushes stop until you reconnect."
+      },
+      "zoho": {
+        "connectButton": "Connect Zoho CRM",
+        "connecting": "Opening Zoho...",
+        "connected": "Connected to Zoho CRM",
+        "accountLabel": "Account",
+        "apiDomainLabel": "API domain",
+        "regionLabel": "Region",
+        "regionToggleLabel": "Zoho data center (region)",
+        "regionHint": "Pick the data center where your Zoho CRM lives. Zoho operates independent regions; picking the wrong one will fail to authenticate.",
+        "regions": {
+          "us": "US (.com)",
+          "eu": "EU (.eu)",
+          "in": "India (.in)",
+          "au": "Australia (.com.au)",
+          "jp": "Japan (.jp)",
+          "cn": "China (.com.cn)"
+        },
+        "connectError": "Could not start the Zoho connection.",
+        "callbackError": "Zoho connection failed: {reason}",
+        "callbackSuccess": "Zoho connected successfully.",
+        "disconnect": "Disconnect Zoho",
+        "disconnecting": "Disconnecting...",
+        "confirmDisconnect": "Disconnect Zoho? Existing leads stay in your CRM; future pushes stop until you reconnect.",
+        "reauthorizeNotice": "If you reconnect later, revoke this app first at your Zoho account settings — otherwise Zoho will not return a new refresh token."
+      },
+      "primary": {
+        "title": "Primary destination",
+        "description": "When multiple CRMs are connected, choose which one receives the lead at escalation. Otherwise the most recently updated wins.",
+        "autoOption": "Auto (most recent)",
+        "primaryBadge": "Primary",
+        "saving": "Saving...",
+        "saveError": "Could not update the primary provider."
+      }
     },
     "chat": {
       "loadingImage": "Loading image…",
@@ -689,7 +871,8 @@
       "resolution": "Resolution:",
       "bot": "Bot:",
       "created": "Created:",
-      "resolved": "Resolved:"
+      "resolved": "Resolved:",
+      "crmBadge": "View in CRM"
     },
     "action": {
       "attend": "Attend",

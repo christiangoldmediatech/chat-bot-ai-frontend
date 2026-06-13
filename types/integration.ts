@@ -1,4 +1,9 @@
-export type IntegrationProvider = 'GOOGLE_CALENDAR'
+export type IntegrationProvider =
+  | 'GOOGLE_CALENDAR'
+  | 'SALESFORCE'
+  | 'ZOHO_CRM'
+  | 'HUBSPOT'
+  | 'CUSTOM_WEBHOOK'
 
 export interface Integration {
   provider: IntegrationProvider

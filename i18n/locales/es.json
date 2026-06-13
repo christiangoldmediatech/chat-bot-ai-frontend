@@ -538,7 +538,9 @@
         "media": "Multimedia",
         "mediaDesc": "Imágenes, PDFs, videos, audios o ubicaciones que el bot envía como adjuntos nativos en WhatsApp.",
         "calendar": "Google Calendar",
-        "calendarDesc": "Conecta una cuenta de Google para que el bot pueda ver disponibilidad y agendar reuniones."
+        "calendarDesc": "Conecta una cuenta de Google para que el bot pueda ver disponibilidad y agendar reuniones.",
+        "crm": "Conexión con CRM",
+        "crmDesc": "Envía leads a tu CRM cuando un cliente solicita hablar con un asesor humano."
       },
       "ai": "IA",
       "aiProvider": "Proveedor",
@@ -603,6 +605,186 @@
       "superadminNotice": "Administrando recursos de un bot ajeno como super-admin.",
       "deleteConfirmTitle": "¿Eliminar este recurso?",
       "deleteConfirmMessage": "\"{key}\" se eliminará del bot. Si las instrucciones del bot referencian esta clave, dejará de encontrarla. Esta acción no se puede deshacer."
+    },
+    "crm": {
+      "sectionTitle": "Conexión con CRM",
+      "sectionDescription": "Envía leads a tu CRM cuando un cliente solicita hablar con un asesor humano. Disponible en el plan Premium.",
+      "navChip": "CRM",
+      "loading": "Cargando...",
+      "loadError": "No se pudo cargar la configuración del CRM.",
+      "upsell": {
+        "title": "Función Premium",
+        "description": "Conecta tu CRM (Salesforce, Zoho, HubSpot o un webhook personalizado) para recibir automáticamente un lead cuando un cliente pida hablar con un asesor.",
+        "cta": "Actualizar plan"
+      },
+      "providers": {
+        "label": "Elige un proveedor",
+        "customWebhook": {
+          "label": "Webhook personalizado",
+          "description": "Envía leads a cualquier CRM vía una petición HTTP con plantilla definida por ti."
+        },
+        "hubspot": {
+          "label": "HubSpot",
+          "description": "OAuth nativo — envía el lead como un Contact de HubSpot con lifecycle = lead."
+        },
+        "salesforce": {
+          "label": "Salesforce",
+          "description": "OAuth nativo — envía el lead a tu org de Salesforce como objeto Lead."
+        },
+        "zohoCrm": {
+          "label": "Zoho CRM",
+          "description": "OAuth nativo — envía el lead a tu org de Zoho CRM como un Lead. Multi-DC (US/EU/IN/AU/JP/CN)."
+        },
+        "comingSoon": "Próximamente"
+      },
+      "status": {
+        "connected": "Configurado",
+        "notConnected": "Sin configurar",
+        "active": "Activo",
+        "paused": "Pausado",
+        "lastSyncNever": "Aún no se han registrado envíos",
+        "lastSyncAt": "Último envío: {date}",
+        "lastError": "Último error: {message}"
+      },
+      "customWebhook": {
+        "formTitle": "Configurar webhook personalizado",
+        "formDescription": "Indícanos cómo llamar a tu CRM. La configuración se guarda cifrada y solo se usa cuando un cliente escala.",
+        "customNameLabel": "Nombre de display",
+        "customNamePlaceholder": "ej. HubSpot interno",
+        "customNameHint": "Solo se muestra en este panel de admin.",
+        "endpointLabel": "URL del endpoint",
+        "endpointPlaceholder": "https://tu-crm.ejemplo.com/leads",
+        "methodLabel": "Método HTTP",
+        "authTypeLabel": "Autenticación",
+        "authNone": "Ninguna",
+        "authBearer": "Bearer token",
+        "authBasic": "Basic (usuario:contraseña)",
+        "authApiKey": "API key en header",
+        "authSecretLabel": "Secret",
+        "authSecretPlaceholder": "Token, contraseña o API key",
+        "authSecretHint": "Se guarda cifrado con AES-256-GCM. Déjalo en blanco al editar para mantener el secret actual.",
+        "authSecretMasked": "Ya hay un secret guardado — déjalo en blanco para mantenerlo.",
+        "authHeaderNameLabel": "Nombre del header",
+        "authHeaderNamePlaceholder": "X-Api-Key",
+        "customHeadersLabel": "Headers extra (objeto JSON)",
+        "customHeadersPlaceholder": "{'{'}\"X-Source\": \"ChatBotAI\"{'}'}",
+        "payloadTemplateLabel": "Plantilla del payload (JSON)",
+        "payloadTemplateHint": "Usa marcadores {placeholder}. Placeholders disponibles: {list}.",
+        "successCodesLabel": "Códigos HTTP de éxito",
+        "successCodesPlaceholder": "200, 201, 202",
+        "successCodesHint": "Separados por coma. Default: 200, 201, 202.",
+        "leadIdPathLabel": "JSONPath para extraer el lead id (opcional)",
+        "leadIdPathPlaceholder": "$.data.id",
+        "leadUrlTemplateLabel": "Plantilla de URL del lead (opcional)",
+        "leadUrlTemplatePlaceholder": "https://tu-crm.ejemplo.com/leads/{'{'}leadId{'}'}",
+        "leadUrlTemplateHint": "Usa {leadIdPlaceholder} como placeholder.",
+        "isActiveLabel": "Activo",
+        "isActiveHint": "Si está apagado, la configuración queda guardada pero no se disparan envíos.",
+        "submitCreate": "Guardar configuración",
+        "submitUpdate": "Actualizar configuración",
+        "saving": "Guardando...",
+        "disconnect": "Desconectar",
+        "disconnecting": "Desconectando...",
+        "confirmDisconnect": "¿Desconectar la integración con CRM? La configuración se borrará de forma permanente."
+      },
+      "placeholders": {
+        "phone": "Teléfono del cliente (E.164)",
+        "name": "Nombre del cliente (o 'Cliente WhatsApp')",
+        "email": "Email del cliente si se capturó",
+        "summary": "Resumen distilado por el LLM",
+        "botName": "Nombre del bot",
+        "tenantName": "Nombre del tenant (sirve como 'Company')",
+        "tenantSlug": "Slug del tenant",
+        "conversationUrl": "Deep link a la conversación en el admin",
+        "caseId": "Id local del caso",
+        "customerProfileJson": "Perfil del cliente en JSON",
+        "lastMessages": "Últimos mensajes de la conversación",
+        "timestamp": "Timestamp ISO del envío"
+      },
+      "testPush": {
+        "button": "Probar conexión",
+        "running": "Enviando push de prueba...",
+        "success": "Push de prueba exitoso",
+        "successWithLead": "Lead id: {leadId} · {duration} ms",
+        "successNoLead": "El webhook aceptó la petición · {duration} ms",
+        "failure": "Falló el push de prueba",
+        "failureDetails": "{error}",
+        "notice": "Envía un payload fake para validar tu configuración. Puedes borrar el lead resultante de forma segura en tu CRM.",
+        "dismiss": "Cerrar"
+      },
+      "errors": {
+        "invalidJson": "JSON inválido — revisa la sintaxis",
+        "requiredEndpoint": "La URL del endpoint es obligatoria",
+        "requiredTemplate": "La plantilla del payload es obligatoria",
+        "generic": "Algo salió mal"
+      },
+      "hubspot": {
+        "connectButton": "Conectar HubSpot",
+        "connecting": "Abriendo HubSpot...",
+        "connected": "Conectado a HubSpot",
+        "accountLabel": "Cuenta",
+        "portalLabel": "Portal id",
+        "connectError": "No se pudo iniciar la conexión con HubSpot.",
+        "callbackError": "Falló la conexión con HubSpot: {reason}",
+        "callbackSuccess": "HubSpot conectado exitosamente.",
+        "disconnect": "Desconectar HubSpot",
+        "disconnecting": "Desconectando...",
+        "confirmDisconnect": "¿Desconectar HubSpot? Los escalamientos existentes se mantienen; los nuevos envíos se detendrán hasta reconectar.",
+        "pauseLabel": "Pausar envíos",
+        "pauseHint": "Si está activo, los nuevos leads no se disparan sin perder las credenciales."
+      },
+      "salesforce": {
+        "connectButton": "Conectar Salesforce",
+        "connecting": "Abriendo Salesforce...",
+        "connected": "Conectado a Salesforce",
+        "accountLabel": "Cuenta",
+        "instanceLabel": "Instancia",
+        "sandboxBadge": "Sandbox",
+        "productionBadge": "Producción",
+        "envToggleLabel": "Ambiente de Salesforce",
+        "envProduction": "Producción",
+        "envSandbox": "Sandbox",
+        "envHint": "Producción usa login.salesforce.com. Sandbox usa test.salesforce.com — para orgs sandbox creadas desde una org producción padre.",
+        "connectError": "No se pudo iniciar la conexión con Salesforce.",
+        "callbackError": "Falló la conexión con Salesforce: {reason}",
+        "callbackSuccess": "Salesforce conectado exitosamente.",
+        "disconnect": "Desconectar Salesforce",
+        "disconnecting": "Desconectando...",
+        "confirmDisconnect": "¿Desconectar Salesforce? Los leads existentes permanecen en tu org; los nuevos envíos se detendrán hasta reconectar."
+      },
+      "zoho": {
+        "connectButton": "Conectar Zoho CRM",
+        "connecting": "Abriendo Zoho...",
+        "connected": "Conectado a Zoho CRM",
+        "accountLabel": "Cuenta",
+        "apiDomainLabel": "Dominio API",
+        "regionLabel": "Región",
+        "regionToggleLabel": "Data center de Zoho (región)",
+        "regionHint": "Elige el data center donde vive tu Zoho CRM. Zoho opera regiones independientes; elegir la incorrecta fallará la autenticación.",
+        "regions": {
+          "us": "US (.com)",
+          "eu": "EU (.eu)",
+          "in": "India (.in)",
+          "au": "Australia (.com.au)",
+          "jp": "Japón (.jp)",
+          "cn": "China (.com.cn)"
+        },
+        "connectError": "No se pudo iniciar la conexión con Zoho.",
+        "callbackError": "Falló la conexión con Zoho: {reason}",
+        "callbackSuccess": "Zoho conectado exitosamente.",
+        "disconnect": "Desconectar Zoho",
+        "disconnecting": "Desconectando...",
+        "confirmDisconnect": "¿Desconectar Zoho? Los leads existentes permanecen en tu CRM; los nuevos envíos se detendrán hasta reconectar.",
+        "reauthorizeNotice": "Si reconectas después, revoca primero esta app en la configuración de tu cuenta Zoho — de lo contrario Zoho no devolverá un nuevo refresh token."
+      },
+      "primary": {
+        "title": "Destino primario",
+        "description": "Cuando hay múltiples CRMs conectados, elige cuál recibe el lead al escalar. Si no eliges, gana el más recientemente actualizado.",
+        "autoOption": "Auto (más reciente)",
+        "primaryBadge": "Primario",
+        "saving": "Guardando...",
+        "saveError": "No se pudo actualizar el provider primario."
+      }
     },
     "chat": {
       "loadingImage": "Cargando imagen…",
@@ -689,7 +871,8 @@
       "resolution": "Resolución:",
       "bot": "Bot:",
       "created": "Creado:",
-      "resolved": "Resuelto:"
+      "resolved": "Resuelto:",
+      "crmBadge": "Ver en CRM"
     },
     "action": {
       "attend": "Atender",
