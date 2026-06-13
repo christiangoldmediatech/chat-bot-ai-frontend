@@ -122,6 +122,13 @@ const quickNav = computed(() => {
       tone: 'indigo',
     },
     {
+      key: 'conversations',
+      to: `${base}/conversations`,
+      label: t('superadmin.companyDetail.sections.navConversations'),
+      hint: t('superadmin.companyDetail.quickNav.conversationsHint'),
+      tone: 'violet',
+    },
+    {
       key: 'cases',
       to: `${base}/cases`,
       label: t('superadmin.companyDetail.sections.navCases'),
@@ -147,6 +154,7 @@ const quickNav = computed(() => {
 
 const navToneClasses: Record<string, string> = {
   indigo: 'bg-indigo-500/5 ring-indigo-500/20 hover:bg-indigo-500/10 hover:ring-indigo-500/40 text-indigo-300',
+  violet: 'bg-violet-500/5 ring-violet-500/20 hover:bg-violet-500/10 hover:ring-violet-500/40 text-violet-300',
   amber: 'bg-amber-500/5 ring-amber-500/20 hover:bg-amber-500/10 hover:ring-amber-500/40 text-amber-300',
   sky: 'bg-sky-500/5 ring-sky-500/20 hover:bg-sky-500/10 hover:ring-sky-500/40 text-sky-300',
   emerald: 'bg-emerald-500/5 ring-emerald-500/20 hover:bg-emerald-500/10 hover:ring-emerald-500/40 text-emerald-300',
@@ -312,6 +320,9 @@ await load()
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              <svg v-else-if="item.key === 'conversations'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
               <svg v-else-if="item.key === 'cases'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
                 <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />

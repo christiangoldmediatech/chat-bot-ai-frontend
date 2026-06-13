@@ -33,7 +33,8 @@
     "required": "Required",
     "optional": "(optional)",
     "noData": "No data",
-    "comingSoon": "Coming soon"
+    "comingSoon": "Coming soon",
+    "active": "Active"
   },
   "errors": {
     "generic": "Something went wrong. Try again.",
@@ -553,7 +554,14 @@
       "callbackUrl": "Callback URL",
       "verifyToken": "Verify token",
       "pasteInMeta": "Paste both in Meta App → WhatsApp → Configuration → Webhook.",
-      "systemPrompt": "System prompt"
+      "systemPrompt": "System prompt",
+      "systemPromptEmpty": "No system prompt configured yet.",
+      "systemPromptModalSubtitle": "Read-only view of the instructions the LLM receives on every turn. Edit it from the agent configuration page.",
+      "viewSystemPrompt": "View full prompt",
+      "editSystemPrompt": "Edit in agent configuration →",
+      "viewWebhookCredentials": "View webhook credentials",
+      "webhookModalTitle": "Webhook credentials",
+      "webhookModalSubtitle": "Copy the callback URL and verify token, then paste them in Meta App → WhatsApp → Configuration → Webhook."
     },
     "media": {
       "cardTitle": "Multimedia resources",
@@ -619,6 +627,11 @@
       },
       "providers": {
         "label": "Choose a provider",
+        "viewingLabel": "Currently viewing",
+        "notConfigured": "Not configured",
+        "changeCrm": "Change CRM",
+        "pickerTitle": "Switch CRM provider",
+        "pickerSubtitle": "Pick a provider to view its panel. Switching here does not change which CRM receives leads — set that with the primary selector.",
         "customWebhook": {
           "label": "Custom webhook",
           "description": "Send leads to any CRM via HTTP request templated by you."
@@ -829,8 +842,29 @@
       "deleteConfirmMessage": "\"{name}\" will be removed from the bot's knowledge base. The bot will stop using it as context in future replies. This action cannot be undone."
     },
     "calendar": {
+      "cardTitle": "Google Calendar",
+      "cardDescription": "Connect an account so the bot can schedule meetings.",
+      "fieldAccount": "Account",
+      "fieldCalendar": "Calendar",
+      "fieldTimezone": "Time zone",
+      "fieldWorkingHours": "Working hours",
+      "fieldDefaultDuration": "Default duration",
+      "minutesShort": "min",
+      "emptyTitle": "No account connected",
+      "emptyBody": "Connect a Google account so the bot can read availability and book meetings.",
+      "connect": "Connect Google Calendar",
+      "connecting": "Opening…",
+      "consentHint": "Google's consent screen will open in a new tab. When you come back, click Reload.",
+      "disconnect": "Disconnect",
+      "disconnectConfirmTitle": "Disconnect Google Calendar?",
+      "disconnectConfirmMessage": "The bot will stop reading availability and booking meetings until reconnected. You can reconnect at any time.",
+      "disconnectConfirmAction": "Disconnect",
       "escalationTitle": "Escalate to advisor",
       "escalationSubtitle": "Advisor contact info and when the bot should follow up if the case stays pending.",
+      "escalationOpenButton": "Configure escalation",
+      "escalationModalSubtitle": "These settings only take effect for case-escalation tools. The email uses the same Google account as the calendar.",
+      "escalationConfiguredHint": "{email} · {hours}h follow-up",
+      "escalationNotConfigured": "Not configured",
       "saved": "Saved ✓",
       "advisorEmail": "Advisor email",
       "advisorEmailHelp": "When the bot escalates, this address receives the notification. Leave empty to disable escalation.",
@@ -1027,6 +1061,7 @@
     },
     "detail": {
       "back": "← Back to conversations",
+      "actionsTitle": "Actions",
       "takeOver": "Take over (HUMAN)",
       "handBack": "Hand back to bot",
       "close": "Close",
@@ -1038,6 +1073,11 @@
       "composerNote": "The message is stored and kept in the history. Outbound delivery to WhatsApp from the agent side is not wired up in the backend yet — confirm with the customer through another channel in the meantime.",
       "closedNote": "Conversation closed. It automatically returns to BOT status when the customer sends a new message.",
       "botActiveNote": "The bot is responding. Take over the conversation to reply as an agent."
+    },
+    "phone": {
+      "statusBot": "bot active",
+      "statusHuman": "human agent",
+      "statusClosed": "closed"
     }
   },
   "superadmin": {
@@ -1198,6 +1238,7 @@
         "users": "Users",
         "navCases": "Cases",
         "navCustomers": "Customers",
+        "navConversations": "Conversations",
         "navMeetings": "Meetings",
         "navBilling": "Billing"
       },
@@ -1211,6 +1252,7 @@
         "title": "Sections",
         "subtitle": "Jump to a specific area of this tenant.",
         "customersHint": "Browse contacts across all bots",
+        "conversationsHint": "Read-only chats from every bot",
         "casesHint": "Escalations and human-handover",
         "meetingsHint": "Bookings made through bots",
         "billingHint": "Cycle, payments and deactivation"
@@ -1274,6 +1316,13 @@
       "back": "← Back to company",
       "title": "Cases",
       "subtitle": "Cases escalated within this company."
+    },
+    "companyConversations": {
+      "backToCompany": "← Back to company",
+      "title": "Conversations",
+      "subtitle": "All conversations across this company's bots.",
+      "readOnlyBadge": "Read-only",
+      "readOnlyNote": "Super admins observe conversations but cannot take over, close, or send messages on behalf of the tenant."
     },
     "companyMeetings": {
       "back": "← Back to company",

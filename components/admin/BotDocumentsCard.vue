@@ -193,13 +193,17 @@ onMounted(() => {
       {{ error }}
     </p>
 
-    <div class="mt-3 flex flex-wrap items-center gap-3">
+    <div class="mt-3 flex flex-wrap items-center gap-2">
       <label
-        class="inline-flex items-center gap-2 rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800"
+        class="inline-flex items-center gap-1.5 rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800 shadow-glass transition"
         :class="(uploading || atLimit) ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'"
         :aria-disabled="uploading || atLimit"
         :title="atLimit ? $t('admin.documents.limitReached', { max: maxDocuments }) : undefined"
       >
+        <SpinnerInline v-if="uploading" class="!size-4" />
+        <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+          <path d="M12 5v14" /><path d="M5 12h14" />
+        </svg>
         <span>{{ uploading ? $t('common.uploading') : items.length === 0 ? $t('admin.documents.uploadButton') : $t('admin.documents.addAnotherButton') }}</span>
         <input
           ref="fileInput"
@@ -210,64 +214,122 @@ onMounted(() => {
           @change="onFileChange"
         >
       </label>
-      <span v-if="maxDocuments !== null" class="text-xs text-slate-500">
-        {{ $t('admin.documents.countOfMax', { count: items.length, max: maxDocuments }) }}
+
+      <!-- Count pill -->
+      <span
+        class="inline-flex items-center gap-1 rounded-full bg-slate-100 ring-1 ring-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-600"
+      >
+        <template v-if="maxDocuments !== null">
+          {{ $t('admin.documents.countOfMax', { count: items.length, max: maxDocuments }) }}
+        </template>
+        <template v-else>
+          {{ $t('admin.documents.countOnly', { count: items.length }) }}
+        </template>
       </span>
-      <span v-else class="text-xs text-slate-500">
-        {{ $t('admin.documents.countOnly', { count: items.length }) }}
-      </span>
-      <span v-if="atLimit && maxDocuments !== null" class="text-xs text-amber-700">
+
+      <span
+        v-if="atLimit && maxDocuments !== null"
+        class="inline-flex items-center gap-1 rounded-full bg-amber-50 ring-1 ring-amber-200 px-2.5 py-1 text-[11px] font-medium text-amber-700"
+      >
         {{ $t('admin.documents.limitReached', { max: maxDocuments }) }}
       </span>
-      <span v-else-if="items.length > 0" class="text-xs text-slate-500">
+      <span
+        v-else-if="items.length > 0"
+        class="text-[11px] text-slate-500 ml-auto"
+      >
         {{ $t('admin.documents.moreEqualsBetter') }}
       </span>
     </div>
 
-    <SpinnerInline v-if="loading" class="mt-4" />
+    <SpinnerInline v-if="loading" class="mt-5" />
 
-    <p
+    <!-- Empty state matching the Media card aesthetic -->
+    <div
       v-else-if="items.length === 0"
-      class="mt-4 text-sm text-slate-500"
+      class="mt-5 rounded-2xl bg-slate-50/80 ring-1 ring-slate-200/70 p-6 text-center"
     >
-      {{ $t('admin.documents.noDocuments') }}
-    </p>
+      <div class="mx-auto flex size-10 items-center justify-center rounded-xl bg-white ring-1 ring-slate-200">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-amber-600" aria-hidden="true">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+        </svg>
+      </div>
+      <p class="mt-3 text-sm font-medium text-slate-700">{{ $t('admin.documents.noDocuments') }}</p>
+      <p class="mt-1 text-xs text-slate-500">{{ $t('admin.documents.cardDescription') }}</p>
+    </div>
 
-    <ul v-else class="mt-4 divide-y divide-slate-100">
+    <ul v-else class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
       <li
         v-for="d in items"
         :key="d.id"
-        class="flex items-center justify-between py-2 gap-3"
+        class="group rounded-xl bg-white/90 ring-1 ring-slate-200/70 p-3 flex items-start gap-3 hover:ring-slate-300 transition"
       >
-        <div class="min-w-0">
-          <div class="text-sm font-medium text-slate-900 truncate">{{ d.fileName }}</div>
-          <div class="text-xs text-slate-500">
+        <!-- Document icon tile -->
+        <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-amber-50 ring-1 ring-amber-100 text-amber-600">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="8" y1="13" x2="16" y2="13" />
+            <line x1="8" y1="17" x2="13" y2="17" />
+          </svg>
+        </div>
+
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-sm font-medium text-slate-900 truncate">{{ d.fileName }}</span>
+            <span
+              class="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
+              :class="statusClass(d.status)"
+            >
+              <span
+                class="size-1.5 rounded-full"
+                :class="{
+                  'bg-blue-500 animate-pulse': d.status === 'PROCESSING',
+                  'bg-success-500': d.status === 'READY',
+                  'bg-danger-500': d.status === 'ERROR',
+                }"
+              />
+              {{ d.status }}
+            </span>
+          </div>
+          <p class="mt-1 text-[11px] text-slate-500">
             {{ d.fileType }} · {{ new Date(d.createdAt).toLocaleString() }}
             <span v-if="typeof d.chunkCount === 'number'"> · {{ d.chunkCount }} {{ $t('admin.documents.chunksLabel') }}</span>
-          </div>
+          </p>
         </div>
-        <div class="flex items-center gap-3">
-          <span
-            class="inline-block rounded-full border px-2 py-0.5 text-xs font-medium"
-            :class="statusClass(d.status)"
-          >
-            {{ d.status }}
-          </span>
+
+        <!-- Icon-only actions -->
+        <div class="flex items-center gap-1 shrink-0">
           <button
             type="button"
-            class="text-xs text-slate-600 hover:text-slate-900 disabled:opacity-50"
+            class="inline-flex size-7 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 disabled:opacity-50 transition"
             :disabled="fetchingContent === d.id"
+            :title="fetchingContent === d.id ? $t('common.loading') : $t('admin.documents.view')"
+            :aria-label="$t('admin.documents.view')"
             @click="onView(d)"
           >
-            {{ fetchingContent === d.id ? $t('common.loading') : $t('admin.documents.view') }}
+            <SpinnerInline v-if="fetchingContent === d.id" class="!size-3.5" />
+            <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
           </button>
           <button
             type="button"
-            class="text-xs text-danger-600 hover:text-danger-700 disabled:opacity-50"
+            class="inline-flex size-7 items-center justify-center rounded-lg text-slate-500 hover:bg-danger-50 hover:text-danger-600 disabled:opacity-50 transition"
             :disabled="removing === d.id"
+            :title="removing === d.id ? $t('common.deleting') : $t('common.delete')"
+            :aria-label="$t('common.delete')"
             @click="askRemove(d)"
           >
-            {{ removing === d.id ? $t('common.deleting') : $t('common.delete') }}
+            <SpinnerInline v-if="removing === d.id" class="!size-3.5" />
+            <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+              <path d="M10 11v6" />
+              <path d="M14 11v6" />
+              <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />
+            </svg>
           </button>
         </div>
       </li>

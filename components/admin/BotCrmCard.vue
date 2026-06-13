@@ -78,6 +78,38 @@ const primaryProvider = ref<CrmPrimaryProvider | null>(null)
 const primarySaving = ref(false)
 const primarySaveError = ref<string | null>(null)
 
+// Provider picker modal. Once a tenant has any active CRM, the card collapses
+// the four-provider grid into a single "currently configured" pill and a
+// "Change CRM" button. The grid only re-appears inline when there are no
+// active integrations (so the user can start configuring one) or inside this
+// modal when they explicitly ask to switch.
+const pickerOpen = ref(false)
+
+function providerLabel(provider: IntegrationProvider): string {
+  switch (provider) {
+    case 'CUSTOM_WEBHOOK':
+      return t('admin.crm.providers.customWebhook.label')
+    case 'HUBSPOT':
+      return t('admin.crm.providers.hubspot.label')
+    case 'SALESFORCE':
+      return t('admin.crm.providers.salesforce.label')
+    case 'ZOHO_CRM':
+      return t('admin.crm.providers.zohoCrm.label')
+    default:
+      // GOOGLE_CALENDAR is in the type but never appears on the CRM card.
+      return provider
+  }
+}
+
+function hasIntegrationFor(provider: IntegrationProvider): boolean {
+  return integrations.value.some((i) => i.provider === provider)
+}
+
+function selectProvider(provider: IntegrationProvider): void {
+  selectedProvider.value = provider
+  pickerOpen.value = false
+}
+
 const isPremium = computed(() => props.plan === 'PREMIUM')
 
 const customWebhookIntegration = computed<CrmIntegration | null>(() => {
@@ -628,33 +660,145 @@ onMounted(() => {
 
     <!-- Premium content -->
     <template v-else>
-      <!-- Provider selector -->
+      <!--
+        Provider area. Two modes:
+          A) No active integration → render the full 4-card grid inline so
+             the user can pick one to start.
+          B) At least one active integration → render a compact summary
+             ("Currently configured: HubSpot") + a "Change CRM" button.
+             The 4-card grid moves inside the picker modal, opened on demand.
+      -->
       <div class="mt-6">
-        <p class="text-xs font-semibold text-slate-600 mb-2">{{ $t('admin.crm.providers.label') }}</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-          <button
-            type="button"
-            :class="selectedProvider === 'CUSTOM_WEBHOOK' ? 'border-violet-400 bg-violet-50' : 'border-slate-200 hover:border-slate-300 bg-white'"
-            class="text-left rounded-xl border p-3 transition"
-            @click="selectedProvider = 'CUSTOM_WEBHOOK'"
-          >
-            <div class="flex items-center justify-between gap-1">
+        <template v-if="activeIntegrations.length === 0">
+          <p class="text-xs font-semibold text-slate-600 mb-2">{{ $t('admin.crm.providers.label') }}</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <button
+              type="button"
+              :class="selectedProvider === 'CUSTOM_WEBHOOK' ? 'border-violet-400 bg-violet-50' : 'border-slate-200 hover:border-slate-300 bg-white'"
+              class="text-left rounded-xl border p-3 transition"
+              @click="selectedProvider = 'CUSTOM_WEBHOOK'"
+            >
               <span class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.providers.customWebhook.label') }}</span>
+              <p class="text-xs text-slate-500 mt-1">{{ $t('admin.crm.providers.customWebhook.description') }}</p>
+            </button>
+            <button
+              type="button"
+              :class="selectedProvider === 'HUBSPOT' ? 'border-orange-400 bg-orange-50' : 'border-slate-200 hover:border-slate-300 bg-white'"
+              class="text-left rounded-xl border p-3 transition"
+              @click="selectedProvider = 'HUBSPOT'"
+            >
+              <span class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.providers.hubspot.label') }}</span>
+              <p class="text-xs text-slate-500 mt-1">{{ $t('admin.crm.providers.hubspot.description') }}</p>
+            </button>
+            <button
+              type="button"
+              :class="selectedProvider === 'SALESFORCE' ? 'border-sky-400 bg-sky-50' : 'border-slate-200 hover:border-slate-300 bg-white'"
+              class="text-left rounded-xl border p-3 transition"
+              @click="selectedProvider = 'SALESFORCE'"
+            >
+              <span class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.providers.salesforce.label') }}</span>
+              <p class="text-xs text-slate-500 mt-1">{{ $t('admin.crm.providers.salesforce.description') }}</p>
+            </button>
+            <button
+              type="button"
+              :class="selectedProvider === 'ZOHO_CRM' ? 'border-red-400 bg-red-50' : 'border-slate-200 hover:border-slate-300 bg-white'"
+              class="text-left rounded-xl border p-3 transition"
+              @click="selectedProvider = 'ZOHO_CRM'"
+            >
+              <span class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.providers.zohoCrm.label') }}</span>
+              <p class="text-xs text-slate-500 mt-1">{{ $t('admin.crm.providers.zohoCrm.description') }}</p>
+            </button>
+          </div>
+        </template>
+
+        <!-- Compact summary when at least one CRM is configured -->
+        <div
+          v-else
+          class="rounded-xl bg-white/80 ring-1 ring-slate-200/70 p-3 flex items-center justify-between gap-3 flex-wrap"
+        >
+          <div class="min-w-0">
+            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+              {{ $t('admin.crm.providers.viewingLabel') }}
+            </p>
+            <div class="mt-1 flex items-center gap-2 flex-wrap">
+              <span class="text-sm font-semibold text-slate-900">
+                {{ providerLabel(selectedProvider) }}
+              </span>
               <span
-                v-if="effectivePrimary === 'CUSTOM_WEBHOOK'"
-                class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-violet-100 text-violet-700 ring-1 ring-violet-200"
+                v-if="hasIntegrationFor(selectedProvider)"
+                class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200"
+              >
+                <span class="size-1.5 rounded-full bg-emerald-500" />
+                {{ $t('admin.crm.status.connected') }}
+              </span>
+              <span
+                v-else
+                class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-slate-100 text-slate-600 ring-1 ring-slate-200"
+              >
+                {{ $t('admin.crm.providers.notConfigured') }}
+              </span>
+              <span
+                v-if="effectivePrimary === selectedProvider"
+                class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-violet-100 text-violet-700 ring-1 ring-violet-200"
               >
                 {{ $t('admin.crm.primary.primaryBadge') }}
               </span>
             </div>
+          </div>
+          <button
+            type="button"
+            class="shrink-0 inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition"
+            @click="pickerOpen = true"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
+              <polyline points="23 4 23 10 17 10" />
+              <polyline points="1 20 1 14 7 14" />
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+            </svg>
+            {{ $t('admin.crm.providers.changeCrm') }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Picker modal (only used when at least one CRM is configured) -->
+      <Modal
+        :open="pickerOpen"
+        :title="$t('admin.crm.providers.pickerTitle')"
+        :subtitle="$t('admin.crm.providers.pickerSubtitle')"
+        size="lg"
+        @close="pickerOpen = false"
+      >
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <button
+            type="button"
+            :class="selectedProvider === 'CUSTOM_WEBHOOK' ? 'border-violet-400 bg-violet-50' : 'border-slate-200 hover:border-slate-300 bg-white'"
+            class="text-left rounded-xl border p-3 transition"
+            @click="selectProvider('CUSTOM_WEBHOOK')"
+          >
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.providers.customWebhook.label') }}</span>
+              <div class="flex gap-1">
+                <span
+                  v-if="effectivePrimary === 'CUSTOM_WEBHOOK'"
+                  class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-violet-100 text-violet-700 ring-1 ring-violet-200"
+                >
+                  {{ $t('admin.crm.primary.primaryBadge') }}
+                </span>
+                <span
+                  v-if="hasIntegration"
+                  class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200"
+                >
+                  {{ $t('admin.crm.status.connected') }}
+                </span>
+              </div>
+            </div>
             <p class="text-xs text-slate-500 mt-1">{{ $t('admin.crm.providers.customWebhook.description') }}</p>
           </button>
-
           <button
             type="button"
             :class="selectedProvider === 'HUBSPOT' ? 'border-orange-400 bg-orange-50' : 'border-slate-200 hover:border-slate-300 bg-white'"
             class="text-left rounded-xl border p-3 transition"
-            @click="selectedProvider = 'HUBSPOT'"
+            @click="selectProvider('HUBSPOT')"
           >
             <div class="flex items-center justify-between gap-1">
               <span class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.providers.hubspot.label') }}</span>
@@ -675,12 +819,11 @@ onMounted(() => {
             </div>
             <p class="text-xs text-slate-500 mt-1">{{ $t('admin.crm.providers.hubspot.description') }}</p>
           </button>
-
           <button
             type="button"
             :class="selectedProvider === 'SALESFORCE' ? 'border-sky-400 bg-sky-50' : 'border-slate-200 hover:border-slate-300 bg-white'"
             class="text-left rounded-xl border p-3 transition"
-            @click="selectedProvider = 'SALESFORCE'"
+            @click="selectProvider('SALESFORCE')"
           >
             <div class="flex items-center justify-between gap-1">
               <span class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.providers.salesforce.label') }}</span>
@@ -701,12 +844,11 @@ onMounted(() => {
             </div>
             <p class="text-xs text-slate-500 mt-1">{{ $t('admin.crm.providers.salesforce.description') }}</p>
           </button>
-
           <button
             type="button"
             :class="selectedProvider === 'ZOHO_CRM' ? 'border-red-400 bg-red-50' : 'border-slate-200 hover:border-slate-300 bg-white'"
             class="text-left rounded-xl border p-3 transition"
-            @click="selectedProvider = 'ZOHO_CRM'"
+            @click="selectProvider('ZOHO_CRM')"
           >
             <div class="flex items-center justify-between gap-1">
               <span class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.providers.zohoCrm.label') }}</span>
@@ -728,7 +870,7 @@ onMounted(() => {
             <p class="text-xs text-slate-500 mt-1">{{ $t('admin.crm.providers.zohoCrm.description') }}</p>
           </button>
         </div>
-      </div>
+      </Modal>
 
       <!-- Primary provider selector — only when 2+ active integrations -->
       <div
