@@ -1514,5 +1514,9 @@
         "body": "Para consultas sobre estas Condiciones escríbenos a info{'@'}kaibots.com."
       }
     }
+  },
+  "security": {
+    "warn1": "Actualmente solo puedo ayudarte con información relacionada con nuestro negocio y servicios.",
+    "warn2": "Por el momento únicamente puedo responder consultas relacionadas con nuestros productos o servicios."
   }
 }

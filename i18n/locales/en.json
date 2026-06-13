@@ -1514,5 +1514,9 @@
         "body": "For questions about these Terms write to info{'@'}kaibots.com."
       }
     }
+  },
+  "security": {
+    "warn1": "I can currently only help you with information about our business and services.",
+    "warn2": "For now, I can only answer questions about our products or services."
   }
 }
