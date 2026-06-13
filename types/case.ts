@@ -15,6 +15,10 @@ export interface Case {
   resolvedBy: CaseResolvedBy | null
   advisorEmail: string
   gmailMessageId: string | null
+  /** CRM lead id (HubSpot/Salesforce/Zoho/custom) created at escalation, if any. */
+  crmLeadId: string | null
+  /** Direct deep-link to the CRM lead, when the provider supports it. */
+  crmLeadUrl: string | null
   followupSentAt: string | null
   followupCount: number
   createdAt: string

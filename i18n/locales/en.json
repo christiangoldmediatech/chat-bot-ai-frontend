@@ -776,6 +776,14 @@
         "disconnecting": "Disconnecting...",
         "confirmDisconnect": "Disconnect Zoho? Existing leads stay in your CRM; future pushes stop until you reconnect.",
         "reauthorizeNotice": "If you reconnect later, revoke this app first at your Zoho account settings — otherwise Zoho will not return a new refresh token."
+      },
+      "primary": {
+        "title": "Primary destination",
+        "description": "When multiple CRMs are connected, choose which one receives the lead at escalation. Otherwise the most recently updated wins.",
+        "autoOption": "Auto (most recent)",
+        "primaryBadge": "Primary",
+        "saving": "Saving...",
+        "saveError": "Could not update the primary provider."
       }
     },
     "chat": {
@@ -863,7 +871,8 @@
       "resolution": "Resolution:",
       "bot": "Bot:",
       "created": "Created:",
-      "resolved": "Resolved:"
+      "resolved": "Resolved:",
+      "crmBadge": "View in CRM"
     },
     "action": {
       "attend": "Attend",

@@ -72,6 +72,12 @@ const zohoConnectError = ref<string | null>(null)
 const zohoCallbackBanner = ref<{ kind: 'success' | 'error'; message: string } | null>(null)
 const zohoRegion = ref<ZohoRegion>('us')
 
+// Primary provider selector
+type CrmPrimaryProvider = 'SALESFORCE' | 'ZOHO_CRM' | 'HUBSPOT' | 'CUSTOM_WEBHOOK'
+const primaryProvider = ref<CrmPrimaryProvider | null>(null)
+const primarySaving = ref(false)
+const primarySaveError = ref<string | null>(null)
+
 const isPremium = computed(() => props.plan === 'PREMIUM')
 
 const customWebhookIntegration = computed<CrmIntegration | null>(() => {
@@ -94,6 +100,23 @@ const hasIntegration = computed(() => customWebhookIntegration.value !== null)
 const hasHubSpot = computed(() => hubspotIntegration.value !== null)
 const hasSalesforce = computed(() => salesforceIntegration.value !== null)
 const hasZoho = computed(() => zohoIntegration.value !== null)
+
+/** Active integrations only — used to decide whether to show the primary selector. */
+const activeIntegrations = computed(() => integrations.value.filter((i) => i.isActive))
+const showPrimarySelector = computed(() => activeIntegrations.value.length >= 2)
+/** Effective primary used in the chips (badge "Primary"): user choice if it
+ *  matches an active integration; otherwise the most recently updated active. */
+const effectivePrimary = computed<CrmPrimaryProvider | null>(() => {
+  if (primaryProvider.value) {
+    const found = activeIntegrations.value.find((i) => i.provider === primaryProvider.value)
+    if (found) return primaryProvider.value
+  }
+  if (activeIntegrations.value.length === 0) return null
+  const sorted = [...activeIntegrations.value].sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+  )
+  return sorted[0].provider as CrmPrimaryProvider
+})
 
 const submitLabel = computed(() =>
   hasIntegration.value
@@ -184,26 +207,42 @@ async function load(): Promise<void> {
   loading.value = true
   loadError.value = null
   try {
-    integrations.value = await crm.list(props.botId)
+    const [list, primary] = await Promise.all([
+      crm.list(props.botId),
+      crm.getPrimary(props.botId).catch(() => ({ provider: null })),
+    ])
+    integrations.value = list
+    primaryProvider.value = (primary.provider as CrmPrimaryProvider | null) ?? null
     loadFormFrom(customWebhookIntegration.value)
     // Auto-select tab:
     //   1. If the URL says we just came back from an OAuth callback, prefer
     //      the provider that triggered it — that's what the user expects
     //      to see right after pressing "Connect".
-    //   2. Otherwise pick the integration most recently updated (so the
-    //      last one the user touched is on top).
+    //   2. Otherwise, prefer the effective primary so the test-push button
+    //      on screen matches the CRM that will actually receive leads.
+    //   3. Fall back to the integration most recently updated.
     if (callbackProvider.value) {
       selectedProvider.value = callbackProvider.value
       if (callbackProvider.value === 'SALESFORCE' && salesforceIntegration.value) {
         salesforceSandbox.value = salesforceIntegration.value.isSandbox
       }
-    } else if (integrations.value.length > 0) {
-      const mostRecent = [...integrations.value].sort(
-        (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-      )[0]
-      selectedProvider.value = mostRecent.provider
-      if (mostRecent.provider === 'SALESFORCE') {
-        salesforceSandbox.value = mostRecent.isSandbox
+    } else {
+      const primaryIntegration = effectivePrimary.value
+        ? integrations.value.find((i) => i.provider === effectivePrimary.value && i.isActive)
+        : null
+      if (primaryIntegration) {
+        selectedProvider.value = primaryIntegration.provider
+        if (primaryIntegration.provider === 'SALESFORCE') {
+          salesforceSandbox.value = primaryIntegration.isSandbox
+        }
+      } else if (integrations.value.length > 0) {
+        const mostRecent = [...integrations.value].sort(
+          (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+        )[0]
+        selectedProvider.value = mostRecent.provider
+        if (mostRecent.provider === 'SALESFORCE') {
+          salesforceSandbox.value = mostRecent.isSandbox
+        }
       }
     }
     // Pre-seed Zoho region from existing integration's apiDomain, if any.
@@ -221,6 +260,24 @@ async function load(): Promise<void> {
 watch(selectedProvider, () => {
   testResult.value = null
 })
+
+async function onChangePrimary(event: Event): Promise<void> {
+  const target = event.target as HTMLSelectElement
+  const raw = target.value
+  const next = raw === '' ? null : (raw as CrmPrimaryProvider)
+  primarySaving.value = true
+  primarySaveError.value = null
+  try {
+    await crm.setPrimary(props.botId, next)
+    primaryProvider.value = next
+  } catch (err) {
+    primarySaveError.value = (err as ApiError).message
+    // revert UI
+    target.value = primaryProvider.value ?? ''
+  } finally {
+    primarySaving.value = false
+  }
+}
 
 function parseJsonObject(text: string, fieldKey: string): Record<string, unknown> | null {
   const trimmed = text.trim()
@@ -581,8 +638,14 @@ onMounted(() => {
             class="text-left rounded-xl border p-3 transition"
             @click="selectedProvider = 'CUSTOM_WEBHOOK'"
           >
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between gap-1">
               <span class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.providers.customWebhook.label') }}</span>
+              <span
+                v-if="effectivePrimary === 'CUSTOM_WEBHOOK'"
+                class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-violet-100 text-violet-700 ring-1 ring-violet-200"
+              >
+                {{ $t('admin.crm.primary.primaryBadge') }}
+              </span>
             </div>
             <p class="text-xs text-slate-500 mt-1">{{ $t('admin.crm.providers.customWebhook.description') }}</p>
           </button>
@@ -593,14 +656,22 @@ onMounted(() => {
             class="text-left rounded-xl border p-3 transition"
             @click="selectedProvider = 'HUBSPOT'"
           >
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between gap-1">
               <span class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.providers.hubspot.label') }}</span>
-              <span
-                v-if="hasHubSpot"
-                class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200"
-              >
-                {{ $t('admin.crm.status.connected') }}
-              </span>
+              <div class="flex gap-1">
+                <span
+                  v-if="effectivePrimary === 'HUBSPOT'"
+                  class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-violet-100 text-violet-700 ring-1 ring-violet-200"
+                >
+                  {{ $t('admin.crm.primary.primaryBadge') }}
+                </span>
+                <span
+                  v-if="hasHubSpot"
+                  class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200"
+                >
+                  {{ $t('admin.crm.status.connected') }}
+                </span>
+              </div>
             </div>
             <p class="text-xs text-slate-500 mt-1">{{ $t('admin.crm.providers.hubspot.description') }}</p>
           </button>
@@ -611,14 +682,22 @@ onMounted(() => {
             class="text-left rounded-xl border p-3 transition"
             @click="selectedProvider = 'SALESFORCE'"
           >
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between gap-1">
               <span class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.providers.salesforce.label') }}</span>
-              <span
-                v-if="hasSalesforce"
-                class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200"
-              >
-                {{ $t('admin.crm.status.connected') }}
-              </span>
+              <div class="flex gap-1">
+                <span
+                  v-if="effectivePrimary === 'SALESFORCE'"
+                  class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-violet-100 text-violet-700 ring-1 ring-violet-200"
+                >
+                  {{ $t('admin.crm.primary.primaryBadge') }}
+                </span>
+                <span
+                  v-if="hasSalesforce"
+                  class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200"
+                >
+                  {{ $t('admin.crm.status.connected') }}
+                </span>
+              </div>
             </div>
             <p class="text-xs text-slate-500 mt-1">{{ $t('admin.crm.providers.salesforce.description') }}</p>
           </button>
@@ -629,18 +708,58 @@ onMounted(() => {
             class="text-left rounded-xl border p-3 transition"
             @click="selectedProvider = 'ZOHO_CRM'"
           >
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between gap-1">
               <span class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.providers.zohoCrm.label') }}</span>
-              <span
-                v-if="hasZoho"
-                class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200"
-              >
-                {{ $t('admin.crm.status.connected') }}
-              </span>
+              <div class="flex gap-1">
+                <span
+                  v-if="effectivePrimary === 'ZOHO_CRM'"
+                  class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-violet-100 text-violet-700 ring-1 ring-violet-200"
+                >
+                  {{ $t('admin.crm.primary.primaryBadge') }}
+                </span>
+                <span
+                  v-if="hasZoho"
+                  class="text-[10px] font-semibold uppercase tracking-wide rounded-full px-2 py-0.5 bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200"
+                >
+                  {{ $t('admin.crm.status.connected') }}
+                </span>
+              </div>
             </div>
             <p class="text-xs text-slate-500 mt-1">{{ $t('admin.crm.providers.zohoCrm.description') }}</p>
           </button>
         </div>
+      </div>
+
+      <!-- Primary provider selector — only when 2+ active integrations -->
+      <div
+        v-if="showPrimarySelector"
+        class="mt-5 rounded-xl border border-violet-200 bg-violet-50/50 p-4"
+      >
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <h3 class="text-sm font-semibold text-slate-900">{{ $t('admin.crm.primary.title') }}</h3>
+            <p class="text-xs text-slate-600 mt-1">{{ $t('admin.crm.primary.description') }}</p>
+          </div>
+          <select
+            :value="primaryProvider ?? ''"
+            :disabled="primarySaving"
+            class="shrink-0 rounded-lg border-slate-200 bg-white px-3 py-1.5 text-xs font-medium shadow-sm focus:ring-2 focus:ring-violet-400 focus:border-violet-400 disabled:opacity-60"
+            @change="onChangePrimary"
+          >
+            <option value="">{{ $t('admin.crm.primary.autoOption') }}</option>
+            <option v-if="hasHubSpot" value="HUBSPOT">{{ $t('admin.crm.providers.hubspot.label') }}</option>
+            <option v-if="hasSalesforce" value="SALESFORCE">{{ $t('admin.crm.providers.salesforce.label') }}</option>
+            <option v-if="hasZoho" value="ZOHO_CRM">{{ $t('admin.crm.providers.zohoCrm.label') }}</option>
+            <option v-if="hasIntegration" value="CUSTOM_WEBHOOK">{{ $t('admin.crm.providers.customWebhook.label') }}</option>
+          </select>
+        </div>
+        <p v-if="primarySaving" class="mt-2 text-[11px] text-slate-500">{{ $t('admin.crm.primary.saving') }}</p>
+        <p
+          v-if="primarySaveError"
+          class="mt-2 text-[11px] text-danger-700 bg-danger-50 ring-1 ring-danger-200 rounded-md px-2 py-1"
+        >
+          {{ primarySaveError }}
+        </p>
       </div>
 
       <!-- HubSpot OAuth panel -->

@@ -75,5 +75,18 @@ export function useCrmIntegration(tenantId?: string) {
         `${base(botId)}/zoho/oauth/start?region=${region}`,
       )
     },
+
+    /** Get the current primary CRM provider for the bot, or null when auto. */
+    getPrimary: (botId: string): Promise<{ provider: string | null }> => {
+      return api.get<{ provider: string | null }>(`${base(botId)}/primary`)
+    },
+
+    /** Set the primary CRM provider. Pass null to revert to auto. */
+    setPrimary: (
+      botId: string,
+      provider: 'SALESFORCE' | 'ZOHO_CRM' | 'HUBSPOT' | 'CUSTOM_WEBHOOK' | null,
+    ): Promise<{ provider: string | null }> => {
+      return api.patch<{ provider: string | null }>(`${base(botId)}/primary`, { provider })
+    },
   }
 }
