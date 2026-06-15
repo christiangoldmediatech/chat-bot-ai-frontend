@@ -1,6 +1,6 @@
 <script setup lang="ts">
 type Tone = 'default' | 'indigo' | 'emerald' | 'amber' | 'rose' | 'sky'
-type IconKey = 'bots' | 'conversations' | 'humans' | 'customers' | 'messages' | 'clock'
+type IconKey = 'bots' | 'conversations' | 'humans' | 'customers' | 'messages' | 'clock' | 'leads'
 
 const props = withDefaults(defineProps<{
   label: string
@@ -162,6 +162,9 @@ const palette = computed(() => toneClasses.value[props.tone])
           <circle cx="12" cy="12" r="10" />
           <polyline points="12 6 12 12 16 14" />
         </svg>
+        <svg v-else-if="icon === 'leads'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">
+          <polygon points="22 12 18 12 15 21 9 3 6 12 2 12" />
+        </svg>
       </div>
     </div>
   </NuxtLink>
@@ -214,6 +217,9 @@ const palette = computed(() => toneClasses.value[props.tone])
         <svg v-else-if="icon === 'clock'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">
           <circle cx="12" cy="12" r="10" />
           <polyline points="12 6 12 12 16 14" />
+        </svg>
+        <svg v-else-if="icon === 'leads'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">
+          <polygon points="22 12 18 12 15 21 9 3 6 12 2 12" />
         </svg>
       </div>
     </div>

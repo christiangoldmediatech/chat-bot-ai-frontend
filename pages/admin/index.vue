@@ -107,6 +107,42 @@ await load()
         />
       </div>
 
+      <!-- Commercial activity (leads) -->
+      <div class="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          :label="$t('admin.dashboard.stats.leadsTotal')"
+          :value="data.totalLeads"
+          :hint="$t('admin.dashboard.stats.leadsTotalHint')"
+          icon="leads"
+          tone="indigo"
+          to="/admin/leads"
+        />
+        <StatCard
+          :label="$t('admin.dashboard.stats.leadsNew')"
+          :value="data.newLeads"
+          :hint="$t('admin.dashboard.stats.leadsNewHint')"
+          icon="leads"
+          tone="sky"
+          to="/admin/leads"
+        />
+        <StatCard
+          :label="$t('admin.dashboard.stats.leadsQualified')"
+          :value="data.qualifiedLeads"
+          :hint="$t('admin.dashboard.stats.leadsQualifiedHint')"
+          icon="leads"
+          tone="amber"
+          to="/admin/leads"
+        />
+        <StatCard
+          :label="$t('admin.dashboard.stats.leadsWon')"
+          :value="data.wonLeads"
+          :hint="$t('admin.dashboard.stats.leadsWonHint')"
+          icon="leads"
+          tone="emerald"
+          to="/admin/leads"
+        />
+      </div>
+
       <!-- Recent conversations -->
       <section class="mt-10">
         <div class="flex items-end justify-between gap-3 flex-wrap">

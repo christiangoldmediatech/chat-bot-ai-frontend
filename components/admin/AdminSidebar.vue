@@ -8,6 +8,7 @@ const links = computed(() => [
   { to: '/admin/customers', label: t('nav.customers') },
   { to: '/admin/meetings', label: t('nav.meetings') },
   { to: '/admin/cases', label: t('nav.cases') },
+  { to: '/admin/leads', label: t('nav.leads') },
   { to: '/admin/profile', label: t('nav.myProfile') },
 ])
 
