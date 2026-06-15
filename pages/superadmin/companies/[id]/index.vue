@@ -136,6 +136,13 @@ const quickNav = computed(() => {
       tone: 'amber',
     },
     {
+      key: 'leads',
+      to: `${base}/leads`,
+      label: t('superadmin.companyDetail.sections.navLeads'),
+      hint: t('superadmin.companyDetail.quickNav.leadsHint'),
+      tone: 'rose',
+    },
+    {
       key: 'meetings',
       to: `${base}/meetings`,
       label: t('superadmin.companyDetail.sections.navMeetings'),
@@ -328,6 +335,9 @@ await load()
                 <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
                 <line x1="12" y1="9" x2="12" y2="13" />
                 <line x1="12" y1="17" x2="12" y2="17" />
+              </svg>
+              <svg v-else-if="item.key === 'leads'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                <polygon points="22 12 18 12 15 21 9 3 6 12 2 12" />
               </svg>
               <svg v-else-if="item.key === 'meetings'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />

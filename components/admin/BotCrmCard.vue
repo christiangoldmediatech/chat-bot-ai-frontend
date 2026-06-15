@@ -21,10 +21,35 @@ const props = defineProps<{
 
 const { t } = useI18n()
 const crm = useCrmIntegration(props.tenantId)
+const leads = useLeads(props.tenantId)
 
 const integrations = ref<CrmIntegration[]>([])
 const loading = ref(true)
 const loadError = ref<string | null>(null)
+
+// Per-bot lead backfill state — surfaced after the admin connects (or
+// reconnects) a CRM so historical NOT_CONFIGURED leads can be pushed in
+// one click.
+const backfilling = ref(false)
+const backfillResult = ref<string | null>(null)
+const backfillError = ref<string | null>(null)
+
+async function backfillLeads(): Promise<void> {
+  backfilling.value = true
+  backfillError.value = null
+  backfillResult.value = null
+  try {
+    const { enqueued } = await leads.backfillCrm(props.botId)
+    backfillResult.value = enqueued > 0
+      ? t('admin.crm.backfillResult', { n: enqueued })
+      : t('admin.crm.backfillEmpty')
+    setTimeout(() => { backfillResult.value = null }, 5000)
+  } catch (err) {
+    backfillError.value = (err as ApiError).message
+  } finally {
+    backfilling.value = false
+  }
+}
 
 const selectedProvider = ref<IntegrationProvider>('CUSTOM_WEBHOOK')
 
@@ -629,6 +654,42 @@ onMounted(() => {
     >
       {{ loadError }}
     </div>
+
+    <!-- Per-bot lead backfill action. Only surfaces when at least one CRM
+         integration is connected — backfilling makes no sense otherwise.
+         Useful right after first wiring a CRM, when there might be a
+         backlog of NOT_CONFIGURED leads from before the connection. -->
+    <div
+      v-else-if="activeIntegrations.length > 0"
+      class="mt-5 rounded-xl border border-violet-200 bg-violet-50/60 p-3 flex items-center justify-between gap-3 flex-wrap"
+    >
+      <div class="min-w-0">
+        <p class="text-xs font-semibold text-violet-900">{{ $t('admin.crm.backfillTitle') }}</p>
+        <p class="text-[11px] text-violet-800 mt-0.5">{{ $t('admin.crm.backfillDescription') }}</p>
+      </div>
+      <button
+        type="button"
+        :disabled="backfilling"
+        class="inline-flex items-center gap-1.5 rounded-lg bg-violet-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+        @click="backfillLeads"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" :class="{ 'animate-spin': backfilling }">
+          <polyline points="23 4 23 10 17 10" />
+          <polyline points="1 20 1 14 7 14" />
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10" />
+          <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14" />
+        </svg>
+        {{ backfilling ? $t('admin.crm.backfilling') : $t('admin.crm.backfillButton') }}
+      </button>
+    </div>
+    <p
+      v-if="backfillResult"
+      class="mt-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800"
+    >{{ backfillResult }}</p>
+    <p
+      v-if="backfillError"
+      class="mt-2 rounded-lg border border-danger-200 bg-danger-50 px-3 py-2 text-xs text-danger-700"
+    >{{ backfillError }}</p>
 
     <!-- Upsell when plan != PREMIUM -->
     <div

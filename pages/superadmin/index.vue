@@ -125,6 +125,41 @@ await load()
         </div>
       </section>
 
+      <!-- Commercial group (leads) -->
+      <section class="mt-6">
+        <h2 class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('superadmin.dashboard.groupCommercial') }}</h2>
+        <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <SuperadminStatCard
+            :label="$t('superadmin.dashboard.stat.leadsTotal')"
+            icon="leads"
+            tone="indigo"
+            :value="data.totalLeads"
+            :hint="$t('superadmin.dashboard.stat.leadsTotalHint')"
+          />
+          <SuperadminStatCard
+            :label="$t('superadmin.dashboard.stat.leadsNew')"
+            icon="leads"
+            tone="sky"
+            :value="data.newLeads"
+            :hint="$t('superadmin.dashboard.stat.leadsNewHint')"
+          />
+          <SuperadminStatCard
+            :label="$t('superadmin.dashboard.stat.leadsWon')"
+            icon="leads"
+            tone="emerald"
+            :value="data.wonLeads"
+            :hint="$t('superadmin.dashboard.stat.leadsWonHint')"
+          />
+          <SuperadminStatCard
+            :label="$t('superadmin.dashboard.stat.leadsCrmFailed')"
+            icon="leads"
+            tone="rose"
+            :value="data.failedCrmSyncs"
+            :hint="$t('superadmin.dashboard.stat.leadsCrmFailedHint')"
+          />
+        </div>
+      </section>
+
       <!-- Operations -->
       <section class="mt-8">
         <h2 class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('superadmin.dashboard.groupOperations') }}</h2>

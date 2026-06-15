@@ -1,11 +1,11 @@
 <script setup lang="ts">
-type Tone = 'default' | 'indigo' | 'emerald' | 'amber' | 'rose'
+type Tone = 'default' | 'indigo' | 'emerald' | 'amber' | 'rose' | 'sky'
 
 const props = withDefaults(defineProps<{
   label: string
   value: string | number
   hint?: string
-  icon?: 'companies' | 'users' | 'bots' | 'conversations' | 'documents'
+  icon?: 'companies' | 'users' | 'bots' | 'conversations' | 'documents' | 'leads'
   tone?: Tone
 }>(), {
   tone: 'default',
@@ -17,6 +17,7 @@ const toneClasses = computed<Record<Tone, { ring: string, bg: string, icon: stri
   emerald: { ring: 'ring-emerald-500/30', bg: 'bg-emerald-500/10', icon: 'text-emerald-300' },
   amber: { ring: 'ring-amber-500/30', bg: 'bg-amber-500/10', icon: 'text-amber-300' },
   rose: { ring: 'ring-rose-500/30', bg: 'bg-rose-500/10', icon: 'text-rose-300' },
+  sky: { ring: 'ring-sky-500/30', bg: 'bg-sky-500/10', icon: 'text-sky-300' },
 }))
 
 const palette = computed(() => toneClasses.value[props.tone])
@@ -60,6 +61,9 @@ const palette = computed(() => toneClasses.value[props.tone])
           <polyline points="14 2 14 8 20 8" />
           <line x1="8" y1="13" x2="16" y2="13" />
           <line x1="8" y1="17" x2="13" y2="17" />
+        </svg>
+        <svg v-else-if="icon === 'leads'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" :class="palette.icon" aria-hidden="true">
+          <polygon points="22 12 18 12 15 21 9 3 6 12 2 12" />
         </svg>
       </div>
     </div>

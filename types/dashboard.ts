@@ -9,6 +9,10 @@ export interface DashboardSummary {
   humanConversations: number
   customers: number
   documents: number
+  totalLeads: number
+  newLeads: number
+  qualifiedLeads: number
+  wonLeads: number
   recentConversations: Conversation[]
 }
 
@@ -51,5 +55,10 @@ export interface SuperadminDashboardSummary {
   activeBots: number
   totalConversations: number
   totalDocuments: number
+  totalLeads: number
+  newLeads: number
+  wonLeads: number
+  /** Leads whose latest CRM sync attempt is in FAILED state. */
+  failedCrmSyncs: number
   recentCompanies: SuperadminRecentCompany[]
 }

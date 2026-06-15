@@ -150,6 +150,7 @@
     "customers": "Customers",
     "meetings": "Meetings",
     "cases": "Cases",
+    "leads": "Leads",
     "company": "Company",
     "myCompany": "My company",
     "profile": "Profile",
@@ -173,7 +174,15 @@
         "humanHandled": "Handled by humans",
         "humanHandledHint": "HUMAN status",
         "customers": "Customers",
-        "customersHint": "Unique phone numbers"
+        "customersHint": "Unique phone numbers",
+        "leadsTotal": "Total leads",
+        "leadsTotalHint": "All commercial-intent contacts",
+        "leadsNew": "New leads",
+        "leadsNewHint": "Detected, not yet contacted",
+        "leadsQualified": "Qualified",
+        "leadsQualifiedHint": "Moved past first contact",
+        "leadsWon": "Won",
+        "leadsWonHint": "Closed deals"
       },
       "recentConversations": "Recent conversations",
       "recentConversationsHint": "Latest activity across all your bots.",
@@ -620,6 +629,12 @@
       "navChip": "CRM",
       "loading": "Loading...",
       "loadError": "Could not load the CRM configuration.",
+      "backfillTitle": "Push historical leads",
+      "backfillDescription": "Send every NOT_CONFIGURED lead from this bot to the connected CRM. Useful after first connecting (or reconnecting) the CRM.",
+      "backfillButton": "Backfill leads",
+      "backfilling": "Enqueuing…",
+      "backfillResult": "{n} sync job(s) enqueued. They'll move from PENDING → SYNCED or FAILED over the next few minutes.",
+      "backfillEmpty": "No leads needed backfilling — every lead is already synced or pending.",
       "upsell": {
         "title": "Premium feature",
         "description": "Connect your CRM (Salesforce, Zoho, HubSpot, or a custom webhook) to automatically receive a lead when a customer asks to talk to an advisor.",
@@ -939,6 +954,120 @@
       "groupResolved": "✓ Resolved ({n})"
     }
   },
+  "leads": {
+    "title": "Leads",
+    "subtitle": "Customers showing real commercial intent — asked about pricing, requested a demo, left contact data, or booked a meeting.",
+    "totalLabel": "Total leads",
+    "matchingLabel": "Matching",
+    "stat": {
+      "all": "All"
+    },
+    "status": {
+      "NEW": "New",
+      "CONTACTED": "Contacted",
+      "QUALIFIED": "Qualified",
+      "PROPOSAL_SENT": "Proposal sent",
+      "NEGOTIATION": "Negotiation",
+      "WON": "Won",
+      "LOST": "Lost"
+    },
+    "interest": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High"
+    },
+    "crmStatus": {
+      "NOT_CONFIGURED": "No CRM",
+      "PENDING": "Syncing…",
+      "SYNCED": "Synced",
+      "FAILED": "Sync failed"
+    },
+    "eventType": {
+      "CREATED": "Lead created",
+      "SIGNAL_PRICE_ASKED": "Asked about pricing",
+      "SIGNAL_DEMO_REQUESTED": "Requested a demo",
+      "SIGNAL_MEETING_REQUESTED": "Requested a meeting",
+      "SIGNAL_QUOTE_REQUESTED": "Requested a quote",
+      "SIGNAL_EMAIL_CAPTURED": "Email captured",
+      "SIGNAL_PHONE_CAPTURED": "Alternate phone captured",
+      "SIGNAL_HUMAN_REQUESTED": "Asked to talk to a human",
+      "SIGNAL_BOT_KEYWORD": "Business keyword",
+      "STATUS_CHANGED": "Status changed",
+      "CRM_SYNC_OK": "Synced to CRM",
+      "CRM_SYNC_FAIL": "CRM sync failed",
+      "MANUAL_NOTE": "Manual note"
+    },
+    "score": {
+      "tooltip": "Score {score} · {interest} interest"
+    },
+    "filter": {
+      "allBots": "All bots",
+      "allInterests": "All interest levels",
+      "searchPlaceholder": "Search by name, phone, email, or signal…"
+    },
+    "pagination": {
+      "summary": "Showing {from}–{to} of {total}",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page} of {total}"
+    },
+    "list": {
+      "empty": "No leads detected yet. They appear automatically as customers show commercial interest.",
+      "noMatches": "No leads match the current filters.",
+      "bot": "Bot:",
+      "created": "Created:",
+      "lastActivity": "Last activity:",
+      "crmBadge": "View in CRM",
+      "view": "Open",
+      "retrySync": "Retry sync",
+      "exportCsv": "Export CSV",
+      "exportingLabel": "Exporting…",
+      "backfillCrm": "Backfill CRM",
+      "backfillingLabel": "Backfilling…",
+      "backfillTooltip": "Push every NOT_CONFIGURED lead to the bot's connected CRM. Useful after connecting a CRM that was inactive when the leads were created."
+    },
+    "detail": {
+      "backToList": "Back to leads",
+      "openConversation": "Open conversation",
+      "editTitle": "Lead details",
+      "editSubtitle": "Update status, capture corrections, or add a note. Status changes and notes are logged on the timeline.",
+      "statusLabel": "Status",
+      "scoreLabel": "Score",
+      "nameLabel": "Customer name",
+      "namePlaceholder": "Not captured yet",
+      "emailLabel": "Customer email",
+      "emailPlaceholder": "Not captured yet",
+      "noteLabel": "Note",
+      "notePlaceholder": "Optional — logged as a manual note on the timeline.",
+      "saved": "Changes saved.",
+      "syncQueued": "CRM sync queued.",
+      "timelineTitle": "Activity timeline",
+      "timelineSubtitle": "Every detection signal, status change, note, and CRM sync result.",
+      "timelineEmpty": "No events yet.",
+      "factsTitle": "Facts",
+      "createdAt": "Created at",
+      "updatedAt": "Last updated",
+      "lastSignalAt": "Last signal at",
+      "lastSignalType": "Last signal",
+      "statusChangedAt": "Status changed at",
+      "crmTitle": "CRM sync",
+      "crmSubtitle": "External record automatically created/updated when the bot has a CRM connected.",
+      "crmProvider": "Provider",
+      "crmLeadId": "External ID",
+      "crmSyncedAt": "Last synced",
+      "crmLastError": "Last error",
+      "crmNotConfiguredHelp": "Connect a CRM on the bot to enable automatic Lead sync.",
+      "openInCrm": "Open in CRM",
+      "retrySync": "Retry sync",
+      "payloadTitle": "CRM payload",
+      "payloadSubtitle": "Exact JSON we would send to the CRM strategy. Refreshed automatically on every signal or update.",
+      "payloadShow": "Show",
+      "payloadHide": "Hide",
+      "payloadEmpty": "No payload computed yet — appears after the first signal or admin update.",
+      "payloadCollapsed": "Click \"Show\" to view the JSON.",
+      "payloadUpdatedAt": "Last refreshed:"
+    }
+  },
   "customers": {
     "title": "Customers",
     "subtitle": "Everyone who has messaged any of your bots, ordered by most recent activity.",
@@ -1081,6 +1210,38 @@
     }
   },
   "superadmin": {
+    "leads": {
+      "kicker": "Leads",
+      "title": "All leads",
+      "subtitle": "Every lead detected across every tenant. Filter by company, status, or interest.",
+      "totalLabel": "Showing",
+      "allCompanies": "All companies",
+      "allStatuses": "All statuses",
+      "allCrm": "Any CRM state",
+      "hasCrmYes": "Synced to CRM",
+      "hasCrmNo": "Not synced",
+      "backfillAll": "Backfill all CRMs",
+      "backfillTenant": "Backfill this company",
+      "backfillAllTooltip": "Push every NOT_CONFIGURED lead across every tenant to their respective CRMs.",
+      "backfillTenantTooltip": "Push every NOT_CONFIGURED lead of the selected company to its CRM.",
+      "backToAllLeads": "← Back to all leads",
+      "viewCompanyLeads": "View this company's leads",
+      "companyTitle": "Company leads",
+      "companySubtitle": "Every commercial-intent contact detected within this company's bots.",
+      "backToCompany": "← Back to company",
+      "backToCompanyLeads": "← Back to company leads",
+      "withCrm": "With CRM",
+      "editHint": "Status changes are logged in the timeline. Platform-admin edits are not attributed to a tenant user.",
+      "col": {
+        "customer": "Customer",
+        "company": "Company",
+        "bot": "Bot",
+        "status": "Status",
+        "score": "Score",
+        "crm": "CRM",
+        "created": "Created"
+      }
+    },
     "chrome": {
       "brandShort": "SA",
       "brandLabel": "Super Admin",
@@ -1109,6 +1270,7 @@
       "allCompanies": "All companies",
       "groupTenants": "Tenants",
       "groupActivity": "Activity",
+      "groupCommercial": "Commercial",
       "groupOperations": "Operations",
       "stat": {
         "companies": "Companies",
@@ -1120,7 +1282,15 @@
         "conversations": "Conversations",
         "conversationsHint": "Total messages exchanged",
         "documents": "Documents",
-        "documentsHint": "Knowledge base entries"
+        "documentsHint": "Knowledge base entries",
+        "leadsTotal": "Total leads",
+        "leadsTotalHint": "Across every tenant",
+        "leadsNew": "New leads",
+        "leadsNewHint": "Detected, not yet contacted",
+        "leadsWon": "Won",
+        "leadsWonHint": "Closed deals across the platform",
+        "leadsCrmFailed": "CRM sync failed",
+        "leadsCrmFailedHint": "Leads needing manual retry"
       },
       "recent": {
         "title": "Recent companies",
@@ -1237,6 +1407,7 @@
         "bots": "Bots",
         "users": "Users",
         "navCases": "Cases",
+        "navLeads": "Leads",
         "navCustomers": "Customers",
         "navConversations": "Conversations",
         "navMeetings": "Meetings",
@@ -1254,6 +1425,7 @@
         "customersHint": "Browse contacts across all bots",
         "conversationsHint": "Read-only chats from every bot",
         "casesHint": "Escalations and human-handover",
+        "leadsHint": "Commercial-intent contacts and CRM sync",
         "meetingsHint": "Bookings made through bots",
         "billingHint": "Cycle, payments and deactivation"
       },

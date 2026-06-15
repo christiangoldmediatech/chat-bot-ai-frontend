@@ -150,6 +150,7 @@
     "customers": "Clientes",
     "meetings": "Reuniones",
     "cases": "Casos",
+    "leads": "Leads",
     "company": "Empresa",
     "myCompany": "Mi empresa",
     "profile": "Perfil",
@@ -173,7 +174,15 @@
         "humanHandled": "Atendidas por humanos",
         "humanHandledHint": "Estado HUMAN",
         "customers": "Clientes",
-        "customersHint": "Números únicos"
+        "customersHint": "Números únicos",
+        "leadsTotal": "Total de leads",
+        "leadsTotalHint": "Todos los contactos con intención comercial",
+        "leadsNew": "Leads nuevos",
+        "leadsNewHint": "Detectados, sin contactar todavía",
+        "leadsQualified": "Calificados",
+        "leadsQualifiedHint": "Más allá del primer contacto",
+        "leadsWon": "Ganados",
+        "leadsWonHint": "Cerrados con éxito"
       },
       "recentConversations": "Conversaciones recientes",
       "recentConversationsHint": "Última actividad a través de todos tus bots.",
@@ -620,6 +629,12 @@
       "navChip": "CRM",
       "loading": "Cargando...",
       "loadError": "No se pudo cargar la configuración del CRM.",
+      "backfillTitle": "Empujar leads históricos",
+      "backfillDescription": "Envía todos los leads en estado NOT_CONFIGURED de este bot al CRM conectado. Útil después de conectar (o reconectar) el CRM.",
+      "backfillButton": "Sincronizar leads",
+      "backfilling": "Encolando…",
+      "backfillResult": "{n} sincronización(es) encolada(s). Pasarán de PENDING → SYNCED o FAILED en los próximos minutos.",
+      "backfillEmpty": "Ningún lead necesitaba sincronización — todos están ya sincronizados o pendientes.",
       "upsell": {
         "title": "Función Premium",
         "description": "Conecta tu CRM (Salesforce, Zoho, HubSpot o un webhook personalizado) para recibir automáticamente un lead cuando un cliente pida hablar con un asesor.",
@@ -939,6 +954,120 @@
       "groupResolved": "✓ Resueltas ({n})"
     }
   },
+  "leads": {
+    "title": "Leads",
+    "subtitle": "Clientes con intención comercial real — preguntaron precios, pidieron una demo, dejaron datos o agendaron una reunión.",
+    "totalLabel": "Total de leads",
+    "matchingLabel": "Coincidencias",
+    "stat": {
+      "all": "Todos"
+    },
+    "status": {
+      "NEW": "Nuevo",
+      "CONTACTED": "Contactado",
+      "QUALIFIED": "Calificado",
+      "PROPOSAL_SENT": "Propuesta enviada",
+      "NEGOTIATION": "Negociación",
+      "WON": "Ganado",
+      "LOST": "Perdido"
+    },
+    "interest": {
+      "LOW": "Bajo",
+      "MEDIUM": "Medio",
+      "HIGH": "Alto"
+    },
+    "crmStatus": {
+      "NOT_CONFIGURED": "Sin CRM",
+      "PENDING": "Sincronizando…",
+      "SYNCED": "Sincronizado",
+      "FAILED": "Sincronización fallida"
+    },
+    "eventType": {
+      "CREATED": "Lead creado",
+      "SIGNAL_PRICE_ASKED": "Preguntó por precios",
+      "SIGNAL_DEMO_REQUESTED": "Solicitó una demo",
+      "SIGNAL_MEETING_REQUESTED": "Solicitó una reunión",
+      "SIGNAL_QUOTE_REQUESTED": "Solicitó una cotización",
+      "SIGNAL_EMAIL_CAPTURED": "Correo capturado",
+      "SIGNAL_PHONE_CAPTURED": "Teléfono alternativo capturado",
+      "SIGNAL_HUMAN_REQUESTED": "Solicitó hablar con un humano",
+      "SIGNAL_BOT_KEYWORD": "Palabra clave del negocio",
+      "STATUS_CHANGED": "Cambio de estado",
+      "CRM_SYNC_OK": "Sincronizado al CRM",
+      "CRM_SYNC_FAIL": "Falló la sincronización al CRM",
+      "MANUAL_NOTE": "Nota manual"
+    },
+    "score": {
+      "tooltip": "Score {score} · interés {interest}"
+    },
+    "filter": {
+      "allBots": "Todos los bots",
+      "allInterests": "Todos los niveles",
+      "searchPlaceholder": "Buscar por nombre, teléfono, correo o señal…"
+    },
+    "pagination": {
+      "summary": "Mostrando {from}–{to} de {total}",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página {page} de {total}"
+    },
+    "list": {
+      "empty": "No se han detectado leads todavía. Aparecen automáticamente cuando un cliente muestra intención comercial.",
+      "noMatches": "Ningún lead coincide con los filtros aplicados.",
+      "bot": "Bot:",
+      "created": "Creado:",
+      "lastActivity": "Última actividad:",
+      "crmBadge": "Ver en CRM",
+      "view": "Abrir",
+      "retrySync": "Reintentar sincronización",
+      "exportCsv": "Exportar CSV",
+      "exportingLabel": "Exportando…",
+      "backfillCrm": "Sincronizar al CRM",
+      "backfillingLabel": "Sincronizando…",
+      "backfillTooltip": "Empuja todos los leads en estado NOT_CONFIGURED al CRM conectado del bot. Útil después de conectar un CRM que estaba inactivo cuando se crearon los leads."
+    },
+    "detail": {
+      "backToList": "Volver a leads",
+      "openConversation": "Abrir conversación",
+      "editTitle": "Detalle del lead",
+      "editSubtitle": "Actualizá el estado, capturá correcciones o agregá una nota. Cambios y notas quedan registrados en la línea de tiempo.",
+      "statusLabel": "Estado",
+      "scoreLabel": "Score",
+      "nameLabel": "Nombre del cliente",
+      "namePlaceholder": "No capturado todavía",
+      "emailLabel": "Correo del cliente",
+      "emailPlaceholder": "No capturado todavía",
+      "noteLabel": "Nota",
+      "notePlaceholder": "Opcional — queda registrada como nota manual en la línea de tiempo.",
+      "saved": "Cambios guardados.",
+      "syncQueued": "Sincronización al CRM encolada.",
+      "timelineTitle": "Línea de tiempo",
+      "timelineSubtitle": "Cada señal detectada, cambio de estado, nota y resultado de sincronización al CRM.",
+      "timelineEmpty": "Sin eventos todavía.",
+      "factsTitle": "Datos",
+      "createdAt": "Creado",
+      "updatedAt": "Última actualización",
+      "lastSignalAt": "Última señal",
+      "lastSignalType": "Tipo de señal",
+      "statusChangedAt": "Estado cambiado",
+      "crmTitle": "Sincronización CRM",
+      "crmSubtitle": "Registro externo creado/actualizado automáticamente cuando el bot tiene un CRM conectado.",
+      "crmProvider": "Proveedor",
+      "crmLeadId": "ID externo",
+      "crmSyncedAt": "Última sincronización",
+      "crmLastError": "Último error",
+      "crmNotConfiguredHelp": "Conectá un CRM en el bot para habilitar la sincronización automática.",
+      "openInCrm": "Abrir en CRM",
+      "retrySync": "Reintentar sincronización",
+      "payloadTitle": "Payload CRM",
+      "payloadSubtitle": "JSON exacto que se enviaría al CRM. Se actualiza automáticamente en cada señal o cambio.",
+      "payloadShow": "Mostrar",
+      "payloadHide": "Ocultar",
+      "payloadEmpty": "Todavía no hay payload calculado — aparece tras la primera señal o cambio.",
+      "payloadCollapsed": "Tocá \"Mostrar\" para ver el JSON.",
+      "payloadUpdatedAt": "Actualizado:"
+    }
+  },
   "customers": {
     "title": "Clientes",
     "subtitle": "Todas las personas que han escrito a tus bots, ordenadas por actividad más reciente.",
@@ -1081,6 +1210,38 @@
     }
   },
   "superadmin": {
+    "leads": {
+      "kicker": "Leads",
+      "title": "Todos los leads",
+      "subtitle": "Cada lead detectado en todos los clientes. Filtrá por empresa, estado o nivel de interés.",
+      "totalLabel": "Mostrando",
+      "allCompanies": "Todas las empresas",
+      "allStatuses": "Todos los estados",
+      "allCrm": "Cualquier estado CRM",
+      "hasCrmYes": "Sincronizado al CRM",
+      "hasCrmNo": "Sin sincronizar",
+      "backfillAll": "Sincronizar todos los CRMs",
+      "backfillTenant": "Sincronizar esta empresa",
+      "backfillAllTooltip": "Empuja todos los leads NOT_CONFIGURED de todos los tenants a sus respectivos CRMs.",
+      "backfillTenantTooltip": "Empuja todos los leads NOT_CONFIGURED de la empresa seleccionada a su CRM.",
+      "backToAllLeads": "← Volver a todos los leads",
+      "viewCompanyLeads": "Ver leads de esta empresa",
+      "companyTitle": "Leads de la empresa",
+      "companySubtitle": "Cada contacto con intención comercial detectado en los bots de esta empresa.",
+      "backToCompany": "← Volver a la empresa",
+      "backToCompanyLeads": "← Volver a leads de la empresa",
+      "withCrm": "Con CRM",
+      "editHint": "Los cambios de estado se registran en la línea de tiempo. Las ediciones de super admin no se atribuyen a un usuario del tenant.",
+      "col": {
+        "customer": "Cliente",
+        "company": "Empresa",
+        "bot": "Bot",
+        "status": "Estado",
+        "score": "Score",
+        "crm": "CRM",
+        "created": "Creado"
+      }
+    },
     "chrome": {
       "brandShort": "SA",
       "brandLabel": "Super Admin",
@@ -1109,6 +1270,7 @@
       "allCompanies": "Todas las empresas",
       "groupTenants": "Tenants",
       "groupActivity": "Actividad",
+      "groupCommercial": "Comercial",
       "groupOperations": "Operaciones",
       "stat": {
         "companies": "Empresas",
@@ -1120,7 +1282,15 @@
         "conversations": "Conversaciones",
         "conversationsHint": "Total de mensajes intercambiados",
         "documents": "Documentos",
-        "documentsHint": "Entradas de la base de conocimiento"
+        "documentsHint": "Entradas de la base de conocimiento",
+        "leadsTotal": "Total de leads",
+        "leadsTotalHint": "En todos los tenants",
+        "leadsNew": "Leads nuevos",
+        "leadsNewHint": "Detectados, sin contactar todavía",
+        "leadsWon": "Ganados",
+        "leadsWonHint": "Cerrados con éxito en toda la plataforma",
+        "leadsCrmFailed": "CRM con fallo",
+        "leadsCrmFailedHint": "Leads que requieren reintento manual"
       },
       "recent": {
         "title": "Empresas recientes",
@@ -1237,6 +1407,7 @@
         "bots": "Bots",
         "users": "Usuarios",
         "navCases": "Casos",
+        "navLeads": "Leads",
         "navCustomers": "Clientes",
         "navConversations": "Conversaciones",
         "navMeetings": "Reuniones",
@@ -1254,6 +1425,7 @@
         "customersHint": "Contactos a través de todos los bots",
         "conversationsHint": "Chats de todos los bots (solo lectura)",
         "casesHint": "Escalaciones y transferencia a humano",
+        "leadsHint": "Contactos con intención comercial y sincronización CRM",
         "meetingsHint": "Reservas hechas por los bots",
         "billingHint": "Ciclo, pagos y desactivación"
       },

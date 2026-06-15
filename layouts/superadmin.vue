@@ -9,6 +9,7 @@ const drawer = useNavDrawer()
 const links = computed(() => [
   { to: '/superadmin', label: t('nav.dashboard') },
   { to: '/superadmin/companies', label: t('nav.companies') },
+  { to: '/superadmin/leads', label: t('nav.leads') },
   { to: '/superadmin/profile', label: t('nav.myProfile') },
 ])
 
