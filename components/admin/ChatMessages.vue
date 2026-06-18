@@ -45,8 +45,21 @@ defineProps<{
 
         <ChatMessageBubble :message="msg" :bot-id="botId" :tenant-id="tenantId" />
 
-        <div class="mt-1 text-[10px] opacity-70">
-          {{ new Date(msg.createdAt).toLocaleString() }}
+        <div class="mt-1 flex items-center justify-end gap-1.5 text-[10px]">
+          <span
+            :class="
+              msg.role === 'ASSISTANT'
+                ? 'text-white/70'
+                : msg.role === 'USER'
+                  ? 'text-slate-500'
+                  : 'text-slate-500'
+            "
+          >{{ new Date(msg.createdAt).toLocaleString() }}</span>
+          <ChatDeliveryStatus
+            v-if="msg.role === 'ASSISTANT'"
+            :status="msg.deliveryStatus"
+            :error="msg.deliveryError"
+          />
         </div>
       </div>
     </div>

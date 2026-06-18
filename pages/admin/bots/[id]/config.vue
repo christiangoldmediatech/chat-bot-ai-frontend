@@ -45,25 +45,6 @@ const DELAY_PRESETS = computed<{ label: string, value: number }[]>(() => [
   { label: '3s', value: 3000 },
   { label: '5s', value: 5000 },
 ])
-const FOLLOWUP_HOUR_PRESETS: { label: string, value: number }[] = [
-  { label: '12 h', value: 12 },
-  { label: '24 h', value: 24 },
-  { label: '48 h', value: 48 },
-  { label: '72 h', value: 72 },
-]
-const FOLLOWUP_ATTEMPT_PRESETS: number[] = [1, 2, 3, 5]
-const followupSummary = computed(() => {
-  if (!form.followupInactivityEnabled) {
-    return t('admin.botConfig.followup.summaryOff')
-  }
-  const h = form.followupInactivityHours
-  const n = form.followupInactivityMaxCount
-  const total = h * n
-  const totalLabel = total >= 24
-    ? t('admin.botConfig.followup.totalDays', { n: Math.round((total / 24) * 10) / 10 })
-    : t('admin.botConfig.followup.totalHours', { n: total })
-  return t('admin.botConfig.followup.summaryOn', { h, n, total: totalLabel })
-})
 const PROVIDERS: { value: string, label: string, models: string[] }[] = [
   {
     value: 'anthropic',
@@ -384,119 +365,7 @@ await load()
       </section>
 
       <!-- ────────────────────────────────────────────────────────────────
-           SECTION 4 — Inactivity follow-up
-      ───────────────────────────────────────────────────────────────── -->
-      <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6 space-y-5">
-        <header class="flex items-start gap-3">
-          <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 ring-1 ring-amber-100">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-amber-600" aria-hidden="true">
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 16 14" />
-            </svg>
-          </div>
-          <div>
-            <h2 class="text-base font-semibold text-slate-900">{{ $t('admin.botConfig.followup.title') }}</h2>
-            <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.botConfig.followup.subtitle') }}</p>
-          </div>
-        </header>
-
-        <!-- Main toggle -->
-        <label class="flex items-center justify-between rounded-xl bg-white/60 ring-1 ring-slate-200/80 px-4 py-3 cursor-pointer">
-          <div>
-            <p class="text-sm font-medium text-slate-900">{{ $t('admin.botConfig.followup.enableLabel') }}</p>
-            <p class="text-xs text-slate-500">{{ $t('admin.botConfig.followup.enableHelp') }}</p>
-          </div>
-          <button
-            type="button"
-            role="switch"
-            :aria-checked="form.followupInactivityEnabled"
-            class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition"
-            :class="form.followupInactivityEnabled ? 'bg-primary-600' : 'bg-slate-300'"
-            @click="form.followupInactivityEnabled = !form.followupInactivityEnabled"
-          >
-            <span
-              class="inline-block size-4 transform rounded-full bg-white shadow transition"
-              :class="form.followupInactivityEnabled ? 'translate-x-6' : 'translate-x-1'"
-            />
-          </button>
-        </label>
-
-        <!-- Live summary -->
-        <div
-          class="rounded-xl px-4 py-3 text-xs"
-          :class="form.followupInactivityEnabled
-            ? 'bg-primary-50/70 ring-1 ring-primary-100 text-primary-900/90'
-            : 'bg-slate-100/70 ring-1 ring-slate-200 text-slate-600'"
-        >
-          {{ followupSummary }}
-        </div>
-
-        <!-- Inputs (disabled when toggle is off) -->
-        <fieldset :disabled="!form.followupInactivityEnabled" class="space-y-5" :class="{ 'opacity-50 pointer-events-none': !form.followupInactivityEnabled }">
-          <div>
-            <label class="block text-sm font-medium text-slate-700">{{ $t('admin.botConfig.followup.hoursLabel') }}</label>
-            <p class="mt-0.5 text-xs text-slate-500">{{ $t('admin.botConfig.followup.hoursHelp') }}</p>
-            <div class="mt-2 flex flex-wrap items-center gap-2">
-              <button
-                v-for="preset in FOLLOWUP_HOUR_PRESETS"
-                :key="preset.value"
-                type="button"
-                class="rounded-full px-3 py-1 text-xs font-medium ring-1 transition"
-                :class="form.followupInactivityHours === preset.value
-                  ? 'bg-primary-600 text-white ring-primary-600'
-                  : 'bg-white/80 text-slate-600 ring-slate-200 hover:ring-slate-300'"
-                @click="form.followupInactivityHours = preset.value"
-              >
-                {{ preset.label }}
-              </button>
-              <div class="ml-2 flex items-center gap-2">
-                <input
-                  v-model.number="form.followupInactivityHours"
-                  type="number"
-                  min="1"
-                  max="168"
-                  step="1"
-                  class="w-24 rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-sm text-slate-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-                >
-                <span class="text-xs text-slate-500">{{ $t('admin.botConfig.followup.hoursSuffix') }}</span>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-slate-700">{{ $t('admin.botConfig.followup.attemptsLabel') }}</label>
-            <p class="mt-0.5 text-xs text-slate-500">{{ $t('admin.botConfig.followup.attemptsHelp') }}</p>
-            <div class="mt-2 flex flex-wrap items-center gap-2">
-              <button
-                v-for="n in FOLLOWUP_ATTEMPT_PRESETS"
-                :key="n"
-                type="button"
-                class="rounded-full px-3 py-1 text-xs font-medium ring-1 transition"
-                :class="form.followupInactivityMaxCount === n
-                  ? 'bg-primary-600 text-white ring-primary-600'
-                  : 'bg-white/80 text-slate-600 ring-slate-200 hover:ring-slate-300'"
-                @click="form.followupInactivityMaxCount = n"
-              >
-                {{ n }}
-              </button>
-              <div class="ml-2 flex items-center gap-2">
-                <input
-                  v-model.number="form.followupInactivityMaxCount"
-                  type="number"
-                  min="1"
-                  max="10"
-                  step="1"
-                  class="w-24 rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-sm text-slate-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-                >
-                <span class="text-xs text-slate-500">{{ $t('admin.botConfig.followup.attemptsSuffix') }}</span>
-              </div>
-            </div>
-          </div>
-        </fieldset>
-      </section>
-
-      <!-- ────────────────────────────────────────────────────────────────
-           SECTION 5 — Internal metadata + status
+           SECTION 4 — Internal metadata + status
       ───────────────────────────────────────────────────────────────── -->
       <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6 space-y-5">
         <header class="flex items-start gap-3">

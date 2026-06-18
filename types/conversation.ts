@@ -12,6 +12,12 @@ export type MessageMediaType =
   | 'STICKER'
   | 'LOCATION'
 
+// Mirrors backend Prisma DeliveryStatus. Outbound only — populated as Meta
+// emits status webhooks. Null on inbound rows and on legacy outbound rows
+// persisted before delivery tracking shipped (renderer treats null as
+// "estado desconocido" with no indicator).
+export type DeliveryStatus = 'SENT' | 'DELIVERED' | 'READ' | 'FAILED'
+
 export interface Conversation {
   id: string
   botId: string
@@ -39,6 +45,15 @@ export interface Message {
   mediaRef: string | null
   /** Meta wamid — useful for read-receipt correlation. */
   metaMessageId: string | null
+  /**
+   * Outbound delivery state surfaced from Meta's `statuses` webhook. The
+   * chat bubble renders ✓ / ✓✓ / ✓✓ (blue) / ⚠ based on this. Null when
+   * inbound, or outbound but no status received yet (legacy row, webhook
+   * outage, missing wamid).
+   */
+  deliveryStatus: DeliveryStatus | null
+  /** Free-text error description when deliveryStatus=FAILED. */
+  deliveryError: string | null
   metadata: Record<string, unknown>
   createdAt: string
 }
