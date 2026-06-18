@@ -828,7 +828,19 @@
       "receivedViaWhatsapp": "Recibido vía WhatsApp",
       "failedToLoad": "No se pudo cargar.",
       "imageFullView": "Vista ampliada de imagen",
-      "closeEsc": "Cerrar (Esc)"
+      "closeEsc": "Cerrar (Esc)",
+      "delivery": {
+        "sentTitle": "Enviado",
+        "sentAria": "Mensaje enviado a Meta",
+        "deliveredTitle": "Entregado",
+        "deliveredAria": "Mensaje entregado al dispositivo del cliente",
+        "readTitle": "Leído",
+        "readAria": "Mensaje leído por el cliente",
+        "failedTitle": "No entregado",
+        "failedAria": "Meta no pudo entregar el mensaje",
+        "failedReason": "Motivo: {reason}",
+        "failedNoReason": "Sin detalles del error"
+      }
     },
     "documents": {
       "cardTitle": "Documentos (RAG)",
