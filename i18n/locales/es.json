@@ -68,7 +68,41 @@
       "chatPreviewUser1": "¡Hola! ¿Envían a México?",
       "chatPreviewBot1": "Sí, enviamos a todo México — normalmente 2-4 días hábiles. ¿Quieres que te pase una cotización?",
       "chatPreviewUser2": "Sí, por favor",
-      "chatPreviewTyping": "Kaibot está escribiendo…"
+      "chatPreviewTyping": "Kaibot está escribiendo…",
+      "chatPreviewBot2": "¡Listo! Tu cotización de envío va en camino — ¿te ayudo con algo más?"
+    },
+    "marquee": {
+      "i1": "Respuestas 24/7",
+      "i2": "Calificación de leads",
+      "i3": "Handoff a humanos",
+      "i4": "Entrenado con tus documentos",
+      "i5": "Configuración sin código",
+      "i6": "WhatsApp nativo",
+      "i7": "Respuestas al instante",
+      "i8": "Español e inglés"
+    },
+    "stats": {
+      "availability": "Disponibilidad continua",
+      "native": "Nativo en WhatsApp",
+      "steps": "Pasos para arrancar"
+    },
+    "inbox": {
+      "kicker": "El cuello de botella",
+      "title": "Los mensajes se acumulan. Kaibot los resuelve todos.",
+      "body": "Cada chat sin responder es un cliente a punto de irse. En cuanto llegan los mensajes, Kaibot entra en acción y responde a todos a la vez — sin cola, sin esperas, nadie queda en visto.",
+      "point1": "Responde cada conversación en segundos, incluso en horas pico",
+      "point2": "Ningún cliente espera mientras se atiende a otro",
+      "point3": "Involucra a tu equipo solo cuando realmente importa",
+      "panelTitle": "Bandeja de WhatsApp",
+      "pendingCount": "{n} pendiente | {n} pendientes",
+      "allCaught": "Todo al día",
+      "botActive": "Kaibot entró en acción…",
+      "replied": "Respondido por Kaibot",
+      "summary": "4 conversaciones respondidas en segundos",
+      "msg1": "¡Hola! ¿Están abiertos hoy?",
+      "msg2": "¿Cuánto cuesta el plan Pro?",
+      "msg3": "Necesito cambiar mi dirección de entrega",
+      "msg4": "¿Tienen esto en stock?"
     },
     "features": {
       "kicker": "Por qué Kaibot",
