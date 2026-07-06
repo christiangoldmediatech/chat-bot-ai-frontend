@@ -68,7 +68,41 @@
       "chatPreviewUser1": "Hi! Do you ship to Mexico?",
       "chatPreviewBot1": "Yes, we ship across all of Mexico — usually 2-4 business days. Want me to pass you a shipping quote?",
       "chatPreviewUser2": "Yes please",
-      "chatPreviewTyping": "Kaibot is typing…"
+      "chatPreviewTyping": "Kaibot is typing…",
+      "chatPreviewBot2": "Great! Your shipping quote is on its way — anything else I can help with?"
+    },
+    "marquee": {
+      "i1": "Replies 24/7",
+      "i2": "Lead qualification",
+      "i3": "Human handoff",
+      "i4": "Trained on your docs",
+      "i5": "No-code setup",
+      "i6": "Native WhatsApp",
+      "i7": "Instant answers",
+      "i8": "English & Spanish"
+    },
+    "stats": {
+      "availability": "Always-on availability",
+      "native": "Native on WhatsApp",
+      "steps": "Steps to go live"
+    },
+    "inbox": {
+      "kicker": "The bottleneck",
+      "title": "Messages pile up. Kaibot clears them all.",
+      "body": "Every unanswered chat is a customer about to walk away. The moment messages land, Kaibot steps in and answers everyone at once — no queue, no waiting, no one left on read.",
+      "point1": "Answers every conversation in seconds, even during peaks",
+      "point2": "No customer waits while another is being helped",
+      "point3": "Brings in your team only when it truly matters",
+      "panelTitle": "WhatsApp inbox",
+      "pendingCount": "{n} pending | {n} pending",
+      "allCaught": "All caught up",
+      "botActive": "Kaibot stepped in…",
+      "replied": "Answered by Kaibot",
+      "summary": "4 conversations answered in seconds",
+      "msg1": "Hi! Are you open today?",
+      "msg2": "How much is the Pro plan?",
+      "msg3": "I need to change my delivery address",
+      "msg4": "Is this still in stock?"
     },
     "features": {
       "kicker": "Why Kaibot",

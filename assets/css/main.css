@@ -36,11 +36,165 @@
   transform: translate3d(0, 0, 0) scale(1);
 }
 
+/* ---- Landing animations ---- */
+
+/* Gradiente que fluye lentamente — fondos de secciones/CTA. */
+.anim-gradient-flow {
+  background-size: 300% 300%;
+  animation: gradient-flow 8s ease infinite;
+}
+
+@keyframes gradient-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Texto con gradiente en movimiento (headline "Kaibot"). */
+.anim-gradient-text {
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: gradient-flow 5s linear infinite;
+}
+
+/* Entrada palabra por palabra: cada span recibe --i para el stagger.
+   El hijo directo es un wrapper aria-hidden; las palabras van un nivel
+   más adentro. */
+.word-reveal > span > span {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(0.4em);
+  animation: word-in 600ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+@keyframes word-in {
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+/* Barrido de luz sobre superficies glass. */
+.light-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.light-sweep::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.35) 50%, transparent 70%);
+  background-size: 250% 100%;
+  animation: light-sweep 5s ease-in-out infinite;
+}
+
+@keyframes light-sweep {
+  0% { background-position: 130% 0; }
+  60%, 100% { background-position: -120% 0; }
+}
+
+/* Marquee infinito — el contenido va duplicado para el loop sin costura. */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* Respiración de glow — botón flotante de WhatsApp. */
+.glow-pulse {
+  animation: glow-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(37 211 102 / 0.45); }
+  50% { box-shadow: 0 0 0 12px rgb(37 211 102 / 0); }
+}
+
+/* Burbuja de chat que aparece (loop del preview del hero). */
+.chat-pop {
+  animation: chat-pop 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes chat-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Flotación suave — decoraciones del hero. */
+.float-y {
+  animation: float-y 6s ease-in-out infinite;
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+/* Tilt 3D (directiva v-tilt): el JS actualiza --rx/--ry/--mx/--my. */
+.tilt-card {
+  transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 200ms ease-out;
+  will-change: transform;
+}
+
+.tilt-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgb(99 102 241 / 0.16), transparent 65%);
+}
+
+.tilt-card:hover .tilt-glow {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal-init {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+  .anim-gradient-flow,
+  .anim-gradient-text,
+  .glow-pulse,
+  .float-y,
+  .marquee-track {
+    animation: none;
+  }
+  .light-sweep::after {
+    display: none;
+  }
+  .word-reveal > span > span,
+  .chat-pop {
+    animation: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+  .tilt-card {
+    transform: none !important;
   }
 }
