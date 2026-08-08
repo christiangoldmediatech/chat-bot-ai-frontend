@@ -98,6 +98,7 @@ function statusBadgeClass(s: ConversationStatus): string {
           :customer-name="data.customerName"
           :customer-phone="data.customerPhone"
           :status="data.status"
+          :messages-count="data.messages.length"
         >
           <ChatMessages :messages="data.messages" :bot-id="data.botId" />
           <p
