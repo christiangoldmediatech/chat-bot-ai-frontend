@@ -1,14 +1,65 @@
 <script setup lang="ts">
 import type { ConversationStatus } from '~/types/conversation'
 
-defineProps<{
+const props = defineProps<{
   /** Customer display name; falls back to phone if empty. */
   customerName?: string | null
   /** E.164 phone number — always shown as secondary line. */
   customerPhone: string
   /** Status badge in the WhatsApp-style header. */
   status: ConversationStatus
+  /**
+   * Number of messages in the thread. Only used to detect appends so the
+   * chat body can auto-scroll to the newest message (WhatsApp behavior).
+   * Pass `data.messages.length` from the parent — the value itself is what
+   * we watch, we don't render the count anywhere.
+   */
+  messagesCount?: number
 }>()
+
+const chatBody = ref<HTMLElement | null>(null)
+// Track whether the user is currently near the bottom of the thread. When
+// true (default), a new incoming message triggers auto-scroll — feels like
+// live WhatsApp. When false (user scrolled up to read history), we leave
+// their scroll position alone; otherwise scrolling them to the bottom on
+// every message would fight against their intent.
+const isNearBottom = ref(true)
+const NEAR_BOTTOM_PX = 120
+
+function scrollToBottom(): void {
+  const el = chatBody.value
+  if (!el) return
+  el.scrollTop = el.scrollHeight
+}
+
+function onScroll(): void {
+  const el = chatBody.value
+  if (!el) return
+  const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
+  isNearBottom.value = distanceFromBottom < NEAR_BOTTOM_PX
+}
+
+// On mount, scroll to the newest message once the initial slot content has
+// been rendered. Two `nextTick`s wait for both the parent's async load and
+// the child `<ChatMessages>` render.
+onMounted(async () => {
+  await nextTick()
+  await nextTick()
+  scrollToBottom()
+})
+
+// When the message count changes (a new turn was appended), auto-scroll to
+// bottom ONLY if the user was already near the bottom. If they were reading
+// history, don't yank them back.
+watch(
+  () => props.messagesCount,
+  async (next, prev) => {
+    if (next === undefined || prev === undefined || next <= prev) return
+    if (!isNearBottom.value) return
+    await nextTick()
+    scrollToBottom()
+  },
+)
 
 function statusDotClass(s: ConversationStatus): string {
   return {
@@ -103,9 +154,13 @@ function initials(name: string | null | undefined, phone: string): string {
         </header>
 
         <!-- Chat body — WhatsApp-style wallpaper. Taller on mobile since
-             the chat is the whole viewport, not a constrained phone screen. -->
+             the chat is the whole viewport, not a constrained phone screen.
+             The `chatBody` ref + @scroll drive the auto-scroll behavior in
+             the script above (see WhatsApp-style rules there). -->
         <div
+          ref="chatBody"
           class="phone-chat-bg relative max-h-[72vh] sm:max-h-[65vh] min-h-[60vh] sm:min-h-[420px] overflow-y-auto px-3 py-4"
+          @scroll.passive="onScroll"
         >
           <slot />
         </div>
