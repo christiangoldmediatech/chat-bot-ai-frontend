@@ -12,6 +12,140 @@
   }
 }
 
+/* ---- ALIA landing (dark commit) ---- */
+/* Grain overlay: SVG de fractalNoise en base64 sobre mix-blend-mode overlay,
+   posición fija encima del ground para dar textura al canvas oscuro. */
+.alia-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.34'/></svg>");
+}
+
+/* Wordmark drop-shadow — halo detrás del trazo para simular emisión. */
+.alia-mark path {
+  filter: drop-shadow(0 0 14px rgba(88, 240, 206, 0.35));
+}
+
+/* Rise-in de líneas del headline — cada `.alia-ln` es un contenedor con
+   overflow hidden y su hijo `>span` se traslada de 105% a 0. La animación
+   se dispara automáticamente al montar; el delay lo pone el componente. */
+.alia-ln {
+  display: block;
+  overflow: hidden;
+}
+.alia-ln > span {
+  display: block;
+  transform: translateY(105%);
+  animation: alia-rise-in 1.05s cubic-bezier(0.16, 0.84, 0.28, 1) forwards;
+}
+@keyframes alia-rise-in {
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Fade-up genérico para hero__sub, hero__copy, ticker, cta. */
+@keyframes alia-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.alia-fade-up {
+  opacity: 0;
+  animation: alia-fade-up 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+
+/* Reveal on scroll (portado del `.rv` del HTML, alineado con la directiva
+   v-reveal existente — el plugin agrega `reveal-in` al intersectar). */
+.alia-rv {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.85s cubic-bezier(0.2, 0.8, 0.3, 1),
+    transform 0.85s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.alia-rv.reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Underline animado del nav (scaleX de derecha a izquierda al hover). */
+.alia-nav-link {
+  position: relative;
+  padding-block: 4px;
+}
+.alia-nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: #58f0ce;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.38s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.alia-nav-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Border-gradient wrapper para el phone frame — usa mask compositing para
+   dibujar sólo el borde. */
+.alia-phone-border {
+  position: relative;
+}
+.alia-phone-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 27px;
+  padding: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    160deg,
+    rgba(88, 240, 206, 0.3),
+    transparent 40%,
+    transparent 70%,
+    rgba(88, 240, 206, 0.14)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Belt marquee mask — fade laterales para que las integrations aparezcan
+   emergiendo del vacío en lugar de cortarse en seco. */
+.alia-belt-mask {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alia-ln > span,
+  .alia-fade-up {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+  .alia-rv {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* ---- Scroll reveal ---- */
 /* Applied by the `v-reveal` directive. The element starts in `reveal-init`
    (hidden + offset), and when it enters the viewport the directive adds
@@ -49,7 +183,7 @@
   50% { background-position: 100% 50%; }
 }
 
-/* Texto con gradiente en movimiento (headline "Kaibot"). */
+/* Texto con gradiente en movimiento (headline "ALIA"). */
 .anim-gradient-text {
   background-size: 300% auto;
   -webkit-background-clip: text;

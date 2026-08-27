@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Admin panel for the chat-bot-ai multi-tenant WhatsApp bot SaaS. Nuxt 3 + TypeScript (strict) + Pinia + Tailwind, running as a pure SPA (`ssr: false` in `nuxt.config.ts`) against a NestJS backend.
+Admin panel for **ALIA** — the multi-tenant WhatsApp bot SaaS (branded KaiBots pre-2026-08-26). Nuxt 3 + TypeScript (strict) + Pinia + Tailwind, running as a pure SPA (`ssr: false` in `nuxt.config.ts`) against a NestJS backend.
 
 ## Commands
 

@@ -66,26 +66,28 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'Kaibot — WhatsApp AI for businesses',
+      title: 'ALIA — WhatsApp AI for businesses',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Kaibot replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
-        { name: 'theme-color', content: '#6366f1' },
+        { name: 'description', content: 'ALIA replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
+        { name: 'theme-color', content: '#58F0CE' },
       ],
-      // Poppins is the platform-wide font. Wired into Tailwind's `font-sans`
-      // stack in `tailwind.config.ts`, so every element inherits it through
-      // Tailwind's base layer without per-component overrides.
+      // Platform-wide typography (dark commit):
+      // - Archivo (variable width/weight) → wordmark + display headings via
+      //   `font-display`.
+      // - Chivo → body/UI text via `font-sans` (Tailwind base layer).
+      // - Chivo Mono → labels, eyebrows and metadata via `font-mono`.
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-        { rel: 'icon', type: 'image/png', href: '/kaibot-logo.png' },
-        { rel: 'shortcut icon', type: 'image/png', href: '/kaibot-logo.png' },
-        { rel: 'apple-touch-icon', href: '/kaibot-logo.png' },
+        { rel: 'icon', type: 'image/png', href: '/alia-logo.png' },
+        { rel: 'shortcut icon', type: 'image/png', href: '/alia-logo.png' },
+        { rel: 'apple-touch-icon', href: '/alia-logo.png' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         {
           rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap',
+          href: 'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Chivo:wght@300;400;500;600&family=Chivo+Mono:wght@400;500&display=swap',
         },
       ],
     },

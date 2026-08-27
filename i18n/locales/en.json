@@ -50,96 +50,202 @@
     "apiUnreachable": "Couldn't reach the server. Check your connection and try again."
   },
   "landing": {
-    "navFeatures": "Features",
-    "navHow": "How it works",
-    "navGetStarted": "Get started",
     "goToDashboard": "Go to dashboard",
     "createAccount": "Create account",
     "signIn": "Sign in",
+    "nav": {
+      "aria": "Main",
+      "demo": "Demo",
+      "caps": "Capabilities",
+      "process": "Implementation",
+      "plans": "Plans",
+      "book": "Book a demo"
+    },
     "hero": {
-      "badge": "AI assistant for WhatsApp",
-      "title1": "Meet",
-      "title2": ". Your business's tireless WhatsApp agent.",
-      "subtitle": "Kaibot replies to your customers on WhatsApp 24/7 — answering questions, qualifying leads, and handing off to a human only when it truly matters.",
-      "ctaSignIn": "Sign in to your company",
-      "ctaCreateFree": "Create a free account",
-      "chatPreviewTitle": "Kaibot · Acme Co.",
-      "chatPreviewOnline": "online",
-      "chatPreviewUser1": "Hi! Do you ship to Mexico?",
-      "chatPreviewBot1": "Yes, we ship across all of Mexico — usually 2-4 business days. Want me to pass you a shipping quote?",
-      "chatPreviewUser2": "Yes please",
-      "chatPreviewTyping": "Kaibot is typing…",
-      "chatPreviewBot2": "Great! Your shipping quote is on its way — anything else I can help with?"
+      "tagline": "Intelligent Assistant",
+      "line1": "No customer",
+      "line2": "message",
+      "line3": "waits again.",
+      "copy": "Today ALIA replies automatically on WhatsApp — 24/7, with no robotic answers. It understands your customers' voice notes, books appointments in Google Calendar and learns your catalog, your prices and your tone. It hands the conversation to a person only when it truly matters.",
+      "ctaPrimary": "See ALIA replying",
+      "ctaSecondary": "How it's implemented",
+      "ticker": {
+        "avgReply": "Average reply time",
+        "always": "On WhatsApp, no shifts or holidays",
+        "noHuman": "Resolved without a human",
+        "channels": "Customers waiting in queue"
+      }
     },
-    "marquee": {
-      "i1": "Replies 24/7",
-      "i2": "Lead qualification",
-      "i3": "Human handoff",
-      "i4": "Trained on your docs",
-      "i5": "No-code setup",
-      "i6": "Native WhatsApp",
-      "i7": "Instant answers",
-      "i8": "English & Spanish"
+    "demo": {
+      "eyebrow": "Real conversation",
+      "titleA": "This is how it sounds",
+      "titleB": "at work.",
+      "copy": "Pick a channel and watch the full conversation: from the first «hi» to the appointment confirmed on the calendar. Everything happens without anyone on your team picking up the phone.",
+      "channelsLabel": "Channels",
+      "channelsAria": "ALIA channels",
+      "channelsCopy": "The same brain everywhere. If the customer starts on Instagram and continues on WhatsApp, ALIA doesn't ask them to repeat anything.",
+      "replay": "Replay",
+      "channels": {
+        "wa": {
+          "label": "WhatsApp Business",
+          "hint": "Medical inquiry → appointment booked",
+          "tag": "Booking",
+          "m1": "Hi, good morning. I'd like an appointment with Dr. Paredes 🙏",
+          "m2": "Hello! Of course 👋 Dr. Paredes handles dentistry. Is this a routine visit or something specific?",
+          "m2meta": "Read 1.8 s",
+          "m3": "a dental cleaning",
+          "m4": "Perfect. For a cleaning I have tomorrow Thursday 11:30 or Friday 08:00. Which one works better for you?",
+          "m5": "friday at 8 please",
+          "m6": "Could you confirm your full name and ID number?",
+          "m7": "Andrea Salazar, 1717332109",
+          "m8": "Appointment created · Fri 08:00 · Dr. Paredes",
+          "m9": "All set, Andrea. Your appointment is Friday at 08:00 with Dr. Paredes at Clínica Andes 🦷 You'll receive confirmation here and a reminder on Thursday afternoon.",
+          "m10": "thanks!! 💚"
+        },
+        "web": {
+          "label": "Website chat",
+          "hint": "Complaint → escalated to a person",
+          "tag": "Support",
+          "m1": "My order says delivered and it never arrived. It's been 3 days.",
+          "m2": "I'm sorry about the issue. I see your order #40912 marked as delivered yesterday at 16:40 at Av. República E7-45. Is that the correct address?",
+          "m3": "No! I moved, I updated my address in my account two weeks ago",
+          "m4": "I understand — the order went out with the old address. This is something a person on the team needs to solve, not me.",
+          "m5": "Escalated · high priority",
+          "m6": "I've passed the case to Daniela in Logistics with the full history. She'll contact you today before 17:00 and you have ticket #SP-7731 as backup.",
+          "m7": "thanks, hopefully it gets solved",
+          "m8": "It's in good hands. I'll let you know here as soon as Daniela registers the replacement."
+        },
+        "voz": {
+          "label": "Incoming voice call",
+          "hint": "Live transcript · 00:47",
+          "tag": "Booking",
+          "m1": "Incoming call · 09:12",
+          "m2": "Clínica Andes, good morning, this is ALIA. How can I help you?",
+          "m2meta": "Voice · 0.9 s",
+          "m3": "I wanted an appointment with Dr. Paredes, dentistry.",
+          "m4": "Gladly. Dr. Paredes has tomorrow 11:30 or Friday 08:00 available. Which works better for you?",
+          "m5": "Friday at eight.",
+          "m6": "Perfect. Could you confirm your ID number, please?",
+          "m7": "One seven one four… three three two one zero nine.",
+          "m8": "Appointment created · Fri 08:00",
+          "m9": "Done, Mr. Vaca. Friday 08:00 with Dr. Paredes. You'll get the confirmation via WhatsApp in a minute. Have a great day!"
+        },
+        "ig": {
+          "label": "Instagram Direct",
+          "hint": "Comment → sale in 4 messages",
+          "tag": "Catalog",
+          "m1": "Commented «price?» on your post",
+          "m2": "Hi! I'm writing about the Aura bag from the photo 👜 It's $89 and there are 3 left in moss green.",
+          "m3": "do you have it in black?",
+          "m4": "Black is sold out, but restock arrives September 4th. I can hold one for you with $20 and you pay on arrival.",
+          "m5": "sure, hold a black one",
+          "m6": "Reservation RS-118 · payment pending",
+          "m7": "Reserved. I'll send you the payment link right here; as soon as it clears, it's yours until September 11th."
+        }
+      }
     },
-    "stats": {
-      "availability": "Always-on availability",
-      "native": "Native on WhatsApp",
-      "steps": "Steps to go live"
+    "caps": {
+      "eyebrow": "What it does today",
+      "titleA": "What ALIA",
+      "titleB": "already does for you.",
+      "copy": "All of this runs today on your WhatsApp Business. No new apps for your team, no shifts, no robotic answers.",
+      "items": {
+        "1": { "title": "Replies 24/7 on WhatsApp", "body": "Answers in seconds with your business tone — automatic, no shifts or holidays. Zero customers in queue, zero robotic replies." },
+        "2": { "title": "Books appointments in Google Calendar", "body": "Checks your real availability, proposes time slots, creates the event in Google Calendar and sends the reminder the day before via WhatsApp." },
+        "3": { "title": "Replies with your catalog", "body": "Learns your products, prices, policies and even your team's style from 30 days of real conversations. When it doesn't know something, it says so and escalates." },
+        "4": { "title": "Escalates when it matters", "body": "Detects frustration, urgency or complex cases and transfers the conversation with a summarized history — your rep steps in with context, not from scratch." },
+        "5": { "title": "Understands voice notes", "body": "Transcribes and understands the voice notes your customers send on WhatsApp — no asking them to type, no detail lost." },
+        "6": { "title": "Learns from every correction", "body": "Your team corrects answers with one click and ALIA doesn't miss the same one again. It gets better every week without you lifting a finger." }
+      }
     },
-    "inbox": {
-      "kicker": "The bottleneck",
-      "title": "Messages pile up. Kaibot clears them all.",
-      "body": "Every unanswered chat is a customer about to walk away. The moment messages land, Kaibot steps in and answers everyone at once — no queue, no waiting, no one left on read.",
-      "point1": "Answers every conversation in seconds, even during peaks",
-      "point2": "No customer waits while another is being helped",
-      "point3": "Brings in your team only when it truly matters",
-      "panelTitle": "WhatsApp inbox",
-      "pendingCount": "{n} pending | {n} pending",
-      "allCaught": "All caught up",
-      "botActive": "Kaibot stepped in…",
-      "replied": "Answered by Kaibot",
-      "summary": "4 conversations answered in seconds",
-      "msg1": "Hi! Are you open today?",
-      "msg2": "How much is the Pro plan?",
-      "msg3": "I need to change my delivery address",
-      "msg4": "Is this still in stock?"
+    "process": {
+      "eyebrow": "Implementation",
+      "titleA": "From zero",
+      "titleB": "to production.",
+      "copy": "Three stages in strict order: without the first, the second has nothing to train on. Total estimated time, 3 weeks.",
+      "items": {
+        "1": { "week": "Week 1", "title": "We feed it", "body": "We load catalog, price list, shipping and return policies, and 30 days of real conversations from your team. That's where the tone comes from, not a template.", "tags": "Catalog|Prices|History|Policies" },
+        "2": { "week": "Week 2", "title": "We train and limit", "body": "We define what it can promise and what it can't, escalation paths and maximum discounts. Your team tests in a closed environment and corrects answers with one click.", "tags": "Tone|Limits|Escalation|Internal QA" },
+        "3": { "week": "Week 3", "title": "We ship and tune", "body": "It goes live on your channels with daily monitoring the first week. Then, weekly reviews where we tune based on real conversations.", "tags": "Go-live|Monitoring|Weekly tuning|Reports" }
+      }
     },
-    "features": {
-      "kicker": "Why Kaibot",
-      "title": "Built so customers never wait.",
-      "subtitle": "A focused set of capabilities — no fluff, no setup gymnastics.",
-      "alwaysOnTitle": "Always-on replies",
-      "alwaysOnBody": "Kaibot answers every message in seconds — at 3 AM, on weekends, during launches. No customer is left hanging.",
-      "nativeTitle": "Native WhatsApp",
-      "nativeBody": "Plugs into the channel your customers already use every day. No app to download, no new habits to learn.",
-      "trainedTitle": "Trained on your business",
-      "trainedBody": "Upload your docs, FAQs, and policies. Kaibot learns how to treat your customers exactly the way you would."
+    "belt": {
+      "eyebrow": "Connects with what you already use",
+      "webChat": "Website chat",
+      "sip": "SIP telephony"
     },
-    "how": {
-      "kicker": "How it works",
-      "title": "Up and running in minutes.",
-      "step1Title": "Connect WhatsApp",
-      "step1Body": "Link your business number in a couple of clicks. No code, no complicated setup.",
-      "step2Title": "Teach Kaibot",
-      "step2Body": "Upload documents, pricing, and FAQs. Kaibot reads everything and is ready in under an hour.",
-      "step3Title": "Let it work",
-      "step3Body": "Kaibot replies on its own and pings a human only when the conversation truly needs one."
+    "results": {
+      "eyebrow": "Expected impact",
+      "titleA": "What changes",
+      "titleB": "by month three.",
+      "copy": "Reference ranges observed in similar customer support operations. Final numbers depend on your volume and your catalog.",
+      "footnote": "Illustrative figures for the purposes of this design proposal.",
+      "items": {
+        "1": { "title": "of inquiries close without human intervention", "desc": "Price, stock, hours and order status questions" },
+        "2": { "title": "first response time, at any hour", "desc": "Compared to a manual average of 4 to 6 hours after hours" },
+        "3": { "title": "more appointments booked from the same traffic", "desc": "The conversation doesn't cool waiting for someone available" }
+      }
     },
-    "cta": {
-      "title": "Give your business a 24/7 assistant.",
-      "subtitle": "Sign in to your company workspace and start replying faster than ever.",
-      "primary": "Company login",
-      "primaryAuth": "Open dashboard",
-      "secondary": "Create a free account"
+    "plans": {
+      "eyebrow": "Plans",
+      "titleA": "Simple",
+      "titleB": "to start.",
+      "copy": "Implementation included in all plans. No commitment: if it's not working by month two, you turn it off.",
+      "perMonth": "/ month",
+      "perContract": "/ contract",
+      "recommended": "Recommended",
+      "start": "Start",
+      "book": "Book a demo",
+      "talk": "Talk to the team",
+      "essential": {
+        "name": "Essential",
+        "items": {
+          "1": "1 channel (WhatsApp or web)",
+          "2": "Up to 1,500 conversations a month",
+          "3": "Catalog and FAQs",
+          "4": "Escalation to a human agent",
+          "5": "Monthly report"
+        }
+      },
+      "business": {
+        "name": "Business",
+        "items": {
+          "1": "Up to 4 channels in one inbox",
+          "2": "Up to 8,000 conversations a month",
+          "3": "Booking, PDF quotes and payments",
+          "4": "Incoming voice and voice notes",
+          "5": "CRM integration",
+          "6": "Weekly review and tuning"
+        }
+      },
+      "corporate": {
+        "name": "Corporate",
+        "price": "Custom",
+        "items": {
+          "1": "Channels and volume with no cap",
+          "2": "Deployment in your infrastructure",
+          "3": "ERP and SIP telephony integration",
+          "4": "Multiple branches and brands",
+          "5": "SLA and dedicated support"
+        }
+      }
+    },
+    "close": {
+      "eyebrow": "15 minutes, with your own questions",
+      "titleA": "Bring the toughest",
+      "titleB": "questions from",
+      "titleEm": "your customers.",
+      "ctaPrimary": "Book a demo",
+      "ctaSecondary": "See plans"
     },
     "footer": {
-      "tagline": "WhatsApp AI for modern businesses",
+      "tagline": "Intelligent assistant for businesses that support customers via WhatsApp, web and voice.",
       "signIn": "Sign in",
       "createAccount": "Create account"
     },
     "whatsappFloat": {
       "label": "Chat with us on WhatsApp",
-      "ariaLabel": "Write to Kaibot on WhatsApp"
+      "ariaLabel": "Write to ALIA on WhatsApp"
     }
   },
   "auth": {
@@ -226,7 +332,7 @@
     "payment": {
       "back": "← Back to dashboard",
       "title": "Payment instructions",
-      "subtitle": "Pay your subscription by bank transfer to the official Kaibots account. Then send us your proof of payment by email so we can activate or extend your access.",
+      "subtitle": "Pay your subscription by bank transfer to the official ALIA account. Then send us your proof of payment by email so we can activate or extend your access.",
       "amount": {
         "title": "Amount to deposit",
         "subtitle": "This is the exact amount you must transfer to the account shown below.",
@@ -254,7 +360,7 @@
       },
       "officialNotice": {
         "title": "This is our only official account",
-        "body": "Kaibots will never request payments to any other account, number or person. If you receive different bank details, please report it before transferring."
+        "body": "ALIA will never request payments to any other account, number or person. If you receive different bank details, please report it before transferring."
       },
       "howTo": {
         "title": "How to send your proof of payment",
@@ -279,7 +385,7 @@
         "subjectFallback": "Your company name",
         "companyFallback": "[your company name]",
         "userFallback": "[your registered email]",
-        "bodyTemplate": "Hello Kaibots team,\n\nI'm sending the proof of payment for our subscription.\n\nCompany: {company}\nRegistered user at www.kaibots.com: {user}\n\nThe receipt screenshot is attached to this email.\n\nThank you."
+        "bodyTemplate": "Hello ALIA team,\n\nI'm sending the proof of payment for our subscription.\n\nCompany: {company}\nRegistered user at www.alia.com: {user}\n\nThe receipt screenshot is attached to this email.\n\nThank you."
       },
       "cta": {
         "compose": "Open prefilled email",
@@ -353,7 +459,7 @@
       "successMessage": "Changes saved",
       "billingBlocked": {
         "title": "Activate your service to manage your workspace",
-        "body": "Your Kaibots account is set up, but it isn't active yet. Send your first bank transfer to switch on the bot — then you'll be able to update your company name and start configuring your bots.",
+        "body": "Your ALIA account is set up, but it isn't active yet. Send your first bank transfer to switch on the bot — then you'll be able to update your company name and start configuring your bots.",
         "cta": "View payment instructions"
       }
     },
@@ -462,7 +568,7 @@
         "title": "Conversation messages",
         "subtitle": "Fixed copy used at key moments of the chat.",
         "welcome": "Welcome message",
-        "welcomePlaceholder": "Hi! I'm Kaibot, your assistant. How can I help today?",
+        "welcomePlaceholder": "Hi! I'm ALIA, your assistant. How can I help today?",
         "welcomeHelp": "Sent on the first message of a new conversation.",
         "fallback": "Fallback message",
         "fallbackPlaceholder": "I'm not sure I can help with that. Want me to connect you with a person?",
@@ -1646,7 +1752,7 @@
       "warningTitle": "Renewal needed soon",
       "warningTitleToday": "Renewal needed today",
       "pendingTitle": "Subscription expired",
-      "pendingFirstTitle": "Welcome to Kaibots — one step away from going live",
+      "pendingFirstTitle": "Welcome to ALIA — one step away from going live",
       "suspendedTitle": "Account suspended",
       "renewSoon": "Your subscription expires in {days} day. To keep your bot active, send your proof of payment to {email} before the cutoff. | Your subscription expires in {days} days. To keep your bot active, send your proof of payment to {email} before the cutoff.",
       "renewToday": "Your subscription expires today. Send your proof of payment to {email} now to avoid suspension.",
@@ -1662,11 +1768,11 @@
     "lastUpdated": "Last updated",
     "lastUpdatedDate": "June 11, 2026",
     "contactLabel": "Contact",
-    "company": "Kaibots",
+    "company": "ALIA",
     "privacy": {
       "title": "Privacy Policy",
-      "subtitle": "How we collect, use, and protect your information when you use Kaibots.",
-      "intro": "This Privacy Policy describes how Kaibots (\"we\", \"us\", \"our\") collects, uses, shares, and protects personal information when you use our WhatsApp AI assistant platform (the \"Service\"). By creating an account or using the Service, you agree to the practices described here.",
+      "subtitle": "How we collect, use, and protect your information when you use ALIA.",
+      "intro": "This Privacy Policy describes how ALIA (\"we\", \"us\", \"our\") collects, uses, shares, and protects personal information when you use our WhatsApp AI assistant platform (the \"Service\"). By creating an account or using the Service, you agree to the practices described here.",
       "collect": {
         "title": "1. Information we collect",
         "body": "We collect account data (name, business name, email, hashed password, phone number), the content of WhatsApp messages exchanged through your assistant (text, media, timestamps and end-user phone numbers), usage logs and analytics (IP, device, language, navigation), training documents you upload, and billing data processed by our payment provider. We do not store full credit card numbers."
@@ -1681,7 +1787,7 @@
       },
       "retention": {
         "title": "4. Data retention",
-        "body": "We keep conversation data while your account remains active or as needed to provide the Service. You may request deletion of specific conversations or your entire account at any time by writing to info{'@'}kaibots.com. Encrypted backups may persist for up to 90 days after deletion. Records we are legally required to keep (billing, tax) will be kept for the term required by law."
+        "body": "We keep conversation data while your account remains active or as needed to provide the Service. You may request deletion of specific conversations or your entire account at any time by writing to info{'@'}alia.com. Encrypted backups may persist for up to 90 days after deletion. Records we are legally required to keep (billing, tax) will be kept for the term required by law."
       },
       "security": {
         "title": "5. Security",
@@ -1689,7 +1795,7 @@
       },
       "rights": {
         "title": "6. Your rights",
-        "body": "Subject to applicable law, you may access your personal data, request corrections or deletion, restrict or object to processing, request portability, and withdraw consent at any time. To exercise these rights write to info{'@'}kaibots.com. You also have the right to lodge a complaint with your local data protection authority."
+        "body": "Subject to applicable law, you may access your personal data, request corrections or deletion, restrict or object to processing, request portability, and withdraw consent at any time. To exercise these rights write to info{'@'}alia.com. You also have the right to lodge a complaint with your local data protection authority."
       },
       "endUser": {
         "title": "7. Responsibility for your end-users",
@@ -1713,16 +1819,16 @@
       },
       "contact": {
         "title": "12. Contact",
-        "body": "If you have questions about this Policy or want to exercise your rights, write to info{'@'}kaibots.com."
+        "body": "If you have questions about this Policy or want to exercise your rights, write to info{'@'}alia.com."
       }
     },
     "terms": {
       "title": "Terms of Service",
-      "subtitle": "The rules for using the Kaibots platform.",
-      "intro": "These Terms of Service (\"Terms\") govern your access to and use of the Kaibots platform (the \"Service\"). By creating an account or using the Service, you accept these Terms. If you do not agree, do not use the Service.",
+      "subtitle": "The rules for using the ALIA platform.",
+      "intro": "These Terms of Service (\"Terms\") govern your access to and use of the ALIA platform (the \"Service\"). By creating an account or using the Service, you accept these Terms. If you do not agree, do not use the Service.",
       "service": {
         "title": "1. Description of the Service",
-        "body": "Kaibots is a multi-tenant platform that allows businesses to operate AI-powered conversational assistants over the WhatsApp Business API, including dashboards, analytics, document training, multimedia resources, human handoff, and integrations with third-party systems."
+        "body": "ALIA is a multi-tenant platform that allows businesses to operate AI-powered conversational assistants over the WhatsApp Business API, including dashboards, analytics, document training, multimedia resources, human handoff, and integrations with third-party systems."
       },
       "account": {
         "title": "2. Account registration",
@@ -1738,11 +1844,11 @@
       },
       "content": {
         "title": "5. Your content",
-        "body": "You retain ownership of the content you upload to the Service (training documents, bot personality, multimedia, fallback messages). You grant Kaibots a worldwide, non-exclusive, royalty-free license to host, process, and transmit that content strictly to operate the Service for you. You represent and warrant that you have the rights to all content you upload."
+        "body": "You retain ownership of the content you upload to the Service (training documents, bot personality, multimedia, fallback messages). You grant ALIA a worldwide, non-exclusive, royalty-free license to host, process, and transmit that content strictly to operate the Service for you. You represent and warrant that you have the rights to all content you upload."
       },
       "ai": {
         "title": "6. AI-generated responses",
-        "body": "The Service uses third-party AI language models. AI-generated responses may be inaccurate, incomplete, or inappropriate for a given context. You are solely responsible for reviewing and supervising automated conversations and for configuring your assistant in line with your business needs. Kaibots is not liable for the content or consequences of AI-generated messages sent through your account."
+        "body": "The Service uses third-party AI language models. AI-generated responses may be inaccurate, incomplete, or inappropriate for a given context. You are solely responsible for reviewing and supervising automated conversations and for configuring your assistant in line with your business needs. ALIA is not liable for the content or consequences of AI-generated messages sent through your account."
       },
       "billing": {
         "title": "7. Subscriptions and billing",
@@ -1754,19 +1860,19 @@
       },
       "disclaimer": {
         "title": "9. Disclaimer of warranties",
-        "body": "The Service is provided \"as is\" and \"as available\". To the maximum extent permitted by law, Kaibots disclaims all warranties, express or implied, including merchantability, fitness for a particular purpose, and non-infringement. We do not warrant that the Service will be uninterrupted, error-free, secure, or that AI responses will be accurate."
+        "body": "The Service is provided \"as is\" and \"as available\". To the maximum extent permitted by law, ALIA disclaims all warranties, express or implied, including merchantability, fitness for a particular purpose, and non-infringement. We do not warrant that the Service will be uninterrupted, error-free, secure, or that AI responses will be accurate."
       },
       "liability": {
         "title": "10. Limitation of liability",
-        "body": "To the maximum extent permitted by law, Kaibots is not liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, revenue, data, business opportunity, or reputation. Our total aggregate liability under these Terms is limited to the amount you actually paid for the Service in the twelve (12) months immediately preceding the event giving rise to the claim."
+        "body": "To the maximum extent permitted by law, ALIA is not liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, revenue, data, business opportunity, or reputation. Our total aggregate liability under these Terms is limited to the amount you actually paid for the Service in the twelve (12) months immediately preceding the event giving rise to the claim."
       },
       "indemnity": {
         "title": "11. Indemnity",
-        "body": "You agree to indemnify, defend, and hold harmless Kaibots, its officers, directors, employees, and partners from any claim, demand, loss, or expense (including reasonable attorneys' fees) arising from your use of the Service, your content, or your breach of these Terms or third-party rights."
+        "body": "You agree to indemnify, defend, and hold harmless ALIA, its officers, directors, employees, and partners from any claim, demand, loss, or expense (including reasonable attorneys' fees) arising from your use of the Service, your content, or your breach of these Terms or third-party rights."
       },
       "ip": {
         "title": "12. Intellectual property",
-        "body": "The Service — including software, design, brand, logos, documentation, and trademarks — is owned by Kaibots or its licensors and is protected by intellectual property law. These Terms do not grant you any rights over Kaibots' intellectual property other than the limited right to use the Service in accordance with these Terms."
+        "body": "The Service — including software, design, brand, logos, documentation, and trademarks — is owned by ALIA or its licensors and is protected by intellectual property law. These Terms do not grant you any rights over ALIA' intellectual property other than the limited right to use the Service in accordance with these Terms."
       },
       "changes": {
         "title": "13. Changes to these Terms",
@@ -1774,11 +1880,11 @@
       },
       "law": {
         "title": "14. Governing law",
-        "body": "These Terms shall be governed by the laws applicable in the jurisdiction where Kaibots operates, without prejudice to the mandatory consumer protection rights granted to you by the law of your country of residence."
+        "body": "These Terms shall be governed by the laws applicable in the jurisdiction where ALIA operates, without prejudice to the mandatory consumer protection rights granted to you by the law of your country of residence."
       },
       "contact": {
         "title": "15. Contact",
-        "body": "For questions about these Terms write to info{'@'}kaibots.com."
+        "body": "For questions about these Terms write to info{'@'}alia.com."
       }
     }
   },

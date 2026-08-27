@@ -53,8 +53,8 @@ async function onSubmit(): Promise<void> {
   <div class="w-full max-w-md">
     <!-- Brand mark -->
     <div class="mb-6 flex flex-col items-center">
-      <KaibotLogo :size="72" rounded="rounded-3xl" class="bg-white ring-1 ring-white/70 shadow-glass-lg" />
-      <p class="mt-3 text-base font-semibold tracking-tight text-slate-900">Kaibot</p>
+      <AliaLogo :size="72" rounded="rounded-3xl" class="bg-white ring-1 ring-white/70 shadow-glass-lg" />
+      <p class="mt-3 text-base font-semibold tracking-tight text-slate-900">ALIA</p>
       <p class="text-xs text-slate-500">{{ $t('auth.brandTagline') }}</p>
     </div>
     <!-- Glass card -->

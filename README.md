@@ -1,6 +1,6 @@
 # chat-bot-ai-frontend
 
-Admin panel for the chat-bot-ai multi-tenant WhatsApp bot SaaS. Built with Nuxt 3 + TypeScript + Pinia + Tailwind.
+Admin panel for **ALIA** — the multi-tenant WhatsApp bot SaaS. Built with Nuxt 3 + TypeScript + Pinia + Tailwind.
 
 ## Requirements
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex bg-mist-light text-slate-900">
+  <div class="min-h-screen flex bg-brand-ambient-light text-slate-900">
     <AdminSidebar />
     <div class="flex-1 flex flex-col min-w-0">
       <AdminHeader />
