@@ -24,6 +24,7 @@ interface Script {
 const { t } = useI18n()
 
 const SCRIPTS: Record<string, Script> = {
+  // Cita médica en WhatsApp (Andrea → Dr. Paredes).
   wa: {
     labelKey: 'landing.demo.channels.wa.label',
     hintKey: 'landing.demo.channels.wa.hint',
@@ -33,53 +34,61 @@ const SCRIPTS: Record<string, Script> = {
       { s: 'them', tKey: 'landing.demo.channels.wa.m3' },
       { s: 'alia', tKey: 'landing.demo.channels.wa.m4' },
       { s: 'them', tKey: 'landing.demo.channels.wa.m5' },
-      { s: 'sys', tKey: 'landing.demo.channels.wa.m6' },
-      { s: 'alia', tKey: 'landing.demo.channels.wa.m7' },
-      { s: 'them', tKey: 'landing.demo.channels.wa.m8' },
-      { s: 'sys', tKey: 'landing.demo.channels.wa.m9' },
-      { s: 'alia', tKey: 'landing.demo.channels.wa.m10' },
+      { s: 'alia', tKey: 'landing.demo.channels.wa.m6' },
+      { s: 'them', tKey: 'landing.demo.channels.wa.m7' },
+      { s: 'sys', tKey: 'landing.demo.channels.wa.m8' },
+      { s: 'alia', tKey: 'landing.demo.channels.wa.m9' },
+      { s: 'them', tKey: 'landing.demo.channels.wa.m10' },
     ],
   },
+  // Consulta de precio en WhatsApp (LG lavadora → cotización → venta).
   web: {
     labelKey: 'landing.demo.channels.web.label',
     hintKey: 'landing.demo.channels.web.hint',
     msgs: [
       { s: 'them', tKey: 'landing.demo.channels.web.m1' },
-      { s: 'alia', tKey: 'landing.demo.channels.web.m2' },
+      { s: 'alia', tKey: 'landing.demo.channels.web.m2', mKey: 'landing.demo.channels.web.m2meta' },
       { s: 'them', tKey: 'landing.demo.channels.web.m3' },
       { s: 'alia', tKey: 'landing.demo.channels.web.m4' },
-      { s: 'sys', tKey: 'landing.demo.channels.web.m5' },
-      { s: 'alia', tKey: 'landing.demo.channels.web.m6' },
-      { s: 'them', tKey: 'landing.demo.channels.web.m7' },
-      { s: 'alia', tKey: 'landing.demo.channels.web.m8' },
+      { s: 'them', tKey: 'landing.demo.channels.web.m5' },
+      { s: 'sys', tKey: 'landing.demo.channels.web.m6' },
+      { s: 'alia', tKey: 'landing.demo.channels.web.m7' },
+      { s: 'them', tKey: 'landing.demo.channels.web.m8' },
+      { s: 'sys', tKey: 'landing.demo.channels.web.m9' },
+      { s: 'alia', tKey: 'landing.demo.channels.web.m10' },
     ],
   },
+  // Nota de voz en WhatsApp (moto Yamaha). El cliente manda audio; ALIA
+  // muestra el label 🎙️ y la meta con la transcripción entendida, luego
+  // responde con contexto perfecto.
   voz: {
     labelKey: 'landing.demo.channels.voz.label',
     hintKey: 'landing.demo.channels.voz.hint',
     msgs: [
-      { s: 'sys', tKey: 'landing.demo.channels.voz.m1' },
+      { s: 'them', tKey: 'landing.demo.channels.voz.m1', mKey: 'landing.demo.channels.voz.m1meta' },
       { s: 'alia', tKey: 'landing.demo.channels.voz.m2', mKey: 'landing.demo.channels.voz.m2meta' },
-      { s: 'them', tKey: 'landing.demo.channels.voz.m3' },
+      { s: 'them', tKey: 'landing.demo.channels.voz.m3', mKey: 'landing.demo.channels.voz.m3meta' },
       { s: 'alia', tKey: 'landing.demo.channels.voz.m4' },
       { s: 'them', tKey: 'landing.demo.channels.voz.m5' },
       { s: 'alia', tKey: 'landing.demo.channels.voz.m6' },
-      { s: 'them', tKey: 'landing.demo.channels.voz.m7' },
-      { s: 'sys', tKey: 'landing.demo.channels.voz.m8' },
-      { s: 'alia', tKey: 'landing.demo.channels.voz.m9' },
     ],
   },
+  // Panel web — intervención humana. ALIA maneja el inicio, detecta
+  // urgencia, y una operadora (Andrea) toma el control desde el panel;
+  // sus mensajes se ven como bubble de ALIA pero con meta que la
+  // identifica como operadora del panel web.
   ig: {
     labelKey: 'landing.demo.channels.ig.label',
     hintKey: 'landing.demo.channels.ig.hint',
     msgs: [
-      { s: 'sys', tKey: 'landing.demo.channels.ig.m1' },
-      { s: 'alia', tKey: 'landing.demo.channels.ig.m2' },
+      { s: 'them', tKey: 'landing.demo.channels.ig.m1' },
+      { s: 'alia', tKey: 'landing.demo.channels.ig.m2', mKey: 'landing.demo.channels.ig.m2meta' },
       { s: 'them', tKey: 'landing.demo.channels.ig.m3' },
       { s: 'alia', tKey: 'landing.demo.channels.ig.m4' },
-      { s: 'them', tKey: 'landing.demo.channels.ig.m5' },
-      { s: 'sys', tKey: 'landing.demo.channels.ig.m6' },
-      { s: 'alia', tKey: 'landing.demo.channels.ig.m7' },
+      { s: 'sys', tKey: 'landing.demo.channels.ig.m5' },
+      { s: 'alia', tKey: 'landing.demo.channels.ig.m6', mKey: 'landing.demo.channels.ig.m6meta' },
+      { s: 'them', tKey: 'landing.demo.channels.ig.m7' },
+      { s: 'alia', tKey: 'landing.demo.channels.ig.m8', mKey: 'landing.demo.channels.ig.m8meta' },
     ],
   },
 }
