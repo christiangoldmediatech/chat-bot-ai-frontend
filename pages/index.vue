@@ -153,12 +153,25 @@ function smoothScroll(ev: MouseEvent, href: string) {
         <a href="#proceso" class="alia-nav-link font-mono text-[0.74rem] uppercase tracking-[0.13em] text-mist transition-colors hover:text-pearl" @click="smoothScroll($event, '#proceso')">{{ $t('landing.nav.process') }}</a>
         <a href="#planes" class="alia-nav-link font-mono text-[0.74rem] uppercase tracking-[0.13em] text-mist transition-colors hover:text-pearl" @click="smoothScroll($event, '#planes')">{{ $t('landing.nav.plans') }}</a>
       </nav>
-      <NuxtLink
-        :to="isAuthenticated ? '/admin' : primaryCtaTarget"
-        class="ml-auto inline-flex items-center gap-2 rounded-full border border-transparent bg-brand-gradient px-4 py-2 font-mono text-[0.7rem] font-medium uppercase tracking-[0.12em] text-ink-tealDeep shadow-halo-glow transition-transform hover:-translate-y-0.5 md:ml-0"
-      >
-        {{ isAuthenticated ? $t('landing.goToDashboard') : $t('landing.nav.book') }}
-      </NuxtLink>
+      <!-- Auth CTAs: Crear cuenta (text link, oculto en mobile) + Iniciar
+           sesión (pill halo). Cuando el usuario ya inició sesión, se colapsa
+           a un solo pill "Ir al panel". Mismo patrón que la rama main pero
+           adaptado a la paleta dark commit (mono font, pill halo gradient). -->
+      <div class="ml-auto flex items-center gap-3 md:ml-0">
+        <NuxtLink
+          v-if="!isAuthenticated"
+          to="/register"
+          class="alia-nav-link hidden font-mono text-[0.7rem] uppercase tracking-[0.13em] text-mist transition-colors hover:text-pearl sm:inline"
+        >
+          {{ $t('landing.createAccount') }}
+        </NuxtLink>
+        <NuxtLink
+          :to="primaryCtaTarget"
+          class="inline-flex items-center gap-2 rounded-full border border-transparent bg-brand-gradient px-4 py-2 font-mono text-[0.7rem] font-medium uppercase tracking-[0.12em] text-ink-tealDeep shadow-halo-glow transition-transform hover:-translate-y-0.5"
+        >
+          {{ isAuthenticated ? $t('landing.goToDashboard') : $t('landing.signIn') }}
+        </NuxtLink>
+      </div>
     </header>
 
     <main id="top">
