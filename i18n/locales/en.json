@@ -66,8 +66,8 @@
       "line1": "No customer",
       "line2": "message",
       "line3": "waits again.",
-      "copy": "Today ALIA replies automatically on WhatsApp — 24/7, with no robotic answers. It understands your customers' voice notes, books appointments in Google Calendar and learns your catalog, your prices and your tone. It hands the conversation to a person only when it truly matters.",
-      "ctaPrimary": "See ALIA replying",
+      "copy": "Today LURVIA replies automatically on WhatsApp — 24/7, with no robotic answers. It understands your customers' voice notes, books appointments in Google Calendar and learns your catalog, your prices and your tone. It hands the conversation to a person only when it truly matters.",
+      "ctaPrimary": "See LURVIA replying",
       "ctaSecondary": "How it's implemented",
       "ticker": {
         "avgReply": "Average reply time",
@@ -82,7 +82,7 @@
       "titleB": "at work.",
       "copy": "Pick a case and watch the full conversation. It all happens on WhatsApp — your team sees it in the web panel and can take over any time, without the customer noticing.",
       "channelsLabel": "Real cases",
-      "channelsAria": "ALIA cases",
+      "channelsAria": "LURVIA cases",
       "channelsCopy": "The same brain in every conversation: understands text, understands audio, and knows when to hand the chat to a person. All from WhatsApp Business, with full visibility in the panel for your team.",
       "replay": "Replay",
       "channels": {
@@ -134,7 +134,7 @@
         },
         "ig": {
           "label": "Web panel · Handoff",
-          "hint": "ALIA replies → operator takes over",
+          "hint": "LURVIA replies → operator takes over",
           "tag": "Panel",
           "m1": "Hi, three days ago I bought some socks and they arrived torn 😡",
           "m2": "I'm really sorry 🙏 Share your order number and I'll check it right away.",
@@ -152,7 +152,7 @@
     },
     "caps": {
       "eyebrow": "What it does today",
-      "titleA": "What ALIA",
+      "titleA": "What LURVIA",
       "titleB": "already does for you.",
       "copy": "All of this runs today on your WhatsApp Business. No new apps for your team, no shifts, no robotic answers.",
       "items": {
@@ -161,7 +161,7 @@
         "3": { "title": "Replies with your catalog", "body": "Learns your products, prices, policies and even your team's style from 30 days of real conversations. When it doesn't know something, it says so and escalates." },
         "4": { "title": "Escalates when it matters", "body": "Detects frustration, urgency or complex cases and transfers the conversation with a summarized history — your rep steps in with context, not from scratch." },
         "5": { "title": "Understands voice notes", "body": "Transcribes and understands the voice notes your customers send on WhatsApp — no asking them to type, no detail lost." },
-        "6": { "title": "Learns from every correction", "body": "Your team corrects answers with one click and ALIA doesn't miss the same one again. It gets better every week without you lifting a finger." }
+        "6": { "title": "Learns from every correction", "body": "Your team corrects answers with one click and LURVIA doesn't miss the same one again. It gets better every week without you lifting a finger." }
       }
     },
     "process": {
@@ -251,7 +251,7 @@
     },
     "whatsappFloat": {
       "label": "Chat with us on WhatsApp",
-      "ariaLabel": "Write to ALIA on WhatsApp"
+      "ariaLabel": "Write to LURVIA on WhatsApp"
     }
   },
   "auth": {
@@ -338,7 +338,7 @@
     "payment": {
       "back": "← Back to dashboard",
       "title": "Payment instructions",
-      "subtitle": "Pay your subscription by bank transfer to the official ALIA account. Then send us your proof of payment by email so we can activate or extend your access.",
+      "subtitle": "Pay your subscription by bank transfer to the official LURVIA account. Then send us your proof of payment by email so we can activate or extend your access.",
       "amount": {
         "title": "Amount to deposit",
         "subtitle": "This is the exact amount you must transfer to the account shown below.",
@@ -366,7 +366,7 @@
       },
       "officialNotice": {
         "title": "This is our only official account",
-        "body": "ALIA will never request payments to any other account, number or person. If you receive different bank details, please report it before transferring."
+        "body": "LURVIA will never request payments to any other account, number or person. If you receive different bank details, please report it before transferring."
       },
       "howTo": {
         "title": "How to send your proof of payment",
@@ -391,7 +391,7 @@
         "subjectFallback": "Your company name",
         "companyFallback": "[your company name]",
         "userFallback": "[your registered email]",
-        "bodyTemplate": "Hello ALIA team,\n\nI'm sending the proof of payment for our subscription.\n\nCompany: {company}\nRegistered user at www.alia.com: {user}\n\nThe receipt screenshot is attached to this email.\n\nThank you."
+        "bodyTemplate": "Hello LURVIA team,\n\nI'm sending the proof of payment for our subscription.\n\nCompany: {company}\nRegistered user at www.lurvia.com: {user}\n\nThe receipt screenshot is attached to this email.\n\nThank you."
       },
       "cta": {
         "compose": "Open prefilled email",
@@ -465,7 +465,7 @@
       "successMessage": "Changes saved",
       "billingBlocked": {
         "title": "Activate your service to manage your workspace",
-        "body": "Your ALIA account is set up, but it isn't active yet. Send your first bank transfer to switch on the bot — then you'll be able to update your company name and start configuring your bots.",
+        "body": "Your LURVIA account is set up, but it isn't active yet. Send your first bank transfer to switch on the bot — then you'll be able to update your company name and start configuring your bots.",
         "cta": "View payment instructions"
       }
     },
@@ -574,7 +574,7 @@
         "title": "Conversation messages",
         "subtitle": "Fixed copy used at key moments of the chat.",
         "welcome": "Welcome message",
-        "welcomePlaceholder": "Hi! I'm ALIA, your assistant. How can I help today?",
+        "welcomePlaceholder": "Hi! I'm LURVIA, your assistant. How can I help today?",
         "welcomeHelp": "Sent on the first message of a new conversation.",
         "fallback": "Fallback message",
         "fallbackPlaceholder": "I'm not sure I can help with that. Want me to connect you with a person?",
@@ -1758,7 +1758,7 @@
       "warningTitle": "Renewal needed soon",
       "warningTitleToday": "Renewal needed today",
       "pendingTitle": "Subscription expired",
-      "pendingFirstTitle": "Welcome to ALIA — one step away from going live",
+      "pendingFirstTitle": "Welcome to LURVIA — one step away from going live",
       "suspendedTitle": "Account suspended",
       "renewSoon": "Your subscription expires in {days} day. To keep your bot active, send your proof of payment to {email} before the cutoff. | Your subscription expires in {days} days. To keep your bot active, send your proof of payment to {email} before the cutoff.",
       "renewToday": "Your subscription expires today. Send your proof of payment to {email} now to avoid suspension.",
@@ -1774,11 +1774,11 @@
     "lastUpdated": "Last updated",
     "lastUpdatedDate": "June 11, 2026",
     "contactLabel": "Contact",
-    "company": "ALIA",
+    "company": "LURVIA",
     "privacy": {
       "title": "Privacy Policy",
-      "subtitle": "How we collect, use, and protect your information when you use ALIA.",
-      "intro": "This Privacy Policy describes how ALIA (\"we\", \"us\", \"our\") collects, uses, shares, and protects personal information when you use our WhatsApp AI assistant platform (the \"Service\"). By creating an account or using the Service, you agree to the practices described here.",
+      "subtitle": "How we collect, use, and protect your information when you use LURVIA.",
+      "intro": "This Privacy Policy describes how LURVIA (\"we\", \"us\", \"our\") collects, uses, shares, and protects personal information when you use our WhatsApp AI assistant platform (the \"Service\"). By creating an account or using the Service, you agree to the practices described here.",
       "collect": {
         "title": "1. Information we collect",
         "body": "We collect account data (name, business name, email, hashed password, phone number), the content of WhatsApp messages exchanged through your assistant (text, media, timestamps and end-user phone numbers), usage logs and analytics (IP, device, language, navigation), training documents you upload, and billing data processed by our payment provider. We do not store full credit card numbers."
@@ -1830,11 +1830,11 @@
     },
     "terms": {
       "title": "Terms of Service",
-      "subtitle": "The rules for using the ALIA platform.",
-      "intro": "These Terms of Service (\"Terms\") govern your access to and use of the ALIA platform (the \"Service\"). By creating an account or using the Service, you accept these Terms. If you do not agree, do not use the Service.",
+      "subtitle": "The rules for using the LURVIA platform.",
+      "intro": "These Terms of Service (\"Terms\") govern your access to and use of the LURVIA platform (the \"Service\"). By creating an account or using the Service, you accept these Terms. If you do not agree, do not use the Service.",
       "service": {
         "title": "1. Description of the Service",
-        "body": "ALIA is a multi-tenant platform that allows businesses to operate AI-powered conversational assistants over the WhatsApp Business API, including dashboards, analytics, document training, multimedia resources, human handoff, and integrations with third-party systems."
+        "body": "LURVIA is a multi-tenant platform that allows businesses to operate AI-powered conversational assistants over the WhatsApp Business API, including dashboards, analytics, document training, multimedia resources, human handoff, and integrations with third-party systems."
       },
       "account": {
         "title": "2. Account registration",
@@ -1850,11 +1850,11 @@
       },
       "content": {
         "title": "5. Your content",
-        "body": "You retain ownership of the content you upload to the Service (training documents, bot personality, multimedia, fallback messages). You grant ALIA a worldwide, non-exclusive, royalty-free license to host, process, and transmit that content strictly to operate the Service for you. You represent and warrant that you have the rights to all content you upload."
+        "body": "You retain ownership of the content you upload to the Service (training documents, bot personality, multimedia, fallback messages). You grant LURVIA a worldwide, non-exclusive, royalty-free license to host, process, and transmit that content strictly to operate the Service for you. You represent and warrant that you have the rights to all content you upload."
       },
       "ai": {
         "title": "6. AI-generated responses",
-        "body": "The Service uses third-party AI language models. AI-generated responses may be inaccurate, incomplete, or inappropriate for a given context. You are solely responsible for reviewing and supervising automated conversations and for configuring your assistant in line with your business needs. ALIA is not liable for the content or consequences of AI-generated messages sent through your account."
+        "body": "The Service uses third-party AI language models. AI-generated responses may be inaccurate, incomplete, or inappropriate for a given context. You are solely responsible for reviewing and supervising automated conversations and for configuring your assistant in line with your business needs. LURVIA is not liable for the content or consequences of AI-generated messages sent through your account."
       },
       "billing": {
         "title": "7. Subscriptions and billing",
@@ -1866,19 +1866,19 @@
       },
       "disclaimer": {
         "title": "9. Disclaimer of warranties",
-        "body": "The Service is provided \"as is\" and \"as available\". To the maximum extent permitted by law, ALIA disclaims all warranties, express or implied, including merchantability, fitness for a particular purpose, and non-infringement. We do not warrant that the Service will be uninterrupted, error-free, secure, or that AI responses will be accurate."
+        "body": "The Service is provided \"as is\" and \"as available\". To the maximum extent permitted by law, LURVIA disclaims all warranties, express or implied, including merchantability, fitness for a particular purpose, and non-infringement. We do not warrant that the Service will be uninterrupted, error-free, secure, or that AI responses will be accurate."
       },
       "liability": {
         "title": "10. Limitation of liability",
-        "body": "To the maximum extent permitted by law, ALIA is not liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, revenue, data, business opportunity, or reputation. Our total aggregate liability under these Terms is limited to the amount you actually paid for the Service in the twelve (12) months immediately preceding the event giving rise to the claim."
+        "body": "To the maximum extent permitted by law, LURVIA is not liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, revenue, data, business opportunity, or reputation. Our total aggregate liability under these Terms is limited to the amount you actually paid for the Service in the twelve (12) months immediately preceding the event giving rise to the claim."
       },
       "indemnity": {
         "title": "11. Indemnity",
-        "body": "You agree to indemnify, defend, and hold harmless ALIA, its officers, directors, employees, and partners from any claim, demand, loss, or expense (including reasonable attorneys' fees) arising from your use of the Service, your content, or your breach of these Terms or third-party rights."
+        "body": "You agree to indemnify, defend, and hold harmless LURVIA, its officers, directors, employees, and partners from any claim, demand, loss, or expense (including reasonable attorneys' fees) arising from your use of the Service, your content, or your breach of these Terms or third-party rights."
       },
       "ip": {
         "title": "12. Intellectual property",
-        "body": "The Service — including software, design, brand, logos, documentation, and trademarks — is owned by ALIA or its licensors and is protected by intellectual property law. These Terms do not grant you any rights over ALIA' intellectual property other than the limited right to use the Service in accordance with these Terms."
+        "body": "The Service — including software, design, brand, logos, documentation, and trademarks — is owned by LURVIA or its licensors and is protected by intellectual property law. These Terms do not grant you any rights over LURVIA' intellectual property other than the limited right to use the Service in accordance with these Terms."
       },
       "changes": {
         "title": "13. Changes to these Terms",
@@ -1886,7 +1886,7 @@
       },
       "law": {
         "title": "14. Governing law",
-        "body": "These Terms shall be governed by the laws applicable in the jurisdiction where ALIA operates, without prejudice to the mandatory consumer protection rights granted to you by the law of your country of residence."
+        "body": "These Terms shall be governed by the laws applicable in the jurisdiction where LURVIA operates, without prejudice to the mandatory consumer protection rights granted to you by the law of your country of residence."
       },
       "contact": {
         "title": "15. Contact",

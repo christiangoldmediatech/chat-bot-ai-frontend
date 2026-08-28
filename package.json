@@ -1,8 +1,8 @@
 {
-  "name": "chat-bot-ai-frontend",
+  "name": "lurvia-frontend",
   "version": "0.1.0",
   "private": true,
-  "description": "Admin panel for the chat-bot-ai multi-tenant WhatsApp bot SaaS.",
+  "description": "Admin panel for LURVIA — the multi-tenant WhatsApp AI assistants platform.",
   "engines": {
     "node": "22.13.1"
   },

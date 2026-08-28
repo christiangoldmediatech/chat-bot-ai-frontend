@@ -66,12 +66,17 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'ALIA — WhatsApp AI for businesses',
+      title: 'LURVIA — Plataforma de asistentes inteligentes',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'ALIA replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
-        { name: 'theme-color', content: '#58F0CE' },
+        { name: 'description', content: 'LURVIA replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
+        { name: 'theme-color', content: '#077DDC' },
+        { property: 'og:title', content: 'LURVIA — Plataforma de asistentes inteligentes' },
+        { property: 'og:site_name', content: 'LURVIA' },
+        { property: 'og:description', content: 'LURVIA replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
+        { name: 'twitter:title', content: 'LURVIA — Plataforma de asistentes inteligentes' },
+        { name: 'twitter:description', content: 'LURVIA replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
       ],
       // Platform-wide typography (dark commit):
       // - Archivo (variable width/weight) → wordmark + display headings via
@@ -80,9 +85,9 @@ export default defineNuxtConfig({
       // - Chivo Mono → labels, eyebrows and metadata via `font-mono`.
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-        { rel: 'icon', type: 'image/png', href: '/alia-logo.png' },
-        { rel: 'shortcut icon', type: 'image/png', href: '/alia-logo.png' },
-        { rel: 'apple-touch-icon', href: '/alia-logo.png' },
+        { rel: 'icon', type: 'image/png', href: '/lurvia-logo.png' },
+        { rel: 'shortcut icon', type: 'image/png', href: '/lurvia-logo.png' },
+        { rel: 'apple-touch-icon', href: '/lurvia-logo.png' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         {

@@ -1,21 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
-    <linearGradient id="alia-brand" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#39B4E0"/>
-      <stop offset="100%" stop-color="#1FEBB0"/>
+    <linearGradient id="lurvia-brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5BE9EC"/>
+      <stop offset="100%" stop-color="#077DDC"/>
     </linearGradient>
   </defs>
 
   <!-- Rounded brand tile -->
-  <rect x="0" y="0" width="64" height="64" rx="14" fill="url(#alia-brand)"/>
+  <rect x="0" y="0" width="64" height="64" rx="14" fill="url(#lurvia-brand)"/>
 
-  <!-- Letter A (Space Grotesk-ish geometric wedge) rendered as paths so the
-       favicon does not depend on the Space Grotesk web font being loaded. -->
+  <!-- Letter L (geometric wedge). LURVIA wordmark opens with L — the favicon
+       lifts that letter as the mark. -->
   <g fill="#ffffff">
-    <!-- Left leg -->
-    <path d="M20 46 L28.5 16 L35.5 16 L44 46 L37.5 46 L35 37 L29 37 L26.5 46 Z"/>
-    <!-- Crossbar cutout is baked into the shape above (thin diamond around x=32).
-         Middle counter to give the A its bowl: -->
-    <path d="M30 31 L34 31 L32 24 Z" fill="url(#alia-brand)"/>
+    <path d="M22 16 L30 16 L30 40 L46 40 L46 48 L22 48 Z"/>
   </g>
 </svg>

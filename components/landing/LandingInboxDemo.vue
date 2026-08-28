@@ -1,10 +1,10 @@
 <script setup lang="ts">
 /**
- * Escena animada "bandeja desbordada → ALIA responde a todos".
+ * Escena animada "bandeja desbordada → LURVIA responde a todos".
  *
  * Máquina de estados con timeouts (mismo patrón que el chat del hero):
  * los 4 chats entran uno a uno con badge de pendiente, aparece el pill de
- * ALIA y cada fila pasa a "respondido" en cascada; cierra con el resumen
+ * LURVIA y cada fila pasa a "respondido" en cascada; cierra con el resumen
  * y reinicia. Arranca la primera vez que la tarjeta entra al viewport.
  * Con prefers-reduced-motion se muestra el estado final estático.
  */
@@ -17,7 +17,7 @@ const ROWS = [
   { name: 'Carlos', time: '10:05', avatar: 'bg-primary-100 text-primary-700' },
 ] as const
 
-// stage 1-4: entra cada chat · 5: pill de ALIA · 6-9: se resuelve cada
+// stage 1-4: entra cada chat · 5: pill de LURVIA · 6-9: se resuelve cada
 // chat · 10: resumen final.
 const STEPS: Array<{ stage: number, at: number }> = [
   { stage: 1, at: 400 },
@@ -167,14 +167,14 @@ onBeforeUnmount(() => {
       </template>
     </ul>
 
-    <!-- Pill de ALIA: entra en acción → resumen. Altura fija para no
+    <!-- Pill de LURVIA: entra en acción → resumen. Altura fija para no
          desplazar el layout cuando aparece. -->
     <div class="mt-4 flex h-10 items-center justify-center">
       <div
         v-if="stage >= 5"
         class="chat-pop inline-flex max-w-full items-center gap-2 rounded-full bg-slate-900 px-4 py-2 shadow-glass"
       >
-        <AliaLogo :size="20" rounded="rounded-full" class="shrink-0 bg-white" />
+        <LurviaLogo :size="20" rounded="rounded-full" class="shrink-0 bg-white" />
         <span class="truncate text-xs font-semibold text-white">
           {{ stage >= FINAL_STAGE ? t('landing.inbox.summary') : t('landing.inbox.botActive') }}
         </span>

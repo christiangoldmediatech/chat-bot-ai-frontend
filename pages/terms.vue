@@ -2,9 +2,9 @@
 definePageMeta({ layout: false })
 
 useHead({
-  title: 'Terms of Service · ALIA',
+  title: 'Terms of Service · LURVIA',
   meta: [
-    { name: 'description', content: 'ALIA Terms of Service — the rules for using the platform.' },
+    { name: 'description', content: 'LURVIA Terms of Service — the rules for using the platform.' },
     { name: 'robots', content: 'index, follow' },
   ],
 })
@@ -32,9 +32,9 @@ const sections = [
   <div class="relative min-h-screen overflow-x-hidden bg-sky-day font-sans text-slate-900">
     <header class="sticky top-0 z-40 backdrop-blur-xl bg-white/80 ring-1 ring-white/60">
       <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
-        <NuxtLink to="/" class="flex items-center gap-2.5 group" aria-label="ALIA home">
-          <AliaLogo :size="36" rounded="rounded-2xl" class="shadow-glass ring-1 ring-white/60 bg-white transition-transform group-hover:scale-105" />
-          <span class="text-base font-semibold tracking-tight">ALIA</span>
+        <NuxtLink to="/" class="flex items-center gap-2.5 group" aria-label="LURVIA home">
+          <LurviaLogo :size="36" rounded="rounded-2xl" class="shadow-glass ring-1 ring-white/60 bg-white transition-transform group-hover:scale-105" />
+          <span class="text-base font-semibold tracking-tight">LURVIA</span>
         </NuxtLink>
         <NuxtLink
           to="/"
@@ -78,10 +78,10 @@ const sections = [
             <p class="text-sm font-medium text-slate-900">
               {{ $t('legal.contactLabel') }}:
               <a
-                href="mailto:info@alia.com"
+                href="mailto:info@lurvia.com"
                 class="text-success-700 hover:underline"
               >
-                info@alia.com
+                info@lurvia.com
               </a>
             </p>
           </div>

@@ -1,47 +1,49 @@
 import type { Config } from 'tailwindcss'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
-// ALIA design tokens — dark commit. El logo vive sobre un degradado verde-abisal
-// (halo teal + navy profundo); una versión clara traicionaría la marca. Todos
-// los colores se pintan desde tokens, no hardcodeados en componentes.
+// LURVIA design tokens — dark commit. El wordmark vive sobre un vórtice azul
+// noche (núcleo deep navy + halo cian). Todos los colores se pintan desde
+// tokens, no hardcodeados en componentes.
 //
 // Palettes:
-//   • primary — ALIA halo (base `#58F0CE`, un mint teal más frío que la iteración
-//     anterior). Wordmark, CTAs, glow, "en acción".
-//   • accent  — halo-dim `#2FB99B` para labels, foco, acentos secundarios.
-//   • ink / surface / card — capas de fondo (near-black → surface teal → card).
-//   • pearl / mist — texto (blanco perlado sobre oscuro / gris teal para body).
-//   • line    — bordes translúcidos derivados de mist.
-//   • success / danger — sin cambio (semántica de canal / severidad).
+//   • primary — LURVIA action blue (base `#077DDC`). Wordmark accents, CTAs,
+//     enlaces, "en acción".
+//   • accent  — cian `#5BE9EC` para glow, highlights, foco, bordes iluminados.
+//   • ink / surface / card — capas de fondo (near-black → azul noche → azul
+//     profundo).
+//   • pearl / mist — texto (blanco sobre oscuro / gris azulado para body).
+//   • line    — bordes translúcidos derivados del cian.
+//   • success / danger — WhatsApp verde y rose (semántica de canal / severidad,
+//     no se rebrandean).
 //
 // `brand` es alias de `primary` para retrocompatibilidad con clases legacy.
 
 const primary = {
-  50: '#f0fffb',
-  100: '#c9fff0',
-  200: '#9dfbe0',
-  300: '#74f5cf',
-  400: '#58f0ce', // halo — base ALIA
-  500: '#3fdcb6',
-  600: '#2fb99b', // halo-dim — texto sobre pearl si necesario
-  700: '#22957c',
-  800: '#177361',
-  900: '#0d5449',
-  950: '#032e28',
+  50: '#e6f5ff',
+  100: '#c1e6ff',
+  200: '#8fd1ff',
+  300: '#5bb9fb',
+  400: '#2a9cec',
+  500: '#077ddc', // base LURVIA — --color-4
+  600: '#0668ba',
+  700: '#065396',
+  800: '#054073',
+  900: '#032e56',
+  950: '#01142a',  // --color-3
 }
 
 const accent = {
-  50: '#e7fbf5',
-  100: '#c4f4e5',
-  200: '#94e7cf',
-  300: '#5dd6b6',
-  400: '#3cc7a4',
-  500: '#2fb99b',
-  600: '#219481',
-  700: '#187366',
-  800: '#125650',
-  900: '#0a2a25',
-  950: '#04100e',
+  50: '#e8fdfe',
+  100: '#c6f8fa',
+  200: '#9ff2f5',
+  300: '#77ecf0',
+  400: '#5be9ec', // base cian — --color-5
+  500: '#3ecdd1',
+  600: '#2ba7ab',
+  700: '#1f8083',
+  800: '#155a5d',
+  900: '#0a3436',
+  950: '#031619',
 }
 
 const success = {
@@ -72,28 +74,28 @@ const danger = {
   950: '#4c0519',
 }
 
-// Ink / surface / card / teal — capas de fondo del dark commit.
+// Ink / surface / card — capas de fondo del dark commit.
 const ink = {
-  DEFAULT: '#04100e',
-  deep: '#020908',
-  surface: '#081c19',
-  card: '#0b2723',
-  cardHi: '#103330',
-  tealDeep: '#0a2a25',
-  tealMid: '#12554a',
+  DEFAULT: '#030303',   // --color-1
+  deep: '#000000',
+  surface: '#01142a',   // --color-3
+  card: '#032040',
+  cardHi: '#034871',    // --color-2
+  navyDeep: '#01142a',
+  navyMid: '#034871',
 }
 
-// Text / neutral (perla + mist teal).
-const pearl = '#e9f6f2'
+// Text / neutral (perla + mist azulado).
+const pearl = '#ffffff'
 const mist = {
-  DEFAULT: '#8aafa7',
-  dim: '#567c75',
+  DEFAULT: 'rgba(255,255,255,0.72)',
+  dim: 'rgba(255,255,255,0.48)',
 }
 
-// Line — bordes translúcidos derivados de mist.
+// Line — bordes translúcidos derivados del cian de acento.
 const line = {
-  DEFAULT: 'rgba(138,175,167,0.16)',
-  soft: 'rgba(138,175,167,0.08)',
+  DEFAULT: 'rgba(91,233,236,0.20)',
+  soft: 'rgba(91,233,236,0.10)',
 }
 
 export default <Partial<Config>>{
@@ -127,57 +129,57 @@ export default <Partial<Config>>{
         line,
         // Halo utilities: `bg-halo-wash` (soft fill), `border-halo-line`.
         halo: {
-          DEFAULT: '#58f0ce',
-          dim: '#2fb99b',
-          wash: 'rgba(88,240,206,0.10)',
-          line: 'rgba(88,240,206,0.26)',
+          DEFAULT: '#5be9ec',
+          dim: '#077ddc',
+          wash: 'rgba(91,233,236,0.10)',
+          line: 'rgba(91,233,236,0.35)',
         },
       },
       backgroundImage: {
-        // Brand gradient — halo → halo-dim. Se usa en botones sólidos y en el
-        // wordmark cuando pinta con gradiente.
-        'brand-gradient': 'linear-gradient(100deg, #58f0ce 0%, #2fb99b 100%)',
-        // Ground: fondo canónico del dark commit — halo abisal arriba, deep
-        // ink abajo, con un radial secundario en la esquina inferior derecha.
+        // Brand gradient — cian → azul primario. Se usa en botones sólidos y
+        // en el wordmark cuando pinta con gradiente.
+        'brand-gradient': 'linear-gradient(135deg, #5be9ec 0%, #077ddc 100%)',
+        // Ground: fondo canónico del dark commit — vórtice radial azul con
+        // núcleo noche, anillos primario y desvanecido a negro.
         'ground': [
-          'radial-gradient(120% 80% at 50% -10%, rgba(18,85,74,.62) 0%, rgba(10,42,37,.22) 42%, rgba(4,16,14,0) 72%)',
-          'radial-gradient(90% 60% at 100% 100%, rgba(18,85,74,.28) 0%, rgba(4,16,14,0) 60%)',
-          'linear-gradient(180deg, #020908 0%, #04100e 30%, #04100e 100%)',
+          'radial-gradient(closest-side circle at 50% -10%, rgba(7,125,220,0.32) 0%, rgba(3,72,113,0.18) 42%, rgba(3,3,3,0) 72%)',
+          'radial-gradient(90% 60% at 100% 100%, rgba(7,125,220,0.20) 0%, rgba(3,3,3,0) 60%)',
+          'linear-gradient(180deg, #000000 0%, #030303 30%, #030303 100%)',
         ].join(','),
         // Brand ambient — legacy alias del ground para retrocompatibilidad
         // con lo que ya venía usando `bg-brand-ambient` en layouts.
         'brand-ambient': [
-          'radial-gradient(120% 80% at 50% -10%, rgba(18,85,74,.62) 0%, rgba(10,42,37,.22) 42%, rgba(4,16,14,0) 72%)',
-          'radial-gradient(90% 60% at 100% 100%, rgba(18,85,74,.28) 0%, rgba(4,16,14,0) 60%)',
-          'linear-gradient(180deg, #020908 0%, #04100e 30%, #04100e 100%)',
+          'radial-gradient(closest-side circle at 50% -10%, rgba(7,125,220,0.32) 0%, rgba(3,72,113,0.18) 42%, rgba(3,3,3,0) 72%)',
+          'radial-gradient(90% 60% at 100% 100%, rgba(7,125,220,0.20) 0%, rgba(3,3,3,0) 60%)',
+          'linear-gradient(180deg, #000000 0%, #030303 30%, #030303 100%)',
         ].join(','),
         // Variante clara para admin (subordinada; mantiene el mismo motif
-        // pero sobre base near-white).
+        // pero sobre base near-white con tinte azul).
         'brand-ambient-light': [
-          'radial-gradient(circle at 12% 18%, rgba(47,185,155,0.14), transparent 55%)',
-          'radial-gradient(circle at 88% 82%, rgba(88,240,206,0.14), transparent 55%)',
-          'linear-gradient(180deg, #f4fbfd 0%, #eaf7fd 100%)',
+          'radial-gradient(circle at 12% 18%, rgba(7,125,220,0.10), transparent 55%)',
+          'radial-gradient(circle at 88% 82%, rgba(91,233,236,0.12), transparent 55%)',
+          'linear-gradient(180deg, #f4f8fd 0%, #eaf2fd 100%)',
         ].join(','),
         // Halo radial que respira detrás del wordmark del hero.
-        'halo-radial': 'radial-gradient(circle, rgba(88,240,206,.16) 0%, rgba(18,85,74,.10) 34%, rgba(4,16,14,0) 64%)',
+        'halo-radial': 'radial-gradient(circle, rgba(91,233,236,0.18) 0%, rgba(7,125,220,0.12) 34%, rgba(3,3,3,0) 64%)',
         // Chrome sutil para cards elevadas.
-        'chrome-card': 'linear-gradient(170deg, #103330 0%, #081c19 46%, #04100e 100%)',
+        'chrome-card': 'linear-gradient(170deg, #034871 0%, #01142a 46%, #030303 100%)',
       },
       boxShadow: {
         // Elevated glass shadow.
-        glass: '0 10px 30px -12px rgb(4 16 14 / 0.35), 0 4px 10px -6px rgb(4 16 14 / 0.15)',
-        'glass-lg': '0 20px 50px -20px rgb(4 16 14 / 0.55), 0 8px 16px -8px rgb(4 16 14 / 0.20)',
+        glass: '0 10px 30px -12px rgb(3 3 3 / 0.45), 0 4px 10px -6px rgb(3 3 3 / 0.20)',
+        'glass-lg': '0 20px 50px -20px rgb(3 3 3 / 0.65), 0 8px 16px -8px rgb(3 3 3 / 0.28)',
         // Halo glow para el CTA sólido y el picked plan.
-        'halo-glow': '0 10px 34px -14px rgba(88,240,206,.85)',
-        'halo-glow-lg': '0 30px 70px -46px rgba(88,240,206,.7)',
+        'halo-glow': '0 10px 34px -14px rgba(91,233,236,0.85)',
+        'halo-glow-lg': '0 30px 70px -46px rgba(91,233,236,0.70)',
         // Deep shadow para el phone frame.
-        'phone': '0 40px 90px -50px rgba(0,0,0,.95), inset 0 1px 0 rgba(232,246,242,.06)',
+        'phone': '0 40px 90px -50px rgba(0,0,0,0.95), inset 0 1px 0 rgba(255,255,255,0.06)',
       },
       keyframes: {
         // Pulso de ping para el dot del CTA sólido.
         ping: {
-          '0%': { boxShadow: '0 0 0 0 rgba(88,240,206,.55)' },
-          '70%, 100%': { boxShadow: '0 0 0 9px rgba(88,240,206,0)' },
+          '0%': { boxShadow: '0 0 0 0 rgba(91,233,236,0.55)' },
+          '70%, 100%': { boxShadow: '0 0 0 9px rgba(91,233,236,0)' },
         },
         // Halo del hero respirando.
         breathe: {

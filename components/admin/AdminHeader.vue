@@ -27,9 +27,9 @@ async function onLogout(): Promise<void> {
         </svg>
       </button>
       <!-- Mobile brand (sidebar is hidden until drawer opens) -->
-      <NuxtLink to="/admin" class="md:hidden flex items-center gap-2 min-w-0" aria-label="ALIA dashboard">
-        <AliaLogo :size="28" rounded="rounded-lg" class="bg-white ring-1 ring-white/70 shadow-sm" />
-        <span class="text-sm font-semibold text-slate-900 truncate">ALIA</span>
+      <NuxtLink to="/admin" class="md:hidden flex items-center gap-2 min-w-0" aria-label="LURVIA dashboard">
+        <LurviaLogo :size="28" rounded="rounded-lg" class="bg-white ring-1 ring-white/70 shadow-sm" />
+        <span class="text-sm font-semibold text-slate-900 truncate">LURVIA</span>
       </NuxtLink>
       <!-- Desktop subtitle -->
       <div class="hidden md:block text-sm text-slate-500">{{ $t('admin.panelTitle') }}</div>

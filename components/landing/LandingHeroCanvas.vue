@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Fondo animado del landing (ALIA — dark commit).
+ * Fondo animado del landing (LURVIA — dark commit).
  *
  * Un `<canvas>` 2D a pantalla completa que dibuja tres "hebras" sinusoidales
  * horizontales cerca del centro vertical. Cada hebra combina tres frecuencias
@@ -84,11 +84,11 @@ function frame(now: number) {
     const g = ctx.createLinearGradient(0, 0, w, 0)
     // Gradiente lateral: cyan invisible en los bordes, halo brillante al
     // centro. Multiplicamos la alpha central por 1.5 para el pop.
-    g.addColorStop(0, 'rgba(88,240,206,0)')
-    g.addColorStop(0.28, `rgba(47,185,155,${S.alpha})`)
-    g.addColorStop(0.55, `rgba(88,240,206,${S.alpha * 1.5})`)
-    g.addColorStop(0.78, `rgba(47,185,155,${S.alpha})`)
-    g.addColorStop(1, 'rgba(88,240,206,0)')
+    g.addColorStop(0, 'rgba(91,233,236,0)')
+    g.addColorStop(0.28, `rgba(7,125,220,${S.alpha})`)
+    g.addColorStop(0.55, `rgba(91,233,236,${S.alpha * 1.5})`)
+    g.addColorStop(0.78, `rgba(7,125,220,${S.alpha})`)
+    g.addColorStop(1, 'rgba(91,233,236,0)')
     ctx.strokeStyle = g
     ctx.lineWidth = S.width
     ctx.beginPath()

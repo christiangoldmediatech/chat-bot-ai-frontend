@@ -1,6 +1,6 @@
-# chat-bot-ai-frontend
+# lurvia-frontend
 
-Admin panel for **ALIA** — the multi-tenant WhatsApp bot SaaS. Built with Nuxt 3 + TypeScript + Pinia + Tailwind.
+Admin panel for **LURVIA** — the multi-tenant WhatsApp AI assistants platform. Built with Nuxt 3 + TypeScript + Pinia + Tailwind.
 
 ## Requirements
 

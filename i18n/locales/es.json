@@ -66,8 +66,8 @@
       "line1": "Ningún mensaje",
       "line2": "de tu cliente",
       "line3": "vuelve a esperar.",
-      "copy": "Hoy ALIA responde automáticamente por WhatsApp — 24/7, sin respuestas robóticas. Entiende las notas de voz de tus clientes, agenda citas en Google Calendar y aprende tu catálogo, tus precios y tu tono. Le pasa la conversación a una persona solo cuando de verdad hace falta.",
-      "ctaPrimary": "Ver ALIA respondiendo",
+      "copy": "Hoy LURVIA responde automáticamente por WhatsApp — 24/7, sin respuestas robóticas. Entiende las notas de voz de tus clientes, agenda citas en Google Calendar y aprende tu catálogo, tus precios y tu tono. Le pasa la conversación a una persona solo cuando de verdad hace falta.",
+      "ctaPrimary": "Ver LURVIA respondiendo",
       "ctaSecondary": "Cómo se implementa",
       "ticker": {
         "avgReply": "Respuesta promedio",
@@ -82,7 +82,7 @@
       "titleB": "trabajando.",
       "copy": "Elige un caso y mira la conversación completa. Todo ocurre en WhatsApp — tu equipo la ve en el panel web y puede tomar el control cuando quiera, sin que el cliente lo note.",
       "channelsLabel": "Casos reales",
-      "channelsAria": "Casos de ALIA",
+      "channelsAria": "Casos de LURVIA",
       "channelsCopy": "El mismo cerebro en cada conversación: entiende texto, entiende audio y sabe cuándo pasar el chat a una persona. Todo desde WhatsApp Business, con vista completa en el panel para tu equipo.",
       "replay": "Repetir",
       "channels": {
@@ -134,7 +134,7 @@
         },
         "ig": {
           "label": "Panel web · Intervención",
-          "hint": "ALIA responde → operadora toma el control",
+          "hint": "LURVIA responde → operadora toma el control",
           "tag": "Panel",
           "m1": "Hola, hace tres días compré unas medias y me llegaron rotas 😡",
           "m2": "Lamento mucho eso 🙏 Cuéntame tu número de pedido y reviso el caso al toque.",
@@ -152,7 +152,7 @@
     },
     "caps": {
       "eyebrow": "Lo que hace hoy",
-      "titleA": "Lo que ALIA",
+      "titleA": "Lo que LURVIA",
       "titleB": "ya hace por ti.",
       "copy": "Todo esto corre hoy en tu WhatsApp Business. Sin apps nuevas para tu equipo, sin turnos, sin respuestas robóticas.",
       "items": {
@@ -161,7 +161,7 @@
         "3": { "title": "Responde con tu catálogo", "body": "Aprende tus productos, precios, políticas y hasta el estilo de tu equipo con 30 días de conversaciones reales. Cuando no sabe algo, lo dice y escala." },
         "4": { "title": "Escala al humano cuando importa", "body": "Detecta molestia, urgencia o casos complejos y transfiere la conversación con el historial resumido — tu vendedor entra con contexto, no de cero." },
         "5": { "title": "Entiende notas de voz", "body": "Transcribe y comprende las notas de audio que tus clientes mandan por WhatsApp — sin pedirles que escriban, sin perder detalle." },
-        "6": { "title": "Aprende con cada corrección", "body": "Tu equipo corrige respuestas con un clic y ALIA no vuelve a fallar la misma. Cada semana mejora sin que muevas un dedo." }
+        "6": { "title": "Aprende con cada corrección", "body": "Tu equipo corrige respuestas con un clic y LURVIA no vuelve a fallar la misma. Cada semana mejora sin que muevas un dedo." }
       }
     },
     "process": {
@@ -251,7 +251,7 @@
     },
     "whatsappFloat": {
       "label": "Escríbenos por WhatsApp",
-      "ariaLabel": "Escribir a ALIA por WhatsApp"
+      "ariaLabel": "Escribir a LURVIA por WhatsApp"
     }
   },
   "auth": {
@@ -338,7 +338,7 @@
     "payment": {
       "back": "← Volver al panel",
       "title": "Instrucciones de pago",
-      "subtitle": "Paga tu suscripción por transferencia bancaria a la cuenta oficial de ALIA. Luego envíanos el comprobante por correo para activar o extender tu acceso.",
+      "subtitle": "Paga tu suscripción por transferencia bancaria a la cuenta oficial de LURVIA. Luego envíanos el comprobante por correo para activar o extender tu acceso.",
       "amount": {
         "title": "Monto a depositar",
         "subtitle": "Este es el valor exacto que debes transferir a la cuenta mostrada abajo.",
@@ -366,7 +366,7 @@
       },
       "officialNotice": {
         "title": "Esta es nuestra única cuenta oficial",
-        "body": "ALIA nunca te pedirá pagos a otra cuenta, número o persona. Si recibes datos bancarios distintos, repórtalo antes de transferir."
+        "body": "LURVIA nunca te pedirá pagos a otra cuenta, número o persona. Si recibes datos bancarios distintos, repórtalo antes de transferir."
       },
       "howTo": {
         "title": "Cómo enviar tu comprobante",
@@ -391,7 +391,7 @@
         "subjectFallback": "Nombre de tu empresa",
         "companyFallback": "[nombre de tu empresa]",
         "userFallback": "[tu correo registrado]",
-        "bodyTemplate": "Hola equipo de ALIA,\n\nLes envío el comprobante de pago de nuestra suscripción.\n\nEmpresa: {company}\nUsuario registrado en www.alia.com: {user}\n\nAdjunto la captura del comprobante a este correo.\n\nGracias."
+        "bodyTemplate": "Hola equipo de LURVIA,\n\nLes envío el comprobante de pago de nuestra suscripción.\n\nEmpresa: {company}\nUsuario registrado en www.lurvia.com: {user}\n\nAdjunto la captura del comprobante a este correo.\n\nGracias."
       },
       "cta": {
         "compose": "Abrir correo prellenado",
@@ -465,7 +465,7 @@
       "successMessage": "Cambios guardados",
       "billingBlocked": {
         "title": "Activa tu servicio para gestionar tu workspace",
-        "body": "Tu cuenta ALIA ya está creada pero aún no está activa. Realiza tu primera transferencia para encender el bot — luego podrás editar el nombre de la empresa y empezar a configurar tus bots.",
+        "body": "Tu cuenta LURVIA ya está creada pero aún no está activa. Realiza tu primera transferencia para encender el bot — luego podrás editar el nombre de la empresa y empezar a configurar tus bots.",
         "cta": "Ver instrucciones de pago"
       }
     },
@@ -574,7 +574,7 @@
         "title": "Mensajes de conversación",
         "subtitle": "Copy fijo que se usa en momentos clave del chat.",
         "welcome": "Mensaje de bienvenida",
-        "welcomePlaceholder": "¡Hola! Soy ALIA, tu asistente. ¿En qué puedo ayudarte hoy?",
+        "welcomePlaceholder": "¡Hola! Soy LURVIA, tu asistente. ¿En qué puedo ayudarte hoy?",
         "welcomeHelp": "Se envía en el primer mensaje de una conversación nueva.",
         "fallback": "Mensaje de fallback",
         "fallbackPlaceholder": "No estoy seguro de poder ayudarte con eso. ¿Te conecto con una persona?",
@@ -1758,7 +1758,7 @@
       "warningTitle": "Renovación próxima",
       "warningTitleToday": "Tu suscripción vence hoy",
       "pendingTitle": "Suscripción vencida",
-      "pendingFirstTitle": "Bienvenido a ALIA — un paso para activar tu servicio",
+      "pendingFirstTitle": "Bienvenido a LURVIA — un paso para activar tu servicio",
       "suspendedTitle": "Cuenta suspendida",
       "renewSoon": "Tu suscripción vence en {days} día. Para mantener tu bot activo, envía tu comprobante de pago a {email} antes del corte. | Tu suscripción vence en {days} días. Para mantener tu bot activo, envía tu comprobante de pago a {email} antes del corte.",
       "renewToday": "Tu suscripción vence hoy. Envía tu comprobante de pago a {email} ahora mismo para evitar la suspensión.",
@@ -1774,11 +1774,11 @@
     "lastUpdated": "Última actualización",
     "lastUpdatedDate": "11 de junio de 2026",
     "contactLabel": "Contacto",
-    "company": "ALIA",
+    "company": "LURVIA",
     "privacy": {
       "title": "Política de Privacidad",
-      "subtitle": "Cómo recopilamos, usamos y protegemos tu información cuando utilizas ALIA.",
-      "intro": "Esta Política de Privacidad describe cómo ALIA («nosotros», «nuestro») recopila, utiliza, comparte y protege la información personal cuando usas nuestra plataforma de asistentes con IA para WhatsApp (el «Servicio»). Al crear una cuenta o usar el Servicio aceptas las prácticas descritas aquí.",
+      "subtitle": "Cómo recopilamos, usamos y protegemos tu información cuando utilizas LURVIA.",
+      "intro": "Esta Política de Privacidad describe cómo LURVIA («nosotros», «nuestro») recopila, utiliza, comparte y protege la información personal cuando usas nuestra plataforma de asistentes con IA para WhatsApp (el «Servicio»). Al crear una cuenta o usar el Servicio aceptas las prácticas descritas aquí.",
       "collect": {
         "title": "1. Información que recopilamos",
         "body": "Recopilamos datos de la cuenta (nombre, nombre de empresa, correo electrónico, contraseña en hash, número de teléfono), el contenido de los mensajes de WhatsApp intercambiados a través de tu asistente (texto, multimedia, marcas de tiempo y números de teléfono del usuario final), registros y métricas de uso (IP, dispositivo, idioma, navegación), los documentos de entrenamiento que cargues, y los datos de facturación procesados por nuestro proveedor de pagos. No almacenamos los números completos de tarjetas de crédito."
@@ -1830,11 +1830,11 @@
     },
     "terms": {
       "title": "Condiciones del Servicio",
-      "subtitle": "Las reglas para utilizar la plataforma ALIA.",
-      "intro": "Estas Condiciones del Servicio («Condiciones») regulan tu acceso y uso de la plataforma ALIA (el «Servicio»). Al crear una cuenta o usar el Servicio aceptas estas Condiciones. Si no estás de acuerdo, no utilices el Servicio.",
+      "subtitle": "Las reglas para utilizar la plataforma LURVIA.",
+      "intro": "Estas Condiciones del Servicio («Condiciones») regulan tu acceso y uso de la plataforma LURVIA (el «Servicio»). Al crear una cuenta o usar el Servicio aceptas estas Condiciones. Si no estás de acuerdo, no utilices el Servicio.",
       "service": {
         "title": "1. Descripción del Servicio",
-        "body": "ALIA es una plataforma multi-tenant que permite a las empresas operar asistentes conversacionales con IA sobre la API de WhatsApp Business, incluyendo paneles, analíticas, entrenamiento por documentos, recursos multimedia, traspaso a operador humano e integraciones con sistemas de terceros."
+        "body": "LURVIA es una plataforma multi-tenant que permite a las empresas operar asistentes conversacionales con IA sobre la API de WhatsApp Business, incluyendo paneles, analíticas, entrenamiento por documentos, recursos multimedia, traspaso a operador humano e integraciones con sistemas de terceros."
       },
       "account": {
         "title": "2. Registro de la cuenta",
@@ -1850,11 +1850,11 @@
       },
       "content": {
         "title": "5. Tu contenido",
-        "body": "Conservas la propiedad del contenido que cargues al Servicio (documentos de entrenamiento, personalidad del bot, multimedia, mensajes de respaldo). Otorgas a ALIA una licencia mundial, no exclusiva y sin regalías para alojar, procesar y transmitir ese contenido estrictamente para operar el Servicio en tu beneficio. Declaras y garantizas que cuentas con los derechos sobre todo el contenido que cargues."
+        "body": "Conservas la propiedad del contenido que cargues al Servicio (documentos de entrenamiento, personalidad del bot, multimedia, mensajes de respaldo). Otorgas a LURVIA una licencia mundial, no exclusiva y sin regalías para alojar, procesar y transmitir ese contenido estrictamente para operar el Servicio en tu beneficio. Declaras y garantizas que cuentas con los derechos sobre todo el contenido que cargues."
       },
       "ai": {
         "title": "6. Respuestas generadas por IA",
-        "body": "El Servicio utiliza modelos de lenguaje de IA de terceros. Las respuestas generadas por IA pueden ser inexactas, incompletas o inapropiadas para un contexto determinado. Eres el único responsable de revisar y supervisar las conversaciones automatizadas y de configurar tu asistente conforme a las necesidades de tu negocio. ALIA no es responsable del contenido ni de las consecuencias de los mensajes generados por IA enviados a través de tu cuenta."
+        "body": "El Servicio utiliza modelos de lenguaje de IA de terceros. Las respuestas generadas por IA pueden ser inexactas, incompletas o inapropiadas para un contexto determinado. Eres el único responsable de revisar y supervisar las conversaciones automatizadas y de configurar tu asistente conforme a las necesidades de tu negocio. LURVIA no es responsable del contenido ni de las consecuencias de los mensajes generados por IA enviados a través de tu cuenta."
       },
       "billing": {
         "title": "7. Suscripciones y facturación",
@@ -1866,19 +1866,19 @@
       },
       "disclaimer": {
         "title": "9. Exención de garantías",
-        "body": "El Servicio se proporciona «tal cual» y «según disponibilidad». En la máxima medida permitida por la ley, ALIA renuncia a toda garantía, expresa o implícita, incluidas las de comerciabilidad, idoneidad para un fin particular y no infracción. No garantizamos que el Servicio será ininterrumpido, libre de errores, seguro o que las respuestas de IA serán exactas."
+        "body": "El Servicio se proporciona «tal cual» y «según disponibilidad». En la máxima medida permitida por la ley, LURVIA renuncia a toda garantía, expresa o implícita, incluidas las de comerciabilidad, idoneidad para un fin particular y no infracción. No garantizamos que el Servicio será ininterrumpido, libre de errores, seguro o que las respuestas de IA serán exactas."
       },
       "liability": {
         "title": "10. Limitación de responsabilidad",
-        "body": "En la máxima medida permitida por la ley, ALIA no será responsable por daños indirectos, incidentales, especiales, consecuentes ni punitivos, incluidos lucro cesante, pérdida de ingresos, datos, oportunidades comerciales o reputación. Nuestra responsabilidad total agregada bajo estas Condiciones se limita al monto efectivamente pagado por el Servicio durante los doce (12) meses inmediatamente anteriores al hecho que origine la reclamación."
+        "body": "En la máxima medida permitida por la ley, LURVIA no será responsable por daños indirectos, incidentales, especiales, consecuentes ni punitivos, incluidos lucro cesante, pérdida de ingresos, datos, oportunidades comerciales o reputación. Nuestra responsabilidad total agregada bajo estas Condiciones se limita al monto efectivamente pagado por el Servicio durante los doce (12) meses inmediatamente anteriores al hecho que origine la reclamación."
       },
       "indemnity": {
         "title": "11. Indemnización",
-        "body": "Aceptas indemnizar, defender y mantener indemne a ALIA, sus directivos, empleados y socios, frente a cualquier reclamación, demanda, pérdida o gasto (incluyendo honorarios razonables de abogados) derivado de tu uso del Servicio, tu contenido o tu incumplimiento de estas Condiciones o de derechos de terceros."
+        "body": "Aceptas indemnizar, defender y mantener indemne a LURVIA, sus directivos, empleados y socios, frente a cualquier reclamación, demanda, pérdida o gasto (incluyendo honorarios razonables de abogados) derivado de tu uso del Servicio, tu contenido o tu incumplimiento de estas Condiciones o de derechos de terceros."
       },
       "ip": {
         "title": "12. Propiedad intelectual",
-        "body": "El Servicio —incluyendo software, diseño, marca, logos, documentación y marcas comerciales— es propiedad de ALIA o sus licenciantes y está protegido por la legislación de propiedad intelectual. Estas Condiciones no te otorgan ningún derecho sobre la propiedad intelectual de ALIA distinto del derecho limitado a usar el Servicio conforme a estas Condiciones."
+        "body": "El Servicio —incluyendo software, diseño, marca, logos, documentación y marcas comerciales— es propiedad de LURVIA o sus licenciantes y está protegido por la legislación de propiedad intelectual. Estas Condiciones no te otorgan ningún derecho sobre la propiedad intelectual de LURVIA distinto del derecho limitado a usar el Servicio conforme a estas Condiciones."
       },
       "changes": {
         "title": "13. Cambios a estas Condiciones",
@@ -1886,7 +1886,7 @@
       },
       "law": {
         "title": "14. Ley aplicable",
-        "body": "Estas Condiciones se regirán por las leyes aplicables en la jurisdicción donde opera ALIA, sin perjuicio de los derechos imperativos de protección al consumidor que te confiera la ley de tu país de residencia."
+        "body": "Estas Condiciones se regirán por las leyes aplicables en la jurisdicción donde opera LURVIA, sin perjuicio de los derechos imperativos de protección al consumidor que te confiera la ley de tu país de residencia."
       },
       "contact": {
         "title": "15. Contacto",

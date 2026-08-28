@@ -64,9 +64,9 @@ onMounted(() => {
     aria-label="Main navigation"
   >
     <div class="flex items-center justify-between gap-2 mb-6 px-2">
-      <NuxtLink to="/admin" class="flex items-center gap-2 group" aria-label="ALIA dashboard">
-        <AliaLogo :size="36" rounded="rounded-xl" class="bg-white ring-1 ring-white/70 shadow-sm transition-transform group-hover:scale-105" />
-        <span class="text-base font-semibold text-slate-900">ALIA</span>
+      <NuxtLink to="/admin" class="flex items-center gap-2 group" aria-label="LURVIA dashboard">
+        <LurviaLogo :size="36" rounded="rounded-xl" class="bg-white ring-1 ring-white/70 shadow-sm transition-transform group-hover:scale-105" />
+        <span class="text-base font-semibold text-slate-900">LURVIA</span>
       </NuxtLink>
       <!-- Close button only on mobile -->
       <button
