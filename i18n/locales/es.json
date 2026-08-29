@@ -50,96 +50,220 @@
     "apiUnreachable": "No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo."
   },
   "landing": {
-    "navFeatures": "Características",
-    "navHow": "Cómo funciona",
-    "navGetStarted": "Empezar",
     "goToDashboard": "Ir al panel",
     "createAccount": "Crear cuenta",
     "signIn": "Iniciar sesión",
+    "nav": {
+      "aria": "Principal",
+      "demo": "Demo",
+      "caps": "Capacidades",
+      "process": "Implementación",
+      "plans": "Planes",
+      "book": "Agendar demo"
+    },
+    "dots": {
+      "aria": "Navegación por secciones",
+      "splash": "Intro",
+      "hero": "Presentación",
+      "demo": "Demo",
+      "capacidades": "Capacidades",
+      "proceso": "Proceso",
+      "resultados": "Resultados",
+      "planes": "Planes",
+      "cierre": "Empezar"
+    },
     "hero": {
-      "badge": "Asistente IA para WhatsApp",
-      "title1": "Conoce a",
-      "title2": ". El agente incansable de tu negocio en WhatsApp.",
-      "subtitle": "Kaibot responde a tus clientes en WhatsApp 24/7 — contesta preguntas, califica leads y deriva a una persona solo cuando realmente importa.",
-      "ctaSignIn": "Inicia sesión en tu empresa",
-      "ctaCreateFree": "Crea una cuenta gratis",
-      "chatPreviewTitle": "Kaibot · Acme Co.",
-      "chatPreviewOnline": "en línea",
-      "chatPreviewUser1": "¡Hola! ¿Envían a México?",
-      "chatPreviewBot1": "Sí, enviamos a todo México — normalmente 2-4 días hábiles. ¿Quieres que te pase una cotización?",
-      "chatPreviewUser2": "Sí, por favor",
-      "chatPreviewTyping": "Kaibot está escribiendo…",
-      "chatPreviewBot2": "¡Listo! Tu cotización de envío va en camino — ¿te ayudo con algo más?"
+      "eyebrow": "En vivo · WhatsApp · 24/7",
+      "tagline": "Asistente Inteligente",
+      "line1": "Ningún mensaje",
+      "line2": "de tu cliente",
+      "line3": "vuelve a esperar.",
+      "copy": "Hoy LURVIAX responde automáticamente por WhatsApp — 24/7, sin respuestas robóticas. Entiende las notas de voz de tus clientes, agenda citas en Google Calendar y aprende tu catálogo, tus precios y tu tono. Le pasa la conversación a una persona solo cuando de verdad hace falta.",
+      "ctaPrimary": "Ver LURVIAX respondiendo",
+      "ctaSecondary": "Cómo se implementa",
+      "ticker": {
+        "avgReply": "Respuesta promedio",
+        "always": "En WhatsApp, sin turnos ni feriados",
+        "noHuman": "Resuelto sin humano",
+        "channels": "Clientes esperando en cola"
+      }
     },
-    "marquee": {
-      "i1": "Respuestas 24/7",
-      "i2": "Calificación de leads",
-      "i3": "Handoff a humanos",
-      "i4": "Entrenado con tus documentos",
-      "i5": "Configuración sin código",
-      "i6": "WhatsApp nativo",
-      "i7": "Respuestas al instante",
-      "i8": "Español e inglés"
+    "demo": {
+      "eyebrow": "Conversación real",
+      "titleA": "Así suena",
+      "titleB": "trabajando.",
+      "copy": "Elige un caso y mira la conversación completa. Todo ocurre en WhatsApp — tu equipo la ve en el panel web y puede tomar el control cuando quiera, sin que el cliente lo note.",
+      "channelsLabel": "Casos reales",
+      "channelsAria": "Casos de LURVIAX",
+      "channelsCopy": "El mismo cerebro en cada conversación: entiende texto, entiende audio y sabe cuándo pasar el chat a una persona. Todo desde WhatsApp Business, con vista completa en el panel para tu equipo.",
+      "replay": "Repetir",
+      "channels": {
+        "wa": {
+          "label": "WhatsApp Business",
+          "hint": "Consulta médica → cita agendada",
+          "tag": "Agenda",
+          "m1": "Hola, buenas. Quería una cita con el doctor Paredes 🙏",
+          "m2": "¡Hola! Con gusto 👋 El doctor Paredes atiende odontología. ¿Es una consulta de rutina o algo puntual?",
+          "m2meta": "Leído 1.8 s",
+          "m3": "una limpieza dental",
+          "m4": "Perfecto. Para limpieza tengo mañana jueves 11:30 o el viernes 08:00. ¿Cuál te queda mejor?",
+          "m5": "viernes a las 8 porfa",
+          "m6": "¿Me confirmas tu nombre completo y cédula?",
+          "m7": "Andrea Salazar, 1717332109",
+          "m8": "Cita creada · vie 08:00 · Dr. Paredes",
+          "m9": "Listo, Andrea. Tu cita queda para el viernes a las 08:00 con el doctor Paredes en Clínica Andes 🦷 Te llega la confirmación aquí mismo y un recordatorio el jueves en la tarde.",
+          "m10": "gracias!! 💚"
+        },
+        "web": {
+          "label": "WhatsApp · Consulta de precio",
+          "hint": "Cotización lista → venta cerrada",
+          "tag": "Ventas",
+          "m1": "Buenas, tienen la lavadora LG de 19 kilos? cuánto está",
+          "m2": "¡Hola! 👋 Sí, tenemos la LG WT19 en stock. Está en $749 con IVA e incluye instalación gratis dentro de Quito.",
+          "m2meta": "Leído 1.4 s",
+          "m3": "y si llevo dos? es para un local",
+          "m4": "Para dos o más aplico precio corporativo: $698 c/u. Te armo la cotización, ¿a nombre de quién la emito?",
+          "m5": "Lavandería El Sol, RUC 1792xxxxxx001",
+          "m6": "Cotización PF-2418 generada",
+          "m7": "Listo. Te envié la cotización por $1.396 + instalación sin costo, válida 15 días. ¿Agendo la entrega para el jueves 10am?",
+          "m8": "sí perfecto",
+          "m9": "Entrega agendada · jue 10:00",
+          "m10": "Confirmado ✅ Te escribo el miércoles para recordarte. ¡Gracias por la compra! 🙌"
+        },
+        "voz": {
+          "label": "WhatsApp · Nota de voz",
+          "hint": "Audio del cliente → entendido sin re-escribir",
+          "tag": "Voz",
+          "m1": "🎙️ Nota de voz · 0:14",
+          "m1meta": "«Hola vi la moto Yamaha en Instagram, tienen la de 250? y qué papeles necesito pa comprarla»",
+          "m2": "¡Hola! 👋 Sí, tenemos la Yamaha FZ 25 en stock — negra y azul. Precio de contado $4.290 o financiada a 12 meses desde $398/mes.",
+          "m2meta": "Leído 1.9 s",
+          "m3": "🎙️ Nota de voz · 0:08",
+          "m3meta": "«perfecto, y los papeles para financiar?»",
+          "m4": "Para financiar necesitas: cédula, planilla de servicios básicos y un rol de pagos o RUC si eres independiente. Con eso te evalúo el crédito en el día.",
+          "m5": "listo, mañana paso al local",
+          "m6": "¡Perfecto! Te dejo agendada la visita en la sucursal Norte. Ahí te muestran las dos motos y arrancamos el trámite. 🏍️"
+        },
+        "ig": {
+          "label": "Panel web · Intervención",
+          "hint": "LURVIAX responde → operadora toma el control",
+          "tag": "Panel",
+          "m1": "Hola, hace tres días compré unas medias y me llegaron rotas 😡",
+          "m2": "Lamento mucho eso 🙏 Cuéntame tu número de pedido y reviso el caso al toque.",
+          "m2meta": "Leído 1.2 s",
+          "m3": "es urgente, tengo un evento hoy en la tarde",
+          "m4": "Ok, esto lo agiliza una persona del equipo mejor que yo. Ya se están conectando — un momento.",
+          "m5": "Urgencia detectada · Andrea (operadora) entra desde el panel",
+          "m6": "Hola Sara, soy Andrea. Vi tu caso en el panel y ya tengo el pedido al frente. Te reponemos hoy mismo con delivery express antes de las 5pm ✅",
+          "m6meta": "Andrea · Panel web",
+          "m7": "genial, muchas gracias 🙌",
+          "m8": "En 30 min te llega el link de rastreo por acá mismo. Cualquier cosa me escribes.",
+          "m8meta": "Andrea · Panel web"
+        }
+      }
     },
-    "stats": {
-      "availability": "Disponibilidad continua",
-      "native": "Nativo en WhatsApp",
-      "steps": "Pasos para arrancar"
+    "caps": {
+      "eyebrow": "Lo que hace hoy",
+      "titleA": "Lo que LURVIAX",
+      "titleB": "ya hace por ti.",
+      "copy": "Todo esto corre hoy en tu WhatsApp Business. Sin apps nuevas para tu equipo, sin turnos, sin respuestas robóticas.",
+      "items": {
+        "1": { "title": "Responde 24/7 por WhatsApp", "body": "Contesta en segundos con el tono de tu negocio — automático, sin turnos ni feriados. Cero clientes en cola, cero respuestas robóticas." },
+        "2": { "title": "Agenda citas en Google Calendar", "body": "Consulta tu disponibilidad real, propone horarios, crea el evento en Google Calendar y manda el recordatorio la víspera por WhatsApp." },
+        "3": { "title": "Responde con tu catálogo", "body": "Aprende tus productos, precios, políticas y hasta el estilo de tu equipo con 30 días de conversaciones reales. Cuando no sabe algo, lo dice y escala." },
+        "4": { "title": "Escala al humano cuando importa", "body": "Detecta molestia, urgencia o casos complejos y transfiere la conversación con el historial resumido — tu vendedor entra con contexto, no de cero." },
+        "5": { "title": "Entiende notas de voz", "body": "Transcribe y comprende las notas de audio que tus clientes mandan por WhatsApp — sin pedirles que escriban, sin perder detalle." },
+        "6": { "title": "Aprende con cada corrección", "body": "Tu equipo corrige respuestas con un clic y LURVIAX no vuelve a fallar la misma. Cada semana mejora sin que muevas un dedo." }
+      }
     },
-    "inbox": {
-      "kicker": "El cuello de botella",
-      "title": "Los mensajes se acumulan. Kaibot los resuelve todos.",
-      "body": "Cada chat sin responder es un cliente a punto de irse. En cuanto llegan los mensajes, Kaibot entra en acción y responde a todos a la vez — sin cola, sin esperas, nadie queda en visto.",
-      "point1": "Responde cada conversación en segundos, incluso en horas pico",
-      "point2": "Ningún cliente espera mientras se atiende a otro",
-      "point3": "Involucra a tu equipo solo cuando realmente importa",
-      "panelTitle": "Bandeja de WhatsApp",
-      "pendingCount": "{n} pendiente | {n} pendientes",
-      "allCaught": "Todo al día",
-      "botActive": "Kaibot entró en acción…",
-      "replied": "Respondido por Kaibot",
-      "summary": "4 conversaciones respondidas en segundos",
-      "msg1": "¡Hola! ¿Están abiertos hoy?",
-      "msg2": "¿Cuánto cuesta el plan Pro?",
-      "msg3": "Necesito cambiar mi dirección de entrega",
-      "msg4": "¿Tienen esto en stock?"
+    "process": {
+      "eyebrow": "Implementación",
+      "titleA": "De cero a",
+      "titleB": "producción.",
+      "copy": "Tres etapas en orden estricto: sin la primera, la segunda no tiene con qué entrenar. Tiempo total estimado, 3 semanas.",
+      "items": {
+        "1": { "week": "Sem 1", "title": "Alimentamos", "body": "Cargamos catálogo, lista de precios, políticas de envío y devolución, y 30 días de conversaciones reales de tu equipo. De ahí sale el tono, no de una plantilla.", "tags": "Catálogo|Precios|Históricos|Políticas" },
+        "2": { "week": "Sem 2", "title": "Entrenamos y limitamos", "body": "Definimos qué puede prometer y qué no, las rutas de escalamiento y los descuentos máximos. Tu equipo prueba en un entorno cerrado y corrige respuestas con un clic.", "tags": "Tono|Límites|Escalamiento|QA interno" },
+        "3": { "week": "Sem 3", "title": "Publicamos y ajustamos", "body": "Sale a producción en tus canales con monitoreo diario la primera semana. Después, una revisión semanal donde ajustamos con base en conversaciones reales.", "tags": "Go-live|Monitoreo|Ajuste semanal|Reportes" }
+      }
     },
-    "features": {
-      "kicker": "Por qué Kaibot",
-      "title": "Hecho para que tus clientes nunca esperen.",
-      "subtitle": "Un set enfocado de capacidades — sin relleno, sin configuración complicada.",
-      "alwaysOnTitle": "Siempre disponible",
-      "alwaysOnBody": "Kaibot responde cada mensaje en segundos — a las 3 AM, en fines de semana, durante lanzamientos. Ningún cliente queda sin respuesta.",
-      "nativeTitle": "WhatsApp nativo",
-      "nativeBody": "Se conecta al canal que tus clientes ya usan todos los días. Sin descargar nada, sin nuevos hábitos.",
-      "trainedTitle": "Entrenado con tu negocio",
-      "trainedBody": "Sube tus documentos, FAQs y políticas. Kaibot aprende cómo tratar a tus clientes como si fueras tú."
+    "belt": {
+      "eyebrow": "Se conecta con lo que ya usas",
+      "webChat": "Chat web",
+      "sip": "Telefonía SIP"
     },
-    "how": {
-      "kicker": "Cómo funciona",
-      "title": "Funcional en minutos.",
-      "step1Title": "Conecta WhatsApp",
-      "step1Body": "Vincula tu número de empresa en unos clics. Sin código, sin configuración complicada.",
-      "step2Title": "Enseña a Kaibot",
-      "step2Body": "Sube documentos, precios y FAQs. Kaibot los lee y queda listo en menos de una hora.",
-      "step3Title": "Déjalo trabajar",
-      "step3Body": "Kaibot responde solo y avisa a una persona solo cuando la conversación realmente lo necesita."
+    "results": {
+      "eyebrow": "Impacto esperado",
+      "titleA": "Lo que cambia",
+      "titleB": "al mes tres.",
+      "copy": "Rangos de referencia observados en operaciones de atención similares. Los números finales dependen de tu volumen y tu catálogo.",
+      "footnote": "Cifras ilustrativas para efectos de esta propuesta de diseño.",
+      "items": {
+        "1": { "title": "de las consultas se cierran sin intervención humana", "desc": "Preguntas de precio, stock, horarios y estado de pedido" },
+        "2": { "title": "de tiempo de primera respuesta, a cualquier hora", "desc": "Frente a un promedio manual de 4 a 6 horas fuera de horario" },
+        "3": { "title": "más citas agendadas desde el mismo tráfico", "desc": "La conversación no se enfría esperando a alguien disponible" }
+      }
     },
-    "cta": {
-      "title": "Dale a tu negocio un asistente 24/7.",
-      "subtitle": "Entra al workspace de tu empresa y empieza a responder más rápido que nunca.",
-      "primary": "Acceso de empresa",
-      "primaryAuth": "Abrir panel",
-      "secondary": "Crea una cuenta gratis"
+    "plans": {
+      "eyebrow": "Planes",
+      "titleA": "Simple de",
+      "titleB": "empezar.",
+      "copy": "Implementación incluida en todos los planes. Sin permanencia: si al mes dos no te sirve, lo apagas.",
+      "perMonth": "/ mes",
+      "perContract": "/ contrato",
+      "recommended": "Recomendado",
+      "start": "Empezar",
+      "book": "Agendar demo",
+      "talk": "Hablar con el equipo",
+      "essential": {
+        "name": "Esencial",
+        "items": {
+          "1": "1 canal (WhatsApp o web)",
+          "2": "Hasta 1.500 conversaciones al mes",
+          "3": "Catálogo y preguntas frecuentes",
+          "4": "Escalamiento a un agente humano",
+          "5": "Reporte mensual"
+        }
+      },
+      "business": {
+        "name": "Negocio",
+        "items": {
+          "1": "Hasta 4 canales en una bandeja",
+          "2": "Hasta 8.000 conversaciones al mes",
+          "3": "Agenda, proformas en PDF y pagos",
+          "4": "Voz entrante y notas de audio",
+          "5": "Integración con tu CRM",
+          "6": "Revisión y ajuste semanal"
+        }
+      },
+      "corporate": {
+        "name": "Corporativo",
+        "price": "A medida",
+        "items": {
+          "1": "Canales y volumen sin tope",
+          "2": "Despliegue en tu infraestructura",
+          "3": "Integración con ERP y telefonía SIP",
+          "4": "Múltiples sucursales y marcas",
+          "5": "SLA y soporte dedicado"
+        }
+      }
+    },
+    "close": {
+      "eyebrow": "15 minutos, con tus propias preguntas",
+      "titleA": "Tráele las preguntas",
+      "titleB": "más difíciles de",
+      "titleEm": "tus clientes.",
+      "ctaPrimary": "Agendar demo",
+      "ctaSecondary": "Ver planes"
     },
     "footer": {
-      "tagline": "IA en WhatsApp para empresas modernas",
+      "tagline": "Asistente inteligente para empresas que atienden por WhatsApp, web y voz.",
       "signIn": "Iniciar sesión",
       "createAccount": "Crear cuenta"
     },
     "whatsappFloat": {
       "label": "Escríbenos por WhatsApp",
-      "ariaLabel": "Escribir a Kaibot por WhatsApp"
+      "ariaLabel": "Escribir a LURVIAX por WhatsApp"
     }
   },
   "auth": {
@@ -226,7 +350,7 @@
     "payment": {
       "back": "← Volver al panel",
       "title": "Instrucciones de pago",
-      "subtitle": "Paga tu suscripción por transferencia bancaria a la cuenta oficial de Kaibots. Luego envíanos el comprobante por correo para activar o extender tu acceso.",
+      "subtitle": "Paga tu suscripción por transferencia bancaria a la cuenta oficial de LURVIAX. Luego envíanos el comprobante por correo para activar o extender tu acceso.",
       "amount": {
         "title": "Monto a depositar",
         "subtitle": "Este es el valor exacto que debes transferir a la cuenta mostrada abajo.",
@@ -254,7 +378,7 @@
       },
       "officialNotice": {
         "title": "Esta es nuestra única cuenta oficial",
-        "body": "Kaibots nunca te pedirá pagos a otra cuenta, número o persona. Si recibes datos bancarios distintos, repórtalo antes de transferir."
+        "body": "LURVIAX nunca te pedirá pagos a otra cuenta, número o persona. Si recibes datos bancarios distintos, repórtalo antes de transferir."
       },
       "howTo": {
         "title": "Cómo enviar tu comprobante",
@@ -279,7 +403,7 @@
         "subjectFallback": "Nombre de tu empresa",
         "companyFallback": "[nombre de tu empresa]",
         "userFallback": "[tu correo registrado]",
-        "bodyTemplate": "Hola equipo de Kaibots,\n\nLes envío el comprobante de pago de nuestra suscripción.\n\nEmpresa: {company}\nUsuario registrado en www.kaibots.com: {user}\n\nAdjunto la captura del comprobante a este correo.\n\nGracias."
+        "bodyTemplate": "Hola equipo de LURVIAX,\n\nLes envío el comprobante de pago de nuestra suscripción.\n\nEmpresa: {company}\nUsuario registrado en www.lurviax.com: {user}\n\nAdjunto la captura del comprobante a este correo.\n\nGracias."
       },
       "cta": {
         "compose": "Abrir correo prellenado",
@@ -353,7 +477,7 @@
       "successMessage": "Cambios guardados",
       "billingBlocked": {
         "title": "Activa tu servicio para gestionar tu workspace",
-        "body": "Tu cuenta Kaibots ya está creada pero aún no está activa. Realiza tu primera transferencia para encender el bot — luego podrás editar el nombre de la empresa y empezar a configurar tus bots.",
+        "body": "Tu cuenta LURVIAX ya está creada pero aún no está activa. Realiza tu primera transferencia para encender el bot — luego podrás editar el nombre de la empresa y empezar a configurar tus bots.",
         "cta": "Ver instrucciones de pago"
       }
     },
@@ -462,7 +586,7 @@
         "title": "Mensajes de conversación",
         "subtitle": "Copy fijo que se usa en momentos clave del chat.",
         "welcome": "Mensaje de bienvenida",
-        "welcomePlaceholder": "¡Hola! Soy Kaibot, tu asistente. ¿En qué puedo ayudarte hoy?",
+        "welcomePlaceholder": "¡Hola! Soy LURVIAX, tu asistente. ¿En qué puedo ayudarte hoy?",
         "welcomeHelp": "Se envía en el primer mensaje de una conversación nueva.",
         "fallback": "Mensaje de fallback",
         "fallbackPlaceholder": "No estoy seguro de poder ayudarte con eso. ¿Te conecto con una persona?",
@@ -1646,7 +1770,7 @@
       "warningTitle": "Renovación próxima",
       "warningTitleToday": "Tu suscripción vence hoy",
       "pendingTitle": "Suscripción vencida",
-      "pendingFirstTitle": "Bienvenido a Kaibots — un paso para activar tu servicio",
+      "pendingFirstTitle": "Bienvenido a LURVIAX — un paso para activar tu servicio",
       "suspendedTitle": "Cuenta suspendida",
       "renewSoon": "Tu suscripción vence en {days} día. Para mantener tu bot activo, envía tu comprobante de pago a {email} antes del corte. | Tu suscripción vence en {days} días. Para mantener tu bot activo, envía tu comprobante de pago a {email} antes del corte.",
       "renewToday": "Tu suscripción vence hoy. Envía tu comprobante de pago a {email} ahora mismo para evitar la suspensión.",
@@ -1662,11 +1786,11 @@
     "lastUpdated": "Última actualización",
     "lastUpdatedDate": "11 de junio de 2026",
     "contactLabel": "Contacto",
-    "company": "Kaibots",
+    "company": "LURVIAX",
     "privacy": {
       "title": "Política de Privacidad",
-      "subtitle": "Cómo recopilamos, usamos y protegemos tu información cuando utilizas Kaibots.",
-      "intro": "Esta Política de Privacidad describe cómo Kaibots («nosotros», «nuestro») recopila, utiliza, comparte y protege la información personal cuando usas nuestra plataforma de asistentes con IA para WhatsApp (el «Servicio»). Al crear una cuenta o usar el Servicio aceptas las prácticas descritas aquí.",
+      "subtitle": "Cómo recopilamos, usamos y protegemos tu información cuando utilizas LURVIAX.",
+      "intro": "Esta Política de Privacidad describe cómo LURVIAX («nosotros», «nuestro») recopila, utiliza, comparte y protege la información personal cuando usas nuestra plataforma de asistentes con IA para WhatsApp (el «Servicio»). Al crear una cuenta o usar el Servicio aceptas las prácticas descritas aquí.",
       "collect": {
         "title": "1. Información que recopilamos",
         "body": "Recopilamos datos de la cuenta (nombre, nombre de empresa, correo electrónico, contraseña en hash, número de teléfono), el contenido de los mensajes de WhatsApp intercambiados a través de tu asistente (texto, multimedia, marcas de tiempo y números de teléfono del usuario final), registros y métricas de uso (IP, dispositivo, idioma, navegación), los documentos de entrenamiento que cargues, y los datos de facturación procesados por nuestro proveedor de pagos. No almacenamos los números completos de tarjetas de crédito."
@@ -1681,7 +1805,7 @@
       },
       "retention": {
         "title": "4. Retención de datos",
-        "body": "Conservamos los datos de las conversaciones mientras tu cuenta esté activa o lo necesario para prestar el Servicio. Puedes solicitar la eliminación de conversaciones específicas o de tu cuenta completa en cualquier momento escribiendo a info{'@'}kaibots.com. Las copias de seguridad cifradas pueden conservarse hasta 90 días después de la eliminación. Los registros que estamos legalmente obligados a conservar (facturación, impuestos) se mantendrán por el plazo exigido por la ley."
+        "body": "Conservamos los datos de las conversaciones mientras tu cuenta esté activa o lo necesario para prestar el Servicio. Puedes solicitar la eliminación de conversaciones específicas o de tu cuenta completa en cualquier momento escribiendo a info{'@'}alia.com. Las copias de seguridad cifradas pueden conservarse hasta 90 días después de la eliminación. Los registros que estamos legalmente obligados a conservar (facturación, impuestos) se mantendrán por el plazo exigido por la ley."
       },
       "security": {
         "title": "5. Seguridad",
@@ -1689,7 +1813,7 @@
       },
       "rights": {
         "title": "6. Tus derechos",
-        "body": "Sujeto a la legislación aplicable, puedes acceder a tus datos personales, solicitar correcciones o eliminación, restringir u oponerte al procesamiento, solicitar portabilidad y retirar tu consentimiento en cualquier momento. Para ejercer estos derechos escríbenos a info{'@'}kaibots.com. También tienes derecho a presentar una queja ante la autoridad de protección de datos de tu país."
+        "body": "Sujeto a la legislación aplicable, puedes acceder a tus datos personales, solicitar correcciones o eliminación, restringir u oponerte al procesamiento, solicitar portabilidad y retirar tu consentimiento en cualquier momento. Para ejercer estos derechos escríbenos a info{'@'}alia.com. También tienes derecho a presentar una queja ante la autoridad de protección de datos de tu país."
       },
       "endUser": {
         "title": "7. Responsabilidad sobre tus usuarios finales",
@@ -1713,16 +1837,16 @@
       },
       "contact": {
         "title": "12. Contacto",
-        "body": "Si tienes preguntas sobre esta Política o deseas ejercer tus derechos, escríbenos a info{'@'}kaibots.com."
+        "body": "Si tienes preguntas sobre esta Política o deseas ejercer tus derechos, escríbenos a info{'@'}alia.com."
       }
     },
     "terms": {
       "title": "Condiciones del Servicio",
-      "subtitle": "Las reglas para utilizar la plataforma Kaibots.",
-      "intro": "Estas Condiciones del Servicio («Condiciones») regulan tu acceso y uso de la plataforma Kaibots (el «Servicio»). Al crear una cuenta o usar el Servicio aceptas estas Condiciones. Si no estás de acuerdo, no utilices el Servicio.",
+      "subtitle": "Las reglas para utilizar la plataforma LURVIAX.",
+      "intro": "Estas Condiciones del Servicio («Condiciones») regulan tu acceso y uso de la plataforma LURVIAX (el «Servicio»). Al crear una cuenta o usar el Servicio aceptas estas Condiciones. Si no estás de acuerdo, no utilices el Servicio.",
       "service": {
         "title": "1. Descripción del Servicio",
-        "body": "Kaibots es una plataforma multi-tenant que permite a las empresas operar asistentes conversacionales con IA sobre la API de WhatsApp Business, incluyendo paneles, analíticas, entrenamiento por documentos, recursos multimedia, traspaso a operador humano e integraciones con sistemas de terceros."
+        "body": "LURVIAX es una plataforma multi-tenant que permite a las empresas operar asistentes conversacionales con IA sobre la API de WhatsApp Business, incluyendo paneles, analíticas, entrenamiento por documentos, recursos multimedia, traspaso a operador humano e integraciones con sistemas de terceros."
       },
       "account": {
         "title": "2. Registro de la cuenta",
@@ -1738,11 +1862,11 @@
       },
       "content": {
         "title": "5. Tu contenido",
-        "body": "Conservas la propiedad del contenido que cargues al Servicio (documentos de entrenamiento, personalidad del bot, multimedia, mensajes de respaldo). Otorgas a Kaibots una licencia mundial, no exclusiva y sin regalías para alojar, procesar y transmitir ese contenido estrictamente para operar el Servicio en tu beneficio. Declaras y garantizas que cuentas con los derechos sobre todo el contenido que cargues."
+        "body": "Conservas la propiedad del contenido que cargues al Servicio (documentos de entrenamiento, personalidad del bot, multimedia, mensajes de respaldo). Otorgas a LURVIAX una licencia mundial, no exclusiva y sin regalías para alojar, procesar y transmitir ese contenido estrictamente para operar el Servicio en tu beneficio. Declaras y garantizas que cuentas con los derechos sobre todo el contenido que cargues."
       },
       "ai": {
         "title": "6. Respuestas generadas por IA",
-        "body": "El Servicio utiliza modelos de lenguaje de IA de terceros. Las respuestas generadas por IA pueden ser inexactas, incompletas o inapropiadas para un contexto determinado. Eres el único responsable de revisar y supervisar las conversaciones automatizadas y de configurar tu asistente conforme a las necesidades de tu negocio. Kaibots no es responsable del contenido ni de las consecuencias de los mensajes generados por IA enviados a través de tu cuenta."
+        "body": "El Servicio utiliza modelos de lenguaje de IA de terceros. Las respuestas generadas por IA pueden ser inexactas, incompletas o inapropiadas para un contexto determinado. Eres el único responsable de revisar y supervisar las conversaciones automatizadas y de configurar tu asistente conforme a las necesidades de tu negocio. LURVIAX no es responsable del contenido ni de las consecuencias de los mensajes generados por IA enviados a través de tu cuenta."
       },
       "billing": {
         "title": "7. Suscripciones y facturación",
@@ -1754,19 +1878,19 @@
       },
       "disclaimer": {
         "title": "9. Exención de garantías",
-        "body": "El Servicio se proporciona «tal cual» y «según disponibilidad». En la máxima medida permitida por la ley, Kaibots renuncia a toda garantía, expresa o implícita, incluidas las de comerciabilidad, idoneidad para un fin particular y no infracción. No garantizamos que el Servicio será ininterrumpido, libre de errores, seguro o que las respuestas de IA serán exactas."
+        "body": "El Servicio se proporciona «tal cual» y «según disponibilidad». En la máxima medida permitida por la ley, LURVIAX renuncia a toda garantía, expresa o implícita, incluidas las de comerciabilidad, idoneidad para un fin particular y no infracción. No garantizamos que el Servicio será ininterrumpido, libre de errores, seguro o que las respuestas de IA serán exactas."
       },
       "liability": {
         "title": "10. Limitación de responsabilidad",
-        "body": "En la máxima medida permitida por la ley, Kaibots no será responsable por daños indirectos, incidentales, especiales, consecuentes ni punitivos, incluidos lucro cesante, pérdida de ingresos, datos, oportunidades comerciales o reputación. Nuestra responsabilidad total agregada bajo estas Condiciones se limita al monto efectivamente pagado por el Servicio durante los doce (12) meses inmediatamente anteriores al hecho que origine la reclamación."
+        "body": "En la máxima medida permitida por la ley, LURVIAX no será responsable por daños indirectos, incidentales, especiales, consecuentes ni punitivos, incluidos lucro cesante, pérdida de ingresos, datos, oportunidades comerciales o reputación. Nuestra responsabilidad total agregada bajo estas Condiciones se limita al monto efectivamente pagado por el Servicio durante los doce (12) meses inmediatamente anteriores al hecho que origine la reclamación."
       },
       "indemnity": {
         "title": "11. Indemnización",
-        "body": "Aceptas indemnizar, defender y mantener indemne a Kaibots, sus directivos, empleados y socios, frente a cualquier reclamación, demanda, pérdida o gasto (incluyendo honorarios razonables de abogados) derivado de tu uso del Servicio, tu contenido o tu incumplimiento de estas Condiciones o de derechos de terceros."
+        "body": "Aceptas indemnizar, defender y mantener indemne a LURVIAX, sus directivos, empleados y socios, frente a cualquier reclamación, demanda, pérdida o gasto (incluyendo honorarios razonables de abogados) derivado de tu uso del Servicio, tu contenido o tu incumplimiento de estas Condiciones o de derechos de terceros."
       },
       "ip": {
         "title": "12. Propiedad intelectual",
-        "body": "El Servicio —incluyendo software, diseño, marca, logos, documentación y marcas comerciales— es propiedad de Kaibots o sus licenciantes y está protegido por la legislación de propiedad intelectual. Estas Condiciones no te otorgan ningún derecho sobre la propiedad intelectual de Kaibots distinto del derecho limitado a usar el Servicio conforme a estas Condiciones."
+        "body": "El Servicio —incluyendo software, diseño, marca, logos, documentación y marcas comerciales— es propiedad de LURVIAX o sus licenciantes y está protegido por la legislación de propiedad intelectual. Estas Condiciones no te otorgan ningún derecho sobre la propiedad intelectual de LURVIAX distinto del derecho limitado a usar el Servicio conforme a estas Condiciones."
       },
       "changes": {
         "title": "13. Cambios a estas Condiciones",
@@ -1774,11 +1898,11 @@
       },
       "law": {
         "title": "14. Ley aplicable",
-        "body": "Estas Condiciones se regirán por las leyes aplicables en la jurisdicción donde opera Kaibots, sin perjuicio de los derechos imperativos de protección al consumidor que te confiera la ley de tu país de residencia."
+        "body": "Estas Condiciones se regirán por las leyes aplicables en la jurisdicción donde opera LURVIAX, sin perjuicio de los derechos imperativos de protección al consumidor que te confiera la ley de tu país de residencia."
       },
       "contact": {
         "title": "15. Contacto",
-        "body": "Para consultas sobre estas Condiciones escríbenos a info{'@'}kaibots.com."
+        "body": "Para consultas sobre estas Condiciones escríbenos a info{'@'}alia.com."
       }
     }
   },

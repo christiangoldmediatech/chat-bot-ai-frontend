@@ -1,6 +1,6 @@
-# chat-bot-ai-frontend
+# lurviax-frontend
 
-Admin panel for the chat-bot-ai multi-tenant WhatsApp bot SaaS. Built with Nuxt 3 + TypeScript + Pinia + Tailwind.
+Admin panel for **LURVIAX** — the multi-tenant WhatsApp AI assistants platform. Built with Nuxt 3 + TypeScript + Pinia + Tailwind.
 
 ## Requirements
 

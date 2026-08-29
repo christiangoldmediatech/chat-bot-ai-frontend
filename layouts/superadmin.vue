@@ -42,7 +42,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen flex bg-slate-900 text-slate-50">
+  <div class="min-h-screen flex bg-brand-ambient text-slate-50">
     <!-- Mobile backdrop -->
     <Transition
       enter-active-class="transition-opacity duration-200"
