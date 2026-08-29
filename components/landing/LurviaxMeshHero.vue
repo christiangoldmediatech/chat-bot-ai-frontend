@@ -1,13 +1,4 @@
 <script setup lang="ts">
-// Splash intro del landing — mesh gradient 100% CSS (basado en el motif
-// "SKYLRK v7"). Una sola mancha oscura viaja en bucle cerrado de 155s
-// cruzando el centro del viewport sobre un degradado base primary → accent.
-// Encima: grano SVG con blend overlay para textura. El wordmark LURVIAX se
-// centra tipográficamente con letter-spacing amplio.
-//
-// El fondo está scoped a la sección (position:absolute + overflow:hidden)
-// para que no colisione con el ground/canvas del hero clásico que viene
-// debajo en el flujo.
 </script>
 
 <template>
@@ -15,7 +6,6 @@
     class="lm-hero relative flex min-h-screen items-center justify-center overflow-hidden"
     aria-labelledby="lm-hero-title"
   >
-    <!-- Background: degradado base + grupo difuminado con mancha viajera + grano -->
     <div class="lm-bg" aria-hidden="true">
       <div class="lm-bg__blobs">
         <div class="lm-darks">
@@ -25,7 +15,6 @@
       <div class="lm-bg__grain" />
     </div>
 
-    <!-- Contenido: wordmark LURVIAX + tagline -->
     <div class="lm-content relative z-10 px-6 text-center">
       <h1 id="lm-hero-title" class="lm-title">
         LURVIAX
@@ -38,23 +27,10 @@
 </template>
 
 <style scoped>
-/* ============================================================
-   MESH GRADIENT SCOPED — paleta LURVIAX (dark commit)
-   Reemplaza los sky colors originales por el sistema de marca:
-   base = azul primario + accent cian brillante, mancha viajera
-   = azul noche + negro. La mancha oscura es lo que corta el
-   brillo del fondo — nunca al revés.
-   ============================================================ */
-
 .lm-hero {
-  /* Cuando la sección es más alta que el viewport, la mancha sigue
-     confinada; no la dejamos escapar. */
   isolation: isolate;
 }
 
-/* ---------- 1. CONTENEDOR SCOPED ----------
-   position:absolute (no fixed) para que la animación viva sólo dentro
-   de la sección splash, sin superponerse al hero clásico de abajo. */
 .lm-bg {
   position: absolute;
   inset: 0;
@@ -68,20 +44,12 @@
   );
 }
 
-/* ---------- 2. GRUPO DIFUMINADO ----------
-   Un único filter: blur() para todas las capas. inset negativo para
-   que el desenfoque no deje bordes visibles. */
 .lm-bg__blobs {
   position: absolute;
   inset: -20%;
   filter: blur(80px);
 }
 
-/* ---------- 3. SISTEMA DE COORDENADAS ----------
-   El grupo tiene inset:-20% → su origen está en (-20vw,-20vh). La
-   clase .lm-anchor compensa ese offset y centra la caja en su punto
-   de anclaje: translate3d(x,y) coloca el CENTRO de la mancha en el
-   punto (x,y) del viewport. */
 .lm-anchor {
   position: absolute;
   left: 20vw;
@@ -89,9 +57,6 @@
   will-change: transform, opacity;
 }
 
-/* ---------- 4. MANCHA OSCURA VIAJERA ----------
-   Núcleo denso azul noche → transparente. Recorre el viewport en
-   un bucle cerrado que cruza el centro. */
 .lm-roam {
   width: 70vw;
   height: 78vh;
@@ -107,8 +72,6 @@
   animation: lm-roam 155s linear infinite;
 }
 
-/* Bucle CERRADO: 0% y 100% idénticos → sin rebote ni salto. Nunca
-   uses `alternate`: al volver por el mismo camino se nota el vaivén. */
 @keyframes lm-roam {
   0%   { transform: translate3d(75vw, 70vh, 0) scale(1.1);  opacity: 0.65; }
   25%  { transform: translate3d(30vw, 55vh, 0) scale(0.9);  opacity: 0.85; }
@@ -117,9 +80,6 @@
   100% { transform: translate3d(75vw, 70vh, 0) scale(1.1);  opacity: 0.65; }
 }
 
-/* ---------- 5. INTRO ----------
-   La masa entra grande y se asienta (equivale al uFadeIn del shader
-   original). Wrapper aparte para no pisar los transform del roam. */
 .lm-darks {
   position: absolute;
   inset: 0;
@@ -131,12 +91,8 @@
   to   { transform: scale(1);   opacity: 0.95; }
 }
 
-/* ---------- 6. GRANO ----------
-   Encima y FUERA del blur (si no, se difuminaría también). */
 .lm-bg__grain {
   position: absolute;
-  /* inset:-8% > 4% de desplazamiento máximo ⇒ nunca se descubre el
-     borde durante la animación (dejaría una banda sin grano). */
   inset: -8%;
   pointer-events: none;
   opacity: 0.30;
@@ -159,10 +115,6 @@
   100% { transform: translate(0, 0); }
 }
 
-/* ---------- 7. CONTENIDO ----------
-   Wordmark grande (Archivo weight 200 + letter-spacing 0.35em) y
-   tagline en mono más chico con letter-spacing 0.5em. Blanco puro
-   con text-shadow suave para separarlo del fondo dinámico. */
 .lm-title {
   margin: 0;
   font-family: Archivo, 'Chivo', ui-sans-serif, system-ui, sans-serif;
@@ -191,7 +143,6 @@
   to   { opacity: 1; transform: none; }
 }
 
-/* ---------- 8. ACCESIBILIDAD ---------- */
 @media (prefers-reduced-motion: reduce) {
   .lm-darks,
   .lm-roam,
@@ -205,7 +156,6 @@
   .lm-title, .lm-tagline { opacity: 1; transform: none; }
 }
 
-/* ---------- 9. MÓVIL ---------- */
 @media (max-width: 768px) {
   .lm-bg__blobs { filter: blur(55px); }
   .lm-roam { width: 110vw; margin-left: -55vw; }

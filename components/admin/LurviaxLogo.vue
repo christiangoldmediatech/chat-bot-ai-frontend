@@ -1,18 +1,4 @@
 <script setup lang="ts">
-// LURVIAX brand mark. Cuatro variantes comparten el wordmark tipográfico
-// geométrico fino (Archivo variable weight 200, letter-spacing amplio).
-// El espíritu "dark commit" del arte de marca — sólo trazos limpios sobre
-// el vórtice azul.
-//
-//   • mark          — tile cuadrado con la letra L (avatar / favicon).
-//   • wordmark      — LURVIAX completo, sin tagline.
-//   • full          — LURVIAX + "PLATAFORMA DE ASISTENTES INTELIGENTES" debajo.
-//   • wordmark-draw — igual que wordmark, pero al montar hace fade-in con
-//     letter-spacing expandido para simular el trazo pluma.
-//
-// Tone `mono` usa currentColor; `pearl` (default) usa blanco puro; `mist`
-// usa un blanco atenuado.
-
 interface Props {
   variant?: 'mark' | 'wordmark' | 'full' | 'wordmark-draw'
   size?: number | string
@@ -39,11 +25,8 @@ const strokeColor = computed(() => {
   return '#ffffff'
 })
 
-// Suffix estable por instancia para el id del gradient del mark — evita
-// colisiones cuando hay más de un logo en la misma página.
 const gradId = `lurviax-grad-${Math.random().toString(36).slice(2, 8)}`
 
-// Ref al <text> del wordmark-draw para animar el letter-spacing al montar.
 const drawEl = ref<SVGTextElement | null>(null)
 
 onMounted(() => {
@@ -64,7 +47,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- MARK: tile cuadrado con letra L. Drop-in para avatar / favicon. -->
   <svg
     v-if="variant === 'mark'"
     xmlns="http://www.w3.org/2000/svg"
@@ -83,13 +65,11 @@ onMounted(() => {
       </linearGradient>
     </defs>
     <rect x="0" y="0" width="64" height="64" rx="14" :fill="`url(#${gradId})`" />
-    <!-- Letra L: cuña geométrica limpia. -->
     <g fill="#ffffff">
       <path d="M22 16 L30 16 L30 40 L46 40 L46 48 L22 48 Z" />
     </g>
   </svg>
 
-  <!-- WORDMARK: LURVIAX completo, sin animación. -->
   <svg
     v-else-if="variant === 'wordmark'"
     xmlns="http://www.w3.org/2000/svg"
@@ -113,7 +93,6 @@ onMounted(() => {
     >LURVIAX</text>
   </svg>
 
-  <!-- WORDMARK-DRAW: wordmark que se abre con letter-spacing al montar. -->
   <svg
     v-else-if="variant === 'wordmark-draw'"
     xmlns="http://www.w3.org/2000/svg"
@@ -138,7 +117,6 @@ onMounted(() => {
     >LURVIAX</text>
   </svg>
 
-  <!-- FULL: wordmark + tagline debajo. -->
   <svg
     v-else
     xmlns="http://www.w3.org/2000/svg"

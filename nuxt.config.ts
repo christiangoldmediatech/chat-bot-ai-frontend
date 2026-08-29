@@ -51,36 +51,19 @@ export default defineNuxtConfig({
     typeCheck: false,
   },
   css: ['~/assets/css/main.css'],
-  // Desactivar el appManifest experimental. Nuxt lo usa para invalidar builds
-  // en SSR/SSG detectando cambios de deploy, pero en SPA (`ssr:false`) no
-  // aporta nada. Además, Vite pre-transforma el composable `manifest.js` en
-  // dev y, cuando el buildId cacheado no coincide con el `.nuxt/` regenerado
-  // (por rename de componentes, cambios en config, etc.), lanza
-  // `Failed to resolve import "#app-manifest"` en bucle. Apagándolo se elimina
-  // la fuente del error de raíz.
   experimental: {
     appManifest: false,
   },
-  // Excluir el composable de manifest de la pre-optimización de Vite: aunque
-  // `appManifest:false` ya evita que se importe, si Vite lo cachea antes de
-  // arrancar Nuxt puede seguir intentando resolverlo. Belt-and-suspenders.
   vite: {
     optimizeDeps: {
       exclude: ['#app-manifest'],
     },
-    // En dev, el navegador cachea `_nuxt/*.js` de sesiones anteriores. Cuando
-    // reinicias `npm run dev` (rename de componentes, cambios en config), los
-    // chunks nuevos tienen hashes distintos y los viejos devuelven 404 hasta
-    // que el usuario hace hard-refresh. Con `Cache-Control: no-store` el
-    // browser siempre pide la versión fresca del dev server.
     server: {
       headers: {
         'Cache-Control': 'no-store',
       },
     },
   },
-  // En dev, si Nitro sirve algún asset intermedio (ej. plantilla SPA), evitar
-  // que el navegador lo cachee. Complementa el header de vite arriba.
   nitro: {
     devServer: {
       watch: [],

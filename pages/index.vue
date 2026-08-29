@@ -135,8 +135,6 @@ function smoothScroll(ev: MouseEvent, href: string) {
   <div class="lurviax-grain" aria-hidden="true" />
   <div class="fixed inset-0 z-0 pointer-events-none bg-ground" aria-hidden="true" />
 
-  <!-- Vertical pagination dots — refleja la sección visible y navega con
-       click. Fija a la derecha; oculta en mobile. -->
   <LurviaxSectionDots />
 
   <div class="relative z-[3] min-h-screen overflow-x-hidden bg-transparent font-sans text-pearl">
@@ -179,16 +177,10 @@ function smoothScroll(ev: MouseEvent, href: string) {
     </header>
 
     <main id="top">
-      <!-- ══════════ SPLASH — mesh gradient intro ══════════ -->
-      <!-- Primera pantalla que ve el usuario: fondo animado (mesh gradient
-           + mancha oscura viajera + grano) con el wordmark LURVIAX grande
-           centrado. El navbar sticky arriba sigue visible. Al scroll aparece
-           el hero clásico con badge, headline, CTAs y ticker. -->
       <div id="splash">
         <LurviaxMeshHero />
       </div>
 
-      <!-- ══════════ HERO ══════════ -->
       <section id="hero" class="relative pb-[clamp(56px,9vh,110px)] pt-[clamp(48px,9vh,108px)] text-center">
         <!-- Halo respirando detrás del wordmark. -->
         <div
@@ -197,9 +189,6 @@ function smoothScroll(ev: MouseEvent, href: string) {
         />
 
         <div class="mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
-          <!-- Eyebrow badge — reemplaza el wordmark gigante (redundante con
-               el splash mesh de arriba). Un pill compacto con dot pulsante
-               que ancla visualmente el hero sin repetir la marca. -->
           <p class="lurviax-fade-up mx-auto inline-flex items-center gap-2 rounded-full border border-halo-line bg-ink-card/55 px-4 py-1.5 font-mono text-[clamp(0.66rem,1.4vw,0.78rem)] uppercase tracking-[0.32em] text-pearl backdrop-blur-sm" style="animation-delay: 1.35s;">
             <span class="inline-block size-1.5 rounded-full bg-halo animate-ping" aria-hidden="true" />
             {{ $t('landing.hero.eyebrow') }}

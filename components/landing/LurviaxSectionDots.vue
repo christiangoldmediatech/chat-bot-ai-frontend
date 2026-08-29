@@ -1,15 +1,4 @@
 <script setup lang="ts">
-// Vertical carousel pagination dots — columna fija a la derecha que refleja
-// qué sección del landing está visible y permite navegar con click.
-//
-// Cada dot es un botón accesible con label (aparece al hover / focus). El
-// dot activo se convierte en una línea vertical corta pintada con el accent
-// cian (visualmente ancla la posición del scroll). Un IntersectionObserver
-// detecta cuál sección ocupa la mayor porción del viewport.
-//
-// La lista de secciones es una prop opcional; si no se pasa, usa el default
-// que mapea el landing actual. Cada item apunta a un id existente en el DOM.
-
 interface Section {
   id: string
   labelKey: string
@@ -66,7 +55,6 @@ onMounted(() => {
       }
       pickMostVisible()
     },
-    // Múltiples umbrales para capturar cambios finos de visibilidad.
     { threshold: [0, 0.15, 0.3, 0.5, 0.7, 0.9, 1] },
   )
   for (const s of props.sections) {
@@ -82,8 +70,6 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- Fixed rail vertical. Oculto en mobile (poco valor con pantallas cortas)
-       y en usuarios con reduce-motion agresivo (respeta prefer). -->
   <nav
     class="lx-dots pointer-events-none fixed right-[clamp(12px,2vw,28px)] top-1/2 z-40 hidden -translate-y-1/2 md:block"
     :aria-label="t('landing.dots.aria')"
@@ -97,13 +83,11 @@ onBeforeUnmount(() => {
           :aria-current="activeId === s.id ? 'true' : undefined"
           @click="scrollTo(s.id)"
         >
-          <!-- Label (aparece al hover / focus). -->
           <span
             class="lx-label pointer-events-none whitespace-nowrap rounded-full border border-halo-line bg-ink-card/70 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-pearl opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
           >
             {{ t(s.labelKey) }}
           </span>
-          <!-- Dot / línea activa. -->
           <span
             class="lx-mark shrink-0 rounded-full transition-all duration-300"
             :class="activeId === s.id
@@ -122,7 +106,6 @@ onBeforeUnmount(() => {
   outline: 2px solid #5be9ec;
   outline-offset: 3px;
 }
-/* Suave slide-in del label desde la derecha al aparecer. */
 .lx-label {
   transform: translateX(6px);
 }

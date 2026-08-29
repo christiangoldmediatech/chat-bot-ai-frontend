@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --color-1: #030303; /* negro base / fondo */
-  --color-2: #034871; /* azul profundo */
-  --color-3: #01142A; /* azul noche / superficie */
-  --color-4: #077DDC; /* azul primario / acción */
-  --color-5: #5BE9EC; /* cian acento / glow */
+  --color-1: #030303;
+  --color-2: #034871;
+  --color-3: #01142A;
+  --color-4: #077DDC;
+  --color-5: #5BE9EC;
 
   --bg: var(--color-1);
   --surface: var(--color-3);
@@ -29,10 +29,6 @@
   }
 }
 
-/* ---- LURVIAX hero — vórtice radial concéntrico ----
-   Núcleo oscuro azul noche, anillos que suben de azul profundo → azul primario
-   con destellos cian, desvanecido a negro en los bordes. El cian es sólo acento
-   (~10% de la superficie), nunca fondo pleno. */
 .lurviax-hero {
   position: relative;
   background:
@@ -58,9 +54,6 @@
   background: radial-gradient(circle at 50% 45%, transparent 40%, rgba(3, 3, 3, 0.85) 100%);
 }
 
-/* ---- LURVIAX landing (dark commit) ---- */
-/* Grain overlay: SVG de fractalNoise en base64 sobre mix-blend-mode overlay,
-   posición fija encima del ground para dar textura al canvas oscuro. */
 .lurviax-grain {
   position: fixed;
   inset: 0;
@@ -71,14 +64,10 @@
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.34'/></svg>");
 }
 
-/* Wordmark drop-shadow — halo detrás del trazo para simular emisión. */
 .lurviax-mark path {
   filter: drop-shadow(0 0 14px rgba(91, 233, 236, 0.35));
 }
 
-/* Rise-in de líneas del headline — cada `.lurviax-ln` es un contenedor con
-   overflow hidden y su hijo `>span` se traslada de 105% a 0. La animación
-   se dispara automáticamente al montar; el delay lo pone el componente. */
 .lurviax-ln {
   display: block;
   overflow: hidden;
@@ -94,7 +83,6 @@
   }
 }
 
-/* Fade-up genérico para hero__sub, hero__copy, ticker, cta. */
 @keyframes lurviax-fade-up {
   from {
     opacity: 0;
@@ -110,8 +98,6 @@
   animation: lurviax-fade-up 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
 }
 
-/* Reveal on scroll (portado del `.rv` del HTML, alineado con la directiva
-   v-reveal existente — el plugin agrega `reveal-in` al intersectar). */
 .lurviax-rv {
   opacity: 0;
   transform: translateY(26px);
@@ -124,7 +110,6 @@
   transform: none;
 }
 
-/* Underline animado del nav (scaleX de derecha a izquierda al hover). */
 .lurviax-nav-link {
   position: relative;
   padding-block: 4px;
@@ -146,8 +131,6 @@
   transform-origin: left;
 }
 
-/* Border-gradient wrapper para el phone frame — usa mask compositing para
-   dibujar sólo el borde. */
 .lurviax-phone-border {
   position: relative;
 }
@@ -172,8 +155,6 @@
   mask-composite: exclude;
 }
 
-/* Belt marquee mask — fade laterales para que las integrations aparezcan
-   emergiendo del vacío en lugar de cortarse en seco. */
 .lurviax-belt-mask {
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
@@ -192,13 +173,6 @@
   }
 }
 
-/* ---- Scroll reveal ---- */
-/* Applied by the `v-reveal` directive. The element starts in `reveal-init`
-   (hidden + offset), and when it enters the viewport the directive adds
-   `reveal-in` to drop the offset and fade in. Variants choose the offset
-   axis/scale; an optional delay (passed as `v-reveal="120"`) staggers
-   sibling reveals. */
-
 .reveal-init {
   opacity: 0;
   transition: opacity 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -216,9 +190,6 @@
   transform: translate3d(0, 0, 0) scale(1);
 }
 
-/* ---- Landing animations ---- */
-
-/* Gradiente que fluye lentamente — fondos de secciones/CTA. */
 .anim-gradient-flow {
   background-size: 300% 300%;
   animation: gradient-flow 8s ease infinite;
@@ -229,7 +200,6 @@
   50% { background-position: 100% 50%; }
 }
 
-/* Texto con gradiente en movimiento (headline "LURVIAX"). */
 .anim-gradient-text {
   background-size: 300% auto;
   -webkit-background-clip: text;
@@ -237,9 +207,6 @@
   animation: gradient-flow 5s linear infinite;
 }
 
-/* Entrada palabra por palabra: cada span recibe --i para el stagger.
-   El hijo directo es un wrapper aria-hidden; las palabras van un nivel
-   más adentro. */
 .word-reveal > span > span {
   display: inline-block;
   opacity: 0;
@@ -257,7 +224,6 @@
   }
 }
 
-/* Barrido de luz sobre superficies glass. */
 .light-sweep {
   position: relative;
   overflow: hidden;
@@ -278,7 +244,6 @@
   60%, 100% { background-position: -120% 0; }
 }
 
-/* Marquee infinito — el contenido va duplicado para el loop sin costura. */
 .marquee-track {
   display: flex;
   width: max-content;
@@ -293,7 +258,6 @@
   to { transform: translateX(-50%); }
 }
 
-/* Respiración de glow — botón flotante de WhatsApp. */
 .glow-pulse {
   animation: glow-pulse 2.8s ease-in-out infinite;
 }
@@ -303,7 +267,6 @@
   50% { box-shadow: 0 0 0 12px rgb(37 211 102 / 0); }
 }
 
-/* Burbuja de chat que aparece (loop del preview del hero). */
 .chat-pop {
   animation: chat-pop 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
@@ -319,7 +282,6 @@
   }
 }
 
-/* Flotación suave — decoraciones del hero. */
 .float-y {
   animation: float-y 6s ease-in-out infinite;
 }
@@ -329,7 +291,6 @@
   50% { transform: translateY(-14px); }
 }
 
-/* Tilt 3D (directiva v-tilt): el JS actualiza --rx/--ry/--mx/--my. */
 .tilt-card {
   transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   transition: transform 200ms ease-out;
