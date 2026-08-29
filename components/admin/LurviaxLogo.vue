@@ -1,12 +1,12 @@
 <script setup lang="ts">
-// LURVIA brand mark. Cuatro variantes comparten el wordmark tipográfico
+// LURVIAX brand mark. Cuatro variantes comparten el wordmark tipográfico
 // geométrico fino (Archivo variable weight 200, letter-spacing amplio).
 // El espíritu "dark commit" del arte de marca — sólo trazos limpios sobre
 // el vórtice azul.
 //
 //   • mark          — tile cuadrado con la letra L (avatar / favicon).
-//   • wordmark      — LURVIA completo, sin tagline.
-//   • full          — LURVIA + "PLATAFORMA DE ASISTENTES INTELIGENTES" debajo.
+//   • wordmark      — LURVIAX completo, sin tagline.
+//   • full          — LURVIAX + "PLATAFORMA DE ASISTENTES INTELIGENTES" debajo.
 //   • wordmark-draw — igual que wordmark, pero al montar hace fade-in con
 //     letter-spacing expandido para simular el trazo pluma.
 //
@@ -24,7 +24,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   variant: 'mark',
   size: 36,
-  alt: 'LURVIA',
+  alt: 'LURVIAX',
   rounded: 'rounded-xl',
   tone: 'pearl',
 })
@@ -41,7 +41,7 @@ const strokeColor = computed(() => {
 
 // Suffix estable por instancia para el id del gradient del mark — evita
 // colisiones cuando hay más de un logo en la misma página.
-const gradId = `lurvia-grad-${Math.random().toString(36).slice(2, 8)}`
+const gradId = `lurviax-grad-${Math.random().toString(36).slice(2, 8)}`
 
 // Ref al <text> del wordmark-draw para animar el letter-spacing al montar.
 const drawEl = ref<SVGTextElement | null>(null)
@@ -89,7 +89,7 @@ onMounted(() => {
     </g>
   </svg>
 
-  <!-- WORDMARK: LURVIA completo, sin animación. -->
+  <!-- WORDMARK: LURVIAX completo, sin animación. -->
   <svg
     v-else-if="variant === 'wordmark'"
     xmlns="http://www.w3.org/2000/svg"
@@ -110,7 +110,7 @@ onMounted(() => {
       letter-spacing="0.35em"
       :fill="strokeColor"
       style="font-variation-settings: 'wdth' 100, 'wght' 200;"
-    >LURVIA</text>
+    >LURVIAX</text>
   </svg>
 
   <!-- WORDMARK-DRAW: wordmark que se abre con letter-spacing al montar. -->
@@ -120,7 +120,7 @@ onMounted(() => {
     viewBox="0 0 620 150"
     :height="dimension"
     :style="{ height: dimension }"
-    class="lurvia-mark shrink-0 select-none overflow-visible"
+    class="lurviax-mark shrink-0 select-none overflow-visible"
     role="img"
     :aria-label="alt"
   >
@@ -135,7 +135,7 @@ onMounted(() => {
       letter-spacing="0.35em"
       :fill="strokeColor"
       style="font-variation-settings: 'wdth' 100, 'wght' 200;"
-    >LURVIA</text>
+    >LURVIAX</text>
   </svg>
 
   <!-- FULL: wordmark + tagline debajo. -->
@@ -159,7 +159,7 @@ onMounted(() => {
       letter-spacing="0.35em"
       :fill="strokeColor"
       style="font-variation-settings: 'wdth' 100, 'wght' 200;"
-    >LURVIA</text>
+    >LURVIAX</text>
     <text
       x="310"
       y="150"

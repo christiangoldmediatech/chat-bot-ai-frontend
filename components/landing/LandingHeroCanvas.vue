@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Fondo animado del landing (LURVIA — dark commit).
+ * Fondo animado del landing (LURVIAX — dark commit).
  *
  * Un `<canvas>` 2D a pantalla completa que dibuja tres "hebras" sinusoidales
  * horizontales cerca del centro vertical. Cada hebra combina tres frecuencias

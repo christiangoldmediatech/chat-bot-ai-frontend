@@ -29,11 +29,11 @@
   }
 }
 
-/* ---- LURVIA hero — vórtice radial concéntrico ----
+/* ---- LURVIAX hero — vórtice radial concéntrico ----
    Núcleo oscuro azul noche, anillos que suben de azul profundo → azul primario
    con destellos cian, desvanecido a negro en los bordes. El cian es sólo acento
    (~10% de la superficie), nunca fondo pleno. */
-.lurvia-hero {
+.lurviax-hero {
   position: relative;
   background:
     radial-gradient(closest-side circle at 50% 45%, #01142a 0%, transparent 62%),
@@ -50,7 +50,7 @@
     #030303;
   background-blend-mode: screen, screen, normal, normal;
 }
-.lurvia-hero::after {
+.lurviax-hero::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -58,10 +58,10 @@
   background: radial-gradient(circle at 50% 45%, transparent 40%, rgba(3, 3, 3, 0.85) 100%);
 }
 
-/* ---- LURVIA landing (dark commit) ---- */
+/* ---- LURVIAX landing (dark commit) ---- */
 /* Grain overlay: SVG de fractalNoise en base64 sobre mix-blend-mode overlay,
    posición fija encima del ground para dar textura al canvas oscuro. */
-.lurvia-grain {
+.lurviax-grain {
   position: fixed;
   inset: 0;
   z-index: 2;
@@ -72,30 +72,30 @@
 }
 
 /* Wordmark drop-shadow — halo detrás del trazo para simular emisión. */
-.lurvia-mark path {
+.lurviax-mark path {
   filter: drop-shadow(0 0 14px rgba(91, 233, 236, 0.35));
 }
 
-/* Rise-in de líneas del headline — cada `.lurvia-ln` es un contenedor con
+/* Rise-in de líneas del headline — cada `.lurviax-ln` es un contenedor con
    overflow hidden y su hijo `>span` se traslada de 105% a 0. La animación
    se dispara automáticamente al montar; el delay lo pone el componente. */
-.lurvia-ln {
+.lurviax-ln {
   display: block;
   overflow: hidden;
 }
-.lurvia-ln > span {
+.lurviax-ln > span {
   display: block;
   transform: translateY(105%);
-  animation: lurvia-rise-in 1.05s cubic-bezier(0.16, 0.84, 0.28, 1) forwards;
+  animation: lurviax-rise-in 1.05s cubic-bezier(0.16, 0.84, 0.28, 1) forwards;
 }
-@keyframes lurvia-rise-in {
+@keyframes lurviax-rise-in {
   to {
     transform: translateY(0);
   }
 }
 
 /* Fade-up genérico para hero__sub, hero__copy, ticker, cta. */
-@keyframes lurvia-fade-up {
+@keyframes lurviax-fade-up {
   from {
     opacity: 0;
     transform: translateY(14px);
@@ -105,31 +105,31 @@
     transform: none;
   }
 }
-.lurvia-fade-up {
+.lurviax-fade-up {
   opacity: 0;
-  animation: lurvia-fade-up 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+  animation: lurviax-fade-up 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
 }
 
 /* Reveal on scroll (portado del `.rv` del HTML, alineado con la directiva
    v-reveal existente — el plugin agrega `reveal-in` al intersectar). */
-.lurvia-rv {
+.lurviax-rv {
   opacity: 0;
   transform: translateY(26px);
   transition:
     opacity 0.85s cubic-bezier(0.2, 0.8, 0.3, 1),
     transform 0.85s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
-.lurvia-rv.reveal-in {
+.lurviax-rv.reveal-in {
   opacity: 1;
   transform: none;
 }
 
 /* Underline animado del nav (scaleX de derecha a izquierda al hover). */
-.lurvia-nav-link {
+.lurviax-nav-link {
   position: relative;
   padding-block: 4px;
 }
-.lurvia-nav-link::after {
+.lurviax-nav-link::after {
   content: '';
   position: absolute;
   left: 0;
@@ -141,17 +141,17 @@
   transform-origin: right;
   transition: transform 0.38s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
-.lurvia-nav-link:hover::after {
+.lurviax-nav-link:hover::after {
   transform: scaleX(1);
   transform-origin: left;
 }
 
 /* Border-gradient wrapper para el phone frame — usa mask compositing para
    dibujar sólo el borde. */
-.lurvia-phone-border {
+.lurviax-phone-border {
   position: relative;
 }
-.lurvia-phone-border::before {
+.lurviax-phone-border::before {
   content: '';
   position: absolute;
   inset: -1px;
@@ -174,19 +174,19 @@
 
 /* Belt marquee mask — fade laterales para que las integrations aparezcan
    emergiendo del vacío en lugar de cortarse en seco. */
-.lurvia-belt-mask {
+.lurviax-belt-mask {
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lurvia-ln > span,
-  .lurvia-fade-up {
+  .lurviax-ln > span,
+  .lurviax-fade-up {
     animation: none;
     transform: none;
     opacity: 1;
   }
-  .lurvia-rv {
+  .lurviax-rv {
     opacity: 1;
     transform: none;
   }
@@ -229,7 +229,7 @@
   50% { background-position: 100% 50%; }
 }
 
-/* Texto con gradiente en movimiento (headline "LURVIA"). */
+/* Texto con gradiente en movimiento (headline "LURVIAX"). */
 .anim-gradient-text {
   background-size: 300% auto;
   -webkit-background-clip: text;

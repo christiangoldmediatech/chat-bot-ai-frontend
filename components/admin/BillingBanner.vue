@@ -28,10 +28,10 @@ const state = ref<BillingState | null>(null)
 const planCatalog = ref<PlanDetails[] | null>(null)
 const error = ref<string | null>(null)
 
-// The platform owner account (info@lurvia.com) is exempt: it's the company's
+// The platform owner account (info@lurviax.com) is exempt: it's the company's
 // own tenant, always active, so we don't surface renewal warnings or
 // suspension states to it.
-const PLATFORM_OWNER_EMAIL = 'info@lurvia.com'
+const PLATFORM_OWNER_EMAIL = 'info@lurviax.com'
 const isPlatformOwner = computed(() =>
   auth.user?.email?.toLowerCase() === PLATFORM_OWNER_EMAIL,
 )
@@ -79,7 +79,7 @@ const variant = computed<Variant | null>(() => {
 })
 
 const days = computed(() => state.value?.daysRemaining ?? 0)
-const SUPPORT_EMAIL = 'info@lurvia.com'
+const SUPPORT_EMAIL = 'info@lurviax.com'
 const supportEmail = computed(() => SUPPORT_EMAIL)
 
 // Deposit breakdown (plan price + IVA). Shown inline in the banner so the

@@ -1,14 +1,15 @@
 {
-  "name": "lurvia-frontend",
+  "name": "lurviax-frontend",
   "version": "0.1.0",
   "private": true,
-  "description": "Admin panel for LURVIA — the multi-tenant WhatsApp AI assistants platform.",
+  "description": "Admin panel for LURVIAX — the multi-tenant WhatsApp AI assistants platform.",
   "engines": {
     "node": "22.13.1"
   },
   "scripts": {
     "build": "NODE_OPTIONS=--max-old-space-size=8192 nuxt build",
     "dev": "NODE_OPTIONS=--max-old-space-size=8192 nuxt dev",
+    "dev:fresh": "npm run clean && nuxt prepare && npm run dev",
     "generate": "NODE_OPTIONS=--max-old-space-size=8192 nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",

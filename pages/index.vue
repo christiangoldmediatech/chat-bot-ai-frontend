@@ -26,7 +26,7 @@ const primaryCtaTarget = computed(() => (isAuthenticated.value ? '/admin' : '/lo
 
 // ---- Nav sticky (background al scrollear más de 24px) ----
 // La directiva `v-reveal` global (plugins/reveal.client.ts) se encarga de
-// agregar `reveal-in` a los elementos con class `.lurvia-rv` cuando entran
+// agregar `reveal-in` a los elementos con class `.lurviax-rv` cuando entran
 // en el viewport — el CSS de la clase reacciona a ese estado.
 const stuck = ref(false)
 const onScroll = () => { stuck.value = window.scrollY > 24 }
@@ -132,8 +132,12 @@ function smoothScroll(ev: MouseEvent, href: string) {
 <template>
   <!-- Background live: wave-strands canvas + grain overlay + ground base. -->
   <LandingHeroCanvas />
-  <div class="lurvia-grain" aria-hidden="true" />
+  <div class="lurviax-grain" aria-hidden="true" />
   <div class="fixed inset-0 z-0 pointer-events-none bg-ground" aria-hidden="true" />
+
+  <!-- Vertical pagination dots — refleja la sección visible y navega con
+       click. Fija a la derecha; oculta en mobile. -->
+  <LurviaxSectionDots />
 
   <div class="relative z-[3] min-h-screen overflow-x-hidden bg-transparent font-sans text-pearl">
     <!-- ══════════ NAV ══════════ -->
@@ -144,14 +148,14 @@ function smoothScroll(ev: MouseEvent, href: string) {
         ? 'bg-ink-deep/70 backdrop-blur-md backdrop-saturate-150 border-line-soft'
         : 'border-transparent'"
     >
-      <NuxtLink to="/" class="flex items-center gap-3" aria-label="LURVIA, inicio">
-        <LurviaLogo variant="wordmark" :size="19" tone="pearl" alt="LURVIA" />
+      <NuxtLink to="/" class="flex items-center gap-3" aria-label="LURVIAX, inicio">
+        <LurviaxLogo variant="wordmark" :size="19" tone="pearl" alt="LURVIAX" />
       </NuxtLink>
       <nav class="ml-auto hidden gap-7 md:flex" :aria-label="$t('landing.nav.aria')">
-        <a href="#demo" class="lurvia-nav-link font-mono text-[0.74rem] uppercase tracking-[0.13em] text-mist transition-colors hover:text-pearl" @click="smoothScroll($event, '#demo')">{{ $t('landing.nav.demo') }}</a>
-        <a href="#capacidades" class="lurvia-nav-link font-mono text-[0.74rem] uppercase tracking-[0.13em] text-mist transition-colors hover:text-pearl" @click="smoothScroll($event, '#capacidades')">{{ $t('landing.nav.caps') }}</a>
-        <a href="#proceso" class="lurvia-nav-link font-mono text-[0.74rem] uppercase tracking-[0.13em] text-mist transition-colors hover:text-pearl" @click="smoothScroll($event, '#proceso')">{{ $t('landing.nav.process') }}</a>
-        <a href="#planes" class="lurvia-nav-link font-mono text-[0.74rem] uppercase tracking-[0.13em] text-mist transition-colors hover:text-pearl" @click="smoothScroll($event, '#planes')">{{ $t('landing.nav.plans') }}</a>
+        <a href="#demo" class="lurviax-nav-link font-mono text-[0.74rem] uppercase tracking-[0.13em] text-mist transition-colors hover:text-pearl" @click="smoothScroll($event, '#demo')">{{ $t('landing.nav.demo') }}</a>
+        <a href="#capacidades" class="lurviax-nav-link font-mono text-[0.74rem] uppercase tracking-[0.13em] text-mist transition-colors hover:text-pearl" @click="smoothScroll($event, '#capacidades')">{{ $t('landing.nav.caps') }}</a>
+        <a href="#proceso" class="lurviax-nav-link font-mono text-[0.74rem] uppercase tracking-[0.13em] text-mist transition-colors hover:text-pearl" @click="smoothScroll($event, '#proceso')">{{ $t('landing.nav.process') }}</a>
+        <a href="#planes" class="lurviax-nav-link font-mono text-[0.74rem] uppercase tracking-[0.13em] text-mist transition-colors hover:text-pearl" @click="smoothScroll($event, '#planes')">{{ $t('landing.nav.plans') }}</a>
       </nav>
       <!-- Auth CTAs: Crear cuenta (text link, oculto en mobile) + Iniciar
            sesión (pill halo). Cuando el usuario ya inició sesión, se colapsa
@@ -161,7 +165,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
         <NuxtLink
           v-if="!isAuthenticated"
           to="/register"
-          class="lurvia-nav-link hidden font-mono text-[0.7rem] uppercase tracking-[0.13em] text-mist transition-colors hover:text-pearl sm:inline"
+          class="lurviax-nav-link hidden font-mono text-[0.7rem] uppercase tracking-[0.13em] text-mist transition-colors hover:text-pearl sm:inline"
         >
           {{ $t('landing.createAccount') }}
         </NuxtLink>
@@ -175,8 +179,17 @@ function smoothScroll(ev: MouseEvent, href: string) {
     </header>
 
     <main id="top">
+      <!-- ══════════ SPLASH — mesh gradient intro ══════════ -->
+      <!-- Primera pantalla que ve el usuario: fondo animado (mesh gradient
+           + mancha oscura viajera + grano) con el wordmark LURVIAX grande
+           centrado. El navbar sticky arriba sigue visible. Al scroll aparece
+           el hero clásico con badge, headline, CTAs y ticker. -->
+      <div id="splash">
+        <LurviaxMeshHero />
+      </div>
+
       <!-- ══════════ HERO ══════════ -->
-      <section class="relative pb-[clamp(56px,9vh,110px)] pt-[clamp(48px,9vh,108px)] text-center">
+      <section id="hero" class="relative pb-[clamp(56px,9vh,110px)] pt-[clamp(48px,9vh,108px)] text-center">
         <!-- Halo respirando detrás del wordmark. -->
         <div
           class="pointer-events-none absolute left-1/2 top-[16%] aspect-square w-[min(820px,96vw)] -translate-x-1/2 -translate-y-[18%] animate-breathe bg-halo-radial"
@@ -184,33 +197,29 @@ function smoothScroll(ev: MouseEvent, href: string) {
         />
 
         <div class="mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
-          <!-- Wordmark instantáneamente visible: variant="wordmark" (sin
-               stroke-draw) para que el nombre de la plataforma aparezca ya
-               renderizado en el primer paint, no dibujándose durante 1.5s.
-               La drop-shadow halo de `.lurvia-mark` se aplica manualmente. -->
-          <LurviaLogo
-            variant="wordmark"
-            :size="'clamp(64px, 12vw, 130px)'"
-            tone="pearl"
-            alt="LURVIA"
-            class="lurvia-mark mx-auto mb-[clamp(16px,3vw,26px)] block w-[min(560px,84vw)] overflow-visible"
-          />
+          <!-- Eyebrow badge — reemplaza el wordmark gigante (redundante con
+               el splash mesh de arriba). Un pill compacto con dot pulsante
+               que ancla visualmente el hero sin repetir la marca. -->
+          <p class="lurviax-fade-up mx-auto inline-flex items-center gap-2 rounded-full border border-halo-line bg-ink-card/55 px-4 py-1.5 font-mono text-[clamp(0.66rem,1.4vw,0.78rem)] uppercase tracking-[0.32em] text-pearl backdrop-blur-sm" style="animation-delay: 1.35s;">
+            <span class="inline-block size-1.5 rounded-full bg-halo animate-ping" aria-hidden="true" />
+            {{ $t('landing.hero.eyebrow') }}
+          </p>
 
-          <p class="lurvia-fade-up font-mono text-[clamp(0.66rem,1.5vw,0.82rem)] uppercase tracking-[0.52em] text-mist" style="animation-delay: 1.55s;">
+          <p class="lurviax-fade-up mt-6 font-mono text-[clamp(0.66rem,1.5vw,0.82rem)] uppercase tracking-[0.52em] text-mist" style="animation-delay: 1.55s;">
             {{ $t('landing.hero.tagline') }}
           </p>
 
           <h1 class="mx-auto mt-[clamp(34px,6vh,62px)] max-w-[20ch] font-display text-[clamp(2.9rem,8.2vw,6.4rem)] leading-[0.98] tracking-[-0.028em] text-pearl" style="font-variation-settings: 'wdth' 96, 'wght' 420;">
-            <span class="lurvia-ln"><span style="animation-delay: 1.75s;">{{ $t('landing.hero.line1') }}</span></span>
-            <span class="lurvia-ln"><span style="animation-delay: 1.88s;">{{ $t('landing.hero.line2') }}</span></span>
-            <span class="lurvia-ln"><span style="animation-delay: 2.01s;"><em class="not-italic font-medium text-halo" style="font-variation-settings: 'wdth' 96, 'wght' 620;">{{ $t('landing.hero.line3') }}</em></span></span>
+            <span class="lurviax-ln"><span style="animation-delay: 1.75s;">{{ $t('landing.hero.line1') }}</span></span>
+            <span class="lurviax-ln"><span style="animation-delay: 1.88s;">{{ $t('landing.hero.line2') }}</span></span>
+            <span class="lurviax-ln"><span style="animation-delay: 2.01s;"><em class="not-italic font-medium text-halo" style="font-variation-settings: 'wdth' 96, 'wght' 620;">{{ $t('landing.hero.line3') }}</em></span></span>
           </h1>
 
-          <p class="lurvia-fade-up mx-auto mt-6.5 max-w-[54ch] text-[clamp(1.05rem,1.7vw,1.3rem)] text-mist" style="animation-delay: 2.35s;">
+          <p class="lurviax-fade-up mx-auto mt-6.5 max-w-[54ch] text-[clamp(1.05rem,1.7vw,1.3rem)] text-mist" style="animation-delay: 2.35s;">
             {{ $t('landing.hero.copy') }}
           </p>
 
-          <div class="lurvia-fade-up mt-8.5 flex flex-wrap justify-center gap-3.5" style="animation-delay: 2.55s;">
+          <div class="lurviax-fade-up mt-8.5 flex flex-wrap justify-center gap-3.5" style="animation-delay: 2.55s;">
             <a
               href="#demo"
               class="inline-flex items-center gap-2 rounded-full border border-transparent bg-brand-gradient px-6 py-3.5 font-mono text-[0.78rem] font-medium uppercase tracking-[0.12em] text-ink-tealDeep shadow-halo-glow transition-transform hover:-translate-y-0.5"
@@ -229,7 +238,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
           </div>
 
           <!-- Ticker de 4 métricas -->
-          <div class="lurvia-fade-up js-ticker mt-[clamp(48px,8vh,88px)] grid grid-cols-2 border-y border-line-soft sm:grid-cols-4" style="animation-delay: 2.8s;">
+          <div class="lurviax-fade-up js-ticker mt-[clamp(48px,8vh,88px)] grid grid-cols-2 border-y border-line-soft sm:grid-cols-4" style="animation-delay: 2.8s;">
             <div class="border-l-0 border-line-soft p-6 text-left sm:border-l">
               <div class="font-display tabular-nums text-[clamp(1.5rem,3vw,2.15rem)] leading-none tracking-[-0.02em] text-pearl" data-count="2.4" data-dec="1" data-suffix=" s">0 s</div>
               <span class="mt-2 block font-mono text-[0.705rem] uppercase tracking-[0.16em] text-mist-dim">{{ $t('landing.hero.ticker.avgReply') }}</span>
@@ -253,7 +262,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
       <!-- ══════════ DEMO ══════════ -->
       <section id="demo" class="relative py-[clamp(80px,11vh,148px)]">
         <div class="mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
-          <div v-reveal class="lurvia-rv mb-[clamp(38px,6vw,62px)] grid grid-cols-1 items-end gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
+          <div v-reveal class="lurviax-rv mb-[clamp(38px,6vw,62px)] grid grid-cols-1 items-end gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
             <div>
               <p class="flex items-center gap-3 font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">
                 <span class="h-px w-6 bg-halo-dim" />
@@ -268,7 +277,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
             </p>
           </div>
 
-          <div v-reveal="140" class="lurvia-rv">
+          <div v-reveal="140" class="lurviax-rv">
             <PhoneDemo />
           </div>
         </div>
@@ -277,7 +286,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
       <!-- ══════════ CAPACIDADES ══════════ -->
       <section id="capacidades" class="relative py-[clamp(80px,11vh,148px)]">
         <div class="mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
-          <div v-reveal class="lurvia-rv mb-[clamp(38px,6vw,62px)] grid grid-cols-1 items-end gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
+          <div v-reveal class="lurviax-rv mb-[clamp(38px,6vw,62px)] grid grid-cols-1 items-end gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
             <div>
               <p class="flex items-center gap-3 font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">
                 <span class="h-px w-6 bg-halo-dim" />
@@ -294,7 +303,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
 
           <div
             v-reveal="140"
-            class="lurvia-rv grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-line-soft bg-line-soft sm:grid-cols-2 lg:grid-cols-3"
+            class="lurviax-rv grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-line-soft bg-line-soft sm:grid-cols-2 lg:grid-cols-3"
             @pointermove="onCapPointer"
           >
             <article
@@ -333,7 +342,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
       <!-- ══════════ PROCESO ══════════ -->
       <section id="proceso" class="relative py-[clamp(80px,11vh,148px)]">
         <div class="mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
-          <div v-reveal class="lurvia-rv mb-[clamp(38px,6vw,62px)] grid grid-cols-1 items-end gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
+          <div v-reveal class="lurviax-rv mb-[clamp(38px,6vw,62px)] grid grid-cols-1 items-end gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
             <div>
               <p class="flex items-center gap-3 font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">
                 <span class="h-px w-6 bg-halo-dim" />
@@ -348,7 +357,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
             </p>
           </div>
 
-          <div v-reveal="140" class="lurvia-rv">
+          <div v-reveal="140" class="lurviax-rv">
             <div
               v-for="i in 3"
               :key="i"
@@ -379,12 +388,12 @@ function smoothScroll(ev: MouseEvent, href: string) {
       <!-- ══════════ INTEGRACIONES (belt) ══════════ -->
       <section class="py-[clamp(20px,4vh,48px)]">
         <div class="mx-auto mb-5 w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
-          <p v-reveal class="lurvia-rv flex items-center gap-3 font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">
+          <p v-reveal class="lurviax-rv flex items-center gap-3 font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">
             <span class="h-px w-6 bg-halo-dim" />
             {{ $t('landing.belt.eyebrow') }}
           </p>
         </div>
-        <div class="lurvia-belt-mask relative overflow-hidden border-y border-line-soft py-6.5">
+        <div class="lurviax-belt-mask relative overflow-hidden border-y border-line-soft py-6.5">
           <div class="flex w-max animate-slide hover:[animation-play-state:paused]">
             <span
               v-for="(name, i) in [...integrations, ...integrations]"
@@ -400,9 +409,9 @@ function smoothScroll(ev: MouseEvent, href: string) {
       </section>
 
       <!-- ══════════ RESULTADOS ══════════ -->
-      <section class="relative py-[clamp(80px,11vh,148px)]">
+      <section id="resultados" class="relative py-[clamp(80px,11vh,148px)]">
         <div class="mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
-          <div v-reveal class="lurvia-rv mb-[clamp(38px,6vw,62px)] grid grid-cols-1 items-end gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
+          <div v-reveal class="lurviax-rv mb-[clamp(38px,6vw,62px)] grid grid-cols-1 items-end gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
             <div>
               <p class="flex items-center gap-3 font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">
                 <span class="h-px w-6 bg-halo-dim" />
@@ -417,7 +426,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
             </p>
           </div>
 
-          <div v-reveal="140" class="lurvia-rv grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-line-soft bg-line-soft md:grid-cols-3">
+          <div v-reveal="140" class="lurviax-rv grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-line-soft bg-line-soft md:grid-cols-3">
             <div class="bg-gradient-to-b from-ink-surface to-ink p-8 sm:p-10">
               <div class="font-display tabular-nums text-[clamp(2.8rem,6vw,4.4rem)] leading-none tracking-[-0.03em] text-halo" style="font-variation-settings: 'wdth' 88, 'wght' 300;" data-count="72" data-suffix="%">0%</div>
               <p class="mt-3.5 text-sm text-pearl">{{ $t('landing.results.items.1.title') }}</p>
@@ -441,7 +450,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
       <!-- ══════════ PLANES ══════════ -->
       <section id="planes" class="relative py-[clamp(80px,11vh,148px)]">
         <div class="mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
-          <div v-reveal class="lurvia-rv mb-[clamp(38px,6vw,62px)] grid grid-cols-1 items-end gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
+          <div v-reveal class="lurviax-rv mb-[clamp(38px,6vw,62px)] grid grid-cols-1 items-end gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
             <div>
               <p class="flex items-center gap-3 font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">
                 <span class="h-px w-6 bg-halo-dim" />
@@ -456,7 +465,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
             </p>
           </div>
 
-          <div v-reveal="140" class="lurvia-rv grid grid-cols-1 items-start gap-4 md:grid-cols-3">
+          <div v-reveal="140" class="lurviax-rv grid grid-cols-1 items-start gap-4 md:grid-cols-3">
             <!-- Esencial -->
             <article class="flex flex-col gap-4 rounded-2xl border border-line bg-gradient-to-b from-ink-card/95 to-ink/95 p-6 transition-all duration-400 hover:-translate-y-1 hover:border-halo-line sm:p-8">
               <div class="flex items-center gap-2.5">
@@ -534,11 +543,11 @@ function smoothScroll(ev: MouseEvent, href: string) {
           <p class="mb-6.5 font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">
             {{ $t('landing.close.eyebrow') }}
           </p>
-          <h2 v-reveal class="lurvia-rv mx-auto max-w-[16ch] font-display text-[clamp(2.2rem,6vw,4.3rem)] leading-tight tracking-[-0.03em]" style="font-variation-settings: 'wdth' 92, 'wght' 380;">
+          <h2 v-reveal class="lurviax-rv mx-auto max-w-[16ch] font-display text-[clamp(2.2rem,6vw,4.3rem)] leading-tight tracking-[-0.03em]" style="font-variation-settings: 'wdth' 92, 'wght' 380;">
             {{ $t('landing.close.titleA') }}<br>{{ $t('landing.close.titleB') }}
             <em class="not-italic font-medium text-halo" style="font-variation-settings: 'wdth' 92, 'wght' 620;">{{ $t('landing.close.titleEm') }}</em>
           </h2>
-          <div v-reveal="140" class="lurvia-rv mt-9 flex flex-wrap justify-center gap-3.5">
+          <div v-reveal="140" class="lurviax-rv mt-9 flex flex-wrap justify-center gap-3.5">
             <NuxtLink
               :to="primaryCtaTarget"
               class="inline-flex items-center gap-2 rounded-full border border-transparent bg-brand-gradient px-6 py-3.5 font-mono text-[0.78rem] font-medium uppercase tracking-[0.12em] text-ink-tealDeep shadow-halo-glow transition-transform hover:-translate-y-0.5"
@@ -562,7 +571,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
     <footer class="mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
       <div class="flex flex-col gap-4 border-t border-line-soft py-11 pb-14 md:flex-row md:items-center md:justify-between">
         <div class="flex items-center gap-4">
-          <LurviaLogo variant="wordmark" :size="17" tone="mist" alt="LURVIA" />
+          <LurviaxLogo variant="wordmark" :size="17" tone="mist" alt="LURVIAX" />
           <p class="max-w-[46ch] text-[0.82rem] text-mist-dim">{{ $t('landing.footer.tagline') }}</p>
         </div>
         <div class="flex flex-wrap gap-x-5 gap-y-2 text-[0.82rem] text-mist-dim">
@@ -576,7 +585,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
 
     <!-- Floating WhatsApp CTA -->
     <a
-      href="https://wa.me/593979798458?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20LURVIA"
+      href="https://wa.me/593979798458?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20LURVIAX"
       target="_blank"
       rel="noreferrer noopener"
       :aria-label="$t('landing.whatsappFloat.ariaLabel')"

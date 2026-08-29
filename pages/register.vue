@@ -71,8 +71,8 @@ async function onSubmit(): Promise<void> {
 <template>
   <div class="w-full max-w-md">
     <div class="flex flex-col items-center">
-      <LurviaLogo :size="72" rounded="rounded-3xl" class="bg-white ring-1 ring-white/70 shadow-glass-lg" />
-      <p class="mt-3 text-base font-semibold tracking-tight text-slate-900">LURVIA</p>
+      <LurviaxLogo :size="72" rounded="rounded-3xl" class="bg-white ring-1 ring-white/70 shadow-glass-lg" />
+      <p class="mt-3 text-base font-semibold tracking-tight text-slate-900">LURVIAX</p>
       <p class="text-xs text-slate-500">{{ $t('auth.brandTagline') }}</p>
     </div>
 

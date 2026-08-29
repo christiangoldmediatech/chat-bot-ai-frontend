@@ -18,13 +18,13 @@ defineProps<{
       class="flex items-end gap-2"
       :class="msg.role === 'USER' ? 'justify-start' : 'justify-end'"
     >
-      <!-- LURVIA avatar before assistant replies (right-aligned bubble) -->
-      <LurviaLogo
+      <!-- LURVIAX avatar before assistant replies (right-aligned bubble) -->
+      <LurviaxLogo
         v-if="msg.role === 'ASSISTANT'"
         :size="28"
         rounded="rounded-full"
         class="order-2 ml-1 bg-white ring-1 ring-white/70 shadow-sm"
-        alt="LURVIA"
+        alt="LURVIAX"
       />
       <div
         class="max-w-[70%] rounded-2xl px-4 py-2 text-sm"
@@ -40,7 +40,7 @@ defineProps<{
           v-if="msg.role === 'ASSISTANT'"
           class="mb-0.5 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-success-300"
         >
-          LURVIA
+          LURVIAX
         </div>
 
         <ChatMessageBubble :message="msg" :bot-id="botId" :tenant-id="tenantId" />

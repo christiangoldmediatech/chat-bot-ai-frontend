@@ -41,7 +41,7 @@ const ACCOUNT_NUMBER = '2200878125'
 const ACCOUNT_TYPE_KEY = 'admin.payment.bank.typeValue'
 const ACCOUNT_HOLDER = 'Christian Borja'
 const ID_NUMBER = '0104793245'
-const SUPPORT_EMAIL = 'info@lurvia.com'
+const SUPPORT_EMAIL = 'info@lurviax.com'
 
 const companyName = computed(() => tenantData.value?.name ?? '')
 const userEmail = computed(() => auth.user?.email ?? '')

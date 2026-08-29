@@ -2,7 +2,7 @@
 // Demo interactiva del landing (dark commit). Cuatro canales (WhatsApp,
 // web, voz, IG) con un thread pregrabado por canal — al elegir un tab, se
 // reproduce la conversación con timing realista (indicador de "escribiendo"
-// para LURVIA, entradas rápidas del cliente, chips de sistema para acciones).
+// para LURVIAX, entradas rápidas del cliente, chips de sistema para acciones).
 // Todos los strings viven en i18n bajo `landing.demo.*`.
 
 interface Msg {
@@ -58,7 +58,7 @@ const SCRIPTS: Record<string, Script> = {
       { s: 'alia', tKey: 'landing.demo.channels.web.m10' },
     ],
   },
-  // Nota de voz en WhatsApp (moto Yamaha). El cliente manda audio; LURVIA
+  // Nota de voz en WhatsApp (moto Yamaha). El cliente manda audio; LURVIAX
   // muestra el label 🎙️ y la meta con la transcripción entendida, luego
   // responde con contexto perfecto.
   voz: {
@@ -73,9 +73,9 @@ const SCRIPTS: Record<string, Script> = {
       { s: 'alia', tKey: 'landing.demo.channels.voz.m6' },
     ],
   },
-  // Panel web — intervención humana. LURVIA maneja el inicio, detecta
+  // Panel web — intervención humana. LURVIAX maneja el inicio, detecta
   // urgencia, y una operadora (Andrea) toma el control desde el panel;
-  // sus mensajes se ven como bubble de LURVIA pero con meta que la
+  // sus mensajes se ven como bubble de LURVIAX pero con meta que la
   // identifica como operadora del panel web.
   ig: {
     labelKey: 'landing.demo.channels.ig.label',
@@ -140,7 +140,7 @@ function play(channel: Channel) {
     const read = Math.min(text.length * 21, 1900)
 
     if (msg.s === 'alia') {
-      // LURVIA: primero aparece el indicador de "escribiendo", luego el mensaje.
+      // LURVIAX: primero aparece el indicador de "escribiendo", luego el mensaje.
       timers.push(window.setTimeout(() => {
         typing.value = true
         scrollToBottom()
@@ -243,7 +243,7 @@ onBeforeUnmount(() => {
     <!-- Phone frame + thread -->
     <div
       ref="phoneEl"
-      class="lurvia-phone-border relative rounded-[26px] border border-line bg-chrome-card p-3.5 shadow-phone"
+      class="lurviax-phone-border relative rounded-[26px] border border-line bg-chrome-card p-3.5 shadow-phone"
     >
       <!-- Bar superior -->
       <div class="flex items-center gap-3 border-b border-line-soft px-2 pt-1.5 pb-3.5">
@@ -253,7 +253,7 @@ onBeforeUnmount(() => {
           aria-hidden="true"
         />
         <div class="leading-tight">
-          <b class="font-display text-[0.92rem] font-medium tracking-[0.04em]" style="font-variation-settings: 'wdth' 108, 'wght' 560;">LURVIA</b>
+          <b class="font-display text-[0.92rem] font-medium tracking-[0.04em]" style="font-variation-settings: 'wdth' 108, 'wght' 560;">LURVIAX</b>
           <span class="block font-mono text-[0.62rem] uppercase tracking-[0.14em] text-halo-dim">{{ channelLabel }}</span>
         </div>
         <div class="ml-auto flex h-4 items-end gap-0.5" aria-hidden="true">
@@ -281,7 +281,7 @@ onBeforeUnmount(() => {
             {{ msg.t }}
             <span v-if="msg.m" class="mt-1.5 block font-mono text-[0.6rem] tracking-[0.1em] text-mist-dim">{{ msg.m }}</span>
           </div>
-          <!-- LURVIA -->
+          <!-- LURVIAX -->
           <div
             v-else-if="msg.s === 'alia'"
             class="max-w-[84%] self-end rounded-2xl rounded-br-[5px] border border-halo-line px-4 py-2.5 text-[0.935rem] leading-relaxed text-pearl animate-pop"

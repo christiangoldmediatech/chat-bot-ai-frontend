@@ -51,6 +51,44 @@ export default defineNuxtConfig({
     typeCheck: false,
   },
   css: ['~/assets/css/main.css'],
+  // Desactivar el appManifest experimental. Nuxt lo usa para invalidar builds
+  // en SSR/SSG detectando cambios de deploy, pero en SPA (`ssr:false`) no
+  // aporta nada. Además, Vite pre-transforma el composable `manifest.js` en
+  // dev y, cuando el buildId cacheado no coincide con el `.nuxt/` regenerado
+  // (por rename de componentes, cambios en config, etc.), lanza
+  // `Failed to resolve import "#app-manifest"` en bucle. Apagándolo se elimina
+  // la fuente del error de raíz.
+  experimental: {
+    appManifest: false,
+  },
+  // Excluir el composable de manifest de la pre-optimización de Vite: aunque
+  // `appManifest:false` ya evita que se importe, si Vite lo cachea antes de
+  // arrancar Nuxt puede seguir intentando resolverlo. Belt-and-suspenders.
+  vite: {
+    optimizeDeps: {
+      exclude: ['#app-manifest'],
+    },
+    // En dev, el navegador cachea `_nuxt/*.js` de sesiones anteriores. Cuando
+    // reinicias `npm run dev` (rename de componentes, cambios en config), los
+    // chunks nuevos tienen hashes distintos y los viejos devuelven 404 hasta
+    // que el usuario hace hard-refresh. Con `Cache-Control: no-store` el
+    // browser siempre pide la versión fresca del dev server.
+    server: {
+      headers: {
+        'Cache-Control': 'no-store',
+      },
+    },
+  },
+  // En dev, si Nitro sirve algún asset intermedio (ej. plantilla SPA), evitar
+  // que el navegador lo cachee. Complementa el header de vite arriba.
+  nitro: {
+    devServer: {
+      watch: [],
+    },
+    routeRules: {
+      '/_nuxt/**': { headers: { 'cache-control': 'no-store' } },
+    },
+  },
   // Runtime config:
   // - `apiBaseUrl` is PUBLIC (exposed to the client) because the SPA talks
   //   directly to the backend from the browser. Set it via the env var
@@ -66,17 +104,17 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'LURVIA — Plataforma de asistentes inteligentes',
+      title: 'LURVIAX — Plataforma de asistentes inteligentes',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'LURVIA replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
+        { name: 'description', content: 'LURVIAX replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
         { name: 'theme-color', content: '#077DDC' },
-        { property: 'og:title', content: 'LURVIA — Plataforma de asistentes inteligentes' },
-        { property: 'og:site_name', content: 'LURVIA' },
-        { property: 'og:description', content: 'LURVIA replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
-        { name: 'twitter:title', content: 'LURVIA — Plataforma de asistentes inteligentes' },
-        { name: 'twitter:description', content: 'LURVIA replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
+        { property: 'og:title', content: 'LURVIAX — Plataforma de asistentes inteligentes' },
+        { property: 'og:site_name', content: 'LURVIAX' },
+        { property: 'og:description', content: 'LURVIAX replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
+        { name: 'twitter:title', content: 'LURVIAX — Plataforma de asistentes inteligentes' },
+        { name: 'twitter:description', content: 'LURVIAX replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
       ],
       // Platform-wide typography (dark commit):
       // - Archivo (variable width/weight) → wordmark + display headings via
@@ -85,9 +123,9 @@ export default defineNuxtConfig({
       // - Chivo Mono → labels, eyebrows and metadata via `font-mono`.
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-        { rel: 'icon', type: 'image/png', href: '/lurvia-logo.png' },
-        { rel: 'shortcut icon', type: 'image/png', href: '/lurvia-logo.png' },
-        { rel: 'apple-touch-icon', href: '/lurvia-logo.png' },
+        { rel: 'icon', type: 'image/png', href: '/lurviax-logo.png' },
+        { rel: 'shortcut icon', type: 'image/png', href: '/lurviax-logo.png' },
+        { rel: 'apple-touch-icon', href: '/lurviax-logo.png' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         {

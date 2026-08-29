@@ -1,12 +1,12 @@
 import type { Config } from 'tailwindcss'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
-// LURVIA design tokens — dark commit. El wordmark vive sobre un vórtice azul
+// LURVIAX design tokens — dark commit. El wordmark vive sobre un vórtice azul
 // noche (núcleo deep navy + halo cian). Todos los colores se pintan desde
 // tokens, no hardcodeados en componentes.
 //
 // Palettes:
-//   • primary — LURVIA action blue (base `#077DDC`). Wordmark accents, CTAs,
+//   • primary — LURVIAX action blue (base `#077DDC`). Wordmark accents, CTAs,
 //     enlaces, "en acción".
 //   • accent  — cian `#5BE9EC` para glow, highlights, foco, bordes iluminados.
 //   • ink / surface / card — capas de fondo (near-black → azul noche → azul
@@ -24,7 +24,7 @@ const primary = {
   200: '#8fd1ff',
   300: '#5bb9fb',
   400: '#2a9cec',
-  500: '#077ddc', // base LURVIA — --color-4
+  500: '#077ddc', // base LURVIAX — --color-4
   600: '#0668ba',
   700: '#065396',
   800: '#054073',
