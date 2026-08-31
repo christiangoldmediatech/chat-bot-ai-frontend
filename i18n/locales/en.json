@@ -1,4 +1,10 @@
 {
+  "meta": {
+    "title": "LURVIAX — Intelligent assistants platform",
+    "description": "LURVIAX replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.",
+    "ogTitle": "LURVIAX — Intelligent assistants platform",
+    "ogDescription": "LURVIAX replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business."
+  },
   "common": {
     "save": "Save",
     "saving": "Saving…",
@@ -60,6 +66,9 @@
       "process": "Implementation",
       "plans": "Plans",
       "book": "Book a demo"
+    },
+    "splash": {
+      "tagline": "Intelligent assistants platform"
     },
     "dots": {
       "aria": "Section navigation",

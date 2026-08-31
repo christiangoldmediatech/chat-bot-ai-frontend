@@ -1,4 +1,10 @@
 {
+  "meta": {
+    "title": "LURVIAX — Plataforma de asistentes inteligentes",
+    "description": "LURVIAX responde a tus clientes en WhatsApp 24/7 — impulsado por IA, entrenado con tu negocio.",
+    "ogTitle": "LURVIAX — Plataforma de asistentes inteligentes",
+    "ogDescription": "LURVIAX responde a tus clientes en WhatsApp 24/7 — impulsado por IA, entrenado con tu negocio."
+  },
   "common": {
     "save": "Guardar",
     "saving": "Guardando…",
@@ -60,6 +66,9 @@
       "process": "Implementación",
       "plans": "Planes",
       "book": "Agendar demo"
+    },
+    "splash": {
+      "tagline": "Plataforma de asistentes inteligentes"
     },
     "dots": {
       "aria": "Navegación por secciones",

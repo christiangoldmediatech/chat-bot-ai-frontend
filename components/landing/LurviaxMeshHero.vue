@@ -20,7 +20,7 @@
         LURVIAX
       </h1>
       <p class="lm-tagline">
-        PLATAFORMA DE ASISTENTES INTELIGENTES
+        {{ $t('landing.splash.tagline') }}
       </p>
     </div>
   </section>
