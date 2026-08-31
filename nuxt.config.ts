@@ -87,17 +87,12 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'LURVIAX — Plataforma de asistentes inteligentes',
+      title: 'LURVIAX',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'LURVIAX replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
         { name: 'theme-color', content: '#077DDC' },
-        { property: 'og:title', content: 'LURVIAX — Plataforma de asistentes inteligentes' },
         { property: 'og:site_name', content: 'LURVIAX' },
-        { property: 'og:description', content: 'LURVIAX replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
-        { name: 'twitter:title', content: 'LURVIAX — Plataforma de asistentes inteligentes' },
-        { name: 'twitter:description', content: 'LURVIAX replies to your customers on WhatsApp 24/7 — powered by AI, trained on your business.' },
       ],
       // Platform-wide typography (dark commit):
       // - Archivo (variable width/weight) → wordmark + display headings via
