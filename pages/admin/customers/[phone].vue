@@ -38,6 +38,29 @@ async function load(): Promise<void> {
 }
 
 await load()
+
+const notification = ref<{ kind: 'success' | 'error'; text: string } | null>(null)
+const { t } = useI18n()
+
+function notify(kind: 'success' | 'error', text: string): void {
+  notification.value = { kind, text }
+  setTimeout(() => {
+    notification.value = null
+  }, 2500)
+}
+
+function onUnblocked(): void {
+  notify('success', t('conversations.security.toast.unblocked'))
+  void load()
+}
+
+function onUnblockError(): void {
+  notify('error', t('conversations.security.toast.errorUnblock'))
+}
+
+function isConversationBlocked(status: string | null | undefined): boolean {
+  return status === 'AUTO_BLOCKED' || status === 'MANUAL_BLOCKED'
+}
 </script>
 
 <template>
@@ -67,6 +90,14 @@ await load()
         <CustomerCasesCard :phone="phone" />
       </div>
 
+      <p
+        v-if="notification"
+        class="mt-4 rounded-md p-3 text-sm"
+        :class="notification.kind === 'success' ? 'border border-emerald-200 bg-emerald-50 text-emerald-700' : 'border border-danger-200 bg-danger-50 text-danger-700'"
+      >
+        {{ notification.text }}
+      </p>
+
       <h2 class="mt-8 text-base font-semibold text-slate-900">{{ $t('customers.detail.conversationsTitle') }}</h2>
       <div class="mt-3 overflow-x-auto rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass">
         <table class="w-full text-sm">
@@ -74,8 +105,10 @@ await load()
             <tr>
               <th class="text-left font-medium px-4 py-3">{{ $t('customers.detail.table.bot') }}</th>
               <th class="text-left font-medium px-4 py-3">{{ $t('customers.detail.table.status') }}</th>
+              <th class="text-left font-medium px-4 py-3">{{ $t('conversations.security.blockedList.filter.status') }}</th>
               <th class="text-left font-medium px-4 py-3">{{ $t('customers.detail.table.lastMessage') }}</th>
               <th class="text-left font-medium px-4 py-3">{{ $t('customers.detail.table.created') }}</th>
+              <th />
             </tr>
           </thead>
           <tbody>
@@ -87,8 +120,19 @@ await load()
             >
               <td class="px-4 py-3 text-slate-700">{{ botMap.get(c.botId)?.name ?? '—' }}</td>
               <td class="px-4 py-3 text-slate-700">{{ c.status }}</td>
+              <td class="px-4 py-3">
+                <SecurityBadge :status="c.blockStatus" size="xs" />
+              </td>
               <td class="px-4 py-3 text-slate-600 text-xs">{{ new Date(c.lastMessageAt).toLocaleString() }}</td>
               <td class="px-4 py-3 text-slate-600 text-xs">{{ new Date(c.createdAt).toLocaleString() }}</td>
+              <td class="px-4 py-3 text-right">
+                <UnblockButton
+                  v-if="isConversationBlocked(c.blockStatus)"
+                  :conversation-id="c.id"
+                  @unblocked="onUnblocked"
+                  @error="onUnblockError"
+                />
+              </td>
             </tr>
           </tbody>
         </table>
