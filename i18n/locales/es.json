@@ -1386,6 +1386,91 @@
       "statusBot": "bot activo",
       "statusHuman": "agente humano",
       "statusClosed": "cerrada"
+    },
+    "security": {
+      "cardTitle": "Filtro de seguridad",
+      "cardSubtitle": "Estado del acumulador de mensajes sospechosos y overrides manuales.",
+      "badge": {
+        "NONE": "Activa",
+        "AUTO_BLOCKED": "Bloqueada automáticamente",
+        "MANUAL_BLOCKED": "Bloqueada manualmente",
+        "MANUAL_UNBLOCKED": "Desbloqueada manualmente"
+      },
+      "score": "Score acumulado",
+      "count": "Mensajes contados",
+      "blockedUntil": "Bloqueo automático hasta",
+      "blockedAt": "Bloqueada el",
+      "unblockedAt": "Desbloqueada el",
+      "lastReason": "Último motivo",
+      "actions": {
+        "unblock": "Desbloquear",
+        "block": "Bloquear",
+        "refresh": "Refrescar"
+      },
+      "unblockModal": {
+        "title": "Desbloquear conversación",
+        "message": "El acumulador de seguridad se pondrá en cero. Si el cliente vuelve a superar el umbral, el bloqueo automático puede reactivarse en el siguiente mensaje.",
+        "reasonLabel": "Motivo (opcional)",
+        "reasonPlaceholder": "Ej: cliente confirmado, se pidió revisar por error…",
+        "confirm": "Desbloquear",
+        "cancel": "Cancelar",
+        "loading": "Desbloqueando…"
+      },
+      "blockModal": {
+        "title": "Bloquear conversación manualmente",
+        "message": "Esta acción bloquea al cliente hasta que un admin ejecute un desbloqueo manual. El filtro automático NO puede levantarlo por su cuenta.",
+        "reasonLabel": "Motivo (opcional)",
+        "reasonPlaceholder": "Ej: spam confirmado, contacto abusivo…",
+        "confirm": "Bloquear",
+        "cancel": "Cancelar",
+        "loading": "Bloqueando…"
+      },
+      "audit": {
+        "title": "Historial de acciones manuales",
+        "empty": "Sin acciones manuales todavía.",
+        "col": {
+          "action": "Acción",
+          "actor": "Ejecutado por",
+          "role": "Rol",
+          "reason": "Motivo",
+          "when": "Cuándo"
+        },
+        "action": {
+          "MANUAL_BLOCK": "Bloqueo manual",
+          "MANUAL_UNBLOCK": "Desbloqueo manual"
+        },
+        "actorUser": "Usuario del tenant",
+        "actorPlatformAdmin": "Super admin"
+      },
+      "toast": {
+        "unblocked": "Conversación desbloqueada.",
+        "blocked": "Conversación bloqueada manualmente.",
+        "errorLoading": "No pudimos cargar el estado de seguridad.",
+        "errorUnblock": "No pudimos desbloquear la conversación.",
+        "errorBlock": "No pudimos bloquear la conversación."
+      },
+      "blockedList": {
+        "kicker": "Seguridad",
+        "title": "Conversaciones bloqueadas",
+        "subtitle": "Clientes silenciados por el filtro automático o por override manual.",
+        "back": "← Volver a conversaciones",
+        "filter": {
+          "status": "Estado",
+          "all": "Todas (auto + manual)",
+          "auto": "Solo automáticas",
+          "manual": "Solo manuales"
+        },
+        "table": {
+          "customer": "Cliente",
+          "bot": "Bot",
+          "state": "Estado",
+          "score": "Score",
+          "blockedAt": "Desde"
+        },
+        "empty": "Sin conversaciones bloqueadas.",
+        "openDetail": "Abrir",
+        "goToBlocked": "Ver bloqueadas"
+      }
     }
   },
   "superadmin": {

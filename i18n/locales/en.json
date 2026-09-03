@@ -1386,6 +1386,91 @@
       "statusBot": "bot active",
       "statusHuman": "human agent",
       "statusClosed": "closed"
+    },
+    "security": {
+      "cardTitle": "Security filter",
+      "cardSubtitle": "Suspicious-message accumulator and manual overrides.",
+      "badge": {
+        "NONE": "Active",
+        "AUTO_BLOCKED": "Auto-blocked",
+        "MANUAL_BLOCKED": "Manually blocked",
+        "MANUAL_UNBLOCKED": "Manually unblocked"
+      },
+      "score": "Accumulated score",
+      "count": "Messages counted",
+      "blockedUntil": "Auto-block until",
+      "blockedAt": "Blocked at",
+      "unblockedAt": "Unblocked at",
+      "lastReason": "Last reason",
+      "actions": {
+        "unblock": "Unblock",
+        "block": "Block",
+        "refresh": "Refresh"
+      },
+      "unblockModal": {
+        "title": "Unblock conversation",
+        "message": "The security accumulator will be reset to zero. If the customer crosses the threshold again, auto-block may re-engage on the next message.",
+        "reasonLabel": "Reason (optional)",
+        "reasonPlaceholder": "e.g. confirmed customer, false positive…",
+        "confirm": "Unblock",
+        "cancel": "Cancel",
+        "loading": "Unblocking…"
+      },
+      "blockModal": {
+        "title": "Manually block conversation",
+        "message": "This blocks the customer until an admin runs a manual unblock. The automatic filter CAN'T lift it on its own.",
+        "reasonLabel": "Reason (optional)",
+        "reasonPlaceholder": "e.g. confirmed spam, abusive contact…",
+        "confirm": "Block",
+        "cancel": "Cancel",
+        "loading": "Blocking…"
+      },
+      "audit": {
+        "title": "Manual action history",
+        "empty": "No manual actions yet.",
+        "col": {
+          "action": "Action",
+          "actor": "Performed by",
+          "role": "Role",
+          "reason": "Reason",
+          "when": "When"
+        },
+        "action": {
+          "MANUAL_BLOCK": "Manual block",
+          "MANUAL_UNBLOCK": "Manual unblock"
+        },
+        "actorUser": "Tenant user",
+        "actorPlatformAdmin": "Super admin"
+      },
+      "toast": {
+        "unblocked": "Conversation unblocked.",
+        "blocked": "Conversation manually blocked.",
+        "errorLoading": "We couldn't load the security status.",
+        "errorUnblock": "We couldn't unblock the conversation.",
+        "errorBlock": "We couldn't block the conversation."
+      },
+      "blockedList": {
+        "kicker": "Security",
+        "title": "Blocked conversations",
+        "subtitle": "Customers silenced by the automatic filter or by a manual override.",
+        "back": "← Back to conversations",
+        "filter": {
+          "status": "Status",
+          "all": "All (auto + manual)",
+          "auto": "Automatic only",
+          "manual": "Manual only"
+        },
+        "table": {
+          "customer": "Customer",
+          "bot": "Bot",
+          "state": "State",
+          "score": "Score",
+          "blockedAt": "Since"
+        },
+        "empty": "No blocked conversations.",
+        "openDetail": "Open",
+        "goToBlocked": "View blocked"
+      }
     }
   },
   "superadmin": {
