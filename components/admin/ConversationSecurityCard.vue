@@ -39,7 +39,7 @@ async function load(): Promise<void> {
     audit.value = a
   } catch (err) {
     const e = err as ApiError
-    if (e.statusCode === 404) {
+    if (e.status === 404) {
       status.value = null
       audit.value = []
       errorMsg.value = null

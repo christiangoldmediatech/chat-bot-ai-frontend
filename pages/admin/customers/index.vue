@@ -90,6 +90,29 @@ function goNext(): void {
 }
 
 await Promise.all([loadBots(), load()])
+
+const notification = ref<{ kind: 'success' | 'error'; text: string } | null>(null)
+const { t } = useI18n()
+
+function notify(kind: 'success' | 'error', text: string): void {
+  notification.value = { kind, text }
+  setTimeout(() => {
+    notification.value = null
+  }, 2500)
+}
+
+function onUnblocked(): void {
+  notify('success', t('conversations.security.toast.unblocked'))
+  void load()
+}
+
+function onUnblockError(): void {
+  notify('error', t('conversations.security.toast.errorUnblock'))
+}
+
+function isBlocked(c: CustomerSummary): boolean {
+  return c.blockStatus === 'AUTO_BLOCKED' || c.blockStatus === 'MANUAL_BLOCKED'
+}
 </script>
 
 <template>
@@ -211,6 +234,14 @@ await Promise.all([loadBots(), load()])
       {{ error }}
     </p>
 
+    <p
+      v-if="notification"
+      class="mt-4 rounded-xl p-3 text-sm"
+      :class="notification.kind === 'success' ? 'border border-emerald-200 bg-emerald-50 text-emerald-700' : 'border border-danger-200 bg-danger-50 text-danger-700'"
+    >
+      {{ notification.text }}
+    </p>
+
     <SpinnerInline v-if="loading && items.length === 0" class="mt-6" />
 
     <EmptyState
@@ -234,6 +265,8 @@ await Promise.all([loadBots(), load()])
             <th class="text-right font-semibold uppercase tracking-wider text-[11px] px-4 py-3 text-primary-700/80">{{ $t('customers.table.conversations') }}</th>
             <th class="text-right font-semibold uppercase tracking-wider text-[11px] px-4 py-3 text-primary-700/80">{{ $t('customers.table.open') }}</th>
             <th class="text-left font-semibold uppercase tracking-wider text-[11px] px-4 py-3 text-primary-700/80">{{ $t('customers.table.lastMessage') }}</th>
+            <th class="text-left font-semibold uppercase tracking-wider text-[11px] px-4 py-3 text-primary-700/80">{{ $t('conversations.security.blockedList.filter.status') }}</th>
+            <th />
           </tr>
         </thead>
         <tbody>
@@ -268,6 +301,17 @@ await Promise.all([loadBots(), load()])
               </span>
             </td>
             <td class="px-4 py-3 text-slate-600 text-xs">{{ new Date(c.lastMessageAt).toLocaleString() }}</td>
+            <td class="px-4 py-3">
+              <SecurityBadge :status="c.blockStatus" size="xs" />
+            </td>
+            <td class="px-4 py-3 text-right">
+              <UnblockButton
+                v-if="isBlocked(c) && c.blockedConversationId"
+                :conversation-id="c.blockedConversationId"
+                @unblocked="onUnblocked"
+                @error="onUnblockError"
+              />
+            </td>
           </tr>
         </tbody>
       </table>

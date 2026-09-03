@@ -39,6 +39,29 @@ async function load(): Promise<void> {
 }
 
 await load()
+
+const notification = ref<{ kind: 'success' | 'error'; text: string } | null>(null)
+const { t } = useI18n()
+
+function notify(kind: 'success' | 'error', text: string): void {
+  notification.value = { kind, text }
+  setTimeout(() => {
+    notification.value = null
+  }, 2500)
+}
+
+function onUnblocked(): void {
+  notify('success', t('conversations.security.toast.unblocked'))
+  void load()
+}
+
+function onUnblockError(): void {
+  notify('error', t('conversations.security.toast.errorUnblock'))
+}
+
+function isBlocked(c: CustomerSummary): boolean {
+  return c.blockStatus === 'AUTO_BLOCKED' || c.blockStatus === 'MANUAL_BLOCKED'
+}
 </script>
 
 <template>
@@ -68,6 +91,14 @@ await load()
       {{ error }}
     </p>
 
+    <p
+      v-if="notification"
+      class="mt-4 rounded-md p-3 text-sm"
+      :class="notification.kind === 'success' ? 'border border-emerald-800 bg-emerald-950 text-emerald-300' : 'border border-danger-800 bg-danger-950 text-danger-300'"
+    >
+      {{ notification.text }}
+    </p>
+
     <SpinnerInline v-if="loading" class="mt-6" tone="dark" />
 
     <div
@@ -89,6 +120,8 @@ await load()
             <th class="text-left font-medium px-4 py-3">{{ $t('customers.table.conversations') }}</th>
             <th class="text-left font-medium px-4 py-3">{{ $t('customers.table.open') }}</th>
             <th class="text-left font-medium px-4 py-3">{{ $t('customers.table.lastMessage') }}</th>
+            <th class="text-left font-medium px-4 py-3">{{ $t('conversations.security.blockedList.filter.status') }}</th>
+            <th />
           </tr>
         </thead>
         <tbody>
@@ -103,6 +136,18 @@ await load()
             <td class="px-4 py-3 text-slate-300">{{ r.conversationCount }}</td>
             <td class="px-4 py-3 text-slate-300">{{ r.openConversationCount }}</td>
             <td class="px-4 py-3 text-slate-400 text-xs">{{ new Date(r.lastMessageAt).toLocaleString() }}</td>
+            <td class="px-4 py-3">
+              <SecurityBadge :status="r.blockStatus" size="xs" />
+            </td>
+            <td class="px-4 py-3 text-right">
+              <UnblockButton
+                v-if="isBlocked(r) && r.blockedConversationId"
+                :conversation-id="r.blockedConversationId"
+                :tenant-id="tenantId"
+                @unblocked="onUnblocked"
+                @error="onUnblockError"
+              />
+            </td>
           </tr>
         </tbody>
       </table>

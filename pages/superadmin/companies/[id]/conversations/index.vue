@@ -95,6 +95,29 @@ await Promise.all([loadBots(), load()])
 
 const statusOptions: ConversationStatus[] = ['BOT', 'HUMAN', 'CLOSED']
 
+const notification = ref<{ kind: 'success' | 'error'; text: string } | null>(null)
+const { t } = useI18n()
+
+function notify(kind: 'success' | 'error', text: string): void {
+  notification.value = { kind, text }
+  setTimeout(() => {
+    notification.value = null
+  }, 2500)
+}
+
+function onUnblocked(): void {
+  notify('success', t('conversations.security.toast.unblocked'))
+  void load()
+}
+
+function onUnblockError(): void {
+  notify('error', t('conversations.security.toast.errorUnblock'))
+}
+
+function isBlocked(c: Conversation): boolean {
+  return c.blockStatus === 'AUTO_BLOCKED' || c.blockStatus === 'MANUAL_BLOCKED'
+}
+
 function statusClass(s: ConversationStatus): string {
   return {
     BOT: 'bg-blue-50 text-blue-700 border-blue-200',
@@ -218,6 +241,14 @@ function formatDate(s: string): string {
       {{ error }}
     </p>
 
+    <p
+      v-if="notification"
+      class="mt-4 rounded-md p-3 text-sm"
+      :class="notification.kind === 'success' ? 'border border-emerald-200 bg-emerald-50 text-emerald-700' : 'border border-danger-200 bg-danger-50 text-danger-700'"
+    >
+      {{ notification.text }}
+    </p>
+
     <SpinnerInline v-if="loading" class="mt-6" />
 
     <template v-else-if="data">
@@ -238,7 +269,9 @@ function formatDate(s: string): string {
               <th class="text-left font-medium px-4 py-3">{{ $t('conversations.table.customer') }}</th>
               <th class="text-left font-medium px-4 py-3">{{ $t('conversations.table.bot') }}</th>
               <th class="text-left font-medium px-4 py-3">{{ $t('conversations.table.status') }}</th>
+              <th class="text-left font-medium px-4 py-3">{{ $t('conversations.security.blockedList.filter.status') }}</th>
               <th class="text-left font-medium px-4 py-3">{{ $t('conversations.table.lastMessage') }}</th>
+              <th />
             </tr>
           </thead>
           <tbody>
@@ -261,7 +294,19 @@ function formatDate(s: string): string {
                   {{ c.status }}
                 </span>
               </td>
+              <td class="px-4 py-3">
+                <SecurityBadge :status="c.blockStatus" size="xs" />
+              </td>
               <td class="px-4 py-3 text-slate-600 text-xs">{{ formatDate(c.lastMessageAt) }}</td>
+              <td class="px-4 py-3 text-right">
+                <UnblockButton
+                  v-if="isBlocked(c)"
+                  :conversation-id="c.id"
+                  :tenant-id="tenantId"
+                  @unblocked="onUnblocked"
+                  @error="onUnblockError"
+                />
+              </td>
             </tr>
           </tbody>
         </table>

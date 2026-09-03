@@ -38,6 +38,29 @@ async function load(): Promise<void> {
 }
 
 await load()
+
+const notification = ref<{ kind: 'success' | 'error'; text: string } | null>(null)
+const { t } = useI18n()
+
+function notify(kind: 'success' | 'error', text: string): void {
+  notification.value = { kind, text }
+  setTimeout(() => {
+    notification.value = null
+  }, 2500)
+}
+
+function onUnblocked(): void {
+  notify('success', t('conversations.security.toast.unblocked'))
+  void load()
+}
+
+function onUnblockError(): void {
+  notify('error', t('conversations.security.toast.errorUnblock'))
+}
+
+function isConversationBlocked(status: string | null | undefined): boolean {
+  return status === 'AUTO_BLOCKED' || status === 'MANUAL_BLOCKED'
+}
 </script>
 
 <template>
@@ -74,6 +97,14 @@ await load()
         <CustomerCasesCard :phone="phone" :tenant-id="tenantId" tone="dark" />
       </div>
 
+      <p
+        v-if="notification"
+        class="mt-4 rounded-md p-3 text-sm"
+        :class="notification.kind === 'success' ? 'border border-emerald-800 bg-emerald-950 text-emerald-300' : 'border border-danger-800 bg-danger-950 text-danger-300'"
+      >
+        {{ notification.text }}
+      </p>
+
       <h2 class="mt-8 text-base font-semibold text-slate-200">{{ $t('customers.detail.conversationsTitle') }}</h2>
       <div class="mt-3 overflow-x-auto rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg">
         <table class="w-full text-sm">
@@ -81,20 +112,35 @@ await load()
             <tr>
               <th class="text-left font-medium px-4 py-3">{{ $t('customers.detail.table.bot') }}</th>
               <th class="text-left font-medium px-4 py-3">{{ $t('customers.detail.table.status') }}</th>
+              <th class="text-left font-medium px-4 py-3">{{ $t('conversations.security.blockedList.filter.status') }}</th>
               <th class="text-left font-medium px-4 py-3">{{ $t('customers.detail.table.lastMessage') }}</th>
               <th class="text-left font-medium px-4 py-3">{{ $t('customers.detail.table.created') }}</th>
+              <th />
             </tr>
           </thead>
           <tbody>
             <tr
               v-for="c in data.conversations"
               :key="c.id"
-              class="border-t border-slate-800"
+              class="border-t border-slate-800 cursor-pointer hover:bg-slate-800/50"
+              @click="navigateTo(`/superadmin/companies/${tenantId}/conversations/${c.id}`)"
             >
               <td class="px-4 py-3 text-slate-100">{{ botMap.get(c.botId)?.name ?? '—' }}</td>
               <td class="px-4 py-3 text-slate-300">{{ c.status }}</td>
+              <td class="px-4 py-3">
+                <SecurityBadge :status="c.blockStatus" size="xs" />
+              </td>
               <td class="px-4 py-3 text-slate-400 text-xs">{{ new Date(c.lastMessageAt).toLocaleString() }}</td>
               <td class="px-4 py-3 text-slate-400 text-xs">{{ new Date(c.createdAt).toLocaleString() }}</td>
+              <td class="px-4 py-3 text-right">
+                <UnblockButton
+                  v-if="isConversationBlocked(c.blockStatus)"
+                  :conversation-id="c.id"
+                  :tenant-id="tenantId"
+                  @unblocked="onUnblocked"
+                  @error="onUnblockError"
+                />
+              </td>
             </tr>
           </tbody>
         </table>

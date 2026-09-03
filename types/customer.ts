@@ -1,4 +1,5 @@
 import type { Conversation } from './conversation'
+import type { BlockStatus } from './security'
 
 export interface CustomerSummary {
   customerPhone: string
@@ -6,6 +7,8 @@ export interface CustomerSummary {
   conversationCount: number
   openConversationCount: number
   lastMessageAt: string
+  blockStatus: BlockStatus | null
+  blockedConversationId: string | null
 }
 
 export interface CustomerDetail extends CustomerSummary {

@@ -18,6 +18,8 @@ export type MessageMediaType =
 // "estado desconocido" with no indicator).
 export type DeliveryStatus = 'SENT' | 'DELIVERED' | 'READ' | 'FAILED'
 
+import type { BlockStatus } from './security'
+
 export interface Conversation {
   id: string
   botId: string
@@ -26,6 +28,7 @@ export interface Conversation {
   status: ConversationStatus
   lastMessageAt: string
   createdAt: string
+  blockStatus: BlockStatus | null
 }
 
 export interface Message {
