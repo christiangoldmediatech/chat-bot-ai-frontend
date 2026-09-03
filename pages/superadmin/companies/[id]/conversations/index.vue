@@ -126,11 +126,22 @@ function formatDate(s: string): string {
           {{ $t('superadmin.companyConversations.subtitle') }}
         </p>
       </div>
-      <span
-        class="text-[11px] font-semibold uppercase tracking-wide rounded-full px-2.5 py-1 ring-1 bg-slate-100 text-slate-600 ring-slate-200"
-      >
-        {{ $t('superadmin.companyConversations.readOnlyBadge') }}
-      </span>
+      <div class="flex items-center gap-2">
+        <NuxtLink
+          :to="`/superadmin/companies/${tenantId}/conversations/blocked`"
+          class="inline-flex items-center gap-1.5 rounded-lg border border-danger-500/30 bg-danger-500/10 px-3 py-1.5 text-xs font-medium text-danger-300 hover:bg-danger-500/20"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          {{ $t('conversations.security.blockedList.goToBlocked') }}
+        </NuxtLink>
+        <span
+          class="text-[11px] font-semibold uppercase tracking-wide rounded-full px-2.5 py-1 ring-1 bg-slate-100 text-slate-600 ring-slate-200"
+        >
+          {{ $t('superadmin.companyConversations.readOnlyBadge') }}
+        </span>
+      </div>
     </div>
 
     <form

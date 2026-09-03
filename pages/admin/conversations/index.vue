@@ -147,19 +147,30 @@ function formatDate(s: string): string {
           {{ $t('conversations.subtitle') }}
         </p>
       </div>
-      <button
-        type="button"
-        class="text-xs text-slate-500 hover:text-slate-700 inline-flex items-center gap-1"
-        :disabled="activityLoading"
-        @click="loadActivity"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" :class="activityLoading ? 'animate-spin' : ''" aria-hidden="true">
-          <polyline points="23 4 23 10 17 10" />
-          <polyline points="1 20 1 14 7 14" />
-          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
-        </svg>
-        {{ $t('conversations.reloadStats') }}
-      </button>
+      <div class="flex items-center gap-2">
+        <NuxtLink
+          to="/admin/conversations/blocked"
+          class="inline-flex items-center gap-1.5 rounded-lg border border-danger-200 bg-danger-50 px-3 py-1.5 text-xs font-medium text-danger-700 hover:bg-danger-100"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          {{ $t('conversations.security.blockedList.goToBlocked') }}
+        </NuxtLink>
+        <button
+          type="button"
+          class="text-xs text-slate-500 hover:text-slate-700 inline-flex items-center gap-1"
+          :disabled="activityLoading"
+          @click="loadActivity"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" :class="activityLoading ? 'animate-spin' : ''" aria-hidden="true">
+            <polyline points="23 4 23 10 17 10" />
+            <polyline points="1 20 1 14 7 14" />
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+          </svg>
+          {{ $t('conversations.reloadStats') }}
+        </button>
+      </div>
     </div>
 
     <!-- Activity dashboard: day / week / month, always visible together. -->

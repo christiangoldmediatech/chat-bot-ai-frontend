@@ -105,6 +105,12 @@ function statusBadgeClass(s: ConversationStatus): string {
               {{ data.status }}
             </span>
           </section>
+
+          <ConversationSecurityCard
+            :conversation-id="data.id"
+            mode="superadmin"
+            :tenant-id="tenantId"
+          />
         </aside>
       </div>
     </template>

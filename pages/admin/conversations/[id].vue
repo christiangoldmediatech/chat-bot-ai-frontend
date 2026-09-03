@@ -225,6 +225,11 @@ function statusBadgeClass(s: ConversationStatus): string {
               {{ $t('conversations.detail.composerNote') }}
             </p>
           </section>
+
+          <ConversationSecurityCard
+            :conversation-id="data.id"
+            mode="tenant"
+          />
         </aside>
       </div>
     </template>
