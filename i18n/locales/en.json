@@ -1080,6 +1080,7 @@
       "defaultDuration": "Default duration"
     },
     "services": {
+      "back": "← Back to bot",
       "title": "Service catalog",
       "subtitle": "Services and prices the bot can quote on WhatsApp. This is the source of truth — the bot won't mention anything not listed here.",
       "createButton": "+ New service",
@@ -1121,6 +1122,7 @@
       }
     },
     "sales": {
+      "back": "← Back to bot",
       "title": "Sales",
       "subtitle": "Historical record. Each purchase is a new row; sale prices are immutable.",
       "goToRevenue": "View revenue report",
@@ -1174,6 +1176,7 @@
       }
     },
     "reports": {
+      "back": "← Back to bot",
       "revenueTitle": "Revenue report",
       "revenueSubtitle": "Only closed sales (WON) count. Pipeline and lost are shown separately. Currencies are never mixed.",
       "downloadCsv": "Download CSV",
@@ -1658,7 +1661,6 @@
       "submitting": "Signing in…",
       "errorRequired": "Email and password are required.",
       "errorGeneric": "Could not sign in.",
-      "seedNoteBefore": "To create the first super-admin, run in the backend:",
       "tenantLoginLink": "← Tenant login"
     },
     "dashboard": {

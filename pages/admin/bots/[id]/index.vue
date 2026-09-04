@@ -96,7 +96,7 @@ await load()
 
 <template>
   <div>
-    <NuxtLink to="/admin/bots" class="text-sm text-slate-500 hover:text-slate-700">{{ $t('admin.bot.backToBots') }}</NuxtLink>
+    <NuxtLink to="/admin/bots" class="inline-flex items-center gap-1 text-sm text-white/80 hover:text-pearl drop-shadow-sm transition">{{ $t('admin.bot.backToBots') }}</NuxtLink>
 
     <p v-if="error" class="mt-4 rounded-2xl border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">
       {{ error }}
@@ -105,14 +105,13 @@ await load()
     <SpinnerInline v-if="loading" class="mt-6" />
 
     <template v-else-if="bot">
-      <!-- Header -->
-      <div class="mt-2 flex items-center justify-between flex-wrap gap-3">
-        <div class="flex items-center gap-3">
+      <div class="mt-3 rounded-2xl bg-white/75 backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-4 sm:p-5 text-slate-900 flex items-center justify-between flex-wrap gap-3">
+        <div class="flex items-center gap-3 min-w-0">
           <div class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 text-white font-semibold text-xl ring-1 ring-white/40 shadow-inner">
             {{ bot.name.charAt(0).toUpperCase() }}
           </div>
-          <div>
-            <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-3">
+          <div class="min-w-0">
+            <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-3 flex-wrap">
               {{ bot.name }}
               <button
                 type="button"
@@ -135,25 +134,25 @@ await load()
         <div class="flex flex-wrap gap-2">
           <NuxtLink
             :to="`/admin/bots/${bot.id}/services`"
-            class="rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+            class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white transition"
           >
             {{ $t('admin.bot.servicesLink') }}
           </NuxtLink>
           <NuxtLink
             :to="`/admin/bots/${bot.id}/sales`"
-            class="rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+            class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white transition"
           >
             {{ $t('admin.bot.salesLink') }}
           </NuxtLink>
           <NuxtLink
             :to="`/admin/bots/${bot.id}/reports/revenue`"
-            class="rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+            class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white transition"
           >
             {{ $t('admin.bot.revenueLink') }}
           </NuxtLink>
           <NuxtLink
             :to="`/admin/bots/${bot.id}/edit`"
-            class="rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+            class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white transition"
           >
             {{ $t('admin.bot.editBot') }}
           </NuxtLink>
@@ -165,7 +164,7 @@ await load()
           </NuxtLink>
           <button
             type="button"
-            class="rounded-xl border border-danger-200 bg-danger-50/40 px-3 py-1.5 text-sm font-medium text-danger-700 hover:bg-danger-50 transition"
+            class="rounded-xl border border-danger-200 bg-danger-50/60 px-3 py-1.5 text-sm font-medium text-danger-700 hover:bg-danger-50 transition"
             @click="confirmingDelete = true"
           >
             {{ $t('admin.bot.deleteBot') }}

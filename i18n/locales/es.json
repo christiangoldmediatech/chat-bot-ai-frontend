@@ -1080,6 +1080,7 @@
       "defaultDuration": "Duración por defecto"
     },
     "services": {
+      "back": "← Volver al bot",
       "title": "Catálogo de servicios",
       "subtitle": "Los servicios y precios que el bot puede consultar y ofrecer por WhatsApp. Es la fuente de verdad — el bot no cita nada que no aparezca aquí.",
       "createButton": "+ Nuevo servicio",
@@ -1121,6 +1122,7 @@
       }
     },
     "sales": {
+      "back": "← Volver al bot",
       "title": "Ventas",
       "subtitle": "Registro histórico. Cada compra es una fila nueva; los precios de la venta son inmutables.",
       "goToRevenue": "Ver reporte de ingresos",
@@ -1174,6 +1176,7 @@
       }
     },
     "reports": {
+      "back": "← Volver al bot",
       "revenueTitle": "Reporte de ingresos",
       "revenueSubtitle": "Suma solo ventas cerradas (WON). Pipeline y perdidas se muestran aparte. Las monedas nunca se mezclan.",
       "downloadCsv": "Descargar CSV",
@@ -1658,7 +1661,6 @@
       "submitting": "Entrando…",
       "errorRequired": "Correo y contraseña son obligatorios.",
       "errorGeneric": "No se pudo iniciar sesión.",
-      "seedNoteBefore": "Para crear el primer super-admin, ejecuta en el backend:",
       "tenantLoginLink": "← Login de tenant"
     },
     "dashboard": {

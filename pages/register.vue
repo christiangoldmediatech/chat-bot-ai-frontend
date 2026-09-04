@@ -72,8 +72,8 @@ async function onSubmit(): Promise<void> {
   <div class="w-full max-w-md">
     <div class="flex flex-col items-center">
       <LurviaxLogo :size="72" rounded="rounded-3xl" class="bg-white ring-1 ring-white/70 shadow-glass-lg" />
-      <p class="mt-3 text-base font-semibold tracking-tight text-slate-900">LURVIAX</p>
-      <p class="text-xs text-slate-500">{{ $t('auth.brandTagline') }}</p>
+      <p class="mt-3 text-base font-semibold tracking-tight text-pearl drop-shadow-sm">LURVIAX</p>
+      <p class="text-xs text-white/75">{{ $t('auth.brandTagline') }}</p>
     </div>
 
     <div class="mt-5 rounded-3xl bg-white/70 backdrop-blur-2xl ring-1 ring-white/60 shadow-glass-lg p-8 sm:p-10">

@@ -138,7 +138,7 @@ await load()
 
 <template>
   <div>
-    <NuxtLink :to="`/admin/bots/${id}`" class="text-sm text-slate-500 hover:text-slate-700">{{ $t('admin.botConfig.back') }}</NuxtLink>
+    <NuxtLink :to="`/admin/bots/${id}`" class="inline-flex items-center gap-1 text-sm text-white/80 hover:text-pearl drop-shadow-sm transition">{{ $t('admin.botConfig.back') }}</NuxtLink>
     <div class="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
       <span class="inline-flex items-center gap-1.5 rounded-full bg-primary-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary-700 ring-1 ring-primary-100">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3" aria-hidden="true">

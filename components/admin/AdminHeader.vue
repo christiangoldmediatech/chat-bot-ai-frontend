@@ -11,12 +11,11 @@ async function onLogout(): Promise<void> {
 </script>
 
 <template>
-  <header class="sticky top-0 z-30 h-14 bg-white/70 backdrop-blur-xl border-b border-white/60 flex items-center justify-between gap-2 px-4 sm:px-6">
+  <header class="sticky top-0 z-30 h-14 bg-ink-deep/70 backdrop-blur-xl border-b border-halo-line/30 flex items-center justify-between gap-2 px-4 sm:px-6">
     <div class="flex items-center gap-2 min-w-0">
-      <!-- Mobile hamburger -->
       <button
         type="button"
-        class="md:hidden flex size-9 shrink-0 items-center justify-center rounded-xl text-slate-700 hover:bg-white/80 transition"
+        class="md:hidden flex size-9 shrink-0 items-center justify-center rounded-xl text-mist hover:bg-ink-card/60 hover:text-pearl transition"
         :aria-label="$t('nav.openMenu')"
         @click="drawer.toggle()"
       >
@@ -26,33 +25,30 @@ async function onLogout(): Promise<void> {
           <line x1="3" y1="18" x2="21" y2="18" />
         </svg>
       </button>
-      <!-- Mobile brand (sidebar is hidden until drawer opens) -->
       <NuxtLink to="/admin" class="md:hidden flex items-center gap-2 min-w-0" aria-label="LURVIAX dashboard">
         <LurviaxLogo :size="28" rounded="rounded-lg" class="bg-white ring-1 ring-white/70 shadow-sm" />
-        <span class="text-sm font-semibold text-slate-900 truncate">LURVIAX</span>
+        <span class="text-sm font-semibold text-pearl truncate">LURVIAX</span>
       </NuxtLink>
-      <!-- Desktop subtitle -->
-      <div class="hidden md:block text-sm text-slate-500">{{ $t('admin.panelTitle') }}</div>
+      <div class="hidden md:block text-sm text-mist">{{ $t('admin.panelTitle') }}</div>
     </div>
 
     <div v-if="auth.user" class="flex items-center gap-2 shrink-0">
       <NuxtLink
         to="/admin/profile"
-        class="hidden sm:flex items-center gap-3 rounded-xl px-2.5 py-1.5 hover:bg-white/60 transition"
+        class="hidden sm:flex items-center gap-3 rounded-xl px-2.5 py-1.5 hover:bg-ink-card/60 transition"
         :title="$t('nav.myProfile')"
       >
         <div class="text-right">
-          <div class="text-sm font-medium text-slate-900 truncate max-w-[160px]">{{ auth.user.email }}</div>
-          <div class="text-xs text-slate-500">{{ auth.user.role }}</div>
+          <div class="text-sm font-medium text-pearl truncate max-w-[160px]">{{ auth.user.email }}</div>
+          <div class="text-xs text-mist-dim">{{ auth.user.role }}</div>
         </div>
-        <div class="flex size-9 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-indigo-600 text-white text-sm font-semibold ring-1 ring-white/40">
+        <div class="flex size-9 items-center justify-center rounded-full bg-brand-gradient text-ink-tealDeep text-sm font-semibold ring-1 ring-halo-line">
           {{ auth.user.email.charAt(0).toUpperCase() }}
         </div>
       </NuxtLink>
-      <!-- Mobile: avatar-only link to profile -->
       <NuxtLink
         to="/admin/profile"
-        class="sm:hidden flex size-9 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-indigo-600 text-white text-sm font-semibold ring-1 ring-white/40"
+        class="sm:hidden flex size-9 items-center justify-center rounded-full bg-brand-gradient text-ink-tealDeep text-sm font-semibold ring-1 ring-halo-line"
         :title="auth.user.email"
         :aria-label="$t('nav.myProfile')"
       >
@@ -60,15 +56,14 @@ async function onLogout(): Promise<void> {
       </NuxtLink>
       <button
         type="button"
-        class="rounded-xl border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50 transition hidden sm:inline-flex"
+        class="rounded-xl border border-halo-line/50 px-3 py-1.5 text-sm text-pearl hover:bg-ink-card/60 transition hidden sm:inline-flex"
         @click="onLogout"
       >
         {{ $t('nav.signOut') }}
       </button>
-      <!-- Mobile: icon-only logout -->
       <button
         type="button"
-        class="sm:hidden flex size-9 items-center justify-center rounded-xl text-slate-700 hover:bg-white/80 transition"
+        class="sm:hidden flex size-9 items-center justify-center rounded-xl text-mist hover:bg-ink-card/60 transition"
         :aria-label="$t('nav.signOut')"
         @click="onLogout"
       >

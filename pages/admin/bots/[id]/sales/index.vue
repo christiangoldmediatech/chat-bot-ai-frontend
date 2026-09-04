@@ -134,7 +134,8 @@ watch(
 
 <template>
   <div>
-    <div class="flex flex-wrap items-start justify-between gap-3">
+    <NuxtLink :to="`/admin/bots/${botId}`" class="inline-flex items-center gap-1 text-sm text-white/80 hover:text-pearl drop-shadow-sm transition">{{ $t('admin.sales.back') }}</NuxtLink>
+    <div class="mt-3 flex flex-wrap items-start justify-between gap-3">
       <div>
         <h1 class="text-2xl font-semibold tracking-tight">{{ $t('admin.sales.title') }}</h1>
         <p class="text-slate-500 text-sm mt-1 max-w-2xl">{{ $t('admin.sales.subtitle') }}</p>
