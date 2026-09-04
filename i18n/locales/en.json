@@ -98,7 +98,7 @@
         "avgReply": "Average reply time",
         "always": "On WhatsApp, no shifts or holidays",
         "noHuman": "Resolved without a human",
-        "channels": "Customers waiting in queue"
+        "channels": "Media formats on WhatsApp"
       }
     },
     "demo": {
@@ -181,12 +181,12 @@
       "titleB": "already does for you.",
       "copy": "All of this runs today on your WhatsApp Business. No new apps for your team, no shifts, no robotic answers.",
       "items": {
-        "1": { "title": "Replies 24/7 on WhatsApp", "body": "Answers in seconds with your business tone — automatic, no shifts or holidays. Zero customers in queue, zero robotic replies." },
-        "2": { "title": "Books appointments in Google Calendar", "body": "Checks your real availability, proposes time slots, creates the event in Google Calendar and sends the reminder the day before via WhatsApp." },
-        "3": { "title": "Replies with your catalog", "body": "Learns your products, prices, policies and even your team's style from 30 days of real conversations. When it doesn't know something, it says so and escalates." },
-        "4": { "title": "Escalates when it matters", "body": "Detects frustration, urgency or complex cases and transfers the conversation with a summarized history — your rep steps in with context, not from scratch." },
-        "5": { "title": "Understands voice notes", "body": "Transcribes and understands the voice notes your customers send on WhatsApp — no asking them to type, no detail lost." },
-        "6": { "title": "Learns from every correction", "body": "Your team corrects answers with one click and LURVIAX doesn't miss the same one again. It gets better every week without you lifting a finger." }
+        "1": { "title": "Official WhatsApp Cloud (Meta) API", "body": "Direct integration with Meta's WhatsApp Cloud API on your own business number. No scraping, no risk of bans, no personal numbers. Tone, personality, welcome and out-of-hours messages configured from the panel." },
+        "2": { "title": "Books appointments in Google Calendar", "body": "Checks the rep's real calendar, offers available slots and creates the event on your behalf. Configure per bot: working hours, timezone, duration, rep email and WhatsApp, post-visit reminders." },
+        "3": { "title": "Learns your business", "body": "Upload PDFs, catalogs and manuals — the bot indexes them and answers with your real information. Configure products and services from the panel for price, availability and specs questions." },
+        "4": { "title": "Conversations that feel human", "body": "Per-customer memory across sessions, groups burst messages and replies in one coherent turn, typing indicator and response times that match the message. Any rep can take over from the panel — the bot stays silent until released." },
+        "5": { "title": "Native multimedia both ways", "body": "Sends and receives images, PDFs, videos, voice notes (with auto-transcription), locations and stickers as native WhatsApp messages, not links. Upload resources once to the bot library and it uses them when relevant." },
+        "6": { "title": "Smart escalation + lead detection", "body": "Detects when to hand a conversation to a person, opens a case with the full history, notifies the rep by email and WhatsApp. Every message is scored in the background so your sales team sees the hot leads first." }
       }
     },
     "process": {
@@ -199,11 +199,6 @@
         "2": { "week": "Week 2", "title": "We train and limit", "body": "We define what it can promise and what it can't, escalation paths and maximum discounts. Your team tests in a closed environment and corrects answers with one click.", "tags": "Tone|Limits|Escalation|Internal QA" },
         "3": { "week": "Week 3", "title": "We ship and tune", "body": "It goes live on your channels with daily monitoring the first week. Then, weekly reviews where we tune based on real conversations.", "tags": "Go-live|Monitoring|Weekly tuning|Reports" }
       }
-    },
-    "belt": {
-      "eyebrow": "Connects with what you already use",
-      "webChat": "Website chat",
-      "sip": "SIP telephony"
     },
     "results": {
       "eyebrow": "Expected impact",
@@ -218,46 +213,24 @@
       }
     },
     "plans": {
-      "eyebrow": "Plans",
-      "titleA": "Simple",
-      "titleB": "to start.",
-      "copy": "Implementation included in all plans. No commitment: if it's not working by month two, you turn it off.",
+      "eyebrow": "Plan",
+      "titleA": "One plan.",
+      "titleB": "Everything included.",
+      "copy": "Fixed monthly price. Implementation included. No commitment: if it's not working by month two, you turn it off.",
       "perMonth": "/ month",
-      "perContract": "/ contract",
-      "recommended": "Recommended",
-      "start": "Start",
-      "book": "Book a demo",
-      "talk": "Talk to the team",
-      "essential": {
-        "name": "Essential",
-        "items": {
-          "1": "1 channel (WhatsApp or web)",
-          "2": "Up to 1,500 conversations a month",
-          "3": "Catalog and FAQs",
-          "4": "Escalation to a human agent",
-          "5": "Monthly report"
-        }
-      },
-      "business": {
+      "start": "Start now",
+      "single": {
         "name": "Business",
+        "badge": "Everything included",
+        "tagline": "Your official WhatsApp Business number, turned into a 24/7 AI assistant with real memory, native media, appointments and human escalation.",
         "items": {
-          "1": "Up to 4 channels in one inbox",
-          "2": "Up to 8,000 conversations a month",
-          "3": "Booking, PDF quotes and payments",
-          "4": "Incoming voice and voice notes",
-          "5": "CRM integration",
-          "6": "Weekly review and tuning"
-        }
-      },
-      "corporate": {
-        "name": "Corporate",
-        "price": "Custom",
-        "items": {
-          "1": "Channels and volume with no cap",
-          "2": "Deployment in your infrastructure",
-          "3": "ERP and SIP telephony integration",
-          "4": "Multiple branches and brands",
-          "5": "SLA and dedicated support"
+          "1": "Official WhatsApp Cloud (Meta) API on your own business number — no scraping, no ban risk",
+          "2": "Human-feel conversations: per-customer memory, burst-message grouping, typing indicator and human mode from the panel",
+          "3": "Knowledge base from your PDFs, catalogs and manuals, plus products and services configured from the panel",
+          "4": "Native multimedia both ways: images, PDFs, videos, voice notes with auto-transcription, locations and stickers",
+          "5": "Appointments in your real Google Calendar: available slots, event creation, post-visit follow-ups",
+          "6": "Smart escalation: opens a case, notifies the rep by email and WhatsApp, full history in the panel",
+          "7": "Automatic lead detection: every conversation scored so your sales team sees the hot ones first"
         }
       }
     },
@@ -270,7 +243,7 @@
       "ctaSecondary": "See plans"
     },
     "footer": {
-      "tagline": "Intelligent assistant for businesses that support customers via WhatsApp, web and voice.",
+      "tagline": "Intelligent assistant on your official WhatsApp Business — 24/7, with memory, native multimedia, Google Calendar and human escalation.",
       "signIn": "Sign in",
       "createAccount": "Create account"
     },

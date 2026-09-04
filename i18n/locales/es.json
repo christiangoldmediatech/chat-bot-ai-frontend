@@ -98,7 +98,7 @@
         "avgReply": "Respuesta promedio",
         "always": "En WhatsApp, sin turnos ni feriados",
         "noHuman": "Resuelto sin humano",
-        "channels": "Clientes esperando en cola"
+        "channels": "Formatos multimedia en WhatsApp"
       }
     },
     "demo": {
@@ -181,12 +181,12 @@
       "titleB": "ya hace por ti.",
       "copy": "Todo esto corre hoy en tu WhatsApp Business. Sin apps nuevas para tu equipo, sin turnos, sin respuestas robóticas.",
       "items": {
-        "1": { "title": "Responde 24/7 por WhatsApp", "body": "Contesta en segundos con el tono de tu negocio — automático, sin turnos ni feriados. Cero clientes en cola, cero respuestas robóticas." },
-        "2": { "title": "Agenda citas en Google Calendar", "body": "Consulta tu disponibilidad real, propone horarios, crea el evento en Google Calendar y manda el recordatorio la víspera por WhatsApp." },
-        "3": { "title": "Responde con tu catálogo", "body": "Aprende tus productos, precios, políticas y hasta el estilo de tu equipo con 30 días de conversaciones reales. Cuando no sabe algo, lo dice y escala." },
-        "4": { "title": "Escala al humano cuando importa", "body": "Detecta molestia, urgencia o casos complejos y transfiere la conversación con el historial resumido — tu vendedor entra con contexto, no de cero." },
-        "5": { "title": "Entiende notas de voz", "body": "Transcribe y comprende las notas de audio que tus clientes mandan por WhatsApp — sin pedirles que escriban, sin perder detalle." },
-        "6": { "title": "Aprende con cada corrección", "body": "Tu equipo corrige respuestas con un clic y LURVIAX no vuelve a fallar la misma. Cada semana mejora sin que muevas un dedo." }
+        "1": { "title": "API oficial de WhatsApp Cloud (Meta)", "body": "Integración directa con la API oficial de WhatsApp Cloud sobre tu propio número de WhatsApp Business. Sin scraping, sin riesgo de bloqueo, sin números personales. Tono, personalidad, mensajes de bienvenida y fuera de horario, todo desde el panel." },
+        "2": { "title": "Agenda citas en Google Calendar", "body": "Consulta la agenda real del asesor, ofrece huecos disponibles y crea el evento en tu nombre. Configuración por bot: horario laboral, zona horaria, duración, email y WhatsApp del asesor, recordatorios post-cita." },
+        "3": { "title": "Aprende tu negocio", "body": "Sube PDFs, catálogos y manuales — el bot los indexa y responde con información real de tu empresa. Configura productos y servicios desde el panel para preguntas de precio, disponibilidad y características." },
+        "4": { "title": "Conversaciones que se sienten humanas", "body": "Memoria persistente por cliente entre sesiones, agrupa mensajes en ráfaga y responde en un solo turno coherente, typing indicator y tiempos de respuesta proporcionales al mensaje. Cualquier asesor toma el control desde el panel — el bot se calla hasta que se libere." },
+        "5": { "title": "Multimedia nativa en los dos sentidos", "body": "Envía y recibe imágenes, PDFs, videos, notas de voz (con transcripción automática), ubicaciones y stickers como mensajes nativos de WhatsApp, no como link. Sube tus recursos una vez a la librería del bot y los usa cuando corresponde." },
+        "6": { "title": "Escalación inteligente + detección de leads", "body": "Detecta cuándo pasar la conversación a una persona, crea un case con todo el historial y notifica al asesor por email y WhatsApp. Cada mensaje se analiza en segundo plano para que el equipo comercial vea primero a los clientes calientes." }
       }
     },
     "process": {
@@ -199,11 +199,6 @@
         "2": { "week": "Sem 2", "title": "Entrenamos y limitamos", "body": "Definimos qué puede prometer y qué no, las rutas de escalamiento y los descuentos máximos. Tu equipo prueba en un entorno cerrado y corrige respuestas con un clic.", "tags": "Tono|Límites|Escalamiento|QA interno" },
         "3": { "week": "Sem 3", "title": "Publicamos y ajustamos", "body": "Sale a producción en tus canales con monitoreo diario la primera semana. Después, una revisión semanal donde ajustamos con base en conversaciones reales.", "tags": "Go-live|Monitoreo|Ajuste semanal|Reportes" }
       }
-    },
-    "belt": {
-      "eyebrow": "Se conecta con lo que ya usas",
-      "webChat": "Chat web",
-      "sip": "Telefonía SIP"
     },
     "results": {
       "eyebrow": "Impacto esperado",
@@ -218,46 +213,24 @@
       }
     },
     "plans": {
-      "eyebrow": "Planes",
-      "titleA": "Simple de",
-      "titleB": "empezar.",
-      "copy": "Implementación incluida en todos los planes. Sin permanencia: si al mes dos no te sirve, lo apagas.",
+      "eyebrow": "Plan",
+      "titleA": "Un solo plan.",
+      "titleB": "Todo incluido.",
+      "copy": "Precio mensual fijo. Implementación incluida. Sin permanencia: si al mes dos no te sirve, lo apagas.",
       "perMonth": "/ mes",
-      "perContract": "/ contrato",
-      "recommended": "Recomendado",
-      "start": "Empezar",
-      "book": "Agendar demo",
-      "talk": "Hablar con el equipo",
-      "essential": {
-        "name": "Esencial",
-        "items": {
-          "1": "1 canal (WhatsApp o web)",
-          "2": "Hasta 1.500 conversaciones al mes",
-          "3": "Catálogo y preguntas frecuentes",
-          "4": "Escalamiento a un agente humano",
-          "5": "Reporte mensual"
-        }
-      },
-      "business": {
+      "start": "Empezar ahora",
+      "single": {
         "name": "Negocio",
+        "badge": "Todo incluido",
+        "tagline": "Tu número oficial de WhatsApp Business, convertido en un asistente con IA 24/7 con memoria real, multimedia nativa, agenda y escalación a humano.",
         "items": {
-          "1": "Hasta 4 canales en una bandeja",
-          "2": "Hasta 8.000 conversaciones al mes",
-          "3": "Agenda, proformas en PDF y pagos",
-          "4": "Voz entrante y notas de audio",
-          "5": "Integración con tu CRM",
-          "6": "Revisión y ajuste semanal"
-        }
-      },
-      "corporate": {
-        "name": "Corporativo",
-        "price": "A medida",
-        "items": {
-          "1": "Canales y volumen sin tope",
-          "2": "Despliegue en tu infraestructura",
-          "3": "Integración con ERP y telefonía SIP",
-          "4": "Múltiples sucursales y marcas",
-          "5": "SLA y soporte dedicado"
+          "1": "API oficial de WhatsApp Cloud (Meta) sobre tu propio número — sin scraping, sin riesgo de bloqueo",
+          "2": "Conversaciones que se sienten humanas: memoria por cliente, agrupación de mensajes en ráfaga, typing indicator y modo humano desde el panel",
+          "3": "Base de conocimiento con tus PDFs, catálogos y manuales, más productos y servicios configurados desde el panel",
+          "4": "Multimedia nativa en los dos sentidos: imágenes, PDFs, videos, notas de voz con transcripción automática, ubicaciones y stickers",
+          "5": "Agenda en tu Google Calendar real: huecos disponibles, creación del evento, seguimientos post-cita",
+          "6": "Escalación inteligente: crea el case, notifica al asesor por email y WhatsApp, historial completo en el panel",
+          "7": "Detección automática de leads: cada conversación se puntúa para que tu equipo comercial vea primero a los calientes"
         }
       }
     },
@@ -270,7 +243,7 @@
       "ctaSecondary": "Ver planes"
     },
     "footer": {
-      "tagline": "Asistente inteligente para empresas que atienden por WhatsApp, web y voz.",
+      "tagline": "Asistente inteligente sobre tu WhatsApp Business oficial — 24/7, con memoria, multimedia nativa, Google Calendar y escalación a humano.",
       "signIn": "Iniciar sesión",
       "createAccount": "Crear cuenta"
     },
