@@ -40,7 +40,11 @@
     "optional": "(opcional)",
     "noData": "Sin datos",
     "comingSoon": "Próximamente",
-    "active": "Activo"
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "activate": "Activar",
+    "deactivate": "Desactivar",
+    "downloading": "Descargando…"
   },
   "errors": {
     "generic": "Algo salió mal. Inténtalo de nuevo.",
@@ -1069,6 +1073,127 @@
       "followupHoursHelp": "0 = sin follow-up automático.",
       "saveEscalation": "Guardar escalado",
       "defaultDuration": "Duración por defecto"
+    },
+    "services": {
+      "title": "Catálogo de servicios",
+      "subtitle": "Los servicios y precios que el bot puede consultar y ofrecer por WhatsApp. Es la fuente de verdad — el bot no cita nada que no aparezca aquí.",
+      "createButton": "+ Nuevo servicio",
+      "createTitle": "Nuevo servicio",
+      "createSubtitle": "Completa la información básica. Al guardar, podrás subir una foto opcional.",
+      "priceLabel": "Precio",
+      "emptyTitle": "Sin servicios",
+      "emptyDescription": "Aún no hay servicios registrados. Crea el primero para que el bot pueda ofrecerlos.",
+      "deleteTitle": "Eliminar servicio",
+      "deleteDescription": "Se archivará “{name}”. Las ventas históricas conservan su precio y nombre.",
+      "imageSection": "Foto principal",
+      "imageHint": "Se enviará junto con el nombre y descripción cuando el bot ofrezca este servicio.",
+      "chooseImage": "Elegir imagen",
+      "noImage": "Sin foto",
+      "imageSet": "Foto lista",
+      "field": {
+        "name": "Nombre",
+        "slug": "Slug",
+        "slugHint": "Identificador estable (letras minúsculas, dígitos, guiones).",
+        "shortDescription": "Descripción corta",
+        "description": "Descripción",
+        "priceType": "Tipo de precio",
+        "currency": "Moneda",
+        "price": "Precio (unidades)",
+        "priceHint": "Se guarda en centavos. Ej: 150.50 → 15050 centavos.",
+        "priceError": "Precio inválido. Usa formato 150 o 150.50.",
+        "showPrice": "Mostrar precio al cliente",
+        "sortOrder": "Orden"
+      },
+      "priceType": {
+        "fixed": "Fijo",
+        "from": "Desde",
+        "quote": "Cotizar"
+      }
+    },
+    "sales": {
+      "title": "Ventas",
+      "subtitle": "Registro histórico. Cada compra es una fila nueva; los precios de la venta son inmutables.",
+      "goToRevenue": "Ver reporte de ingresos",
+      "emptyTitle": "Sin ventas registradas",
+      "emptyDescription": "Cuando marques una venta como cerrada aquí o desde la conversación aparecerá en esta lista.",
+      "markSold": "Marcar vendido",
+      "markLost": "Marcar perdida",
+      "paginationCount": "Total: {total}",
+      "markSoldTitle": "Marcar como vendido",
+      "markSoldSubmit": "Registrar venta",
+      "markLostTitle": "Marcar como perdida",
+      "markLostSubmit": "Marcar como perdida",
+      "filter": {
+        "status": "Estado",
+        "allStatuses": "Todos",
+        "service": "Servicio",
+        "allServices": "Todos",
+        "dateBasis": "Base de fecha",
+        "soldAt": "Fecha de venta",
+        "serviceDate": "Fecha de servicio",
+        "from": "Desde",
+        "to": "Hasta"
+      },
+      "col": {
+        "service": "Servicio",
+        "status": "Estado",
+        "total": "Total",
+        "soldAt": "Vendido",
+        "serviceDate": "Consumido"
+      },
+      "field": {
+        "service": "Servicio",
+        "servicePlaceholder": "Elige un servicio",
+        "soldAt": "Fecha de venta",
+        "soldAtHint": "Cuándo se cerró la venta.",
+        "serviceDate": "Fecha de consumo",
+        "serviceDateHint": "Cuándo se prestó el servicio (opcional).",
+        "quantity": "Cantidad",
+        "discount": "Descuento",
+        "notes": "Notas",
+        "lostReason": "Motivo",
+        "lostReasonPlaceholder": "Ej: eligió otro proveedor, sin presupuesto, se dio de baja…"
+      },
+      "customerHistory": {
+        "title": "Compras",
+        "subtitle": "Historial de este cliente para este bot.",
+        "viewAll": "Ver todas",
+        "totalSpent": "Total gastado",
+        "wonCount": "{n} compras cerradas",
+        "empty": "Sin compras registradas."
+      }
+    },
+    "reports": {
+      "revenueTitle": "Reporte de ingresos",
+      "revenueSubtitle": "Suma solo ventas cerradas (WON). Pipeline y perdidas se muestran aparte. Las monedas nunca se mezclan.",
+      "downloadCsv": "Descargar CSV",
+      "filter": {
+        "from": "Desde",
+        "to": "Hasta",
+        "dateBasis": "Base de fecha",
+        "dateBasisHint": "“Fecha de venta” = cuando se cobró. “Fecha de servicio” = cuando se prestó.",
+        "soldAt": "Fecha de venta",
+        "serviceDate": "Fecha de servicio",
+        "groupBy": "Agrupar por",
+        "groupService": "Servicio",
+        "groupCustomer": "Cliente",
+        "groupMonth": "Mes"
+      },
+      "section": {
+        "totalRevenue": "Ingreso total",
+        "pipeline": "Pipeline (PENDING)",
+        "lost": "Perdido (LOST)",
+        "notDelivered": "Vendido y no consumido",
+        "sales": "ventas"
+      },
+      "breakdown": {
+        "label": "Etiqueta",
+        "currency": "Moneda",
+        "count": "Ventas",
+        "units": "Unidades",
+        "total": "Total",
+        "empty": "Sin resultados para el rango seleccionado."
+      }
     }
   },
   "cases": {

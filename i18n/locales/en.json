@@ -40,7 +40,11 @@
     "optional": "(optional)",
     "noData": "No data",
     "comingSoon": "Coming soon",
-    "active": "Active"
+    "active": "Active",
+    "inactive": "Inactive",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "downloading": "Downloading…"
   },
   "errors": {
     "generic": "Something went wrong. Try again.",
@@ -1069,6 +1073,127 @@
       "followupHoursHelp": "0 = no automatic follow-up.",
       "saveEscalation": "Save escalation",
       "defaultDuration": "Default duration"
+    },
+    "services": {
+      "title": "Service catalog",
+      "subtitle": "Services and prices the bot can quote on WhatsApp. This is the source of truth — the bot won't mention anything not listed here.",
+      "createButton": "+ New service",
+      "createTitle": "New service",
+      "createSubtitle": "Fill in the basics. After saving, you can upload an optional photo.",
+      "priceLabel": "Price",
+      "emptyTitle": "No services yet",
+      "emptyDescription": "No services registered. Create the first one so the bot can offer them.",
+      "deleteTitle": "Delete service",
+      "deleteDescription": "“{name}” will be archived. Historical sales keep their price and name.",
+      "imageSection": "Main photo",
+      "imageHint": "Sent alongside name and description whenever the bot offers this service.",
+      "chooseImage": "Choose image",
+      "noImage": "No photo",
+      "imageSet": "Photo ready",
+      "field": {
+        "name": "Name",
+        "slug": "Slug",
+        "slugHint": "Stable identifier (lowercase letters, digits, dashes).",
+        "shortDescription": "Short description",
+        "description": "Description",
+        "priceType": "Price type",
+        "currency": "Currency",
+        "price": "Price (units)",
+        "priceHint": "Stored as cents. E.g. 150.50 → 15050 cents.",
+        "priceError": "Invalid price. Use 150 or 150.50 format.",
+        "showPrice": "Show price to customer",
+        "sortOrder": "Sort order"
+      },
+      "priceType": {
+        "fixed": "Fixed",
+        "from": "From",
+        "quote": "Quote"
+      }
+    },
+    "sales": {
+      "title": "Sales",
+      "subtitle": "Historical record. Each purchase is a new row; sale prices are immutable.",
+      "goToRevenue": "View revenue report",
+      "emptyTitle": "No sales yet",
+      "emptyDescription": "When you mark a sale as closed here or from the conversation, it will show up in this list.",
+      "markSold": "Mark sold",
+      "markLost": "Mark lost",
+      "paginationCount": "Total: {total}",
+      "markSoldTitle": "Mark as sold",
+      "markSoldSubmit": "Register sale",
+      "markLostTitle": "Mark as lost",
+      "markLostSubmit": "Mark as lost",
+      "filter": {
+        "status": "Status",
+        "allStatuses": "All",
+        "service": "Service",
+        "allServices": "All",
+        "dateBasis": "Date basis",
+        "soldAt": "Sale date",
+        "serviceDate": "Service date",
+        "from": "From",
+        "to": "To"
+      },
+      "col": {
+        "service": "Service",
+        "status": "Status",
+        "total": "Total",
+        "soldAt": "Sold",
+        "serviceDate": "Delivered"
+      },
+      "field": {
+        "service": "Service",
+        "servicePlaceholder": "Pick a service",
+        "soldAt": "Sale date",
+        "soldAtHint": "When the sale was closed.",
+        "serviceDate": "Service date",
+        "serviceDateHint": "When the service was delivered (optional).",
+        "quantity": "Quantity",
+        "discount": "Discount",
+        "notes": "Notes",
+        "lostReason": "Reason",
+        "lostReasonPlaceholder": "e.g. picked another provider, no budget, dropped out…"
+      },
+      "customerHistory": {
+        "title": "Purchases",
+        "subtitle": "This customer's history for this bot.",
+        "viewAll": "View all",
+        "totalSpent": "Total spent",
+        "wonCount": "{n} closed purchases",
+        "empty": "No purchases yet."
+      }
+    },
+    "reports": {
+      "revenueTitle": "Revenue report",
+      "revenueSubtitle": "Only closed sales (WON) count. Pipeline and lost are shown separately. Currencies are never mixed.",
+      "downloadCsv": "Download CSV",
+      "filter": {
+        "from": "From",
+        "to": "To",
+        "dateBasis": "Date basis",
+        "dateBasisHint": "“Sale date” = when it was closed. “Service date” = when it was delivered.",
+        "soldAt": "Sale date",
+        "serviceDate": "Service date",
+        "groupBy": "Group by",
+        "groupService": "Service",
+        "groupCustomer": "Customer",
+        "groupMonth": "Month"
+      },
+      "section": {
+        "totalRevenue": "Total revenue",
+        "pipeline": "Pipeline (PENDING)",
+        "lost": "Lost",
+        "notDelivered": "Sold and undelivered",
+        "sales": "sales"
+      },
+      "breakdown": {
+        "label": "Label",
+        "currency": "Currency",
+        "count": "Sales",
+        "units": "Units",
+        "total": "Total",
+        "empty": "No results for the selected range."
+      }
     }
   },
   "cases": {
