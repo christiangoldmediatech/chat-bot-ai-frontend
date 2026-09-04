@@ -65,6 +65,8 @@ const ink = {
   cardHi: '#034871',
   navyDeep: '#01142a',
   navyMid: '#034871',
+  tealDeep: '#01142a',
+  tealMid: '#034871',
 }
 
 const pearl = '#ffffff'
@@ -129,6 +131,25 @@ export default <Partial<Config>>{
         ].join(','),
         'halo-radial': 'radial-gradient(circle, rgba(91,233,236,0.18) 0%, rgba(7,125,220,0.12) 34%, rgba(3,3,3,0) 64%)',
         'chrome-card': 'linear-gradient(170deg, #034871 0%, #01142a 46%, #030303 100%)',
+        'home-mesh': [
+          'radial-gradient(70% 55% at 25% 30%, rgba(91,233,236,0.55) 0%, rgba(91,233,236,0) 60%)',
+          'radial-gradient(60% 55% at 78% 68%, rgba(3,32,64,0.65) 0%, rgba(3,32,64,0) 62%)',
+          'radial-gradient(80% 60% at 50% 100%, rgba(1,20,42,0.55) 0%, rgba(1,20,42,0) 70%)',
+          'linear-gradient(155deg, #077ddc 0%, #2a9cec 55%, #5bb9fb 100%)',
+        ].join(','),
+        'home-mesh-glow': 'radial-gradient(55% 45% at 50% 40%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 65%)',
+        'home-mesh-app': [
+          'radial-gradient(75% 55% at 12% 8%, rgba(91,233,236,0.38) 0%, rgba(91,233,236,0) 60%)',
+          'radial-gradient(70% 60% at 92% 88%, rgba(7,125,220,0.30) 0%, rgba(7,125,220,0) 62%)',
+          'radial-gradient(60% 40% at 55% 0%, rgba(91,233,236,0.18) 0%, rgba(91,233,236,0) 55%)',
+          'linear-gradient(160deg, #eaf4ff 0%, #d8e8fb 55%, #c6dbf5 100%)',
+        ].join(','),
+        'home-mesh-dark': [
+          'radial-gradient(70% 55% at 15% 12%, rgba(91,233,236,0.22) 0%, rgba(91,233,236,0) 60%)',
+          'radial-gradient(65% 55% at 90% 85%, rgba(7,125,220,0.32) 0%, rgba(7,125,220,0) 62%)',
+          'radial-gradient(55% 40% at 100% 0%, rgba(91,233,236,0.12) 0%, rgba(91,233,236,0) 55%)',
+          'linear-gradient(160deg, #01142a 0%, #032040 55%, #01142a 100%)',
+        ].join(','),
       },
       boxShadow: {
         glass: '0 10px 30px -12px rgb(3 3 3 / 0.45), 0 4px 10px -6px rgb(3 3 3 / 0.20)',

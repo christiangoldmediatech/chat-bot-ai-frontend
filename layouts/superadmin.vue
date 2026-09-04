@@ -42,8 +42,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen flex bg-brand-ambient text-slate-50">
-    <!-- Mobile backdrop -->
+  <div class="relative min-h-screen flex bg-home-mesh text-pearl">
     <Transition
       enter-active-class="transition-opacity duration-200"
       enter-from-class="opacity-0"
@@ -54,31 +53,29 @@ onMounted(() => {
     >
       <div
         v-if="drawer.open.value"
-        class="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+        class="fixed inset-0 z-40 bg-ink-deep/70 backdrop-blur-sm md:hidden"
         aria-hidden="true"
         @click="drawer.close()"
       />
     </Transition>
 
-    <!-- Sidebar: drawer on mobile, static column on desktop -->
     <aside
-      class="fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-slate-950/95 backdrop-blur-xl border-r border-slate-800/60 p-4 transform transition-transform duration-200 ease-out md:static md:translate-x-0 md:w-64 md:max-w-none md:bg-slate-950/70 md:z-0"
+      class="fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-ink-surface/95 backdrop-blur-xl border-r border-line-soft p-4 transform transition-transform duration-200 ease-out md:static md:translate-x-0 md:w-64 md:max-w-none md:bg-ink-surface/70 md:z-0"
       :class="drawer.open.value ? 'translate-x-0 shadow-2xl' : '-translate-x-full md:shadow-none'"
       role="navigation"
       aria-label="Main navigation"
     >
       <div class="flex items-center justify-between gap-2 px-2">
         <div class="flex items-center gap-2">
-          <span class="inline-flex size-8 items-center justify-center rounded-xl bg-white text-slate-900 text-xs font-bold tracking-tight">{{ $t('superadmin.chrome.brandShort') }}</span>
+          <span class="inline-flex size-8 items-center justify-center rounded-xl bg-brand-gradient text-ink-tealDeep text-xs font-bold tracking-tight shadow-halo-glow">{{ $t('superadmin.chrome.brandShort') }}</span>
           <div>
-            <div class="text-xs uppercase tracking-wider text-slate-400 leading-none">{{ $t('superadmin.chrome.brandLabel') }}</div>
-            <div class="text-sm font-semibold text-slate-100 mt-1">{{ $t('superadmin.chrome.brandSubtitle') }}</div>
+            <div class="text-xs uppercase tracking-wider text-halo-dim leading-none">{{ $t('superadmin.chrome.brandLabel') }}</div>
+            <div class="text-sm font-semibold text-pearl mt-1">{{ $t('superadmin.chrome.brandSubtitle') }}</div>
           </div>
         </div>
-        <!-- Close button only on mobile -->
         <button
           type="button"
-          class="md:hidden -mr-1 flex size-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition"
+          class="md:hidden -mr-1 flex size-8 items-center justify-center rounded-lg text-mist-dim hover:bg-ink-card/60 hover:text-pearl transition"
           :aria-label="$t('nav.closeMenu')"
           @click="drawer.close()"
         >
@@ -93,8 +90,8 @@ onMounted(() => {
           v-for="link in links"
           :key="link.to"
           :to="link.to"
-          class="block px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:bg-slate-800/60 hover:text-white transition-colors"
-          active-class="!bg-white !text-slate-900 font-medium shadow-glass"
+          class="block px-3 py-2.5 rounded-xl text-sm text-mist hover:bg-ink-card/60 hover:text-pearl transition-colors"
+          active-class="!bg-brand-gradient !text-ink-tealDeep font-medium shadow-halo-glow"
         >
           {{ link.label }}
         </NuxtLink>
@@ -102,12 +99,11 @@ onMounted(() => {
     </aside>
 
     <div class="flex-1 flex flex-col min-w-0">
-      <header class="sticky top-0 z-30 h-14 bg-slate-950/70 backdrop-blur-xl border-b border-slate-800/60 flex items-center justify-between gap-2 px-4 sm:px-6">
+      <header class="sticky top-0 z-30 h-14 bg-ink-surface/70 backdrop-blur-xl border-b border-line-soft flex items-center justify-between gap-2 px-4 sm:px-6">
         <div class="flex items-center gap-2 min-w-0">
-          <!-- Mobile hamburger -->
           <button
             type="button"
-            class="md:hidden flex size-9 shrink-0 items-center justify-center rounded-xl text-slate-300 hover:bg-slate-800/60 transition"
+            class="md:hidden flex size-9 shrink-0 items-center justify-center rounded-xl text-mist hover:bg-ink-card/60 transition"
             :aria-label="$t('nav.openMenu')"
             @click="drawer.toggle()"
           >
@@ -117,33 +113,30 @@ onMounted(() => {
               <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
           </button>
-          <!-- Mobile brand -->
           <div class="md:hidden flex items-center gap-2 min-w-0">
-            <span class="inline-flex size-7 items-center justify-center rounded-lg bg-white text-slate-900 text-[10px] font-bold tracking-tight">{{ $t('superadmin.chrome.brandShort') }}</span>
-            <span class="text-sm font-semibold text-slate-100 truncate">{{ $t('superadmin.chrome.brandLabel') }}</span>
+            <span class="inline-flex size-7 items-center justify-center rounded-lg bg-brand-gradient text-ink-tealDeep text-[10px] font-bold tracking-tight">{{ $t('superadmin.chrome.brandShort') }}</span>
+            <span class="text-sm font-semibold text-pearl truncate">{{ $t('superadmin.chrome.brandLabel') }}</span>
           </div>
-          <!-- Desktop subtitle -->
-          <h1 class="hidden md:block text-sm font-medium text-slate-300">{{ $t('superadmin.chrome.headerSubtitle') }}</h1>
+          <h1 class="hidden md:block text-sm font-medium text-mist">{{ $t('superadmin.chrome.headerSubtitle') }}</h1>
         </div>
 
         <div v-if="auth.user" class="flex items-center gap-2 shrink-0">
           <NuxtLink
             to="/superadmin/profile"
-            class="hidden sm:flex items-center gap-3 rounded-xl px-2.5 py-1.5 hover:bg-slate-800/60 transition"
+            class="hidden sm:flex items-center gap-3 rounded-xl px-2.5 py-1.5 hover:bg-ink-card/60 transition"
             :title="$t('nav.myProfile')"
           >
             <div class="text-right">
-              <div class="text-sm font-medium text-slate-100 truncate max-w-[160px]">{{ auth.user.email }}</div>
-              <div class="text-xs text-slate-400">{{ $t('superadmin.chrome.userRole') }}</div>
+              <div class="text-sm font-medium text-pearl truncate max-w-[160px]">{{ auth.user.email }}</div>
+              <div class="text-xs text-mist-dim">{{ $t('superadmin.chrome.userRole') }}</div>
             </div>
-            <div class="flex size-9 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 text-white text-sm font-semibold ring-1 ring-slate-700">
+            <div class="flex size-9 items-center justify-center rounded-full bg-brand-gradient text-ink-tealDeep text-sm font-semibold ring-1 ring-halo-line">
               {{ auth.user.email.charAt(0).toUpperCase() }}
             </div>
           </NuxtLink>
-          <!-- Mobile avatar-only link -->
           <NuxtLink
             to="/superadmin/profile"
-            class="sm:hidden flex size-9 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 text-white text-sm font-semibold ring-1 ring-slate-700"
+            class="sm:hidden flex size-9 items-center justify-center rounded-full bg-brand-gradient text-ink-tealDeep text-sm font-semibold ring-1 ring-halo-line"
             :title="auth.user.email"
             :aria-label="$t('nav.myProfile')"
           >
@@ -151,15 +144,14 @@ onMounted(() => {
           </NuxtLink>
           <button
             type="button"
-            class="rounded-xl border border-slate-700 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-800 transition hidden sm:inline-flex"
+            class="rounded-xl border border-halo-line/50 px-3 py-1.5 text-sm text-pearl hover:bg-ink-card/60 transition hidden sm:inline-flex"
             @click="onLogout"
           >
             {{ $t('nav.signOut') }}
           </button>
-          <!-- Mobile icon-only logout -->
           <button
             type="button"
-            class="sm:hidden flex size-9 items-center justify-center rounded-xl text-slate-300 hover:bg-slate-800/60 transition"
+            class="sm:hidden flex size-9 items-center justify-center rounded-xl text-mist hover:bg-ink-card/60 transition"
             :aria-label="$t('nav.signOut')"
             @click="onLogout"
           >
@@ -172,7 +164,7 @@ onMounted(() => {
         </div>
       </header>
 
-      <main class="flex-1 overflow-y-auto p-4 sm:p-6">
+      <main class="flex-1 overflow-y-auto p-4 sm:p-6 [&_h1.text-slate-900]:!text-pearl [&_h1.text-slate-900]:drop-shadow-sm [&_p.text-slate-500.max-w-2xl]:!text-white/85 [&_p.text-slate-500.max-w-2xl]:drop-shadow-sm">
         <slot />
       </main>
     </div>

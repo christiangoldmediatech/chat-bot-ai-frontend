@@ -97,7 +97,7 @@ await load()
 
 <template>
   <div>
-    <NuxtLink :to="`/admin/bots/${id}`" class="text-sm text-slate-500 hover:text-slate-700">{{ $t('admin.botEdit.back') }}</NuxtLink>
+    <NuxtLink :to="`/admin/bots/${id}`" class="inline-flex items-center gap-1 text-sm text-white/80 hover:text-pearl drop-shadow-sm transition">{{ $t('admin.botEdit.back') }}</NuxtLink>
     <h1 class="mt-2 text-2xl font-semibold tracking-tight">{{ $t('admin.botEdit.title') }}</h1>
     <p class="text-slate-500 text-sm mt-1 max-w-2xl">
       {{ $t('admin.botEdit.subtitle') }}

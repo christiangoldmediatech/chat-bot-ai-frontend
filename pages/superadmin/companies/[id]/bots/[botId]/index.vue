@@ -27,6 +27,35 @@ const loading = ref(true)
 const error = ref<string | null>(null)
 const confirmingDelete = ref(false)
 
+const renameOpen = ref(false)
+const renameValue = ref('')
+const renameSaving = ref(false)
+
+function openRename(): void {
+  renameValue.value = bot.value?.name ?? ''
+  renameOpen.value = true
+}
+
+async function onRenameSubmit(): Promise<void> {
+  if (!bot.value) return
+  const trimmed = renameValue.value.trim()
+  if (trimmed.length < 2 || trimmed.length > 80) return
+  if (trimmed === bot.value.name) {
+    renameOpen.value = false
+    return
+  }
+  renameSaving.value = true
+  try {
+    const updated = await bots.update(bot.value.id, { name: trimmed })
+    bot.value = { ...bot.value, name: updated.name }
+    renameOpen.value = false
+  } catch (err) {
+    error.value = (err as ApiError).message
+  } finally {
+    renameSaving.value = false
+  }
+}
+
 // Per-bot messages activity (day / week / month) shown alongside the overview.
 const activity = reactive<Record<MessagesActivityRange, MessagesActivity | null>>({
   day: null,
@@ -102,18 +131,36 @@ await Promise.all([load(), loadActivity()])
           <div>
             <h1 class="text-2xl font-semibold text-slate-100 tracking-tight flex items-center gap-3">
               {{ bot.name }}
+              <button
+                type="button"
+                class="text-slate-500 hover:text-slate-200 transition"
+                :title="$t('admin.bot.renameTitle')"
+                :aria-label="$t('admin.bot.renameTitle')"
+                @click="openRename"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                </svg>
+              </button>
               <BotStatusBadge :is-active="bot.isActive" />
             </h1>
             <p v-if="bot.description" class="text-slate-400 mt-0.5 text-sm">{{ bot.description }}</p>
           </div>
         </div>
 
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2">
+          <NuxtLink
+            :to="`/superadmin/companies/${tenantId}/bots/${bot.id}/services`"
+            class="rounded-xl border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm font-medium text-slate-200 hover:bg-slate-800 transition"
+          >
+            {{ $t('admin.bot.servicesLink') }}
+          </NuxtLink>
           <NuxtLink
             :to="`/superadmin/companies/${tenantId}/bots/${bot.id}/edit`"
             class="rounded-xl border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm font-medium text-slate-200 hover:bg-slate-800 transition"
           >
-            {{ $t('superadmin.companyBotDetail.whatsapp') }}
+            {{ $t('admin.bot.editBot') }}
           </NuxtLink>
           <NuxtLink
             :to="`/superadmin/companies/${tenantId}/bots/${bot.id}/config`"
@@ -377,6 +424,46 @@ await Promise.all([load(), loadActivity()])
         @cancel="confirmingDelete = false"
         @confirm="onConfirmDelete"
       />
+
+      <Modal
+        :open="renameOpen"
+        :title="$t('admin.bot.renameTitle')"
+        size="sm"
+        @close="renameOpen = false"
+      >
+        <form class="space-y-4" @submit.prevent="onRenameSubmit">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+              {{ $t('admin.botCreate.section.nameLabel') }}
+            </label>
+            <input
+              v-model="renameValue"
+              type="text"
+              minlength="2"
+              maxlength="80"
+              autofocus
+              class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              required
+            >
+          </div>
+          <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+            <button
+              type="button"
+              class="rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-100"
+              @click="renameOpen = false"
+            >
+              {{ $t('common.cancel') }}
+            </button>
+            <button
+              type="submit"
+              class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50"
+              :disabled="renameSaving || renameValue.trim().length < 2"
+            >
+              {{ renameSaving ? $t('common.saving') : $t('common.save') }}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </template>
   </div>
 </template>

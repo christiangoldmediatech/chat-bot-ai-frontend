@@ -26,6 +26,37 @@ const confirmingDelete = ref(false)
 const promptOpen = ref(false)
 const webhookOpen = ref(false)
 
+// Rename inline: modal simple con un solo campo. Se guarda vía PATCH /bots/:id
+// solo con el nombre — el backend acepta partial updates.
+const renameOpen = ref(false)
+const renameValue = ref('')
+const renameSaving = ref(false)
+
+function openRename(): void {
+  renameValue.value = bot.value?.name ?? ''
+  renameOpen.value = true
+}
+
+async function onRenameSubmit(): Promise<void> {
+  if (!bot.value) return
+  const trimmed = renameValue.value.trim()
+  if (trimmed.length < 2 || trimmed.length > 80) return
+  if (trimmed === bot.value.name) {
+    renameOpen.value = false
+    return
+  }
+  renameSaving.value = true
+  try {
+    const updated = await bots.update(bot.value.id, { name: trimmed })
+    bot.value = { ...bot.value, name: updated.name }
+    renameOpen.value = false
+  } catch (err) {
+    error.value = (err as ApiError).message
+  } finally {
+    renameSaving.value = false
+  }
+}
+
 const tenantPlan = computed<Plan>(() => tenant.value?.plan ?? 'BASIC')
 const isPremium = computed(() => tenantPlan.value === 'PREMIUM')
 
@@ -65,7 +96,7 @@ await load()
 
 <template>
   <div>
-    <NuxtLink to="/admin/bots" class="text-sm text-slate-500 hover:text-slate-700">{{ $t('admin.bot.backToBots') }}</NuxtLink>
+    <NuxtLink to="/admin/bots" class="inline-flex items-center gap-1 text-sm text-white/80 hover:text-pearl drop-shadow-sm transition">{{ $t('admin.bot.backToBots') }}</NuxtLink>
 
     <p v-if="error" class="mt-4 rounded-2xl border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">
       {{ error }}
@@ -74,27 +105,56 @@ await load()
     <SpinnerInline v-if="loading" class="mt-6" />
 
     <template v-else-if="bot">
-      <!-- Header -->
-      <div class="mt-2 flex items-center justify-between flex-wrap gap-3">
-        <div class="flex items-center gap-3">
+      <div class="mt-3 rounded-2xl bg-white/75 backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-4 sm:p-5 text-slate-900 flex items-center justify-between flex-wrap gap-3">
+        <div class="flex items-center gap-3 min-w-0">
           <div class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 text-white font-semibold text-xl ring-1 ring-white/40 shadow-inner">
             {{ bot.name.charAt(0).toUpperCase() }}
           </div>
-          <div>
-            <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-3">
+          <div class="min-w-0">
+            <h1 class="text-2xl font-semibold tracking-tight flex items-center gap-3 flex-wrap">
               {{ bot.name }}
+              <button
+                type="button"
+                class="text-slate-400 hover:text-slate-700 transition"
+                :title="$t('admin.bot.renameTitle')"
+                :aria-label="$t('admin.bot.renameTitle')"
+                @click="openRename"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                </svg>
+              </button>
               <BotStatusBadge :is-active="bot.isActive" />
             </h1>
             <p v-if="bot.description" class="text-slate-500 mt-0.5 text-sm">{{ bot.description }}</p>
           </div>
         </div>
 
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2">
+          <NuxtLink
+            :to="`/admin/bots/${bot.id}/services`"
+            class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white transition"
+          >
+            {{ $t('admin.bot.servicesLink') }}
+          </NuxtLink>
+          <NuxtLink
+            :to="`/admin/bots/${bot.id}/sales`"
+            class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white transition"
+          >
+            {{ $t('admin.bot.salesLink') }}
+          </NuxtLink>
+          <NuxtLink
+            :to="`/admin/bots/${bot.id}/reports/revenue`"
+            class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white transition"
+          >
+            {{ $t('admin.bot.revenueLink') }}
+          </NuxtLink>
           <NuxtLink
             :to="`/admin/bots/${bot.id}/edit`"
-            class="rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+            class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white transition"
           >
-            {{ $t('admin.bot.whatsapp') }}
+            {{ $t('admin.bot.editBot') }}
           </NuxtLink>
           <NuxtLink
             :to="`/admin/bots/${bot.id}/config`"
@@ -104,7 +164,7 @@ await load()
           </NuxtLink>
           <button
             type="button"
-            class="rounded-xl border border-danger-200 bg-danger-50/40 px-3 py-1.5 text-sm font-medium text-danger-700 hover:bg-danger-50 transition"
+            class="rounded-xl border border-danger-200 bg-danger-50/60 px-3 py-1.5 text-sm font-medium text-danger-700 hover:bg-danger-50 transition"
             @click="confirmingDelete = true"
           >
             {{ $t('admin.bot.deleteBot') }}
@@ -410,6 +470,46 @@ await load()
         @cancel="confirmingDelete = false"
         @confirm="onConfirmDelete"
       />
+
+      <Modal
+        :open="renameOpen"
+        :title="$t('admin.bot.renameTitle')"
+        size="sm"
+        @close="renameOpen = false"
+      >
+        <form class="space-y-4" @submit.prevent="onRenameSubmit">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+              {{ $t('admin.botCreate.section.nameLabel') }}
+            </label>
+            <input
+              v-model="renameValue"
+              type="text"
+              minlength="2"
+              maxlength="80"
+              autofocus
+              class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+              required
+            >
+          </div>
+          <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+            <button
+              type="button"
+              class="rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-100"
+              @click="renameOpen = false"
+            >
+              {{ $t('common.cancel') }}
+            </button>
+            <button
+              type="submit"
+              class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50"
+              :disabled="renameSaving || renameValue.trim().length < 2"
+            >
+              {{ renameSaving ? $t('common.saving') : $t('common.save') }}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </template>
   </div>
 </template>

@@ -79,10 +79,10 @@ await load()
         <h1 class="text-2xl font-semibold tracking-tight">{{ $t('admin.botsList.title') }}</h1>
         <p class="text-slate-500 text-sm mt-1 max-w-2xl">
           {{ $t('admin.botsList.subtitleStart') }}
-          <span class="font-medium text-success-700">{{ $t('admin.botsList.subtitleWhatsapp') }}</span>,
-          <span class="font-medium text-primary-700">{{ $t('admin.botsList.subtitleAgent') }}</span>,
-          <span class="font-medium text-amber-700">{{ $t('admin.botsList.subtitleDocuments') }}</span>, or
-          <span class="font-medium text-sky-700">{{ $t('admin.botsList.subtitleCalendar') }}</span>.
+          <span class="font-semibold text-success-200 drop-shadow-sm">{{ $t('admin.botsList.subtitleWhatsapp') }}</span>,
+          <span class="font-semibold text-primary-100 drop-shadow-sm">{{ $t('admin.botsList.subtitleAgent') }}</span>,
+          <span class="font-semibold text-amber-200 drop-shadow-sm">{{ $t('admin.botsList.subtitleDocuments') }}</span>, or
+          <span class="font-semibold text-cyan-100 drop-shadow-sm">{{ $t('admin.botsList.subtitleCalendar') }}</span>.
         </p>
       </div>
       <!-- Create button gates on the plan limit. When at limit, render a

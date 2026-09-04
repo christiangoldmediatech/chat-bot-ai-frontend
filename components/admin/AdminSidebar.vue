@@ -50,15 +50,14 @@ onMounted(() => {
   >
     <div
       v-if="drawer.open.value"
-      class="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm md:hidden"
+      class="fixed inset-0 z-40 bg-ink-deep/70 backdrop-blur-sm md:hidden"
       aria-hidden="true"
       @click="drawer.close()"
     />
   </Transition>
 
-  <!-- Sidebar: drawer on mobile, static column on desktop -->
   <aside
-    class="fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-white/95 backdrop-blur-xl border-r border-white/60 p-4 transform transition-transform duration-200 ease-out md:static md:translate-x-0 md:w-64 md:max-w-none md:bg-white/60 md:z-0"
+    class="fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-ink-deep/90 backdrop-blur-xl border-r border-halo-line/30 p-4 transform transition-transform duration-200 ease-out md:static md:translate-x-0 md:w-64 md:max-w-none md:bg-ink-deep/70 md:z-0"
     :class="drawer.open.value ? 'translate-x-0 shadow-2xl' : '-translate-x-full md:shadow-none'"
     role="navigation"
     aria-label="Main navigation"
@@ -66,12 +65,11 @@ onMounted(() => {
     <div class="flex items-center justify-between gap-2 mb-6 px-2">
       <NuxtLink to="/admin" class="flex items-center gap-2 group" aria-label="LURVIAX dashboard">
         <LurviaxLogo :size="36" rounded="rounded-xl" class="bg-white ring-1 ring-white/70 shadow-sm transition-transform group-hover:scale-105" />
-        <span class="text-base font-semibold text-slate-900">LURVIAX</span>
+        <span class="text-base font-semibold text-pearl">LURVIAX</span>
       </NuxtLink>
-      <!-- Close button only on mobile -->
       <button
         type="button"
-        class="md:hidden -mr-1 flex size-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition"
+        class="md:hidden -mr-1 flex size-8 items-center justify-center rounded-lg text-mist hover:bg-ink-card/60 hover:text-pearl transition"
         :aria-label="$t('nav.closeMenu')"
         @click="drawer.close()"
       >
@@ -86,8 +84,8 @@ onMounted(() => {
         v-for="link in links"
         :key="link.to"
         :to="link.to"
-        class="block px-3 py-2.5 rounded-xl text-sm text-slate-600 hover:bg-white/80 hover:text-slate-900 transition-colors"
-        active-class="!bg-slate-900 !text-white font-medium shadow-glass"
+        class="block px-3 py-2.5 rounded-xl text-sm text-mist hover:bg-ink-card/60 hover:text-pearl transition-colors"
+        active-class="!bg-brand-gradient !text-ink-tealDeep font-medium shadow-halo-glow"
       >
         {{ link.label }}
       </NuxtLink>

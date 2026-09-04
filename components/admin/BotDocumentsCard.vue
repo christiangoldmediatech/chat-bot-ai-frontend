@@ -350,7 +350,7 @@ onMounted(() => {
       >
         <div
           v-if="viewingMeta"
-          class="fixed inset-0 z-[100] bg-mist-light text-slate-900 flex flex-col"
+          class="fixed inset-0 z-[100] bg-slate-50 text-slate-900 flex flex-col"
           role="dialog"
           aria-modal="true"
           :aria-label="$t('admin.documents.viewingAria', { filename: viewingMeta.fileName })"
