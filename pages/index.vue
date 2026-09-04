@@ -20,7 +20,6 @@ gtag('config', 'G-3CNB35H723');`,
 })
 
 const auth = useAuthStore()
-const { t } = useI18n()
 const isAuthenticated = computed(() => auth.isAuthenticated)
 const primaryCtaTarget = computed(() => (isAuthenticated.value ? '/admin' : '/login'))
 
@@ -88,29 +87,6 @@ onBeforeUnmount(() => {
   countObserver?.disconnect()
 })
 
-// ---- Integrations belt ----
-// Se duplica el array para hacer un loop sin costura.
-const integrations = [
-  'WhatsApp Business API',
-  'Instagram Direct',
-  'Messenger',
-  t('landing.belt.webChat'),
-  t('landing.belt.sip'),
-  'Google Calendar',
-  'Outlook',
-  'HubSpot',
-  'Salesforce',
-  'Shopify',
-  'WooCommerce',
-  'Odoo',
-  'Zapier',
-  'Make',
-  'Google Sheets',
-  'Gmail',
-]
-
-// Puntero sobre tarjetas de capacidades — actualiza CSS vars para el
-// radial-gradient de hover (definido en <style scoped>).
 function onCapPointer(ev: PointerEvent) {
   const card = (ev.target as HTMLElement).closest('.js-cap') as HTMLElement | null
   if (!card) return
@@ -241,7 +217,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
               <span class="mt-2 block font-mono text-[0.705rem] uppercase tracking-[0.16em] text-mist-dim">{{ $t('landing.hero.ticker.noHuman') }}</span>
             </div>
             <div class="border-l border-t border-line-soft p-6 text-left sm:border-t-0">
-              <div class="font-display tabular-nums text-[clamp(1.5rem,3vw,2.15rem)] leading-none tracking-[-0.02em] text-pearl" data-count="5" data-suffix="">0</div>
+              <div class="font-display tabular-nums text-[clamp(1.5rem,3vw,2.15rem)] leading-none tracking-[-0.02em] text-pearl" data-count="7" data-suffix="">0</div>
               <span class="mt-2 block font-mono text-[0.705rem] uppercase tracking-[0.16em] text-mist-dim">{{ $t('landing.hero.ticker.channels') }}</span>
             </div>
           </div>
@@ -374,29 +350,6 @@ function smoothScroll(ev: MouseEvent, href: string) {
         </div>
       </section>
 
-      <!-- ══════════ INTEGRACIONES (belt) ══════════ -->
-      <section class="py-[clamp(20px,4vh,48px)]">
-        <div class="mx-auto mb-5 w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
-          <p v-reveal class="lurviax-rv flex items-center gap-3 font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">
-            <span class="h-px w-6 bg-halo-dim" />
-            {{ $t('landing.belt.eyebrow') }}
-          </p>
-        </div>
-        <div class="lurviax-belt-mask relative overflow-hidden border-y border-line-soft py-6.5">
-          <div class="flex w-max animate-slide hover:[animation-play-state:paused]">
-            <span
-              v-for="(name, i) in [...integrations, ...integrations]"
-              :key="`b-${i}`"
-              class="flex items-center gap-3 whitespace-nowrap px-7.5 font-display text-[1.02rem] tracking-[0.02em] text-mist"
-              style="font-variation-settings: 'wdth' 104, 'wght' 420;"
-            >
-              <span class="size-1.5 shrink-0 rounded-full bg-halo-dim" aria-hidden="true" />
-              {{ name }}
-            </span>
-          </div>
-        </div>
-      </section>
-
       <!-- ══════════ RESULTADOS ══════════ -->
       <section id="resultados" class="relative py-[clamp(80px,11vh,148px)]">
         <div class="mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
@@ -454,72 +407,28 @@ function smoothScroll(ev: MouseEvent, href: string) {
             </p>
           </div>
 
-          <div v-reveal="140" class="lurviax-rv grid grid-cols-1 items-start gap-4 md:grid-cols-3">
-            <!-- Esencial -->
-            <article class="flex flex-col gap-4 rounded-2xl border border-line bg-gradient-to-b from-ink-card/95 to-ink/95 p-6 transition-all duration-400 hover:-translate-y-1 hover:border-halo-line sm:p-8">
-              <div class="flex items-center gap-2.5">
-                <p class="font-mono text-[0.705rem] uppercase tracking-[0.22em] text-mist-dim">{{ $t('landing.plans.essential.name') }}</p>
+          <div v-reveal="140" class="lurviax-rv mx-auto grid max-w-2xl grid-cols-1 items-start gap-4">
+            <article class="flex flex-col gap-5 rounded-2xl border border-halo-line bg-gradient-to-b from-ink-tealMid/70 to-ink/95 p-6 shadow-halo-glow-lg transition-all duration-400 hover:-translate-y-1 sm:p-10">
+              <div class="flex flex-wrap items-center gap-2.5">
+                <p class="font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">{{ $t('landing.plans.single.name') }}</p>
+                <span class="rounded-full border border-halo-line px-3 py-1 font-mono text-[0.64rem] uppercase tracking-[0.12em] text-halo">{{ $t('landing.plans.single.badge') }}</span>
               </div>
-              <div class="font-display text-[clamp(2rem,3.6vw,2.7rem)] leading-none tracking-[-0.03em]" style="font-variation-settings: 'wdth' 94, 'wght' 400;">
-                $290<small class="ml-2 font-mono text-[0.68rem] tracking-[0.12em] text-mist-dim">{{ $t('landing.plans.perMonth') }}</small>
+              <div class="font-display text-[clamp(2.6rem,5vw,3.6rem)] leading-none tracking-[-0.03em]" style="font-variation-settings: 'wdth' 94, 'wght' 400;">
+                $40<small class="ml-2 font-mono text-[0.72rem] tracking-[0.12em] text-mist-dim">{{ $t('landing.plans.perMonth') }}</small>
               </div>
+              <p class="text-mist">{{ $t('landing.plans.single.tagline') }}</p>
               <ul class="grid gap-3">
-                <li v-for="k in 5" :key="k" class="flex items-start gap-3 text-sm text-mist">
+                <li v-for="k in 7" :key="k" class="flex items-start gap-3 text-sm text-mist">
                   <span class="mt-1 size-3.5 shrink-0 rounded-full border border-halo-line" style="background: radial-gradient(circle, #58F0CE 0 3px, transparent 3.5px);" />
-                  <span>{{ $t(`landing.plans.essential.items.${k}`) }}</span>
+                  <span>{{ $t(`landing.plans.single.items.${k}`) }}</span>
                 </li>
               </ul>
               <a
                 href="#cierre"
-                class="mt-auto inline-flex items-center justify-center gap-2 rounded-full border border-halo-line bg-ink-card/55 px-6 py-3 font-mono text-[0.78rem] uppercase tracking-[0.12em] text-pearl backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-halo hover:bg-ink-tealMid/55"
+                class="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-brand-gradient px-6 py-3.5 font-mono text-[0.78rem] font-medium uppercase tracking-[0.12em] text-ink-tealDeep shadow-halo-glow transition-transform hover:-translate-y-0.5"
                 @click="smoothScroll($event, '#cierre')"
               >
                 {{ $t('landing.plans.start') }}
-              </a>
-            </article>
-            <!-- Negocio (destacado) -->
-            <article class="flex flex-col gap-4 rounded-2xl border border-halo-line bg-gradient-to-b from-ink-tealMid/70 to-ink/95 p-6 shadow-halo-glow-lg transition-all duration-400 hover:-translate-y-1 sm:p-8">
-              <div class="flex items-center gap-2.5">
-                <p class="font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">{{ $t('landing.plans.business.name') }}</p>
-                <span class="rounded-full border border-halo-line px-3 py-1 font-mono text-[0.64rem] uppercase tracking-[0.12em] text-halo">{{ $t('landing.plans.recommended') }}</span>
-              </div>
-              <div class="font-display text-[clamp(2rem,3.6vw,2.7rem)] leading-none tracking-[-0.03em]" style="font-variation-settings: 'wdth' 94, 'wght' 400;">
-                $690<small class="ml-2 font-mono text-[0.68rem] tracking-[0.12em] text-mist-dim">{{ $t('landing.plans.perMonth') }}</small>
-              </div>
-              <ul class="grid gap-3">
-                <li v-for="k in 6" :key="k" class="flex items-start gap-3 text-sm text-mist">
-                  <span class="mt-1 size-3.5 shrink-0 rounded-full border border-halo-line" style="background: radial-gradient(circle, #58F0CE 0 3px, transparent 3.5px);" />
-                  <span>{{ $t(`landing.plans.business.items.${k}`) }}</span>
-                </li>
-              </ul>
-              <a
-                href="#cierre"
-                class="mt-auto inline-flex items-center justify-center gap-2 rounded-full bg-brand-gradient px-6 py-3 font-mono text-[0.78rem] font-medium uppercase tracking-[0.12em] text-ink-tealDeep shadow-halo-glow transition-transform hover:-translate-y-0.5"
-                @click="smoothScroll($event, '#cierre')"
-              >
-                {{ $t('landing.plans.book') }}
-              </a>
-            </article>
-            <!-- Corporativo -->
-            <article class="flex flex-col gap-4 rounded-2xl border border-line bg-gradient-to-b from-ink-card/95 to-ink/95 p-6 transition-all duration-400 hover:-translate-y-1 hover:border-halo-line sm:p-8">
-              <div class="flex items-center gap-2.5">
-                <p class="font-mono text-[0.705rem] uppercase tracking-[0.22em] text-mist-dim">{{ $t('landing.plans.corporate.name') }}</p>
-              </div>
-              <div class="font-display text-[clamp(2rem,3.6vw,2.7rem)] leading-none tracking-[-0.03em]" style="font-variation-settings: 'wdth' 94, 'wght' 400;">
-                {{ $t('landing.plans.corporate.price') }}<small class="ml-2 font-mono text-[0.68rem] tracking-[0.12em] text-mist-dim">{{ $t('landing.plans.perContract') }}</small>
-              </div>
-              <ul class="grid gap-3">
-                <li v-for="k in 5" :key="k" class="flex items-start gap-3 text-sm text-mist">
-                  <span class="mt-1 size-3.5 shrink-0 rounded-full border border-halo-line" style="background: radial-gradient(circle, #58F0CE 0 3px, transparent 3.5px);" />
-                  <span>{{ $t(`landing.plans.corporate.items.${k}`) }}</span>
-                </li>
-              </ul>
-              <a
-                href="#cierre"
-                class="mt-auto inline-flex items-center justify-center gap-2 rounded-full border border-halo-line bg-ink-card/55 px-6 py-3 font-mono text-[0.78rem] uppercase tracking-[0.12em] text-pearl backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-halo hover:bg-ink-tealMid/55"
-                @click="smoothScroll($event, '#cierre')"
-              >
-                {{ $t('landing.plans.talk') }}
               </a>
             </article>
           </div>
