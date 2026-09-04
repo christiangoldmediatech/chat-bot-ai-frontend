@@ -164,7 +164,7 @@ onMounted(() => {
         </div>
       </header>
 
-      <main class="flex-1 overflow-y-auto p-4 sm:p-6 [&_h1.text-slate-900]:!text-pearl [&_h1.text-slate-900]:drop-shadow-sm [&_p.text-slate-500.max-w-2xl]:!text-white/85 [&_p.text-slate-500.max-w-2xl]:drop-shadow-sm">
+      <main class="flex-1 overflow-y-auto p-4 sm:p-6 [&_h1.text-slate-900]:!text-pearl [&_h1.text-slate-900]:drop-shadow-sm [&_p.text-slate-500.max-w-2xl]:!text-white/85 [&_p.text-slate-500.max-w-2xl]:drop-shadow-sm [&_input:not([type=checkbox]):not([type=radio])]:text-slate-900 [&_textarea]:text-slate-900 [&_select]:text-slate-900 [&_input:not([type=checkbox]):not([type=radio])]:caret-slate-900">
         <slot />
       </main>
     </div>
