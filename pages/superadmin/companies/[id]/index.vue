@@ -172,7 +172,7 @@ await load()
 
 <template>
   <div>
-    <NuxtLink to="/superadmin/companies" class="text-sm text-slate-400 hover:text-slate-200">{{ $t('superadmin.companyDetail.back') }}</NuxtLink>
+    <NuxtLink to="/superadmin/companies" class="inline-flex items-center gap-1 text-sm text-white/80 hover:text-pearl drop-shadow-sm transition">{{ $t('superadmin.companyDetail.back') }}</NuxtLink>
 
     <p v-if="error" class="mt-4 rounded-md border border-danger-800 bg-danger-950 p-3 text-sm text-danger-300">
       {{ error }}
