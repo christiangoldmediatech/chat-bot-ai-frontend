@@ -89,7 +89,25 @@ await load()
           </div>
         </div>
 
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2">
+          <NuxtLink
+            :to="`/admin/bots/${bot.id}/services`"
+            class="rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+          >
+            {{ $t('admin.bot.servicesLink') }}
+          </NuxtLink>
+          <NuxtLink
+            :to="`/admin/bots/${bot.id}/sales`"
+            class="rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+          >
+            {{ $t('admin.bot.salesLink') }}
+          </NuxtLink>
+          <NuxtLink
+            :to="`/admin/bots/${bot.id}/reports/revenue`"
+            class="rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+          >
+            {{ $t('admin.bot.revenueLink') }}
+          </NuxtLink>
           <NuxtLink
             :to="`/admin/bots/${bot.id}/edit`"
             class="rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"

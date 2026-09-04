@@ -108,7 +108,13 @@ await Promise.all([load(), loadActivity()])
           </div>
         </div>
 
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2">
+          <NuxtLink
+            :to="`/superadmin/companies/${tenantId}/bots/${bot.id}/services`"
+            class="rounded-xl border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm font-medium text-slate-200 hover:bg-slate-800 transition"
+          >
+            {{ $t('admin.bot.servicesLink') }}
+          </NuxtLink>
           <NuxtLink
             :to="`/superadmin/companies/${tenantId}/bots/${bot.id}/edit`"
             class="rounded-xl border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm font-medium text-slate-200 hover:bg-slate-800 transition"
