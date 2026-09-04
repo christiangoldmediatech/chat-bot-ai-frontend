@@ -308,11 +308,10 @@ await load()
         <SuperadminStatCard :label="$t('superadmin.companyDetail.stats.conversations')" :value="data.conversationCount" icon="conversations" tone="default" />
       </div>
 
-      <!-- Quick navigation to subsections (Customers / Cases / Meetings / Billing) -->
-      <section class="mt-6">
-        <div class="mb-3">
-          <h2 class="text-base font-semibold text-slate-200">{{ $t('superadmin.companyDetail.quickNav.title') }}</h2>
-          <p class="text-xs text-slate-500 mt-1">{{ $t('superadmin.companyDetail.quickNav.subtitle') }}</p>
+      <section class="mt-6 rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg p-5">
+        <div class="mb-4">
+          <h2 class="text-base font-semibold text-slate-100">{{ $t('superadmin.companyDetail.quickNav.title') }}</h2>
+          <p class="text-xs text-slate-400 mt-1">{{ $t('superadmin.companyDetail.quickNav.subtitle') }}</p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <NuxtLink
@@ -362,16 +361,15 @@ await load()
         </div>
       </section>
 
-      <!-- Users -->
-      <section class="mt-8">
-        <h2 class="text-base font-semibold text-slate-200">{{ $t('superadmin.companyDetail.users.title') }}</h2>
+      <section class="mt-6 rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg p-5">
+        <h2 class="text-base font-semibold text-slate-100">{{ $t('superadmin.companyDetail.users.title') }}</h2>
         <p
           v-if="resetPasswordSuccess"
           class="mt-2 rounded-md border border-success-800 bg-success-950 px-3 py-2 text-xs text-success-300"
         >
           {{ resetPasswordSuccess }}
         </p>
-        <div class="mt-3 overflow-x-auto rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-700/50 shadow-glass-lg">
+        <div class="mt-4 overflow-x-auto rounded-xl ring-1 ring-slate-700/40">
           <table class="w-full text-sm">
             <thead class="bg-slate-950 text-slate-400">
               <tr>
