@@ -9,17 +9,36 @@ const tenantId = String(route.params.id)
 const botId = String(route.params.botId)
 const services = useServices(tenantId)
 
+const mediaAssets = useMediaAssets(tenantId)
+
 const items = ref<Service[]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
 const toggling = ref<string | null>(null)
 const confirmingDelete = ref<Service | null>(null)
+const imageUrls = reactive<Record<string, string>>({})
+
+async function loadImages(list: Service[]): Promise<void> {
+  const withImage = list.filter((s) => s.mediaAssetId)
+  await Promise.all(
+    withImage.map(async (s) => {
+      if (!s.mediaAssetId || imageUrls[s.mediaAssetId]) return
+      try {
+        const { url } = await mediaAssets.getDownloadUrl(botId, s.mediaAssetId)
+        if (url) imageUrls[s.mediaAssetId] = url
+      } catch {
+        // ignore per-image failures
+      }
+    }),
+  )
+}
 
 async function load(): Promise<void> {
   loading.value = true
   error.value = null
   try {
     items.value = await services.list(botId)
+    loadImages(items.value)
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -88,6 +107,29 @@ await load()
 
     <div v-else class="mt-6 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
       <div v-for="svc in items" :key="svc.id" class="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-xl p-4 flex flex-col gap-3">
+        <div class="relative -mx-4 -mt-4 aspect-[16/9] bg-slate-100 border-b border-slate-200 overflow-hidden rounded-t-2xl">
+          <img
+            v-if="svc.mediaAssetId && imageUrls[svc.mediaAssetId]"
+            :src="imageUrls[svc.mediaAssetId]"
+            :alt="svc.name"
+            class="size-full object-cover"
+            loading="lazy"
+          >
+          <div v-else class="size-full flex flex-col items-center justify-center gap-1 text-slate-300">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-8" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="14" rx="2" />
+              <circle cx="8.5" cy="10.5" r="1.5" />
+              <path d="M21 15l-5-5-11 11" />
+            </svg>
+            <span class="text-[10px] uppercase tracking-wider text-slate-400">{{ $t('admin.services.noImage') }}</span>
+          </div>
+          <span
+            v-if="svc.mediaAssetId"
+            class="absolute top-2 right-2 rounded-full bg-emerald-50/95 backdrop-blur px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-700 ring-1 ring-emerald-200"
+            :title="$t('admin.services.willBeSent')"
+          >📎 {{ $t('admin.services.attachedShort') }}</span>
+        </div>
+
         <div class="flex items-start justify-between gap-2">
           <div>
             <h3 class="text-base font-semibold text-slate-900">{{ svc.name }}</h3>

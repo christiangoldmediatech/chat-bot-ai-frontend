@@ -11,17 +11,34 @@ const serviceId = String(route.params.serviceId)
 const services = useServices()
 
 const service = ref<Service | null>(null)
+const imageUrl = ref<string | null>(null)
 const loading = ref(true)
 const saving = ref(false)
 const uploading = ref(false)
 const error = ref<string | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
 
+const mediaAssets = useMediaAssets()
+
+async function refreshImagePreview(): Promise<void> {
+  if (!service.value?.mediaAssetId) {
+    imageUrl.value = null
+    return
+  }
+  try {
+    const { url } = await mediaAssets.getDownloadUrl(botId, service.value.mediaAssetId)
+    imageUrl.value = url
+  } catch {
+    imageUrl.value = null
+  }
+}
+
 async function load(): Promise<void> {
   loading.value = true
   error.value = null
   try {
     service.value = await services.get(botId, serviceId)
+    await refreshImagePreview()
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -34,7 +51,8 @@ async function onSubmit(input: CreateServiceInput): Promise<void> {
   saving.value = true
   error.value = null
   try {
-    service.value = await services.update(botId, service.value.id, input)
+    await services.update(botId, service.value.id, input)
+    await router.push(`/admin/bots/${botId}/services`)
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -54,6 +72,7 @@ async function onFileChange(evt: Event): Promise<void> {
   error.value = null
   try {
     service.value = await services.uploadImage(botId, service.value.id, file)
+    await refreshImagePreview()
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -111,8 +130,24 @@ await load()
         <p class="text-xs text-slate-500 mt-1">{{ $t('admin.services.imageHint') }}</p>
         <div class="mt-3 flex items-center gap-3">
           <div class="size-24 rounded-xl bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200">
-            <span v-if="!service.mediaAssetId" class="text-[10px] text-slate-400 uppercase tracking-wider">{{ $t('admin.services.noImage') }}</span>
-            <span v-else class="text-[10px] text-emerald-700 uppercase tracking-wider">{{ $t('admin.services.imageSet') }}</span>
+            <img
+              v-if="imageUrl"
+              :src="imageUrl"
+              :alt="service.name"
+              class="size-full object-cover"
+            >
+            <span
+              v-else-if="!service.mediaAssetId"
+              class="text-[10px] text-slate-400 uppercase tracking-wider text-center px-1"
+            >
+              {{ $t('admin.services.noImage') }}
+            </span>
+            <span
+              v-else
+              class="text-[10px] text-emerald-700 uppercase tracking-wider text-center px-1"
+            >
+              {{ $t('admin.services.imageSet') }}
+            </span>
           </div>
           <div class="flex flex-col gap-1">
             <button
@@ -121,7 +156,7 @@ await load()
               :disabled="uploading"
               @click="onPickImage"
             >
-              {{ uploading ? $t('common.uploading') : $t('admin.services.chooseImage') }}
+              {{ uploading ? $t('common.uploading') : (service.mediaAssetId ? $t('admin.services.replaceImage') : $t('admin.services.chooseImage')) }}
             </button>
             <input
               ref="fileInput"
@@ -131,6 +166,9 @@ await load()
               @change="onFileChange"
             >
             <span class="text-[10px] text-slate-400">jpeg / png / webp</span>
+            <span v-if="service.mediaAssetId" class="text-[10px] text-emerald-700">
+              ✓ {{ $t('admin.services.willBeSent') }}
+            </span>
           </div>
         </div>
       </div>
