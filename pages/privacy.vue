@@ -13,6 +13,7 @@ const sections = [
   'collect',
   'use',
   'sharing',
+  'googleLimitedUse',
   'retention',
   'security',
   'rights',

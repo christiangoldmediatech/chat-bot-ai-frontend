@@ -13,6 +13,7 @@ const sections = [
   'service',
   'account',
   'acceptable',
+  'googleIntegrations',
   'prohibited',
   'content',
   'ai',
