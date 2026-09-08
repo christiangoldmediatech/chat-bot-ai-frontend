@@ -331,7 +331,95 @@
       "recentConversations": "Recent conversations",
       "recentConversationsHint": "Latest activity across all your bots.",
       "viewAllConversations": "View all",
-      "noConversations": "No conversations yet."
+      "noConversations": "No conversations yet.",
+      "sections": {
+        "summary": "Summary",
+        "activity": "Activity",
+        "meetings": "Meetings",
+        "conversations": "Recent conversations",
+        "platform": "Platform",
+        "groupBy": "Group by",
+        "appliesToBelow": "applies to the charts in this section"
+      },
+      "kpi": {
+        "messagesSentByBot": "Messages sent by bot",
+        "messagesSentByBotHint": "Sent by the bot in this period",
+        "conversations": "Conversations",
+        "conversationsHint": "{open} open",
+        "leads": "Leads",
+        "leadsHint": "{rate} conversion",
+        "meetingsScheduled": "Meetings scheduled",
+        "meetingsScheduledHint": "{cancelled} cancelled · {rate} cancellation",
+        "uniqueCustomers": "Unique customers",
+        "uniqueCustomersHint": "Active in this period",
+        "humanHandled": "Handled by human",
+        "humanHandledHint": "Currently in HUMAN state",
+        "leadsNew": "NEW",
+        "leadsQualified": "QUALIFIED",
+        "leadsWon": "WON"
+      },
+      "range": {
+        "today": "Today",
+        "d7": "7 days",
+        "d30": "30 days",
+        "d90": "90 days",
+        "apply": "Apply"
+      },
+      "interval": {
+        "day": "Day",
+        "month": "Month",
+        "year": "Year"
+      },
+      "chart": {
+        "leadsTitle": "Leads per day",
+        "leadsSubtitle": "New leads created per day — grouped by creation date.",
+        "conversationsTitle": "Conversations per day",
+        "conversationsSubtitle": "New conversations per day — grouped by conversation creation.",
+        "mixedTitle": "Conversations vs. Leads",
+        "mixedSubtitle": "Columns = new conversations per day. Line = leads converted per day.",
+        "emptyDefault": "No data in this range.",
+        "mixedTimezoneNote": "Timezone: {tz}",
+        "mixedMixedNote": "Timezone: {tz} — your bots span multiple timezones; the chart uses this one."
+      },
+      "today": {
+        "title": "Today's activity",
+        "conversion": "{converted} of {total} conversations converted to lead ({rate})",
+        "noName": "No name",
+        "empty": "No conversations today."
+      },
+      "meetings": {
+        "title": "Meetings scheduled vs. cancelled",
+        "subtitle": "Scheduled by creation date, cancelled by cancellation date.",
+        "dataSince": "Cancellation data complete since {date}.",
+        "byCustomerTitle": "Meetings by customer",
+        "byCustomerSubtitle": "Who books and who cancels the most. Only customers with 3+ meetings are highlighted.",
+        "col": {
+          "customer": "Customer",
+          "scheduled": "Scheduled",
+          "cancelled": "Cancelled",
+          "noShow": "No-show",
+          "cancellationRate": "% cancellation",
+          "lastMeeting": "Last meeting"
+        },
+        "total": "Total: {total}",
+        "emptyByCustomer": "No meetings in this period."
+      },
+      "platform": {
+        "title": "Platform",
+        "subtitle": "Global view across all tenants and bots.",
+        "tableTitle": "By tenant",
+        "col": {
+          "tenant": "Tenant",
+          "bots": "Bots",
+          "messages": "Messages",
+          "conversations": "Conversations",
+          "leads": "Leads",
+          "conversion": "Conversion",
+          "meetingsScheduled": "Scheduled",
+          "meetingsCancelled": "Cancelled",
+          "cancellationRate": "% cancellation"
+        }
+      }
     },
     "payment": {
       "back": "← Back to dashboard",

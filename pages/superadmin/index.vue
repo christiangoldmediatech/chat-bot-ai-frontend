@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
-import type { SuperadminDashboardSummary } from '~/types/dashboard'
+import type {
+  MetricsSummaryResponse,
+  MetricsTimeseriesResponse,
+  PlatformByTenantRow,
+  SuperadminDashboardSummary,
+} from '~/types/dashboard'
 
 definePageMeta({
   layout: 'superadmin',
@@ -8,10 +13,25 @@ definePageMeta({
 })
 
 const { superadminSummary } = useDashboard()
+const metrics = usePlatformDashboardMetrics()
+const { full, percent } = useDateFormat()
+const { t } = useI18n()
 
 const data = ref<SuperadminDashboardSummary | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
+
+// New: platform-wide metrics with range picker.
+const range = ref<{ from: string; to: string }>({
+  from: '',
+  to: '',
+})
+const activityInterval = ref<'day' | 'month' | 'year'>('day')
+const platformSummary = ref<MetricsSummaryResponse | null>(null)
+const platformConvSeries = ref<MetricsTimeseriesResponse | null>(null)
+const platformLeadSeries = ref<MetricsTimeseriesResponse | null>(null)
+const byTenant = ref<PlatformByTenantRow[]>([])
+const platformLoading = ref(true)
 
 async function load(): Promise<void> {
   loading.value = true
@@ -24,6 +44,66 @@ async function load(): Promise<void> {
     loading.value = false
   }
 }
+
+async function loadPlatform(): Promise<void> {
+  if (!range.value.from || !range.value.to) return
+  platformLoading.value = true
+  try {
+    const q = { ...range.value, interval: activityInterval.value }
+    const [s, conv, leads, byT] = await Promise.all([
+      metrics.summary(range.value),
+      metrics.timeseries('conversations', q),
+      metrics.timeseries('leads', q),
+      metrics.byTenant(range.value),
+    ])
+    platformSummary.value = s
+    platformConvSeries.value = conv
+    platformLeadSeries.value = leads
+    byTenant.value = byT.rows
+  } catch (err) {
+    error.value = (err as ApiError).message
+  } finally {
+    platformLoading.value = false
+  }
+}
+
+watch(
+  () => JSON.stringify(range.value) + activityInterval.value,
+  () => loadPlatform(),
+)
+
+const CHART_COLOR_CONVERSATIONS = '#38bdf8'
+const CHART_COLOR_LEADS = '#34d399'
+
+const mixedChart = computed(() => {
+  if (!platformConvSeries.value || !platformLeadSeries.value) return null
+  return {
+    options: {
+      chart: { toolbar: { show: false }, zoom: { enabled: false }, animations: { enabled: false }, background: 'transparent' },
+      theme: { mode: 'dark' as const },
+      colors: [CHART_COLOR_CONVERSATIONS, CHART_COLOR_LEADS],
+      stroke: { curve: 'smooth' as const, width: [0, 3] },
+      plotOptions: { bar: { columnWidth: '55%', borderRadius: 4 } },
+      grid: { borderColor: '#334155', strokeDashArray: 4 },
+      dataLabels: { enabled: false },
+      xaxis: {
+        type: 'category' as const,
+        categories: platformConvSeries.value.buckets.map((b) => b.date),
+        labels: { style: { colors: '#94a3b8', fontSize: '11px' }, rotate: -30 },
+      },
+      yaxis: [
+        { labels: { style: { colors: '#94a3b8', fontSize: '11px' } } },
+        { opposite: true, labels: { style: { colors: '#94a3b8', fontSize: '11px' } } },
+      ],
+      tooltip: { theme: 'dark' as const, shared: true, y: { formatter: (v: number) => full(v) } },
+      legend: { position: 'bottom' as const, labels: { colors: '#94a3b8' } },
+    },
+    series: [
+      { name: t('admin.dashboard.kpi.conversations'), type: 'column', data: platformConvSeries.value.buckets.map((b) => b.value) },
+      { name: t('admin.dashboard.kpi.leads'), type: 'line', data: platformLeadSeries.value.buckets.map((b) => b.value) },
+    ],
+  }
+})
 
 await load()
 </script>
@@ -232,5 +312,120 @@ await load()
         </div>
       </section>
     </template>
+
+    <!-- ── PLATFORM METRICS (v2) ─────────────────────────────────────── -->
+    <section class="mt-10">
+      <div class="flex flex-wrap items-end justify-between gap-3 mb-4">
+        <div>
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            {{ $t('admin.dashboard.platform.title') }}
+          </h2>
+          <p class="text-sm text-slate-400 mt-0.5">{{ $t('admin.dashboard.platform.subtitle') }}</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2">
+            <label class="text-[10px] uppercase tracking-wider font-semibold text-slate-400">
+              {{ $t('admin.dashboard.sections.groupBy') }}
+            </label>
+            <select
+              v-model="activityInterval"
+              class="rounded-lg border border-slate-700 bg-slate-900 px-2 py-1.5 text-xs text-slate-200"
+            >
+              <option value="day">{{ $t('admin.dashboard.interval.day') }}</option>
+              <option value="month">{{ $t('admin.dashboard.interval.month') }}</option>
+              <option value="year">{{ $t('admin.dashboard.interval.year') }}</option>
+            </select>
+          </div>
+          <DashboardRangePicker v-model="range" />
+        </div>
+      </div>
+
+      <div v-if="platformLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div v-for="i in 4" :key="i" class="h-24 rounded-2xl bg-slate-800/60 animate-pulse" />
+      </div>
+
+      <div v-else-if="platformSummary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-4">
+          <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
+            {{ $t('admin.dashboard.kpi.messagesSentByBot') }}
+          </div>
+          <div class="mt-2 text-3xl font-semibold text-slate-100">{{ full(platformSummary.totals.messagesSentByBot) }}</div>
+        </div>
+        <div class="rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-4">
+          <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
+            {{ $t('admin.dashboard.kpi.conversations') }}
+          </div>
+          <div class="mt-2 text-3xl font-semibold text-slate-100">{{ full(platformSummary.totals.conversationsTotal) }}</div>
+        </div>
+        <div class="rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-4">
+          <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
+            {{ $t('admin.dashboard.kpi.leads') }}
+          </div>
+          <div class="mt-2 text-3xl font-semibold text-slate-100">{{ full(platformSummary.totals.leadsTotal) }}</div>
+        </div>
+        <div class="rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-4">
+          <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
+            {{ $t('admin.dashboard.kpi.meetingsScheduled') }}
+          </div>
+          <div class="mt-2 text-3xl font-semibold text-slate-100">{{ full(platformSummary.totals.meetingsScheduled) }}</div>
+        </div>
+      </div>
+
+      <div class="mt-4 rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-4">
+        <div class="mb-2">
+          <h3 class="text-sm font-semibold text-slate-100">{{ $t('admin.dashboard.chart.mixedTitle') }}</h3>
+          <p class="text-[11px] text-slate-400 mt-0.5">{{ $t('admin.dashboard.chart.mixedSubtitle') }}</p>
+        </div>
+        <div v-if="platformLoading" class="h-64 rounded-xl bg-slate-800/60 animate-pulse" />
+        <ClientOnly v-else-if="mixedChart">
+          <apexchart type="line" height="320" :options="mixedChart.options" :series="mixedChart.series" />
+        </ClientOnly>
+      </div>
+
+      <div class="mt-4 rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-4">
+        <div class="mb-3">
+          <h3 class="text-sm font-semibold text-slate-100">{{ $t('admin.dashboard.platform.tableTitle') }}</h3>
+        </div>
+        <div v-if="platformLoading" class="h-40 rounded-xl bg-slate-800/60 animate-pulse" />
+        <div v-else-if="byTenant.length > 0" class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead class="text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700">
+              <tr>
+                <th class="text-left px-3 py-2">{{ $t('admin.dashboard.platform.col.tenant') }}</th>
+                <th class="text-right px-3 py-2">{{ $t('admin.dashboard.platform.col.bots') }}</th>
+                <th class="text-right px-3 py-2">{{ $t('admin.dashboard.platform.col.messages') }}</th>
+                <th class="text-right px-3 py-2">{{ $t('admin.dashboard.platform.col.conversations') }}</th>
+                <th class="text-right px-3 py-2">{{ $t('admin.dashboard.platform.col.leads') }}</th>
+                <th class="text-right px-3 py-2">{{ $t('admin.dashboard.platform.col.conversion') }}</th>
+                <th class="text-right px-3 py-2">{{ $t('admin.dashboard.platform.col.meetingsScheduled') }}</th>
+                <th class="text-right px-3 py-2">{{ $t('admin.dashboard.platform.col.meetingsCancelled') }}</th>
+                <th class="text-right px-3 py-2">{{ $t('admin.dashboard.platform.col.cancellationRate') }}</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+              <tr v-for="r in byTenant" :key="r.tenantId" class="hover:bg-slate-800/40">
+                <td class="px-3 py-2 text-slate-100">
+                  <NuxtLink :to="`/superadmin/companies/${r.tenantId}`" class="font-medium hover:underline">
+                    {{ r.tenantName }}
+                  </NuxtLink>
+                  <div class="text-[11px] text-slate-500">{{ r.tenantSlug }}</div>
+                </td>
+                <td class="px-3 py-2 text-right text-slate-300 font-mono">{{ r.botsActive }} / {{ r.botsTotal }}</td>
+                <td class="px-3 py-2 text-right text-slate-100 font-mono">{{ full(r.messagesSentByBot) }}</td>
+                <td class="px-3 py-2 text-right text-slate-300 font-mono">{{ full(r.conversations) }}</td>
+                <td class="px-3 py-2 text-right text-slate-300 font-mono">{{ full(r.leads) }}</td>
+                <td class="px-3 py-2 text-right text-slate-300 font-mono">{{ percent(r.conversionRate, 0) }}</td>
+                <td class="px-3 py-2 text-right text-slate-300 font-mono">{{ full(r.meetingsScheduled) }}</td>
+                <td class="px-3 py-2 text-right text-slate-300 font-mono">{{ full(r.meetingsCancelled) }}</td>
+                <td class="px-3 py-2 text-right text-slate-300 font-mono">{{ percent(r.cancellationRate, 0) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div v-else class="text-xs text-slate-500 py-6 text-center">
+          {{ $t('admin.dashboard.chart.emptyDefault') }}
+        </div>
+      </div>
+    </section>
   </div>
 </template>
