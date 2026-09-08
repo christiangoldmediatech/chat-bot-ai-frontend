@@ -390,12 +390,15 @@
       "meetings": {
         "title": "Meetings scheduled vs. cancelled",
         "subtitle": "Scheduled by creation date, cancelled by cancellation date.",
+        "chartTitle": "Meetings on each day vs. cancellations",
+        "chartSubtitle": "Meetings by their scheduled date (when they happen), cancelled by cancellation date. The summary KPI uses creation date.",
         "dataSince": "Cancellation data complete since {date}.",
         "byCustomerTitle": "Meetings by customer",
         "byCustomerSubtitle": "Who books and who cancels the most. Only customers with 3+ meetings are highlighted.",
         "col": {
           "customer": "Customer",
           "scheduled": "Scheduled",
+          "held": "Meetings on day",
           "cancelled": "Cancelled",
           "noShow": "No-show",
           "cancellationRate": "% cancellation",

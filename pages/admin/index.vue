@@ -124,7 +124,7 @@ async function loadMeetings(): Promise<void> {
     const meetingsRange = { ...range.value, interval: meetingsInterval.value }
     const [s, sched, canc, byCustomer] = await Promise.all([
       metrics.meetingsSummary(range.value),
-      metrics.timeseries('meetingsScheduled', meetingsRange),
+      metrics.timeseries('meetingsHeld', meetingsRange),
       metrics.timeseries('meetingsCancelled', meetingsRange),
       metrics.meetingsByCustomer({
         ...range.value,
@@ -286,7 +286,7 @@ const mixedChart = computed(() => {
           labels: { style: { colors: '#64748b', fontSize: '11px' } },
         },
       ],
-      tooltip: { shared: true, y: { formatter: (v: number) => full(v) } },
+      tooltip: { shared: true, intersect: false, y: { formatter: (v: number) => full(v) } },
       legend: { position: 'bottom' as const },
     },
     series: [
@@ -306,30 +306,31 @@ const mixedChart = computed(() => {
 
 const meetingsChart = computed(() => {
   if (!meetingsScheduledSeries.value || !meetingsCancelledSeries.value) return null
+  const categories = meetingsScheduledSeries.value.buckets.map((b) => b.date)
   return {
     options: {
       chart: {
+        id: 'meetings-bar',
         type: 'bar' as const,
         toolbar: { show: false },
         animations: { enabled: false },
         fontFamily: 'inherit',
       },
       colors: [CHART_COLOR_SCHEDULED, CHART_COLOR_CANCELLED],
-      plotOptions: { bar: { columnWidth: '55%', borderRadius: 4, dataLabels: { position: 'top' } } },
+      plotOptions: { bar: { columnWidth: '55%', borderRadius: 4 } },
       dataLabels: { enabled: false },
       grid: { borderColor: '#e2e8f0', strokeDashArray: 4 },
       xaxis: {
-        type: 'category' as const,
-        categories: meetingsScheduledSeries.value.buckets.map((b) => b.date),
+        categories,
         labels: { style: { colors: '#64748b', fontSize: '11px' }, rotate: -30 },
       },
       yaxis: { labels: { style: { colors: '#64748b', fontSize: '11px' } } },
-      tooltip: { shared: true, y: { formatter: (v: number) => full(v) } },
+      tooltip: { shared: true, intersect: false, y: { formatter: (v: number) => full(v) } },
       legend: { position: 'bottom' as const },
     },
     series: [
       {
-        name: t('admin.dashboard.meetings.col.scheduled'),
+        name: t('admin.dashboard.meetings.col.held'),
         data: meetingsScheduledSeries.value.buckets.map((b) => b.value),
       },
       {
@@ -458,12 +459,13 @@ const meetingsChart = computed(() => {
         <DashboardChartCard
           :title="$t('admin.dashboard.chart.leadsTitle')"
           :subtitle="$t('admin.dashboard.chart.leadsSubtitle')"
-          :loading="chartsLoading"
-          :empty="!!(leadsChart && leadsSeries && leadsSeries.total === 0)"
+          :loading="chartsLoading && !leadsChart"
+          :empty="!!(leadsSeries && leadsSeries.total === 0)"
         >
           <ClientOnly>
             <apexchart
               v-if="leadsChart"
+              :key="`leads-${activityInterval}-${leadsSeries?.buckets.length ?? 0}`"
               type="line"
               height="280"
               :options="leadsChart.options"
@@ -475,12 +477,13 @@ const meetingsChart = computed(() => {
         <DashboardChartCard
           :title="$t('admin.dashboard.chart.conversationsTitle')"
           :subtitle="$t('admin.dashboard.chart.conversationsSubtitle')"
-          :loading="chartsLoading"
-          :empty="!!(conversationsChart && conversationsSeries && conversationsSeries.total === 0)"
+          :loading="chartsLoading && !conversationsChart"
+          :empty="!!(conversationsSeries && conversationsSeries.total === 0)"
         >
           <ClientOnly>
             <apexchart
               v-if="conversationsChart"
+              :key="`conv-${activityInterval}-${conversationsSeries?.buckets.length ?? 0}`"
               type="line"
               height="280"
               :options="conversationsChart.options"
@@ -494,12 +497,13 @@ const meetingsChart = computed(() => {
         <DashboardChartCard
           :title="$t('admin.dashboard.chart.mixedTitle')"
           :subtitle="$t('admin.dashboard.chart.mixedSubtitle')"
-          :loading="chartsLoading"
-          :empty="!!(mixedChart && conversationsSeries && conversationsSeries.total === 0 && leadsSeries && leadsSeries.total === 0)"
+          :loading="chartsLoading && !mixedChart"
+          :empty="!!(conversationsSeries && conversationsSeries.total === 0 && leadsSeries && leadsSeries.total === 0)"
         >
           <ClientOnly>
             <apexchart
               v-if="mixedChart"
+              :key="`mixed-${activityInterval}-${conversationsSeries?.buckets.length ?? 0}`"
               type="line"
               height="320"
               :options="mixedChart.options"
@@ -546,14 +550,15 @@ const meetingsChart = computed(() => {
       </div>
 
       <DashboardChartCard
-        :title="$t('admin.dashboard.meetings.title')"
-        :subtitle="$t('admin.dashboard.meetings.subtitle')"
-        :loading="meetingsLoading"
-        :empty="!!(meetingsChart && meetingsScheduledSeries && meetingsScheduledSeries.total === 0 && meetingsCancelledSeries && meetingsCancelledSeries.total === 0)"
+        :title="$t('admin.dashboard.meetings.chartTitle')"
+        :subtitle="$t('admin.dashboard.meetings.chartSubtitle')"
+        :loading="meetingsLoading && !meetingsChart"
+        :empty="!!(meetingsScheduledSeries && meetingsCancelledSeries && meetingsScheduledSeries.total === 0 && meetingsCancelledSeries.total === 0)"
       >
         <ClientOnly>
           <apexchart
             v-if="meetingsChart"
+            :key="`meetings-${meetingsInterval}-${meetingsScheduledSeries?.buckets.map(b => b.date + ':' + b.value).join(',')}`"
             type="bar"
             height="280"
             :options="meetingsChart.options"

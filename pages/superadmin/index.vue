@@ -95,7 +95,7 @@ const mixedChart = computed(() => {
         { labels: { style: { colors: '#94a3b8', fontSize: '11px' } } },
         { opposite: true, labels: { style: { colors: '#94a3b8', fontSize: '11px' } } },
       ],
-      tooltip: { theme: 'dark' as const, shared: true, y: { formatter: (v: number) => full(v) } },
+      tooltip: { theme: 'dark' as const, shared: true, intersect: false, y: { formatter: (v: number) => full(v) } },
       legend: { position: 'bottom' as const, labels: { colors: '#94a3b8' } },
     },
     series: [
