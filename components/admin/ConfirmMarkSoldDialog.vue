@@ -2,9 +2,10 @@
 import type { Sale } from '~/types/sale'
 
 /**
- * Confirmación de "Marcar como perdida" con contexto completo. Muestra
- * servicio + total + cliente + cita para que la decisión no sea a ciegas.
- * El motivo es opcional pero recomendado.
+ * Confirmación para "Marcar como vendida" una Sale que ya existe en PENDING.
+ * Repite el contexto (servicio, total, cliente, cita) para que la decisión
+ * sea informada. Si la cita no está ATTENDED, exige un motivo antes de
+ * continuar (no bloqueo — advertencia útil).
  */
 const props = defineProps<{
   open: boolean
@@ -27,6 +28,17 @@ watch(
   },
 )
 
+const attendanceWarning = computed<boolean>(() => {
+  if (!props.sale) return false
+  return props.sale.attendanceSummary !== 'ATTENDED'
+})
+
+const canSubmit = computed<boolean>(() => {
+  if (props.submitting) return false
+  if (attendanceWarning.value && reason.value.trim().length === 0) return false
+  return true
+})
+
 function money(cents: number, currency: string): string {
   try {
     return new Intl.NumberFormat(locale.value === 'es' ? 'es-EC' : 'en-US', {
@@ -44,7 +56,7 @@ function onSubmit(): void {
 </script>
 
 <template>
-  <Modal :open="open" :title="$t('admin.sales.markLostTitle')" size="md" @close="emit('close')">
+  <Modal :open="open" :title="$t('admin.sales.markSoldTitle')" size="md" @close="emit('close')">
     <form v-if="sale" class="space-y-4" @submit.prevent="onSubmit">
       <div class="rounded-xl bg-slate-50 p-3 space-y-2 text-sm">
         <div class="flex justify-between">
@@ -69,16 +81,26 @@ function onSubmit(): void {
         </div>
       </div>
 
+      <div
+        v-if="attendanceWarning"
+        class="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800"
+      >
+        {{ $t('admin.sales.confirm.attendanceWarning') }}
+      </div>
+
       <div>
         <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
-          {{ $t('admin.sales.field.lostReason') }}
+          {{ attendanceWarning
+            ? $t('admin.sales.confirm.reasonRequired')
+            : $t('admin.sales.confirm.reasonOptional') }}
         </label>
         <textarea
           v-model="reason"
           rows="3"
           maxlength="500"
           class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-          :placeholder="$t('admin.sales.field.lostReasonPlaceholder')"
+          :placeholder="$t('admin.sales.confirm.reasonPlaceholder')"
+          :required="attendanceWarning"
         />
       </div>
 
@@ -92,10 +114,10 @@ function onSubmit(): void {
         </button>
         <button
           type="submit"
-          class="rounded-xl bg-danger-600 px-4 py-2 text-sm font-medium text-white hover:bg-danger-700 disabled:opacity-50"
-          :disabled="submitting"
+          class="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+          :disabled="!canSubmit"
         >
-          {{ submitting ? $t('common.saving') : $t('admin.sales.markLostSubmit') }}
+          {{ submitting ? $t('common.saving') : $t('admin.sales.markSoldConfirmSubmit') }}
         </button>
       </div>
     </form>

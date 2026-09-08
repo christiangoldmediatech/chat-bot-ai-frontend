@@ -62,3 +62,126 @@ export interface SuperadminDashboardSummary {
   failedCrmSyncs: number
   recentCompanies: SuperadminRecentCompany[]
 }
+
+// ─── New metrics module (dashboard v2) ──────────────────────────────────────
+
+export type MetricsInterval = 'day' | 'month' | 'year'
+
+export type TimeseriesMetric =
+  | 'conversations'
+  | 'leads'
+  | 'messagesSentByBot'
+  | 'messagesReceived'
+  | 'meetingsScheduled'
+  | 'meetingsCancelled'
+
+export interface MetricsSummaryTotals {
+  messagesSentByBot: number
+  messagesSentByHuman: number
+  messagesReceived: number
+  conversationsTotal: number
+  conversationsOpen: number
+  conversationsHandledByHuman: number
+  uniqueCustomers: number
+  leadsTotal: number
+  leadsNew: number
+  leadsQualified: number
+  leadsWon: number
+  meetingsScheduled: number
+  meetingsCancelled: number
+  meetingsNoShow: number
+  meetingsUpcoming: number
+}
+
+export interface MetricsSummaryResponse {
+  scope: 'tenant' | 'bot' | 'platform'
+  range: { from: string; to: string; interval: MetricsInterval }
+  timezone: string
+  timezoneMixed: boolean
+  totals: MetricsSummaryTotals
+  previous: MetricsSummaryTotals
+}
+
+export interface MetricsBucket {
+  date: string
+  value: number
+}
+
+export interface MetricsTimeseriesResponse {
+  metric: TimeseriesMetric
+  dateField: string
+  interval: MetricsInterval
+  timezone: string
+  buckets: MetricsBucket[]
+  total: number
+  previousTotal: number
+}
+
+export interface TodayTimelineEntry {
+  conversationId: string
+  customerPhone: string
+  customerName: string | null
+  status: 'BOT' | 'HUMAN' | 'CLOSED'
+  firstMessageAt: string
+  lastMessageAt: string
+  messageCount: number
+  isLead: boolean
+  leadStatus: string | null
+}
+
+export interface TodayTimelineResponse {
+  timezone: string
+  today: string
+  totalConversations: number
+  convertedToLead: number
+  conversionRate: number
+  entries: TodayTimelineEntry[]
+}
+
+export interface MeetingsSummaryResponse {
+  range: { from: string; to: string }
+  timezone: string
+  scheduled: number
+  cancelled: number
+  noShow: number
+  completed: number
+  upcoming: number
+  cancellationRate: number
+  cancellationDataSince: string | null
+}
+
+export interface MeetingsByCustomerRow {
+  customerPhone: string
+  customerName: string | null
+  customerId: string | null
+  scheduled: number
+  cancelled: number
+  noShow: number
+  completed: number
+  cancellationRate: number
+  lastMeetingAt: string | null
+}
+
+export interface MeetingsByCustomerResponse {
+  range: { from: string; to: string }
+  timezone: string
+  page: number
+  pageSize: number
+  total: number
+  rows: MeetingsByCustomerRow[]
+}
+
+export interface PlatformByTenantRow {
+  tenantId: string
+  tenantName: string
+  tenantSlug: string
+  botsTotal: number
+  botsActive: number
+  messagesSentByBot: number
+  conversations: number
+  leads: number
+  conversionRate: number
+  meetingsScheduled: number
+  meetingsCancelled: number
+  cancellationRate: number
+}

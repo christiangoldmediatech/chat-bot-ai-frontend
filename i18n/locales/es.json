@@ -331,7 +331,95 @@
       "recentConversations": "Conversaciones recientes",
       "recentConversationsHint": "Última actividad a través de todos tus bots.",
       "viewAllConversations": "Ver todas",
-      "noConversations": "Aún no hay conversaciones."
+      "noConversations": "Aún no hay conversaciones.",
+      "sections": {
+        "summary": "Resumen",
+        "activity": "Actividad",
+        "meetings": "Citas",
+        "conversations": "Conversaciones recientes",
+        "platform": "Plataforma",
+        "groupBy": "Agrupar por",
+        "appliesToBelow": "aplica a los gráficos de esta sección"
+      },
+      "kpi": {
+        "messagesSentByBot": "Mensajes del bot",
+        "messagesSentByBotHint": "Enviados por el bot en el periodo",
+        "conversations": "Conversaciones",
+        "conversationsHint": "{open} abiertas",
+        "leads": "Leads",
+        "leadsHint": "{rate} de conversión",
+        "meetingsScheduled": "Citas agendadas",
+        "meetingsScheduledHint": "{cancelled} canceladas · {rate} cancelación",
+        "uniqueCustomers": "Clientes únicos",
+        "uniqueCustomersHint": "Con actividad en el periodo",
+        "humanHandled": "Atendidas por humano",
+        "humanHandledHint": "En estado HUMAN ahora",
+        "leadsNew": "NEW",
+        "leadsQualified": "QUALIFIED",
+        "leadsWon": "WON"
+      },
+      "range": {
+        "today": "Hoy",
+        "d7": "7 días",
+        "d30": "30 días",
+        "d90": "90 días",
+        "apply": "Aplicar"
+      },
+      "interval": {
+        "day": "Día",
+        "month": "Mes",
+        "year": "Año"
+      },
+      "chart": {
+        "leadsTitle": "Leads por día",
+        "leadsSubtitle": "Nuevos leads creados por día — agrupado por su fecha de creación.",
+        "conversationsTitle": "Conversaciones por día",
+        "conversationsSubtitle": "Conversaciones abiertas por día — agrupado por creación de la conversación.",
+        "mixedTitle": "Conversaciones vs. Leads",
+        "mixedSubtitle": "Columnas = conversaciones nuevas por día. Línea = leads convertidos por día.",
+        "emptyDefault": "Sin datos en este rango.",
+        "mixedTimezoneNote": "Zona: {tz}",
+        "mixedMixedNote": "Zona: {tz} — tus bots están en zonas distintas; el gráfico usa esta como referencia."
+      },
+      "today": {
+        "title": "Actividad de hoy",
+        "conversion": "{converted} de {total} conversaciones se convirtieron en lead ({rate})",
+        "noName": "Sin nombre",
+        "empty": "Sin conversaciones hoy."
+      },
+      "meetings": {
+        "title": "Citas agendadas vs. canceladas",
+        "subtitle": "Agendadas por fecha de creación, canceladas por fecha de cancelación.",
+        "dataSince": "Datos de cancelaciones completos desde {date}.",
+        "byCustomerTitle": "Citas por cliente",
+        "byCustomerSubtitle": "Quién agenda y quién cancela más. Solo se destacan clientes con 3+ citas.",
+        "col": {
+          "customer": "Cliente",
+          "scheduled": "Agendadas",
+          "cancelled": "Canceladas",
+          "noShow": "No-show",
+          "cancellationRate": "% cancelación",
+          "lastMeeting": "Última cita"
+        },
+        "total": "Total: {total}",
+        "emptyByCustomer": "Sin citas en el periodo."
+      },
+      "platform": {
+        "title": "Plataforma",
+        "subtitle": "Visión global de todos los tenants y bots.",
+        "tableTitle": "Por tenant",
+        "col": {
+          "tenant": "Tenant",
+          "bots": "Bots",
+          "messages": "Mensajes",
+          "conversations": "Conversaciones",
+          "leads": "Leads",
+          "conversion": "Conversión",
+          "meetingsScheduled": "Agendadas",
+          "meetingsCancelled": "Canceladas",
+          "cancellationRate": "% cancelación"
+        }
+      }
     },
     "payment": {
       "back": "← Volver al panel",
@@ -1108,11 +1196,16 @@
       "markSoldSubmit": "Registrar venta",
       "markLostTitle": "Marcar como perdida",
       "markLostSubmit": "Marcar como perdida",
+      "markSoldConfirmSubmit": "Confirmar venta",
       "filter": {
         "status": "Estado",
         "allStatuses": "Todos",
         "service": "Servicio",
         "allServices": "Todos",
+        "attendance": "Asistencia",
+        "allAttendance": "Todas",
+        "search": "Cliente",
+        "searchPlaceholder": "Nombre o teléfono…",
         "dateBasis": "Base de fecha",
         "soldAt": "Fecha de venta",
         "serviceDate": "Fecha de servicio",
@@ -1121,10 +1214,21 @@
       },
       "col": {
         "service": "Servicio",
+        "customer": "Cliente",
+        "appointment": "Cita / atención",
         "status": "Estado",
         "total": "Total",
         "soldAt": "Vendido",
         "serviceDate": "Consumido"
+      },
+      "attendance": {
+        "attended": "Atendido",
+        "attendedAt": "Atendido {when}",
+        "scheduled": "Agendada",
+        "scheduledAt": "Agendada {when}",
+        "noShow": "No asistió",
+        "cancelled": "Cancelada",
+        "noMeeting": "Sin cita vinculada"
       },
       "field": {
         "service": "Servicio",
@@ -1138,6 +1242,53 @@
         "notes": "Notas",
         "lostReason": "Motivo",
         "lostReasonPlaceholder": "Ej: eligió otro proveedor, sin presupuesto, se dio de baja…"
+      },
+      "confirm": {
+        "service": "Servicio",
+        "total": "Total",
+        "customer": "Cliente",
+        "appointment": "Cita",
+        "noName": "Sin nombre",
+        "noCustomer": "Sin cliente vinculado",
+        "noConversation": "Sin conversación vinculada",
+        "attendanceWarning": "Esta cita no está marcada como atendida. Puedes registrar la venta igualmente, pero pon un motivo claro para dejar constancia.",
+        "reasonOptional": "Motivo (opcional)",
+        "reasonRequired": "Motivo (obligatorio — la cita no está en estado atendido)",
+        "reasonPlaceholder": "Ej: cliente confirmó por WhatsApp que sí asistió; asistencia se marcará después…"
+      },
+      "detail": {
+        "title": "Detalle de la venta",
+        "serviceAndAmount": "Servicio y total",
+        "customer": "Cliente",
+        "appointment": "Cita",
+        "appointmentConfirmed": "Confirmada por el cliente",
+        "status": "Estado",
+        "current": "Estado actual",
+        "soldAt": "Fecha de venta",
+        "serviceDate": "Fecha de servicio",
+        "lastChangeBy": "Último cambio por",
+        "reason": "Motivo",
+        "history": "Historial",
+        "linkCustomer": "Ver ficha",
+        "linkConversation": "Ver conversación"
+      },
+      "history": {
+        "by": "Por {actor}",
+        "actorBot": "Bot",
+        "actorBotLabel": "Bot ({label})",
+        "actorSystem": "Sistema",
+        "actorUnknown": "Desconocido",
+        "eventCreated": "Venta creada (PENDING)",
+        "eventMarkedWon": "Marcada como vendida",
+        "eventMarkedLost": "Marcada como perdida",
+        "eventReverted": "Revertida ({from} → {to})",
+        "eventUpdated": "Editada",
+        "eventDeleted": "Eliminada"
+      },
+      "toast": {
+        "markedSold": "Venta marcada como vendida",
+        "markedLost": "Venta marcada como perdida",
+        "errorGeneric": "No se pudo completar la acción"
       },
       "customerHistory": {
         "title": "Compras",

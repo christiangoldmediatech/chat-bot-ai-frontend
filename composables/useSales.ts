@@ -6,6 +6,7 @@ import type {
   MarkWonInput,
   PaginatedSales,
   Sale,
+  SaleDetail,
   UpdateSaleInput,
 } from '~/types/sale'
 
@@ -16,8 +17,8 @@ export function useSales() {
   return {
     list: (botId: string, query: ListSalesQuery = {}): Promise<PaginatedSales> =>
       api.get<PaginatedSales>(base(botId), { query: { ...query } as Record<string, unknown> }),
-    get: (botId: string, id: string): Promise<Sale> =>
-      api.get<Sale>(`${base(botId)}/${id}`),
+    get: (botId: string, id: string): Promise<SaleDetail> =>
+      api.get<SaleDetail>(`${base(botId)}/${id}`),
     create: (botId: string, input: CreateSaleInput): Promise<Sale> =>
       api.post<Sale>(base(botId), input),
     update: (botId: string, id: string, input: UpdateSaleInput): Promise<Sale> =>
@@ -29,7 +30,6 @@ export function useSales() {
     remove: (botId: string, id: string): Promise<void> =>
       api.delete<void>(`${base(botId)}/${id}`),
 
-    /** Historial completo por cliente (ordenado desc). */
     listForCustomer: (
       botId: string,
       customerId: string,
@@ -38,10 +38,6 @@ export function useSales() {
         `/bots/${botId}/customers/${customerId}/sales`,
       ),
 
-    /**
-     * Atajo desde el detalle de conversación. Resuelve botId + customerId
-     * server-side — solo mandamos `serviceId`.
-     */
     createFromConversation: (
       conversationId: string,
       serviceId: string,
@@ -52,7 +48,6 @@ export function useSales() {
         ...(appointmentId ? { appointmentId } : {}),
       }),
 
-    /** Atajo desde una cita (crea + marca WON en una request). */
     createWonFromAppointment: (
       appointmentId: string,
       input: MarkWonInput & { serviceId: string },
