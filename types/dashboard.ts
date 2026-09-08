@@ -73,6 +73,7 @@ export type TimeseriesMetric =
   | 'messagesSentByBot'
   | 'messagesReceived'
   | 'meetingsScheduled'
+  | 'meetingsHeld'
   | 'meetingsCancelled'
 
 export interface MetricsSummaryTotals {

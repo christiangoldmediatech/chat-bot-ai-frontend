@@ -390,12 +390,15 @@
       "meetings": {
         "title": "Citas agendadas vs. canceladas",
         "subtitle": "Agendadas por fecha de creación, canceladas por fecha de cancelación.",
+        "chartTitle": "Citas del día vs. canceladas",
+        "chartSubtitle": "Citas por fecha de la cita (cuándo se atienden), canceladas por fecha de cancelación. El KPI del resumen usa fecha de creación.",
         "dataSince": "Datos de cancelaciones completos desde {date}.",
         "byCustomerTitle": "Citas por cliente",
         "byCustomerSubtitle": "Quién agenda y quién cancela más. Solo se destacan clientes con 3+ citas.",
         "col": {
           "customer": "Cliente",
           "scheduled": "Agendadas",
+          "held": "Citas del día",
           "cancelled": "Canceladas",
           "noShow": "No-show",
           "cancellationRate": "% cancelación",
