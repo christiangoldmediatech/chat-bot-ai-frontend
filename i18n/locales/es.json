@@ -1108,11 +1108,16 @@
       "markSoldSubmit": "Registrar venta",
       "markLostTitle": "Marcar como perdida",
       "markLostSubmit": "Marcar como perdida",
+      "markSoldConfirmSubmit": "Confirmar venta",
       "filter": {
         "status": "Estado",
         "allStatuses": "Todos",
         "service": "Servicio",
         "allServices": "Todos",
+        "attendance": "Asistencia",
+        "allAttendance": "Todas",
+        "search": "Cliente",
+        "searchPlaceholder": "Nombre o teléfono…",
         "dateBasis": "Base de fecha",
         "soldAt": "Fecha de venta",
         "serviceDate": "Fecha de servicio",
@@ -1121,10 +1126,21 @@
       },
       "col": {
         "service": "Servicio",
+        "customer": "Cliente",
+        "appointment": "Cita / atención",
         "status": "Estado",
         "total": "Total",
         "soldAt": "Vendido",
         "serviceDate": "Consumido"
+      },
+      "attendance": {
+        "attended": "Atendido",
+        "attendedAt": "Atendido {when}",
+        "scheduled": "Agendada",
+        "scheduledAt": "Agendada {when}",
+        "noShow": "No asistió",
+        "cancelled": "Cancelada",
+        "noMeeting": "Sin cita vinculada"
       },
       "field": {
         "service": "Servicio",
@@ -1138,6 +1154,53 @@
         "notes": "Notas",
         "lostReason": "Motivo",
         "lostReasonPlaceholder": "Ej: eligió otro proveedor, sin presupuesto, se dio de baja…"
+      },
+      "confirm": {
+        "service": "Servicio",
+        "total": "Total",
+        "customer": "Cliente",
+        "appointment": "Cita",
+        "noName": "Sin nombre",
+        "noCustomer": "Sin cliente vinculado",
+        "noConversation": "Sin conversación vinculada",
+        "attendanceWarning": "Esta cita no está marcada como atendida. Puedes registrar la venta igualmente, pero pon un motivo claro para dejar constancia.",
+        "reasonOptional": "Motivo (opcional)",
+        "reasonRequired": "Motivo (obligatorio — la cita no está en estado atendido)",
+        "reasonPlaceholder": "Ej: cliente confirmó por WhatsApp que sí asistió; asistencia se marcará después…"
+      },
+      "detail": {
+        "title": "Detalle de la venta",
+        "serviceAndAmount": "Servicio y total",
+        "customer": "Cliente",
+        "appointment": "Cita",
+        "appointmentConfirmed": "Confirmada por el cliente",
+        "status": "Estado",
+        "current": "Estado actual",
+        "soldAt": "Fecha de venta",
+        "serviceDate": "Fecha de servicio",
+        "lastChangeBy": "Último cambio por",
+        "reason": "Motivo",
+        "history": "Historial",
+        "linkCustomer": "Ver ficha",
+        "linkConversation": "Ver conversación"
+      },
+      "history": {
+        "by": "Por {actor}",
+        "actorBot": "Bot",
+        "actorBotLabel": "Bot ({label})",
+        "actorSystem": "Sistema",
+        "actorUnknown": "Desconocido",
+        "eventCreated": "Venta creada (PENDING)",
+        "eventMarkedWon": "Marcada como vendida",
+        "eventMarkedLost": "Marcada como perdida",
+        "eventReverted": "Revertida ({from} → {to})",
+        "eventUpdated": "Editada",
+        "eventDeleted": "Eliminada"
+      },
+      "toast": {
+        "markedSold": "Venta marcada como vendida",
+        "markedLost": "Venta marcada como perdida",
+        "errorGeneric": "No se pudo completar la acción"
       },
       "customerHistory": {
         "title": "Compras",

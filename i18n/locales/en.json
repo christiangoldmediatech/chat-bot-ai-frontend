@@ -1108,11 +1108,16 @@
       "markSoldSubmit": "Register sale",
       "markLostTitle": "Mark as lost",
       "markLostSubmit": "Mark as lost",
+      "markSoldConfirmSubmit": "Confirm sale",
       "filter": {
         "status": "Status",
         "allStatuses": "All",
         "service": "Service",
         "allServices": "All",
+        "attendance": "Attendance",
+        "allAttendance": "All",
+        "search": "Customer",
+        "searchPlaceholder": "Name or phone…",
         "dateBasis": "Date basis",
         "soldAt": "Sale date",
         "serviceDate": "Service date",
@@ -1121,10 +1126,21 @@
       },
       "col": {
         "service": "Service",
+        "customer": "Customer",
+        "appointment": "Appointment",
         "status": "Status",
         "total": "Total",
         "soldAt": "Sold",
         "serviceDate": "Delivered"
+      },
+      "attendance": {
+        "attended": "Attended",
+        "attendedAt": "Attended {when}",
+        "scheduled": "Scheduled",
+        "scheduledAt": "Scheduled {when}",
+        "noShow": "No show",
+        "cancelled": "Cancelled",
+        "noMeeting": "No appointment linked"
       },
       "field": {
         "service": "Service",
@@ -1138,6 +1154,53 @@
         "notes": "Notes",
         "lostReason": "Reason",
         "lostReasonPlaceholder": "e.g. picked another provider, no budget, dropped out…"
+      },
+      "confirm": {
+        "service": "Service",
+        "total": "Total",
+        "customer": "Customer",
+        "appointment": "Appointment",
+        "noName": "No name",
+        "noCustomer": "No customer linked",
+        "noConversation": "No conversation linked",
+        "attendanceWarning": "This appointment is not marked as attended. You can still record the sale, but leave a clear reason for the audit trail.",
+        "reasonOptional": "Reason (optional)",
+        "reasonRequired": "Reason (required — appointment is not marked as attended)",
+        "reasonPlaceholder": "e.g. customer confirmed via WhatsApp that they did attend; attendance will be marked later…"
+      },
+      "detail": {
+        "title": "Sale detail",
+        "serviceAndAmount": "Service and total",
+        "customer": "Customer",
+        "appointment": "Appointment",
+        "appointmentConfirmed": "Confirmed by the customer",
+        "status": "Status",
+        "current": "Current status",
+        "soldAt": "Sale date",
+        "serviceDate": "Service date",
+        "lastChangeBy": "Last change by",
+        "reason": "Reason",
+        "history": "History",
+        "linkCustomer": "View profile",
+        "linkConversation": "View conversation"
+      },
+      "history": {
+        "by": "By {actor}",
+        "actorBot": "Bot",
+        "actorBotLabel": "Bot ({label})",
+        "actorSystem": "System",
+        "actorUnknown": "Unknown",
+        "eventCreated": "Sale created (PENDING)",
+        "eventMarkedWon": "Marked as sold",
+        "eventMarkedLost": "Marked as lost",
+        "eventReverted": "Reverted ({from} → {to})",
+        "eventUpdated": "Edited",
+        "eventDeleted": "Deleted"
+      },
+      "toast": {
+        "markedSold": "Sale marked as sold",
+        "markedLost": "Sale marked as lost",
+        "errorGeneric": "Could not complete the action"
       },
       "customerHistory": {
         "title": "Purchases",
