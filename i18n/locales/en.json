@@ -724,6 +724,11 @@
         "descriptionPlaceholder": "What this bot is for, who owns it…",
         "botActive": "Bot active",
         "botActiveHelp": "When off, the bot doesn't reply to incoming WhatsApp messages."
+      },
+      "calendar": {
+        "meetEnabled": "Create meetings with Google Meet",
+        "meetEnabledHint": "On: every new meeting includes a video call link. Off: the meeting is created in Google Calendar without a link, for in-person appointments at the office.",
+        "meetOnlyAffectsNew": "This change only applies to meetings scheduled from now on. Already-created events keep their existing link."
       }
     },
     "botEdit": {
