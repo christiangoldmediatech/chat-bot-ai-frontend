@@ -186,3 +186,19 @@ export interface PlatformByTenantRow {
   meetingsCancelled: number
   cancellationRate: number
 }
+
+export interface PlatformByBotRow {
+  botId: string
+  botName: string
+  botActive: boolean
+  tenantId: string
+  tenantName: string
+  tenantSlug: string
+  customersUnique: number
+  messagesSentByBot: number
+  conversations: number
+  leads: number
+  meetingsScheduled: number
+  meetingsHeld: number
+  meetingsCancelled: number
+}

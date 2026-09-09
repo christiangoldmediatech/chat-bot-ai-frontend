@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
 import type { Bot } from '~/types/bot'
-import type { Meeting, MeetingStatus } from '~/types/meeting'
+import type { Meeting, MeetingOutcome, MeetingStatus } from '~/types/meeting'
 
 const props = defineProps<{
   /** Pass for superadmin context; omit for the tenant owner context. */
@@ -94,7 +94,8 @@ const counts = computed(() => {
 })
 
 function statusBucket(m: Meeting): Tab {
-  if (m.status === 'CANCELLED') return 'CANCELLED'
+  if (m.status === 'CANCELLED' || m.status === 'RESCHEDULED') return 'CANCELLED'
+  if (m.status === 'COMPLETED' || m.status === 'NO_SHOW') return 'PAST'
   return new Date(m.endTime).getTime() >= now.value.getTime() ? 'UPCOMING' : 'PAST'
 }
 
@@ -167,6 +168,75 @@ async function load(): Promise<void> {
     error.value = (err as ApiError).message
   } finally {
     loading.value = false
+  }
+}
+
+const outcomeOpen = ref(false)
+const outcomeMeeting = ref<Meeting | null>(null)
+const outcomeChoice = ref<MeetingOutcome>('COMPLETED')
+const outcomeNote = ref('')
+const outcomeSubmitting = ref(false)
+const outcomeToast = ref<{ kind: 'success' | 'error'; text: string } | null>(null)
+
+function openOutcome(m: Meeting, choice: MeetingOutcome): void {
+  outcomeMeeting.value = m
+  outcomeChoice.value = choice
+  outcomeNote.value = ''
+  outcomeOpen.value = true
+}
+
+async function submitOutcome(): Promise<void> {
+  if (!outcomeMeeting.value) return
+  outcomeSubmitting.value = true
+  try {
+    await meetingsApi.markOutcome(
+      outcomeMeeting.value.id,
+      outcomeChoice.value,
+      outcomeNote.value.trim() || undefined,
+    )
+    outcomeOpen.value = false
+    outcomeMeeting.value = null
+    outcomeToast.value = { kind: 'success', text: 'Resultado registrado' }
+    setTimeout(() => (outcomeToast.value = null), 2500)
+    await load()
+  } catch (err) {
+    outcomeToast.value = {
+      kind: 'error',
+      text: (err as ApiError).message || 'No se pudo registrar',
+    }
+    setTimeout(() => (outcomeToast.value = null), 3000)
+  } finally {
+    outcomeSubmitting.value = false
+  }
+}
+
+function canMarkOutcome(m: Meeting): boolean {
+  return m.status === 'CREATED' && new Date(m.endTime).getTime() < now.value.getTime()
+}
+
+function outcomeLabel(status: MeetingStatus): string {
+  switch (status) {
+    case 'COMPLETED':
+      return 'Asistió'
+    case 'NO_SHOW':
+      return 'No asistió'
+    case 'RESCHEDULED':
+      return 'Reagendada'
+    default:
+      return ''
+  }
+}
+
+function outcomeBadgeClass(status: MeetingStatus): string {
+  switch (status) {
+    case 'COMPLETED':
+      return 'bg-emerald-100 text-emerald-700 ring-emerald-200'
+    case 'NO_SHOW':
+      return 'bg-rose-100 text-rose-700 ring-rose-200'
+    case 'RESCHEDULED':
+      return 'bg-slate-100 text-slate-600 ring-slate-200'
+    default:
+      return ''
   }
 }
 
@@ -628,15 +698,31 @@ await load()
                   {{ m.topic || $t('meetings.card.fallbackTopic') }}
                 </h3>
                 <span
-                  v-if="statusBucket(m) === 'CANCELLED'"
+                  v-if="m.status === 'CANCELLED'"
                   class="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
                   :class="tone === 'dark' ? 'bg-danger-950 text-danger-300' : 'bg-danger-100 text-danger-700'"
                 >Cancelada</span>
+                <span
+                  v-else-if="m.status === 'COMPLETED' || m.status === 'NO_SHOW' || m.status === 'RESCHEDULED'"
+                  class="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded ring-1"
+                  :class="outcomeBadgeClass(m.status)"
+                >{{ outcomeLabel(m.status) }}</span>
                 <span
                   v-else-if="statusBucket(m) === 'UPCOMING'"
                   class="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
                   :class="tone === 'dark' ? 'bg-emerald-950 text-emerald-300' : 'bg-emerald-100 text-emerald-700'"
                 >{{ fmtRelative(m.startTime) }}</span>
+                <span
+                  v-else-if="canMarkOutcome(m)"
+                  class="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded ring-1 bg-amber-50 text-amber-700 ring-amber-200"
+                >Pendiente marcar</span>
+              </div>
+              <div
+                v-if="m.outcomeAskedAt && m.outcomeNote"
+                class="mt-1 text-[11px] italic"
+                :class="tone === 'dark' ? 'text-slate-500' : 'text-slate-500'"
+              >
+                "{{ m.outcomeNote }}"
               </div>
 
               <div
@@ -675,7 +761,6 @@ await load()
               </div>
             </div>
 
-            <!-- Action -->
             <div class="shrink-0 flex flex-col gap-1 items-end">
               <a
                 v-if="m.meetLink && statusBucket(m) !== 'CANCELLED'"
@@ -692,10 +777,102 @@ await load()
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><polygon points="23 7 16 12 23 17 23 7" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></svg>
                 Meet
               </a>
+              <div v-if="canMarkOutcome(m)" class="flex gap-1 mt-1">
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium bg-emerald-600 text-white hover:bg-emerald-700"
+                  @click="openOutcome(m, 'COMPLETED')"
+                >Asistió</button>
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium bg-danger-600 text-white hover:bg-danger-700"
+                  @click="openOutcome(m, 'NO_SHOW')"
+                >No asistió</button>
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium bg-slate-500 text-white hover:bg-slate-600"
+                  @click="openOutcome(m, 'RESCHEDULED')"
+                >Reagendada</button>
+              </div>
             </div>
           </article>
         </div>
       </div>
     </div>
+
+    <Modal
+      :open="outcomeOpen"
+      :title="outcomeChoice === 'COMPLETED' ? 'Marcar como asistió'
+        : outcomeChoice === 'NO_SHOW' ? 'Marcar como no asistió'
+        : 'Marcar como reagendada'"
+      size="sm"
+      @close="outcomeOpen = false; outcomeMeeting = null"
+    >
+      <form v-if="outcomeMeeting" class="space-y-4" @submit.prevent="submitOutcome">
+        <div class="rounded-xl bg-slate-50 p-3 text-sm space-y-1">
+          <div class="font-medium text-slate-900">
+            {{ outcomeMeeting.attendeeName || outcomeMeeting.customerPhone }}
+          </div>
+          <div class="text-xs text-slate-500">{{ fmtDateLong(outcomeMeeting.startTime) }}</div>
+          <div class="text-xs text-slate-500">{{ outcomeMeeting.topic || '—' }}</div>
+        </div>
+        <p class="text-xs text-slate-500">
+          Esta acción no se puede revertir desde el panel. Elige con cuidado.
+        </p>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+            Nota (opcional)
+          </label>
+          <textarea
+            v-model="outcomeNote"
+            rows="3"
+            maxlength="500"
+            class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            placeholder="Ej: cliente avisó por WhatsApp que sí llegó pero 20 min tarde."
+          />
+        </div>
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+          <button
+            type="button"
+            class="rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-100"
+            @click="outcomeOpen = false; outcomeMeeting = null"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="rounded-xl px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+            :class="outcomeChoice === 'COMPLETED' ? 'bg-emerald-600 hover:bg-emerald-700'
+              : outcomeChoice === 'NO_SHOW' ? 'bg-danger-600 hover:bg-danger-700'
+              : 'bg-slate-600 hover:bg-slate-700'"
+            :disabled="outcomeSubmitting"
+          >
+            {{ outcomeSubmitting ? 'Guardando…' : 'Confirmar' }}
+          </button>
+        </div>
+      </form>
+    </Modal>
+
+    <Transition name="toast">
+      <div
+        v-if="outcomeToast"
+        class="fixed bottom-6 right-6 z-50 rounded-xl px-4 py-2 text-sm shadow-lg"
+        :class="outcomeToast.kind === 'success' ? 'bg-emerald-600 text-white' : 'bg-danger-600 text-white'"
+      >
+        {{ outcomeToast.text }}
+      </div>
+    </Transition>
   </div>
 </template>
+
+<style scoped>
+.toast-enter-active,
+.toast-leave-active {
+  transition: all 0.2s ease;
+}
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+  transform: translateY(6px);
+}
+</style>

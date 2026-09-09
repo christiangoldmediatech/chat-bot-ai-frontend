@@ -4,6 +4,7 @@ import type {
   MetricsInterval,
   MetricsSummaryResponse,
   MetricsTimeseriesResponse,
+  PlatformByBotRow,
   PlatformByTenantRow,
   TimeseriesMetric,
   TodayTimelineResponse,
@@ -86,6 +87,14 @@ export function usePlatformDashboardMetrics() {
     ): Promise<{ range: { from: string; to: string }; rows: PlatformByTenantRow[] }> =>
       api.get<{ range: { from: string; to: string }; rows: PlatformByTenantRow[] }>(
         `${base}/by-tenant`,
+        { query: query({ ...input }) },
+      ),
+
+    byBot: (
+      input: RangeInput = {},
+    ): Promise<{ range: { from: string; to: string }; rows: PlatformByBotRow[] }> =>
+      api.get<{ range: { from: string; to: string }; rows: PlatformByBotRow[] }>(
+        `${base}/by-bot`,
         { query: query({ ...input }) },
       ),
   }
