@@ -1203,7 +1203,9 @@
         "priceHint": "Stored as cents. E.g. 150.50 → 15050 cents.",
         "priceError": "Invalid price. Use 150 or 150.50 format.",
         "showPrice": "Show price to customer",
-        "sortOrder": "Sort order"
+        "sortOrder": "Sort order",
+        "durationMinutes": "Meeting duration",
+        "durationMinutesHint": "Minutes the appointment takes when this service is booked (5–480). Default 30."
       },
       "priceType": {
         "fixed": "Fixed",
