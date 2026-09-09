@@ -26,6 +26,7 @@ const form = reactive({
   aiProvider: 'anthropic',
   aiModel: 'claude-sonnet-4-6',
   isActive: true,
+  createMeetEnabled: false,
 })
 
 // Stored as i18n keys so changing language re-renders labels live, while
@@ -83,6 +84,7 @@ function hydrate(cfg: BotConfig): void {
   form.aiProvider = cfg.aiProvider
   form.aiModel = cfg.aiModel
   form.isActive = cfg.isActive
+  form.createMeetEnabled = cfg.createMeetEnabled ?? false
 }
 
 async function load(): Promise<void> {
@@ -123,6 +125,7 @@ async function onSubmit(): Promise<void> {
       aiProvider: form.aiProvider,
       aiModel: form.aiModel,
       isActive: form.isActive,
+      createMeetEnabled: form.createMeetEnabled,
     })
     success.value = t('admin.botConfig.successMessage')
     hydrate(updated)
@@ -399,6 +402,15 @@ await load()
             <p class="text-xs text-slate-500">{{ $t('admin.botConfig.internal.botActiveHelp') }}</p>
           </div>
           <input v-model="form.isActive" type="checkbox" class="size-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500">
+        </label>
+
+        <label class="flex items-start justify-between gap-4 rounded-xl bg-white/60 ring-1 ring-slate-200/80 px-4 py-3">
+          <div class="min-w-0">
+            <p class="text-sm font-medium text-slate-900">{{ $t('admin.botConfig.calendar.meetEnabled') }}</p>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.botConfig.calendar.meetEnabledHint') }}</p>
+            <p class="text-[11px] text-amber-700 mt-1.5">{{ $t('admin.botConfig.calendar.meetOnlyAffectsNew') }}</p>
+          </div>
+          <input v-model="form.createMeetEnabled" type="checkbox" class="size-4 mt-0.5 rounded border-slate-300 text-primary-600 focus:ring-primary-500">
         </label>
       </section>
 

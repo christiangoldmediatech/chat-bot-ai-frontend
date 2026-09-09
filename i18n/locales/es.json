@@ -724,6 +724,11 @@
         "descriptionPlaceholder": "Para qué es este bot, quién lo administra…",
         "botActive": "Bot activo",
         "botActiveHelp": "Cuando está apagado, el bot no responde mensajes entrantes de WhatsApp."
+      },
+      "calendar": {
+        "meetEnabled": "Crear citas con Google Meet",
+        "meetEnabledHint": "Activado: cada cita nueva incluye videollamada. Desactivado: la cita se agenda en Google Calendar sin enlace, para atención presencial en el consultorio.",
+        "meetOnlyAffectsNew": "Este cambio solo aplica a las citas que se agenden a partir de ahora. Las ya creadas conservan su enlace."
       }
     },
     "botEdit": {

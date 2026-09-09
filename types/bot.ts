@@ -30,6 +30,7 @@ export interface BotConfig {
   aiProvider: string
   aiModel: string
   isActive: boolean
+  createMeetEnabled: boolean
 }
 
 export interface CreateBotInput {
@@ -70,4 +71,5 @@ export interface UpdateBotConfigInput {
   aiProvider?: string
   aiModel?: string
   isActive?: boolean
+  createMeetEnabled?: boolean
 }
