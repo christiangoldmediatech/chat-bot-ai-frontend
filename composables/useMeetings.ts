@@ -1,4 +1,4 @@
-import type { Meeting, MeetingStatus } from '~/types/meeting'
+import type { Meeting, MeetingOutcome, MeetingStatus } from '~/types/meeting'
 
 export interface AllMeetingsFilters {
   status?: MeetingStatus
@@ -8,12 +8,6 @@ export interface AllMeetingsFilters {
   dateTo?: string
 }
 
-/**
- * Tenant-aware global meetings API.
- *
- * Without `tenantId` → `/meetings` (owner / tenant context).
- * With `tenantId` → `/superadmin/companies/:tenantId/meetings`.
- */
 export function useMeetings(tenantId?: string) {
   const api = useApi()
   const base = tenantId
@@ -33,5 +27,20 @@ export function useMeetings(tenantId?: string) {
         Object.keys(query).length > 0 ? { query } : undefined,
       )
     },
+
+    markOutcome: (
+      eventId: string,
+      outcome: MeetingOutcome,
+      note?: string,
+    ): Promise<{
+      id: string
+      status: MeetingStatus
+      outcomeNote: string | null
+      outcomeAskedAt: string | null
+    }> =>
+      api.post(`${base}/${eventId}/outcome`, {
+        outcome,
+        ...(note ? { note } : {}),
+      }),
   }
 }

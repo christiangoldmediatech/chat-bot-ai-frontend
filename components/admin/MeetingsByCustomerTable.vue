@@ -67,17 +67,14 @@ function prevPage(): void {
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-          <tr v-for="r in data.rows" :key="r.customerPhone" class="hover:bg-slate-50/50">
+          <tr v-for="r in data.rows" :key="r.customerPhone">
             <td class="px-3 py-2">
               <div class="font-medium text-slate-800">
                 {{ r.customerName || $t('admin.dashboard.today.noName') }}
               </div>
-              <NuxtLink
-                :to="`/admin/customers/${encodeURIComponent(r.customerPhone)}`"
-                class="text-[11px] text-slate-500 font-mono hover:underline"
-              >
+              <div class="text-[11px] text-slate-500 font-mono">
                 {{ r.customerPhone }}
-              </NuxtLink>
+              </div>
             </td>
             <td class="px-3 py-2 text-right font-mono">{{ r.scheduled }}</td>
             <td class="px-3 py-2 text-right font-mono">{{ r.cancelled }}</td>

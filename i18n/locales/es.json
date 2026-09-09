@@ -410,9 +410,11 @@
       "platform": {
         "title": "Plataforma",
         "subtitle": "Visión global de todos los tenants y bots.",
-        "tableTitle": "Por tenant",
+        "tableTitle": "Bots por empresa",
+        "tableSubtitle": "Cada empresa con sus bots. Click en la fila para ver clientes.",
+        "tenantsTableTitle": "Resumen por empresa",
         "col": {
-          "tenant": "Tenant",
+          "tenant": "Empresa",
           "bots": "Bots",
           "messages": "Mensajes",
           "conversations": "Conversaciones",
@@ -421,6 +423,25 @@
           "meetingsScheduled": "Agendadas",
           "meetingsCancelled": "Canceladas",
           "cancellationRate": "% cancelación"
+        },
+        "byBot": {
+          "title": "Clientes únicos por bot",
+          "subtitle": "Número de clientes que interactuaron con cada bot en el rango. Click en una barra para ir a la lista de clientes.",
+          "hint": "Click en una barra para abrir los clientes",
+          "yAxis": "Clientes únicos",
+          "series": "Clientes",
+          "tooltipCustomers": "clientes únicos",
+          "tooltipClickHint": "Click para ver la lista",
+          "bots": "bots",
+          "customers": "clientes",
+          "conversations": "conv.",
+          "colBot": "Bot",
+          "colCustomers": "Clientes",
+          "colConversations": "Conversaciones",
+          "colMessages": "Mensajes",
+          "colLeads": "Leads",
+          "colMeetings": "Citas",
+          "viewCustomers": "Ver clientes"
         }
       }
     },

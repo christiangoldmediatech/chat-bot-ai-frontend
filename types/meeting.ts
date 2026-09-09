@@ -1,4 +1,11 @@
-export type MeetingStatus = 'CREATED' | 'CANCELLED'
+export type MeetingStatus =
+  | 'CREATED'
+  | 'CANCELLED'
+  | 'COMPLETED'
+  | 'NO_SHOW'
+  | 'RESCHEDULED'
+
+export type MeetingOutcome = 'COMPLETED' | 'NO_SHOW' | 'RESCHEDULED'
 
 export interface Meeting {
   id: string
@@ -13,6 +20,8 @@ export interface Meeting {
   endTime: string
   meetLink: string | null
   status: MeetingStatus
+  outcomeNote: string | null
+  outcomeAskedAt: string | null
   createdAt: string
 }
 
