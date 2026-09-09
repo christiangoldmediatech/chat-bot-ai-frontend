@@ -1203,7 +1203,9 @@
         "priceHint": "Se guarda en centavos. Ej: 150.50 → 15050 centavos.",
         "priceError": "Precio inválido. Usa formato 150 o 150.50.",
         "showPrice": "Mostrar precio al cliente",
-        "sortOrder": "Orden"
+        "sortOrder": "Orden",
+        "durationMinutes": "Duración de la cita",
+        "durationMinutesHint": "Minutos que ocupa la cita cuando se agenda este servicio (5–480). Default 30."
       },
       "priceType": {
         "fixed": "Fijo",

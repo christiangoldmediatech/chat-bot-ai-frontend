@@ -33,6 +33,7 @@ const priceType = ref<ServicePriceType>(props.initial?.priceType ?? 'FIXED')
 const showPrice = ref(props.initial?.showPrice ?? true)
 const isActive = ref(props.initial?.isActive ?? true)
 const sortOrder = ref(props.initial?.sortOrder ?? 0)
+const durationMinutes = ref(props.initial?.durationMinutes ?? 30)
 
 /**
  * Convierte "150.50" o "150,50" a 15050 (centavos). Devuelve null si el
@@ -58,6 +59,7 @@ const canSubmit = computed(() => {
   if (!/^[a-z0-9-]+$/.test(slug.value)) return false
   if (description.value.trim().length === 0) return false
   if (priceError.value) return false
+  if (!Number.isFinite(durationMinutes.value) || durationMinutes.value < 5 || durationMinutes.value > 480) return false
   return true
 })
 
@@ -74,6 +76,7 @@ function onSubmit(): void {
     showPrice: showPrice.value,
     isActive: isActive.value,
     sortOrder: sortOrder.value,
+    durationMinutes: durationMinutes.value,
   })
 }
 
@@ -202,16 +205,37 @@ watch(name, (n) => {
       </label>
     </div>
 
-    <div>
-      <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
-        {{ $t('admin.services.field.sortOrder') }}
-      </label>
-      <input
-        v-model.number="sortOrder"
-        type="number"
-        min="0"
-        class="w-24 rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-      >
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+          {{ $t('admin.services.field.durationMinutes') }}
+        </label>
+        <div class="flex items-center gap-2">
+          <input
+            v-model.number="durationMinutes"
+            type="number"
+            min="5"
+            max="480"
+            step="5"
+            class="w-24 rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+          >
+          <span class="text-xs text-slate-500">min</span>
+        </div>
+        <p class="text-[11px] text-slate-500 mt-1">
+          {{ $t('admin.services.field.durationMinutesHint') }}
+        </p>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+          {{ $t('admin.services.field.sortOrder') }}
+        </label>
+        <input
+          v-model.number="sortOrder"
+          type="number"
+          min="0"
+          class="w-24 rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+        >
+      </div>
     </div>
 
     <div class="flex justify-end">

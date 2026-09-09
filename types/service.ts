@@ -15,11 +15,7 @@ export interface Service {
   showPrice: boolean
   isActive: boolean
   sortOrder: number
-  /**
-   * Precio ya formateado por el backend según priceType + showPrice + currency.
-   * Se usa TAL CUAL en el catálogo del panel — no re-formatear en el cliente
-   * para no divergir de lo que ve el LLM en `list_services`.
-   */
+  durationMinutes: number
   priceFormatted: string
   createdAt: string
   updatedAt: string
@@ -36,6 +32,7 @@ export interface CreateServiceInput {
   showPrice?: boolean
   isActive?: boolean
   sortOrder?: number
+  durationMinutes?: number
 }
 
 export type UpdateServiceInput = Partial<CreateServiceInput>
