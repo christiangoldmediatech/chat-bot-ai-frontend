@@ -134,51 +134,53 @@ await load()
 </script>
 
 <template>
-  <div>
+  <div class="max-w-6xl">
     <NuxtLink :to="`/superadmin/companies/${tenantId}/bots/${botId}`" class="text-sm text-slate-400 hover:text-slate-200">{{ $t('admin.botConfig.back') }}</NuxtLink>
-    <div class="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-      <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-indigo-300 ring-1 ring-indigo-500/30">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3" aria-hidden="true">
-          <path d="M12 2a3 3 0 0 1 3 3v1.5a4.5 4.5 0 0 1 4.5 4.5V13a4 4 0 0 1-4 4h-7a4 4 0 0 1-4-4v-2a4.5 4.5 0 0 1 4.5-4.5V5a3 3 0 0 1 3-3z" />
-          <line x1="9" y1="13" x2="9" y2="13" />
-          <line x1="15" y1="13" x2="15" y2="13" />
-        </svg>
-        {{ $t('admin.botConfig.agentBadge') }}
-      </span>
-      <h1 class="text-2xl font-semibold text-slate-100 tracking-tight">{{ $t('admin.botConfig.title') }}</h1>
-      <span v-if="botName" class="text-slate-400 text-base">— {{ botName }}</span>
-    </div>
-    <p class="text-slate-400 text-sm mt-2 max-w-3xl">
-      {{ $t('admin.botConfig.subtitleBefore') }}<strong class="font-medium text-slate-200">{{ $t('admin.botConfig.subtitleEmph') }}</strong>{{ $t('admin.botConfig.subtitleAfter') }}
-    </p>
 
-    <!-- Scope helper: clarify what this page is vs. the WhatsApp integration. -->
-    <div class="mt-4 max-w-3xl rounded-2xl bg-indigo-500/5 ring-1 ring-indigo-500/20 px-4 py-3 text-sm text-slate-300 flex items-start gap-3">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 mt-0.5 shrink-0 text-indigo-300" aria-hidden="true">
-        <circle cx="12" cy="12" r="10" />
-        <line x1="12" y1="16" x2="12" y2="12" />
-        <line x1="12" y1="8" x2="12.01" y2="8" />
-      </svg>
-      <p class="leading-relaxed">
-        {{ $t('admin.botConfig.scopeNoteBefore') }}<strong class="font-semibold text-slate-100">{{ $t('admin.botConfig.scopeNoteEmph') }}</strong>{{ $t('admin.botConfig.scopeNoteMiddle') }}
-        <NuxtLink :to="`/superadmin/companies/${tenantId}/bots/${botId}/edit`" class="font-semibold text-indigo-300 underline-offset-2 hover:underline">{{ $t('admin.botConfig.scopeNoteLink') }}</NuxtLink>{{ $t('admin.botConfig.scopeNoteAfter') }}
+    <section class="mt-3 rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-800 shadow-glass-lg p-6">
+      <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-indigo-300 ring-1 ring-indigo-500/30">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3" aria-hidden="true">
+            <path d="M12 2a3 3 0 0 1 3 3v1.5a4.5 4.5 0 0 1 4.5 4.5V13a4 4 0 0 1-4 4h-7a4 4 0 0 1-4-4v-2a4.5 4.5 0 0 1 4.5-4.5V5a3 3 0 0 1 3-3z" />
+            <line x1="9" y1="13" x2="9" y2="13" />
+            <line x1="15" y1="13" x2="15" y2="13" />
+          </svg>
+          {{ $t('admin.botConfig.agentBadge') }}
+        </span>
+        <h1 class="text-2xl font-semibold text-slate-100 tracking-tight">{{ $t('admin.botConfig.title') }}</h1>
+        <span v-if="botName" class="text-slate-400 text-base">— {{ botName }}</span>
+      </div>
+      <p class="text-slate-400 text-sm mt-2">
+        {{ $t('admin.botConfig.subtitleBefore') }}<strong class="font-medium text-slate-200">{{ $t('admin.botConfig.subtitleEmph') }}</strong>{{ $t('admin.botConfig.subtitleAfter') }}
       </p>
-    </div>
 
-    <p v-if="error" class="mt-4 max-w-3xl rounded-2xl border border-danger-800 bg-danger-950/80 p-3 text-sm text-danger-300">
+      <div class="mt-4 rounded-xl bg-indigo-500/5 ring-1 ring-indigo-500/20 px-4 py-3 text-sm text-slate-300 flex items-start gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 mt-0.5 shrink-0 text-indigo-300" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="16" x2="12" y2="12" />
+          <line x1="12" y1="8" x2="12.01" y2="8" />
+        </svg>
+        <p class="leading-relaxed">
+          {{ $t('admin.botConfig.scopeNoteBefore') }}<strong class="font-semibold text-slate-100">{{ $t('admin.botConfig.scopeNoteEmph') }}</strong>{{ $t('admin.botConfig.scopeNoteMiddle') }}
+          <NuxtLink :to="`/superadmin/companies/${tenantId}/bots/${botId}/edit`" class="font-semibold text-indigo-300 underline-offset-2 hover:underline">{{ $t('admin.botConfig.scopeNoteLink') }}</NuxtLink>{{ $t('admin.botConfig.scopeNoteAfter') }}
+        </p>
+      </div>
+    </section>
+
+    <p v-if="error" class="mt-4 rounded-2xl border border-danger-800 bg-danger-950/80 p-3 text-sm text-danger-300">
       {{ error }}
     </p>
-    <p v-if="success" class="mt-4 max-w-3xl rounded-2xl border border-emerald-800 bg-emerald-950/80 p-3 text-sm text-emerald-300">
+    <p v-if="success" class="mt-4 rounded-2xl border border-emerald-800 bg-emerald-950/80 p-3 text-sm text-emerald-300">
       {{ success }}
     </p>
 
     <SpinnerInline v-if="loading" class="mt-6" tone="dark" />
 
-    <form v-else class="mt-6 max-w-3xl space-y-6" @submit.prevent="onSubmit">
+    <form v-else class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6" @submit.prevent="onSubmit">
       <!-- ────────────────────────────────────────────────────────────────
            SECTION 1 — AI behavior (what's sent to the model)
       ───────────────────────────────────────────────────────────────── -->
-      <section class="rounded-2xl bg-slate-900/60 ring-1 ring-slate-800 p-6 space-y-5">
+      <section v-if="false" class="rounded-2xl bg-slate-900/60 ring-1 ring-slate-800 p-6 space-y-5">
         <header class="flex items-start gap-3">
           <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 ring-1 ring-indigo-500/30">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-indigo-300" aria-hidden="true">
@@ -251,7 +253,7 @@ await load()
       <!-- ────────────────────────────────────────────────────────────────
            SECTION 2 — Conversation messages
       ───────────────────────────────────────────────────────────────── -->
-      <section class="rounded-2xl bg-slate-900/60 ring-1 ring-slate-800 p-6 space-y-5">
+      <section v-if="false" class="rounded-2xl bg-slate-900/60 ring-1 ring-slate-800 p-6 space-y-5">
         <header class="flex items-start gap-3">
           <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 ring-1 ring-emerald-500/30">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-emerald-400" aria-hidden="true">
@@ -292,7 +294,7 @@ await load()
       <!-- ────────────────────────────────────────────────────────────────
            SECTION 3 — Model & timing
       ───────────────────────────────────────────────────────────────── -->
-      <section class="rounded-2xl bg-slate-900/60 ring-1 ring-slate-800 p-6 space-y-5">
+      <section v-if="false" class="rounded-2xl bg-slate-900/60 ring-1 ring-slate-800 p-6 space-y-5">
         <header class="flex items-start gap-3">
           <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 ring-1 ring-amber-500/30">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-amber-300" aria-hidden="true">
@@ -400,14 +402,21 @@ await load()
         </label>
       </section>
 
-      <!-- Knowledge: documents the bot uses as RAG context. -->
-      <BotDocumentsCard :bot-id="botId" :tenant-id="tenantId" />
-
-      <!-- Google Calendar integration. -->
       <BotCalendarCard :bot-id="botId" :tenant-id="tenantId" />
 
-      <!-- Sticky-feel action bar -->
-      <div class="sticky bottom-0 -mx-1 pb-1 pt-3 bg-gradient-to-t from-slate-950/90 to-slate-950/0">
+      <div class="lg:col-span-2">
+        <BotBusinessHoursCard :bot-id="botId" :tenant-id="tenantId" />
+      </div>
+
+      <div class="lg:col-span-2">
+        <BotScheduleBlocksCard :bot-id="botId" :tenant-id="tenantId" />
+      </div>
+
+      <div class="lg:col-span-2">
+        <BotDocumentsCard :bot-id="botId" :tenant-id="tenantId" />
+      </div>
+
+      <div class="lg:col-span-2 sticky bottom-0 -mx-1 pb-1 pt-3 bg-gradient-to-t from-slate-950/90 to-slate-950/0">
         <div class="flex items-center justify-end gap-2">
           <NuxtLink
             :to="`/superadmin/companies/${tenantId}/bots/${botId}`"

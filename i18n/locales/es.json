@@ -1169,6 +1169,96 @@
       "saveEscalation": "Guardar escalado",
       "defaultDuration": "Duración por defecto"
     },
+    "businessHours": {
+      "title": "Horario de atención",
+      "subtitle": "Días y rangos en los que el bot puede agendar reuniones. Soporta dos bloques por día (mañana + tarde).",
+      "timezoneLabel": "Zona horaria",
+      "notConnected": "Conecta primero Google Calendar — el horario de atención requiere una integración de calendario activa.",
+      "closed": "cerrado",
+      "addSecondBlock": "+ Agregar otro bloque",
+      "removeBlock": "Quitar",
+      "save": "Guardar horario",
+      "saved": "Horario guardado.",
+      "days": {
+        "mon": "Lunes",
+        "tue": "Martes",
+        "wed": "Miércoles",
+        "thu": "Jueves",
+        "fri": "Viernes",
+        "sat": "Sábado",
+        "sun": "Domingo"
+      },
+      "presets": {
+        "monFri": "Lun–Vie",
+        "monSat": "Lun–Sáb",
+        "allWeek": "Todos los días",
+        "copyMonday": "Copiar horario del lunes a todos"
+      },
+      "settings": {
+        "slotGranularity": "Granularidad del slot",
+        "slotGranularityHelp": "Cada cuánto se ofrece un turno.",
+        "buffer": "Descanso entre citas",
+        "bufferHelp": "Tiempo extra entre reuniones consecutivas.",
+        "minNotice": "Anticipación mínima",
+        "minNoticeHelp": "Mínimo tiempo desde ahora para que el cliente pueda reservar.",
+        "maxAdvance": "Máximo a futuro",
+        "maxAdvanceHelp": "Hasta cuántos días adelante puede reservar.",
+        "defaultDuration": "Duración de respaldo",
+        "defaultDurationHelp": "Solo se usa si el servicio no tiene su propia duración. Normalmente el bot toma la duración del servicio del catálogo.",
+        "minutes": "min",
+        "hours": "h",
+        "days": "días"
+      },
+      "errors": {
+        "invalidFormat": "Bloque {n}: formato de hora inválido.",
+        "rangeInverted": "Bloque {n}: la hora de fin debe ser posterior al inicio.",
+        "overlap": "Los bloques se solapan en este día."
+      }
+    },
+    "scheduleBlocks": {
+      "title": "Bloqueos de agenda",
+      "subtitle": "Días, rangos de fechas u horas donde el bot NO ofrece disponibilidad (feriados, vacaciones, motivos internos).",
+      "addBlock": "+ Agregar bloqueo",
+      "tabActive": "Activos y futuros",
+      "tabPast": "Pasados",
+      "emptyActive": "No hay bloqueos activos. Agrega uno para evitar reservas en fechas u horas concretas.",
+      "emptyPast": "No hay bloqueos pasados.",
+      "allDayBadge": "día completo",
+      "publicMessageLabel": "Mensaje para el cliente",
+      "modalTitleCreate": "Nuevo bloqueo",
+      "modalTitleEdit": "Editar bloqueo",
+      "typeLabel": "Tipo de bloqueo",
+      "type": {
+        "fullDay": "Día completo",
+        "dateRange": "Rango de fechas",
+        "hours": "Solo unas horas"
+      },
+      "dateLabel": "Fecha",
+      "fromDate": "Desde el día",
+      "toDate": "Hasta el día (incluido)",
+      "fromDateTime": "Empieza",
+      "toDateTime": "Termina",
+      "reasonLabel": "Motivo interno",
+      "reasonPlaceholder": "ej. vacaciones, congreso, motivo personal",
+      "reasonHelp": "Solo lo ve tu equipo. Nunca se muestra al cliente.",
+      "publicMessageInputLabel": "Mensaje al cliente (opcional)",
+      "publicMessagePlaceholder": "ej. esa semana el consultorio no atiende",
+      "publicMessageHelp": "Si lo llenas, el bot puede usarlo como IDEA cuando un cliente pida esa fecha. El motivo interno nunca se revela.",
+      "affectedTitle": "{n} cita(s) agendada(s) caen dentro de este bloqueo",
+      "affectedWarning": "Estas citas NO se cancelan automáticamente. Revísalas y decide qué hacer.",
+      "saveBlock": "Guardar bloqueo",
+      "savedCreate": "Bloqueo creado.",
+      "savedUpdate": "Bloqueo actualizado.",
+      "savedDelete": "Bloqueo eliminado.",
+      "deleteConfirmTitle": "¿Eliminar este bloqueo?",
+      "deleteConfirmMessage": "El bot volverá a ofrecer disponibilidad en ese período. Las citas existentes no se ven afectadas.",
+      "errors": {
+        "reasonRequired": "El motivo interno es obligatorio.",
+        "dateRequired": "Elige una fecha.",
+        "rangeRequired": "Elige un inicio y un fin.",
+        "endBeforeStart": "El fin debe ser posterior al inicio."
+      }
+    },
     "services": {
       "back": "← Volver al bot",
       "title": "Catálogo de servicios",
