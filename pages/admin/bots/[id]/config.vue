@@ -420,6 +420,10 @@ await load()
       <!-- Google Calendar integration. -->
       <BotCalendarCard :bot-id="id" />
 
+      <BotBusinessHoursCard :bot-id="id" />
+
+      <BotScheduleBlocksCard :bot-id="id" />
+
       <!-- Sticky-feel action bar -->
       <div class="sticky bottom-0 -mx-1 pb-1 pt-3 bg-gradient-to-t from-white/90 to-white/0 backdrop-blur-sm">
         <div class="flex items-center justify-end gap-2">

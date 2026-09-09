@@ -1169,6 +1169,96 @@
       "saveEscalation": "Save escalation",
       "defaultDuration": "Default duration"
     },
+    "businessHours": {
+      "title": "Business hours",
+      "subtitle": "Days and time ranges when the bot can schedule meetings. Two blocks per day are supported (morning + afternoon).",
+      "timezoneLabel": "Time zone",
+      "notConnected": "Connect Google Calendar first — business hours require a calendar integration.",
+      "closed": "closed",
+      "addSecondBlock": "+ Add another block",
+      "removeBlock": "Remove",
+      "save": "Save schedule",
+      "saved": "Schedule saved.",
+      "days": {
+        "mon": "Monday",
+        "tue": "Tuesday",
+        "wed": "Wednesday",
+        "thu": "Thursday",
+        "fri": "Friday",
+        "sat": "Saturday",
+        "sun": "Sunday"
+      },
+      "presets": {
+        "monFri": "Mon–Fri",
+        "monSat": "Mon–Sat",
+        "allWeek": "Every day",
+        "copyMonday": "Copy Monday to all days"
+      },
+      "settings": {
+        "slotGranularity": "Slot granularity",
+        "slotGranularityHelp": "How often a slot is offered.",
+        "buffer": "Buffer between meetings",
+        "bufferHelp": "Extra rest between back-to-back meetings.",
+        "minNotice": "Minimum notice",
+        "minNoticeHelp": "Least time from now the customer can book.",
+        "maxAdvance": "Max advance",
+        "maxAdvanceHelp": "How far ahead the customer can book.",
+        "defaultDuration": "Fallback duration",
+        "defaultDurationHelp": "Only used if the service has no duration of its own. In most cases the bot uses the service's own duration from the catalog.",
+        "minutes": "min",
+        "hours": "h",
+        "days": "days"
+      },
+      "errors": {
+        "invalidFormat": "Block {n}: invalid time format.",
+        "rangeInverted": "Block {n}: end must be after start.",
+        "overlap": "Blocks overlap in this day."
+      }
+    },
+    "scheduleBlocks": {
+      "title": "Blocked periods",
+      "subtitle": "Days, date ranges or hour ranges when the bot must NOT offer availability (holidays, vacations, internal reasons).",
+      "addBlock": "+ Add block",
+      "tabActive": "Active & upcoming",
+      "tabPast": "Past",
+      "emptyActive": "No active blocks. Add one to prevent bookings on specific days or hours.",
+      "emptyPast": "No past blocks.",
+      "allDayBadge": "all day",
+      "publicMessageLabel": "Customer-facing note",
+      "modalTitleCreate": "New blocked period",
+      "modalTitleEdit": "Edit blocked period",
+      "typeLabel": "Block type",
+      "type": {
+        "fullDay": "Full day",
+        "dateRange": "Date range",
+        "hours": "Only some hours"
+      },
+      "dateLabel": "Date",
+      "fromDate": "From date",
+      "toDate": "To date (inclusive)",
+      "fromDateTime": "Starts at",
+      "toDateTime": "Ends at",
+      "reasonLabel": "Internal reason",
+      "reasonPlaceholder": "e.g. vacation, congress, personal",
+      "reasonHelp": "Only visible to your team. Not shown to customers.",
+      "publicMessageInputLabel": "Customer message (optional)",
+      "publicMessagePlaceholder": "e.g. we're closed that week",
+      "publicMessageHelp": "If set, the bot may use this as an idea when a customer requests that date. The internal reason is never revealed.",
+      "affectedTitle": "{n} scheduled meeting(s) fall within this block",
+      "affectedWarning": "These meetings are NOT cancelled automatically. Review them and decide what to do.",
+      "saveBlock": "Save block",
+      "savedCreate": "Block created.",
+      "savedUpdate": "Block updated.",
+      "savedDelete": "Block deleted.",
+      "deleteConfirmTitle": "Delete this block?",
+      "deleteConfirmMessage": "The bot will start offering availability during this period again. Existing meetings are not affected.",
+      "errors": {
+        "reasonRequired": "Internal reason is required.",
+        "dateRequired": "Pick a date.",
+        "rangeRequired": "Pick a start and an end.",
+        "endBeforeStart": "End must be after start."
+      }
+    },
     "services": {
       "back": "← Back to bot",
       "title": "Service catalog",
