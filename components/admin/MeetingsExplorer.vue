@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
 import type { Bot } from '~/types/bot'
-import type { Meeting, MeetingOutcome, MeetingStatus } from '~/types/meeting'
+import type {
+  Meeting,
+  MeetingOutcome,
+  MeetingStatus,
+  MeetingsTab,
+  PaginatedMeetings,
+} from '~/types/meeting'
 
 const props = defineProps<{
   /** Pass for superadmin context; omit for the tenant owner context. */
@@ -57,15 +63,18 @@ const tabPalette = {
   },
 } as const
 
-const rows = ref<Meeting[]>([])
+const PAGE_SIZE = 25
+const data = ref<PaginatedMeetings | null>(null)
 const bots = ref<Bot[]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
 
-type Tab = 'UPCOMING' | 'PAST' | 'CANCELLED' | 'ALL'
+type Tab = MeetingsTab
 const tab = ref<Tab>('UPCOMING')
 const botFilter = ref<string>('')
 const search = ref('')
+const debouncedSearch = ref('')
+const page = ref(1)
 type GroupMode = 'flat' | 'bot' | 'customer'
 const groupBy = ref<GroupMode>('flat')
 
@@ -80,42 +89,28 @@ onUnmounted(() => {
   if (tickHandle) clearInterval(tickHandle)
 })
 
-const counts = computed(() => {
-  const ts = now.value.getTime()
-  let upcoming = 0
-  let past = 0
-  let cancelled = 0
-  for (const m of rows.value) {
-    if (m.status === 'CANCELLED') cancelled++
-    else if (new Date(m.endTime).getTime() >= ts) upcoming++
-    else past++
-  }
-  return { upcoming, past, cancelled, total: rows.value.length }
+let searchDebounce: ReturnType<typeof setTimeout> | null = null
+watch(search, (v) => {
+  if (searchDebounce) clearTimeout(searchDebounce)
+  searchDebounce = setTimeout(() => {
+    debouncedSearch.value = v.trim()
+  }, 300)
 })
+
+const rows = computed<Meeting[]>(() => data.value?.rows ?? [])
+const counts = computed(() =>
+  data.value?.counts ?? { upcoming: 0, past: 0, cancelled: 0, total: 0 },
+)
+const total = computed(() => data.value?.total ?? 0)
+const totalPages = computed(() =>
+  total.value === 0 ? 1 : Math.max(1, Math.ceil(total.value / PAGE_SIZE)),
+)
 
 function statusBucket(m: Meeting): Tab {
   if (m.status === 'CANCELLED' || m.status === 'RESCHEDULED') return 'CANCELLED'
   if (m.status === 'COMPLETED' || m.status === 'NO_SHOW') return 'PAST'
   return new Date(m.endTime).getTime() >= now.value.getTime() ? 'UPCOMING' : 'PAST'
 }
-
-const filtered = computed(() => {
-  const q = search.value.trim().toLowerCase()
-  return rows.value.filter((m) => {
-    if (tab.value !== 'ALL' && statusBucket(m) !== tab.value) return false
-    if (botFilter.value && m.botId !== botFilter.value) return false
-    if (q) {
-      const hit =
-        (m.attendeeName ?? '').toLowerCase().includes(q) ||
-        m.attendeeEmail.toLowerCase().includes(q) ||
-        m.customerPhone.toLowerCase().includes(q) ||
-        (m.topic ?? '').toLowerCase().includes(q) ||
-        m.botName.toLowerCase().includes(q)
-      if (!hit) return false
-    }
-    return true
-  })
-})
 
 interface Bucket {
   key: string
@@ -126,10 +121,10 @@ interface Bucket {
 
 const grouped = computed<Bucket[]>(() => {
   if (groupBy.value === 'flat') {
-    return [{ key: 'all', label: '', meetings: filtered.value }]
+    return [{ key: 'all', label: '', meetings: rows.value }]
   }
   const map = new Map<string, Bucket>()
-  for (const m of filtered.value) {
+  for (const m of rows.value) {
     let key: string
     let label: string
     let sublabel: string | undefined
@@ -158,11 +153,17 @@ async function load(): Promise<void> {
   loading.value = true
   error.value = null
   try {
-    const [list, botList] = await Promise.all([
-      meetingsApi.list(),
+    const [pageData, botList] = await Promise.all([
+      meetingsApi.list({
+        tab: tab.value,
+        botId: botFilter.value || undefined,
+        search: debouncedSearch.value || undefined,
+        page: page.value,
+        pageSize: PAGE_SIZE,
+      }),
       botsApi.list().catch(() => [] as Bot[]),
     ])
-    rows.value = list
+    data.value = pageData
     bots.value = botList
   } catch (err) {
     error.value = (err as ApiError).message
@@ -170,6 +171,15 @@ async function load(): Promise<void> {
     loading.value = false
   }
 }
+
+watch([tab, botFilter, debouncedSearch], () => {
+  page.value = 1
+  void load()
+})
+
+watch(page, () => {
+  void load()
+})
 
 const outcomeOpen = ref(false)
 const outcomeMeeting = ref<Meeting | null>(null)
@@ -475,7 +485,7 @@ await load()
       :class="
         tone === 'dark'
           ? 'bg-slate-900/70 ring-slate-700/50'
-          : 'bg-white/70 backdrop-blur-xl ring-white/50 shadow-glass'
+          : 'bg-white ring-slate-200 shadow-glass'
       "
     >
       <!-- Search -->
@@ -573,12 +583,12 @@ await load()
     <SpinnerInline v-if="loading" class="mt-6" :tone="tone === 'dark' ? 'dark' : undefined" />
 
     <div
-      v-else-if="filtered.length === 0"
+      v-else-if="rows.length === 0"
       class="mt-6 rounded-2xl p-10 text-center"
       :class="
         tone === 'dark'
           ? 'bg-slate-900/70 ring-1 ring-slate-700/50 text-slate-400'
-          : 'bg-white/70 ring-1 ring-white/50 text-slate-500 shadow-glass'
+          : 'bg-white ring-1 ring-slate-200 text-slate-500 shadow-glass'
       "
     >
       <div
@@ -594,10 +604,10 @@ await load()
         </svg>
       </div>
       <p class="text-sm font-medium" :class="tone === 'dark' ? 'text-slate-300' : 'text-slate-700'">
-        {{ rows.length === 0 ? $t('meetings.explorer.emptyTitle') : $t('meetings.explorer.emptyTitleFiltered') }}
+        {{ counts.total === 0 ? $t('meetings.explorer.emptyTitle') : $t('meetings.explorer.emptyTitleFiltered') }}
       </p>
       <p class="text-xs mt-1">
-        {{ rows.length === 0 ? $t('meetings.explorer.emptyBody') : $t('meetings.explorer.emptyBodyFiltered') }}
+        {{ counts.total === 0 ? $t('meetings.explorer.emptyBody') : $t('meetings.explorer.emptyBodyFiltered') }}
       </p>
     </div>
 
@@ -796,6 +806,56 @@ await load()
               </div>
             </div>
           </article>
+        </div>
+      </div>
+
+      <div
+        v-if="totalPages > 1"
+        class="flex items-center justify-between gap-3 mt-4"
+      >
+        <span
+          class="text-xs"
+          :class="tone === 'dark' ? 'text-slate-400' : 'text-slate-500'"
+        >
+          {{ $t('meetings.explorer.paginationRange', {
+            from: (page - 1) * PAGE_SIZE + 1,
+            to: Math.min(page * PAGE_SIZE, total),
+            total,
+          }) }}
+        </span>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            class="rounded-lg px-3 py-1.5 text-xs font-medium transition disabled:opacity-40"
+            :class="
+              tone === 'dark'
+                ? 'bg-slate-800 text-slate-200 hover:bg-slate-700'
+                : 'bg-white ring-1 ring-slate-200 text-slate-700 hover:bg-slate-100'
+            "
+            :disabled="page <= 1 || loading"
+            @click="page = Math.max(1, page - 1)"
+          >
+            ←
+          </button>
+          <span
+            class="text-xs tabular-nums"
+            :class="tone === 'dark' ? 'text-slate-300' : 'text-slate-700'"
+          >
+            {{ page }} / {{ totalPages }}
+          </span>
+          <button
+            type="button"
+            class="rounded-lg px-3 py-1.5 text-xs font-medium transition disabled:opacity-40"
+            :class="
+              tone === 'dark'
+                ? 'bg-slate-800 text-slate-200 hover:bg-slate-700'
+                : 'bg-white ring-1 ring-slate-200 text-slate-700 hover:bg-slate-100'
+            "
+            :disabled="page >= totalPages || loading"
+            @click="page = Math.min(totalPages, page + 1)"
+          >
+            →
+          </button>
         </div>
       </div>
     </div>

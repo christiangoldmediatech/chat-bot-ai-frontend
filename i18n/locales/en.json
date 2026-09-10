@@ -1866,7 +1866,8 @@
       "emptyTitle": "No meetings booked yet.",
       "emptyTitleFiltered": "No meetings match the filters.",
       "emptyBody": "When one of your bots books a meeting, it'll show up here.",
-      "emptyBodyFiltered": "Try another search or clear the filters."
+      "emptyBodyFiltered": "Try another search or clear the filters.",
+      "paginationRange": "{from}–{to} of {total}"
     },
     "card": {
       "title": "Booked meetings",

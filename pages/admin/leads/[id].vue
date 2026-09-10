@@ -165,7 +165,7 @@ await load()
 
     <template v-else-if="lead">
       <!-- Header card -->
-      <header class="mt-4 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-5 flex items-start gap-4 flex-wrap">
+      <header class="mt-4 rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5 flex items-start gap-4 flex-wrap">
         <div class="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 text-white font-bold text-xl ring-1 ring-indigo-300/60 shadow-sm">
           {{ (lead.customerName || lead.customerPhone).charAt(0).toUpperCase() }}
         </div>
@@ -200,7 +200,7 @@ await load()
       <div class="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
         <!-- LEFT: form + key facts (2 cols) -->
         <div class="lg:col-span-2 space-y-4">
-          <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-5">
+          <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5">
             <h3 class="text-sm font-semibold text-slate-900">{{ $t('leads.detail.editTitle') }}</h3>
             <p class="text-xs text-slate-500 mt-0.5">{{ $t('leads.detail.editSubtitle') }}</p>
 
@@ -284,7 +284,7 @@ await load()
         <div class="space-y-4">
           <LeadCrmSyncCard :lead="lead" :busy="syncing" @retry="retrySync" />
 
-          <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-5">
+          <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5">
             <header class="flex items-center justify-between gap-3">
               <div class="min-w-0">
                 <h3 class="text-sm font-semibold text-slate-900">{{ $t('leads.detail.payloadTitle') }}</h3>
@@ -334,7 +334,7 @@ await load()
             </p>
           </section>
 
-          <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-5">
+          <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5">
             <h3 class="text-sm font-semibold text-slate-900">{{ $t('leads.detail.factsTitle') }}</h3>
             <dl class="mt-3 space-y-3 text-xs">
               <div class="flex justify-between gap-3">

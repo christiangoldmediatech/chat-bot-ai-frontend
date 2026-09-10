@@ -234,7 +234,7 @@ watch(() => props.botId, () => { void load() })
 </script>
 
 <template>
-  <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6 space-y-5">
+  <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-6 space-y-5">
     <header class="flex items-start gap-3">
       <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-rose-50 ring-1 ring-rose-100">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-rose-600" aria-hidden="true">

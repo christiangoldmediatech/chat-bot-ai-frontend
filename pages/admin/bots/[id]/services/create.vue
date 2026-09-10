@@ -97,7 +97,7 @@ async function onSubmit(input: CreateServiceInput): Promise<void> {
 
     <!-- Selección de imagen ANTES de guardar. La imagen se sube automáticamente
          al backend después del POST /services. -->
-    <div class="mt-6 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-xl p-5">
+    <div class="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
       <h2 class="text-sm font-semibold text-slate-700 uppercase tracking-wider">
         {{ $t('admin.services.imageSection') }}
       </h2>
@@ -147,7 +147,7 @@ async function onSubmit(input: CreateServiceInput): Promise<void> {
       </div>
     </div>
 
-    <div class="mt-6 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-xl p-5">
+    <div class="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
       <ServiceForm :saving="saving" @submit="onSubmit" />
     </div>
   </div>

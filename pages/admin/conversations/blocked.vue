@@ -113,7 +113,7 @@ function formatDate(s: string | null): string {
     </div>
 
     <form
-      class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-4"
+      class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-4"
       @submit.prevent="onApply"
     >
       <div>
@@ -164,7 +164,7 @@ function formatDate(s: string | null): string {
         class="mt-6"
       />
 
-      <div v-else class="mt-6 overflow-x-auto rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass">
+      <div v-else class="mt-6 overflow-x-auto rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass">
         <table class="w-full text-sm">
           <thead class="bg-slate-50 text-slate-600">
             <tr>

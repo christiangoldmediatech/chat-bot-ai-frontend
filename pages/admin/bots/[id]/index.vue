@@ -105,7 +105,7 @@ await load()
     <SpinnerInline v-if="loading" class="mt-6" />
 
     <template v-else-if="bot">
-      <div class="mt-3 rounded-2xl bg-white/75 backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-4 sm:p-5 text-slate-900 flex items-center justify-between flex-wrap gap-3">
+      <div class="mt-3 rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-4 sm:p-5 text-slate-900 flex items-center justify-between flex-wrap gap-3">
         <div class="flex items-center gap-3 min-w-0">
           <div class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 text-white font-semibold text-xl ring-1 ring-white/40 shadow-inner">
             {{ bot.name.charAt(0).toUpperCase() }}
@@ -220,7 +220,7 @@ await load()
       <!-- Overview: 3-column on lg — AI / WhatsApp / System prompt tile -->
       <section id="overview" class="scroll-mt-24 mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <!-- AI -->
-        <div class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
+        <div class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5">
           <div class="flex items-center gap-2">
             <span class="flex size-7 items-center justify-center rounded-lg bg-emerald-50 ring-1 ring-emerald-100 text-emerald-600">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
@@ -242,7 +242,7 @@ await load()
         </div>
 
         <!-- WhatsApp -->
-        <div class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
+        <div class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5">
           <div class="flex items-center gap-2">
             <span class="flex size-7 items-center justify-center rounded-lg bg-success-50 ring-1 ring-success-100 text-success-600">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-3.5" aria-hidden="true">
@@ -285,7 +285,7 @@ await load()
         </div>
 
         <!-- System prompt tile -->
-        <div class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5 flex flex-col">
+        <div class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5 flex flex-col">
           <div class="flex items-center gap-2">
             <span class="flex size-7 items-center justify-center rounded-lg bg-violet-50 ring-1 ring-violet-100 text-violet-600">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">

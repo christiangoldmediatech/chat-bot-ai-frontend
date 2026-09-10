@@ -89,7 +89,7 @@ function meetingLink(row: ServicesPerformedRow): string {
 </script>
 
 <template>
-  <section class="rounded-2xl bg-white backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-5">
+  <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5">
     <header class="mb-4">
       <h3 class="text-sm font-semibold text-slate-900">{{ $t('admin.dashboardServices.title') }}</h3>
       <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.dashboardServices.subtitle') }}</p>

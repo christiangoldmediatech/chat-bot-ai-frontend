@@ -103,7 +103,7 @@ async function onContinue(): Promise<void> {
     <!-- Plan-limit guard: shown instead of the form when the tenant is at quota. -->
     <section
       v-if="atLimit && !createdBot"
-      class="mt-6 max-w-2xl rounded-2xl border border-amber-200 bg-amber-50/70 backdrop-blur-xl p-6 shadow-glass"
+      class="mt-6 max-w-2xl rounded-2xl border border-amber-200 bg-amber-50 p-6 shadow-glass"
     >
       <div class="flex items-start gap-3">
         <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 ring-1 ring-amber-200">
@@ -134,7 +134,7 @@ async function onContinue(): Promise<void> {
       <!-- ────────────────────────────────────────────────────────────────
            LEFT — Meta setup guide (sticky on desktop)
       ───────────────────────────────────────────────────────────────── -->
-      <aside class="lg:sticky lg:top-6 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
+      <aside class="lg:sticky lg:top-6 rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5">
         <div class="flex items-center gap-2">
           <div class="flex size-8 shrink-0 items-center justify-center rounded-xl bg-success-50 ring-1 ring-success-100">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 text-success-600" aria-hidden="true">
@@ -221,7 +221,7 @@ async function onContinue(): Promise<void> {
       <!-- ────────────────────────────────────────────────────────────────
            SECTION 1 — Bot details (internal: name, prompt, status)
       ───────────────────────────────────────────────────────────────── -->
-      <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6 space-y-5">
+      <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-6 space-y-5">
         <header class="flex items-start gap-3">
           <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 ring-1 ring-primary-100">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-primary-600" aria-hidden="true">
@@ -274,7 +274,7 @@ async function onContinue(): Promise<void> {
       <!-- ────────────────────────────────────────────────────────────────
            SECTION 2 — WhatsApp Business connection (from Meta)
       ───────────────────────────────────────────────────────────────── -->
-      <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6 space-y-5">
+      <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-6 space-y-5">
         <header class="flex items-start gap-3">
           <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-success-50 ring-1 ring-success-100">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 text-success-600" aria-hidden="true">
@@ -396,7 +396,7 @@ async function onContinue(): Promise<void> {
 
     <!-- Post-creation: bot exists, upload docs in the same flow before moving on. -->
     <template v-else>
-      <div class="mt-6 max-w-2xl rounded-2xl border border-success-200 bg-success-50/70 backdrop-blur-xl p-4 text-sm text-success-700">
+      <div class="mt-6 max-w-2xl rounded-2xl border border-success-200 bg-success-50 p-4 text-sm text-success-700">
         {{ $t('admin.botCreate.postCreate.successBefore') }}<strong class="font-semibold">{{ createdBot.name }}</strong>{{ $t('admin.botCreate.postCreate.successAfter') }}
       </div>
 

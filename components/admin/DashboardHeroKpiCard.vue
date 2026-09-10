@@ -58,7 +58,7 @@ const sparkChart = computed(() => {
 </script>
 
 <template>
-  <section class="rounded-2xl bg-white backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-5 h-full flex flex-col">
+  <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5 h-full flex flex-col">
     <div class="flex items-start justify-between gap-3">
       <div class="min-w-0 flex-1">
         <p class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">{{ label }}</p>

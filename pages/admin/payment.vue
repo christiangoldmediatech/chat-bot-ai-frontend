@@ -96,7 +96,7 @@ const mailtoHref = computed(() => {
       <!-- ────────────────────────────────────────────────────────────────
            0. Amount to deposit (plan + IVA 15% breakdown)
       ───────────────────────────────────────────────────────────────── -->
-      <section v-if="planDetails" class="mt-6 overflow-hidden rounded-3xl bg-white/80 backdrop-blur-xl ring-1 ring-white/60 shadow-glass-lg">
+      <section v-if="planDetails" class="mt-6 overflow-hidden rounded-3xl bg-white ring-1 ring-slate-200 shadow-glass-lg">
         <div class="p-6 sm:p-7">
           <header class="flex items-start gap-3">
             <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-100 text-primary-700 ring-1 ring-primary-200">
@@ -161,7 +161,7 @@ const mailtoHref = computed(() => {
       <!-- ────────────────────────────────────────────────────────────────
            1. Bank account card (Pichincha brand: yellow + dark)
       ───────────────────────────────────────────────────────────────── -->
-      <section class="mt-6 overflow-hidden rounded-3xl bg-white/80 backdrop-blur-xl ring-1 ring-white/60 shadow-glass-lg">
+      <section class="mt-6 overflow-hidden rounded-3xl bg-white ring-1 ring-slate-200 shadow-glass-lg">
         <!-- Brand strip — white surface so the official Banco Pichincha
              wordmark (which contains a yellow brand mark) reads correctly.
              Yellow accent line on top conveys the bank identity. -->
@@ -293,7 +293,7 @@ const mailtoHref = computed(() => {
       <!-- ────────────────────────────────────────────────────────────────
            2. How to send the receipt
       ───────────────────────────────────────────────────────────────── -->
-      <section class="mt-6 rounded-3xl bg-white/70 backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-6 sm:p-7">
+      <section class="mt-6 rounded-3xl bg-white ring-1 ring-slate-200 shadow-glass p-6 sm:p-7">
         <header class="flex items-start gap-3">
           <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-100 text-primary-700 ring-1 ring-primary-200">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">

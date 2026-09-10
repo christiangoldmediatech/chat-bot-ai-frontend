@@ -34,7 +34,7 @@ const themeClasses = computed(() => {
     }
   }
   return {
-    card: 'bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass',
+    card: 'bg-white ring-1 ring-slate-200 shadow-glass',
     title: 'text-slate-900',
     subtitle: 'text-slate-500',
     latestLabel: 'text-slate-500',

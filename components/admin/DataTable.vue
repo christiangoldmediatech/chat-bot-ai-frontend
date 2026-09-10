@@ -14,7 +14,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="overflow-x-auto rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass">
+  <div class="overflow-x-auto rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass">
     <table class="w-full text-sm">
       <thead class="bg-slate-50 text-slate-600">
         <tr>

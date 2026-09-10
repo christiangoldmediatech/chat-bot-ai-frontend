@@ -118,7 +118,7 @@ watch(
       {{ error }}
     </p>
 
-    <div class="mt-6 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-xl p-4 grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div class="mt-6 rounded-2xl border border-slate-200 bg-white p-4 grid grid-cols-2 lg:grid-cols-4 gap-3">
       <div>
         <label class="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 mb-1">
           {{ $t('admin.reports.filter.from') }}
@@ -199,7 +199,7 @@ watch(
         </div>
       </div>
 
-      <div class="mt-6 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-xl overflow-x-auto">
+      <div class="mt-6 rounded-2xl border border-slate-200 bg-white overflow-x-auto">
         <table class="min-w-full text-sm">
           <thead class="bg-slate-50/50 text-xs uppercase tracking-wider text-slate-500">
             <tr>

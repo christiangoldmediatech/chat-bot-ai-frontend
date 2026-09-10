@@ -165,7 +165,7 @@ await load()
       <article
         v-for="bot in items"
         :key="bot.id"
-        class="group relative flex flex-col rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5 hover:ring-slate-200 transition"
+        class="group relative flex flex-col rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5 hover:ring-slate-300 transition"
       >
         <!-- Header: avatar + name/description + status -->
         <header class="flex items-start gap-3">

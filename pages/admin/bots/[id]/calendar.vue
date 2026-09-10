@@ -34,7 +34,7 @@ await load()
   <div class="max-w-[1400px]">
     <NuxtLink :to="`/admin/bots/${id}`" class="inline-flex items-center gap-1 text-sm text-white/80 hover:text-pearl drop-shadow-sm transition">← {{ $t('admin.calendarView.backToBot') }}</NuxtLink>
 
-    <section class="mt-3 rounded-2xl bg-white/80 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6">
+    <section class="mt-3 rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-6">
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-amber-700 ring-1 ring-amber-100">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>

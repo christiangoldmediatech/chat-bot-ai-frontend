@@ -107,7 +107,7 @@ function isConversationBlocked(status: string | null | undefined): boolean {
       </p>
 
       <h2 class="mt-8 text-base font-semibold text-slate-900">{{ $t('customers.detail.conversationsTitle') }}</h2>
-      <div class="mt-3 overflow-x-auto rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass">
+      <div class="mt-3 overflow-x-auto rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass">
         <table class="w-full text-sm">
           <thead class="bg-slate-50 text-slate-600">
             <tr>

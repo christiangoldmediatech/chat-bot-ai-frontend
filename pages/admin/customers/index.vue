@@ -11,7 +11,7 @@ definePageMeta({
 const customersApi = useCustomers()
 const botsApi = useBots()
 
-const PAGE_SIZE = 50
+const PAGE_SIZE = 25
 
 const items = ref<CustomerSummary[]>([])
 const total = ref(0)
@@ -150,7 +150,7 @@ function isBlocked(c: CustomerSummary): boolean {
 
     <!-- Filters bar — glassmorphic with search + bot filter -->
     <div
-      class="mt-6 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-3 flex flex-wrap items-center gap-2"
+      class="mt-6 rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-3 flex flex-wrap items-center gap-2"
     >
       <!-- Search -->
       <div class="relative flex-1 min-w-[18rem]">
@@ -254,7 +254,7 @@ function isBlocked(c: CustomerSummary): boolean {
     <!-- Customers table -->
     <div
       v-else
-      class="mt-4 overflow-x-auto rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/60 shadow-[0_8px_28px_-12px_rgba(79,70,229,0.16),0_4px_10px_-6px_rgba(15,23,42,0.08),0_-2px_8px_-4px_rgba(79,70,229,0.05)]"
+      class="mt-4 overflow-x-auto rounded-2xl bg-white ring-1 ring-slate-200 shadow-[0_8px_28px_-12px_rgba(79,70,229,0.16),0_4px_10px_-6px_rgba(15,23,42,0.08),0_-2px_8px_-4px_rgba(79,70,229,0.05)]"
       :class="{ 'opacity-60 pointer-events-none': loading }"
     >
       <table class="w-full text-sm">
@@ -319,8 +319,8 @@ function isBlocked(c: CustomerSummary): boolean {
 
     <!-- Pagination footer — visible when there's more than one page -->
     <div
-      v-if="items.length > 0 && pageCount > 1"
-      class="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/60 shadow-glass px-4 py-3"
+      v-if="items.length > 0"
+      class="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass px-4 py-3"
     >
       <p class="text-xs text-slate-600 tabular-nums">
         {{ $t('customers.pagination.summary', { from: fromIndex, to: toIndex, total }) }}

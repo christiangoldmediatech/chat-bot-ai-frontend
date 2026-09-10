@@ -1866,7 +1866,8 @@
       "emptyTitle": "Aún no hay citas agendadas.",
       "emptyTitleFiltered": "No hay citas que coincidan con los filtros.",
       "emptyBody": "Cuando uno de los bots agende, aparecerá aquí.",
-      "emptyBodyFiltered": "Prueba con otra búsqueda o quita los filtros."
+      "emptyBodyFiltered": "Prueba con otra búsqueda o quita los filtros.",
+      "paginationRange": "{from}–{to} de {total}"
     },
     "card": {
       "title": "Citas agendadas",

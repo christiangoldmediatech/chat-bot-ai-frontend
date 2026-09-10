@@ -96,7 +96,7 @@ const chart = computed(() => {
 </script>
 
 <template>
-  <section class="rounded-2xl bg-white backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-5 h-full">
+  <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5 h-full">
     <header class="flex items-start justify-between gap-3 mb-3 flex-wrap">
       <div>
         <h3 class="text-sm font-semibold text-slate-900">{{ $t('admin.dashboardRedesign.attended.title') }}</h3>
