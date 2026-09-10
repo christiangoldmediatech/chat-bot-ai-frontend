@@ -44,7 +44,7 @@ function prevPage(): void {
 
     <div v-else-if="data && data.rows.length > 0" class="overflow-x-auto">
       <table class="min-w-full text-sm">
-        <thead class="text-xs uppercase tracking-wider text-slate-500">
+        <thead class="text-xs uppercase tracking-wider text-slate-600 font-medium">
           <tr class="border-b border-slate-100">
             <th class="text-left px-3 py-2">{{ $t('admin.dashboard.meetings.col.customer') }}</th>
             <th class="text-right px-3 py-2 cursor-pointer" @click="emit('update:sort', 'scheduled')">
@@ -76,13 +76,13 @@ function prevPage(): void {
                 {{ r.customerPhone }}
               </div>
             </td>
-            <td class="px-3 py-2 text-right font-mono">{{ r.scheduled }}</td>
-            <td class="px-3 py-2 text-right font-mono">{{ r.cancelled }}</td>
-            <td class="px-3 py-2 text-right font-mono">{{ r.noShow }}</td>
-            <td class="px-3 py-2 text-right font-mono" :class="highlight(r.cancellationRate, r.scheduled)">
+            <td class="px-3 py-2 text-right font-mono tabular-nums text-slate-900 font-medium">{{ r.scheduled }}</td>
+            <td class="px-3 py-2 text-right font-mono tabular-nums" :class="r.cancelled > 0 ? 'text-danger-700 font-medium' : 'text-slate-500'">{{ r.cancelled }}</td>
+            <td class="px-3 py-2 text-right font-mono tabular-nums" :class="r.noShow > 0 ? 'text-amber-700 font-medium' : 'text-slate-500'">{{ r.noShow }}</td>
+            <td class="px-3 py-2 text-right font-mono tabular-nums" :class="highlight(r.cancellationRate, r.scheduled)">
               {{ r.scheduled === 0 ? '—' : percent(r.cancellationRate, 0) }}
             </td>
-            <td class="px-3 py-2 text-xs text-slate-600">
+            <td class="px-3 py-2 text-xs text-slate-700">
               {{ r.lastMeetingAt ? day(r.lastMeetingAt) : '—' }}
             </td>
           </tr>

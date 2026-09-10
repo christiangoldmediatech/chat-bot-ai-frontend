@@ -9,6 +9,7 @@ import type {
   TimeseriesMetric,
   TodayTimelineResponse,
 } from '~/types/dashboard'
+import type { ServicesPerformedResponse } from '~/types/service-history'
 
 /**
  * Two backends live behind these composables:
@@ -61,6 +62,11 @@ export function useTenantDashboardMetrics() {
       input: RangeInput & { page?: number; pageSize?: number; sort?: string } = {},
     ): Promise<MeetingsByCustomerResponse> =>
       api.get<MeetingsByCustomerResponse>(`${base}/meetings/by-customer`, {
+        query: query({ ...input }),
+      }),
+
+    servicesPerformed: (input: RangeInput = {}): Promise<ServicesPerformedResponse> =>
+      api.get<ServicesPerformedResponse>(`${base}/services-performed`, {
         query: query({ ...input }),
       }),
   }
@@ -128,6 +134,11 @@ export function useSuperadminTenantDashboardMetrics(tenantId: string) {
       input: RangeInput & { page?: number; pageSize?: number; sort?: string } = {},
     ): Promise<MeetingsByCustomerResponse> =>
       api.get<MeetingsByCustomerResponse>(`${base}/meetings/by-customer`, {
+        query: query({ ...input }),
+      }),
+
+    servicesPerformed: (input: RangeInput = {}): Promise<ServicesPerformedResponse> =>
+      api.get<ServicesPerformedResponse>(`${base}/services-performed`, {
         query: query({ ...input }),
       }),
   }

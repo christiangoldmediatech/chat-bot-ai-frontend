@@ -1169,6 +1169,29 @@
       "saveEscalation": "Save escalation",
       "defaultDuration": "Default duration"
     },
+    "dashboardServices": {
+      "title": "Services performed",
+      "subtitle": "Counts attended appointments in the selected period (uses the same date filters as the rest of the dashboard).",
+      "empty": "No services performed in this period.",
+      "rankingTitle": "Services distribution by status",
+      "chartHint": "Attended · Scheduled · No-show · Rescheduled · Cancelled",
+      "tooltipUnit": "appointments",
+      "kpi": {
+        "performed": "Services performed",
+        "revenue": "Revenue",
+        "attendanceRate": "Attendance rate",
+        "rescheduled": "Rescheduled"
+      },
+      "col": {
+        "service": "Service",
+        "attended": "Attended",
+        "scheduled": "Scheduled",
+        "noShow": "No-show",
+        "rescheduled": "Rescheduled",
+        "rate": "Rate",
+        "revenue": "Revenue"
+      }
+    },
     "calendarView": {
       "title": "Calendar",
       "badge": "Bot calendar",
@@ -1664,6 +1687,56 @@
     }
   },
   "customers": {
+    "serviceHistory": {
+      "title": "Service history",
+      "subtitle": "Every appointment for this customer, with attendance and amount.",
+      "empty": "No appointments recorded for this customer yet.",
+      "markSuccess": "Attendance recorded.",
+      "markAttended": "Mark attended",
+      "markNoShow": "Mark no-show",
+      "confirmAttendedTitle": "Mark this appointment as attended?",
+      "confirmNoShowTitle": "Mark this appointment as no-show?",
+      "confirmMessage": "This is registered as an audit entry with your user and cannot be silently changed.",
+      "viewConversation": "Conversation",
+      "rescheduledNTimes": "Rescheduled {n} time(s)",
+      "viewChain": "View reschedule chain",
+      "pagination": "Page {page} of {total}",
+      "summary": {
+        "total": "Appointments",
+        "attended": "Attended",
+        "noShow": "No-show",
+        "rescheduled": "Rescheduled",
+        "pendingUnreg": "Pending + unregistered",
+        "attendanceRate": "Attendance rate",
+        "totalSpent": "Total spent",
+        "lastVisit": "Last visit"
+      },
+      "filter": {
+        "all": "All results",
+        "attended": "Attended",
+        "noShow": "No-show",
+        "rescheduled": "Rescheduled",
+        "cancelled": "Cancelled",
+        "pending": "Pending",
+        "unregistered": "Unregistered",
+        "allServices": "All services"
+      },
+      "col": {
+        "when": "When",
+        "service": "Service",
+        "amount": "Amount",
+        "result": "Result",
+        "actions": "Actions"
+      },
+      "status": {
+        "attended": "Attended",
+        "no_show": "No-show",
+        "rescheduled": "Rescheduled",
+        "cancelled": "Cancelled",
+        "pending": "Pending",
+        "unregistered": "Unregistered"
+      }
+    },
     "title": "Customers",
     "subtitle": "Everyone who has messaged any of your bots, ordered by most recent activity.",
     "filterByBot": "Filter by bot",

@@ -85,8 +85,16 @@ function isConversationBlocked(status: string | null | undefined): boolean {
         <StatCard :label="$t('customers.detail.stats.lastMessage')" :value="new Date(data.lastMessageAt).toLocaleString()" />
       </div>
 
-      <div class="mt-8 grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <CustomerMeetingsCard :phone="phone" />
+      <div v-if="bots.length > 0" class="mt-8 space-y-6">
+        <CustomerServiceHistoryCard
+          v-for="bot in bots"
+          :key="bot.id"
+          :bot-id="bot.id"
+          :phone="phone"
+          :bot-label="bots.length > 1 ? bot.name : undefined"
+        />
+      </div>
+      <div class="mt-6">
         <CustomerCasesCard :phone="phone" />
       </div>
 

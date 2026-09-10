@@ -576,6 +576,13 @@ const meetingsChart = computed(() => {
           @update:page="(v) => meetingsPage = v"
         />
       </div>
+
+      <div class="mt-6">
+        <DashboardServicesPerformedBlock
+          :from="range.from"
+          :to="range.to"
+        />
+      </div>
     </section>
 
     <!-- ── SECCIÓN CONVERSACIONES RECIENTES (legacy) ──────────────────── -->
