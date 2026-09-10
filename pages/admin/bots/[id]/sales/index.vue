@@ -215,7 +215,7 @@ watch(
       {{ error }}
     </p>
 
-    <div class="mt-6 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-xl p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3">
+    <div class="mt-6 rounded-2xl border border-slate-200 bg-white p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3">
       <div>
         <label class="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 mb-1">
           {{ $t('admin.sales.filter.status') }}
@@ -312,7 +312,7 @@ watch(
       class="mt-6"
     />
 
-    <div v-else class="mt-6 overflow-x-auto rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-xl">
+    <div v-else class="mt-6 overflow-x-auto rounded-2xl border border-slate-200 bg-white">
       <table class="min-w-full text-sm">
         <thead class="bg-slate-50/50 text-xs uppercase tracking-wider text-slate-500">
           <tr>

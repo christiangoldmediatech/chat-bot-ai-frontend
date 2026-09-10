@@ -164,7 +164,7 @@ function statusBadgeClass(s: ConversationStatus): string {
 
         <!-- Side controls panel -->
         <aside class="space-y-4">
-          <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-4">
+          <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-4">
             <h2 class="text-sm font-semibold text-slate-900">
               {{ data.customerName || data.customerPhone }}
             </h2>
@@ -177,7 +177,7 @@ function statusBadgeClass(s: ConversationStatus): string {
             </span>
           </section>
 
-          <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-4">
+          <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-4">
             <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-500">
               {{ $t('conversations.detail.actionsTitle') }}
             </h3>

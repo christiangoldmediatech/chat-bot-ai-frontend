@@ -11,7 +11,7 @@ definePageMeta({
 const leadsApi = useLeads()
 const botsApi = useBots()
 
-const PAGE_SIZE = 50
+const PAGE_SIZE = 25
 
 type StatusTab = LeadStatus | 'ALL'
 
@@ -453,7 +453,7 @@ await Promise.all([loadBots(), load()])
     </div>
 
     <!-- Filter bar -->
-    <div class="mt-4 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-3 flex flex-wrap items-center gap-2">
+    <div class="mt-4 rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-3 flex flex-wrap items-center gap-2">
       <div class="relative flex-1 min-w-[18rem]">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">
           <circle cx="11" cy="11" r="8" />
@@ -522,7 +522,7 @@ await Promise.all([loadBots(), load()])
 
     <div
       v-else-if="rows.length === 0"
-      class="mt-6 rounded-2xl bg-white/70 ring-1 ring-white/50 p-10 text-center text-slate-500"
+      class="mt-6 rounded-2xl bg-white ring-1 ring-slate-200 p-10 text-center text-slate-500"
     >
       {{ isFiltered ? $t('leads.list.noMatches') : $t('leads.list.empty') }}
     </div>
@@ -627,8 +627,8 @@ await Promise.all([loadBots(), load()])
 
     <!-- Pagination footer -->
     <div
-      v-if="rows.length > 0 && pageCount > 1"
-      class="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/60 shadow-glass px-4 py-3"
+      v-if="rows.length > 0"
+      class="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass px-4 py-3"
     >
       <p class="text-xs text-slate-600 tabular-nums">
         {{ $t('leads.pagination.summary', { from: fromIndex, to: toIndex, total }) }}

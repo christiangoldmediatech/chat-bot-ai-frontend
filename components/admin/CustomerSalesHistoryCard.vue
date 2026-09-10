@@ -58,7 +58,7 @@ await load()
 </script>
 
 <template>
-  <section class="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-xl p-5">
+  <section class="rounded-2xl border border-slate-200 bg-white p-5">
     <header class="flex items-start justify-between gap-2">
       <div>
         <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-700">

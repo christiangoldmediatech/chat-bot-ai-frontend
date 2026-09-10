@@ -116,7 +116,7 @@ onMounted(() => {
     :class="
       tone === 'dark'
         ? 'bg-slate-900/70 ring-slate-700/50 shadow-glass-lg'
-        : 'bg-white/70 backdrop-blur-xl ring-white/50'
+        : 'bg-white ring-slate-200'
     "
   >
     <header

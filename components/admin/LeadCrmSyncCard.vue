@@ -39,7 +39,7 @@ const palette: Record<LeadCrmSyncStatus, { ring: string; bg: string; dot: string
 
 <template>
   <section
-    class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-5"
+    class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5"
   >
     <header class="flex items-center justify-between gap-3 flex-wrap">
       <div>

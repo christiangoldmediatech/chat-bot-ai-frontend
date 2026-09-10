@@ -111,7 +111,7 @@ await load()
       <div
         v-for="svc in items"
         :key="svc.id"
-        class="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-xl p-4 flex flex-col gap-3"
+        class="rounded-2xl border border-slate-200 bg-white p-4 flex flex-col gap-3"
       >
         <div class="relative -mx-4 -mt-4 aspect-[16/9] bg-slate-100 border-b border-slate-200 overflow-hidden rounded-t-2xl">
           <img

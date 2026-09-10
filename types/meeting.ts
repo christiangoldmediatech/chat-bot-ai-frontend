@@ -30,3 +30,20 @@ export interface MeetingFilters {
   dateFrom?: string
   dateTo?: string
 }
+
+export type MeetingsTab = 'UPCOMING' | 'PAST' | 'CANCELLED' | 'ALL'
+
+export interface MeetingsCounts {
+  upcoming: number
+  past: number
+  cancelled: number
+  total: number
+}
+
+export interface PaginatedMeetings {
+  rows: Meeting[]
+  total: number
+  page: number
+  pageSize: number
+  counts: MeetingsCounts
+}

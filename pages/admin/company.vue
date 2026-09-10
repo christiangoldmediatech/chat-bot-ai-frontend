@@ -118,7 +118,7 @@ await load()
 
     <template v-else-if="data">
       <!-- Identity card with avatar + read-only quick facts -->
-      <section class="mt-6 max-w-3xl rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6">
+      <section class="mt-6 max-w-3xl rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-6">
         <div class="flex items-start gap-4">
           <div class="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 text-white font-semibold text-2xl ring-1 ring-white/40 shadow-inner">
             {{ data.name.charAt(0).toUpperCase() }}
@@ -185,7 +185,7 @@ await load()
       </section>
 
       <!-- Editable details -->
-      <form class="mt-4 max-w-3xl rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6 space-y-5" @submit.prevent="onSubmit">
+      <form class="mt-4 max-w-3xl rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-6 space-y-5" @submit.prevent="onSubmit">
         <header class="flex items-start gap-3">
           <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 ring-1 ring-primary-100">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-primary-600" aria-hidden="true">

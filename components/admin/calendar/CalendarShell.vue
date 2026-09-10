@@ -145,7 +145,7 @@ function onEventClick(appt: CalendarAppointment): void {
 </script>
 
 <template>
-  <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-4 sm:p-6 space-y-4">
+  <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-4 sm:p-6 space-y-4">
     <header class="flex flex-wrap items-center gap-3">
       <div class="inline-flex rounded-xl bg-slate-100 p-1">
         <button

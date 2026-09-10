@@ -296,7 +296,7 @@ function apptDisplayService(appt: CalendarAppointment): string {
 </script>
 
 <template>
-  <div class="rounded-2xl bg-white/80 backdrop-blur-xl ring-1 ring-white/60 shadow-glass overflow-hidden">
+  <div class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass overflow-hidden">
     <div class="grid" :style="{ gridTemplateColumns: `64px repeat(${dayKeys.length}, minmax(0, 1fr))` }">
       <div class="border-b border-r border-slate-200/70 bg-white/60 h-16" />
       <div

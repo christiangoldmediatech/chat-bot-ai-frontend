@@ -116,7 +116,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-5">
+  <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5">
     <div class="flex items-start justify-between gap-3">
       <div class="min-w-0">
         <h2 class="text-sm font-semibold text-slate-900">{{ $t('admin.calendar.cardTitle') }}</h2>

@@ -143,7 +143,7 @@ await load()
   <div class="max-w-6xl">
     <NuxtLink :to="`/admin/bots/${id}`" class="inline-flex items-center gap-1 text-sm text-white/80 hover:text-pearl drop-shadow-sm transition">{{ $t('admin.botConfig.back') }}</NuxtLink>
 
-    <section class="mt-3 rounded-2xl bg-white/80 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6">
+    <section class="mt-3 rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-6">
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span class="inline-flex items-center gap-1.5 rounded-full bg-primary-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary-700 ring-1 ring-primary-100">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3" aria-hidden="true">
@@ -182,7 +182,7 @@ await load()
     <SpinnerInline v-if="loading" class="mt-6" />
 
     <form v-else class="mt-6 max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6" @submit.prevent="onSubmit">
-      <section v-if="false" class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6 space-y-5">
+      <section v-if="false" class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-6 space-y-5">
         <header class="flex items-start gap-3">
           <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 ring-1 ring-primary-100">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-primary-600" aria-hidden="true">
@@ -255,7 +255,7 @@ await load()
       <!-- ────────────────────────────────────────────────────────────────
            SECTION 2 — Conversation messages (templates sent verbatim)
       ───────────────────────────────────────────────────────────────── -->
-      <section v-if="false" class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6 space-y-5">
+      <section v-if="false" class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-6 space-y-5">
         <header class="flex items-start gap-3">
           <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-success-50 ring-1 ring-success-100">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-success-600" aria-hidden="true">
@@ -296,7 +296,7 @@ await load()
       <!-- ────────────────────────────────────────────────────────────────
            SECTION 3 — Model & timing
       ───────────────────────────────────────────────────────────────── -->
-      <section v-if="false" class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6 space-y-5">
+      <section v-if="false" class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-6 space-y-5">
         <header class="flex items-start gap-3">
           <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 ring-1 ring-indigo-100">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-indigo-600" aria-hidden="true">
@@ -369,7 +369,7 @@ await load()
       <!-- ────────────────────────────────────────────────────────────────
            SECTION 4 — Internal metadata + status
       ───────────────────────────────────────────────────────────────── -->
-      <section class="rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-6 space-y-5">
+      <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-6 space-y-5">
         <header class="flex items-start gap-3">
           <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 ring-1 ring-slate-200">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-slate-600" aria-hidden="true">

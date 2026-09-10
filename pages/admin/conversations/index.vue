@@ -166,8 +166,8 @@ function formatDate(s: string): string {
   <div>
     <div class="flex items-end justify-between gap-3 flex-wrap">
       <div>
-        <h1 class="text-2xl font-semibold tracking-tight">{{ $t('conversations.title') }}</h1>
-        <p class="text-slate-500 text-sm mt-1">
+        <h1 class="text-2xl font-semibold tracking-tight text-slate-900">{{ $t('conversations.title') }}</h1>
+        <p class="text-slate-500 text-sm mt-1 max-w-2xl">
           {{ $t('conversations.subtitle') }}
         </p>
       </div>
@@ -183,7 +183,7 @@ function formatDate(s: string): string {
         </NuxtLink>
         <button
           type="button"
-          class="text-xs text-slate-500 hover:text-slate-700 inline-flex items-center gap-1"
+          class="text-xs text-white/70 hover:text-white inline-flex items-center gap-1"
           :disabled="activityLoading"
           @click="loadActivity"
         >
@@ -227,7 +227,7 @@ function formatDate(s: string): string {
 
     <!-- Filters -->
     <form
-      class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass p-4"
+      class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-4"
       @submit.prevent="onApplyFilters"
     >
       <div class="lg:col-span-2">
@@ -315,7 +315,7 @@ function formatDate(s: string): string {
         class="mt-6"
       />
 
-      <div v-else class="mt-6 overflow-x-auto rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/50 shadow-glass">
+      <div v-else class="mt-6 overflow-x-auto rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass">
         <table class="w-full text-sm">
           <thead class="bg-slate-50 text-slate-600">
             <tr>
@@ -364,14 +364,14 @@ function formatDate(s: string): string {
         </table>
       </div>
 
-      <div class="mt-4 flex items-center justify-between text-sm text-slate-600">
-        <div>
+      <div class="mt-4 flex items-center justify-between gap-3 text-sm">
+        <div class="text-white/80">
           {{ $t('conversations.pagination.summary', { total: data.total, page: data.page, totalPages }) }}
         </div>
         <div class="flex gap-2">
           <button
             type="button"
-            class="rounded-md border border-slate-200 px-3 py-1.5 hover:bg-slate-50 disabled:opacity-50"
+            class="rounded-md bg-white ring-1 ring-slate-200 text-slate-700 px-3 py-1.5 font-medium shadow-sm hover:bg-slate-100 disabled:opacity-50"
             :disabled="(filters.page ?? 1) <= 1"
             @click="onPage(-1)"
           >
@@ -379,7 +379,7 @@ function formatDate(s: string): string {
           </button>
           <button
             type="button"
-            class="rounded-md border border-slate-200 px-3 py-1.5 hover:bg-slate-50 disabled:opacity-50"
+            class="rounded-md bg-white ring-1 ring-slate-200 text-slate-700 px-3 py-1.5 font-medium shadow-sm hover:bg-slate-100 disabled:opacity-50"
             :disabled="(filters.page ?? 1) >= totalPages"
             @click="onPage(1)"
           >
