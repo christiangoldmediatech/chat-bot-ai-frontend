@@ -292,7 +292,7 @@
     "documents": "Documentos",
     "conversations": "Conversaciones",
     "customers": "Clientes",
-    "meetings": "Reuniones",
+    "meetings": "Citas",
     "cases": "Casos",
     "leads": "Leads",
     "company": "Empresa",
@@ -788,7 +788,7 @@
         "documentsBody": "Base de conocimiento",
         "documentsSubtitle": "Sube .md / .txt / .pdf para RAG",
         "calendarTitle": "Google Calendar",
-        "calendarBody": "Reservas de reuniones",
+        "calendarBody": "Reservas de citas",
         "calendarSubtitle": "Conecta y gestiona disponibilidad",
         "openDashboard": "Abrir panel"
       }
@@ -814,7 +814,7 @@
         "media": "Multimedia",
         "mediaDesc": "Imágenes, PDFs, videos, audios o ubicaciones que el bot envía como adjuntos nativos en WhatsApp.",
         "calendar": "Google Calendar",
-        "calendarDesc": "Conecta una cuenta de Google para que el bot pueda ver disponibilidad y agendar reuniones.",
+        "calendarDesc": "Conecta una cuenta de Google para que el bot pueda ver disponibilidad y agendar citas.",
         "crm": "Conexión con CRM",
         "crmDesc": "Envía leads a tu CRM cuando un cliente solicita hablar con un asesor humano."
       },
@@ -1136,7 +1136,7 @@
     },
     "calendar": {
       "cardTitle": "Google Calendar",
-      "cardDescription": "Conecta una cuenta para que el bot pueda agendar reuniones.",
+      "cardDescription": "Conecta una cuenta para que el bot pueda agendar citas.",
       "fieldAccount": "Cuenta",
       "fieldCalendar": "Calendario",
       "fieldTimezone": "Zona horaria",
@@ -1144,13 +1144,13 @@
       "fieldDefaultDuration": "Duración por defecto",
       "minutesShort": "min",
       "emptyTitle": "Sin cuenta conectada",
-      "emptyBody": "Conecta una cuenta de Google para que el bot pueda leer disponibilidad y agendar reuniones.",
+      "emptyBody": "Conecta una cuenta de Google para que el bot pueda leer disponibilidad y agendar citas.",
       "connect": "Conectar Google Calendar",
       "connecting": "Abriendo…",
       "consentHint": "La pantalla de consentimiento de Google se abrirá en una pestaña nueva. Cuando vuelvas, pulsa Recargar.",
       "disconnect": "Desconectar",
       "disconnectConfirmTitle": "¿Desconectar Google Calendar?",
-      "disconnectConfirmMessage": "El bot dejará de leer disponibilidad y de agendar reuniones hasta que vuelvas a conectar. Puedes reconectar en cualquier momento.",
+      "disconnectConfirmMessage": "El bot dejará de leer disponibilidad y de agendar citas hasta que vuelvas a conectar. Puedes reconectar en cualquier momento.",
       "disconnectConfirmAction": "Desconectar",
       "escalationTitle": "Escalado a asesor",
       "escalationSubtitle": "Datos del asesor y cuándo el bot debe hacer follow-up si el caso queda pendiente.",
@@ -1163,15 +1163,48 @@
       "advisorEmailHelp": "Cuando el bot escale, este correo recibe la notificación. Déjalo vacío para deshabilitar el escalado.",
       "advisorName": "Nombre del asesor",
       "advisorWhatsapp": "WhatsApp del asesor (con lada, ej. +5215512345678)",
-      "advisorWhatsappHelp": "Formato E.164: empieza con \"+\" seguido del código del país, sin espacios ni guiones. Ejemplo: +5215512345678. Cuando el correo y este número están configurados, cada escalado y cada reunión agendada también notifican a este WhatsApp. Déjalo vacío para no enviar por WhatsApp.",
+      "advisorWhatsappHelp": "Formato E.164: empieza con \"+\" seguido del código del país, sin espacios ni guiones. Ejemplo: +5215512345678. Cuando el correo y este número están configurados, cada escalado y cada cita agendada también notifican a este WhatsApp. Déjalo vacío para no enviar por WhatsApp.",
       "followupHours": "Follow-up tras (horas)",
       "followupHoursHelp": "0 = sin follow-up automático.",
       "saveEscalation": "Guardar escalado",
       "defaultDuration": "Duración por defecto"
     },
+    "calendarView": {
+      "title": "Calendario",
+      "badge": "Calendario del bot",
+      "subtitle": "Citas y periodos bloqueados de este bot, en la zona horaria del negocio.",
+      "backToBot": "Volver al bot",
+      "viewWeek": "Semana",
+      "viewDay": "Día",
+      "today": "Hoy",
+      "closed": "Cerrado",
+      "empty": "Sin citas ni bloqueos en este rango.",
+      "filters": {
+        "hideCancelled": "Ocultar canceladas",
+        "allServices": "Todos los servicios"
+      },
+      "status": {
+        "created": "Agendada",
+        "cancelled": "Cancelada",
+        "completed": "Atendida",
+        "no_show": "No asistió",
+        "rescheduled": "Reagendada"
+      },
+      "drawer": {
+        "appointment": "Cita",
+        "confirmed": "Confirmada por el cliente",
+        "when": "Cuándo",
+        "until": "Hasta",
+        "customer": "Cliente",
+        "service": "Servicio",
+        "openMeet": "Abrir Google Meet",
+        "viewConversation": "Ver conversación",
+        "viewCustomer": "Ver ficha del cliente"
+      }
+    },
     "businessHours": {
       "title": "Horario de atención",
-      "subtitle": "Días y rangos en los que el bot puede agendar reuniones. Soporta dos bloques por día (mañana + tarde).",
+      "subtitle": "Días y rangos en los que el bot puede agendar citas. Soporta dos bloques por día (mañana + tarde).",
       "timezoneLabel": "Zona horaria",
       "notConnected": "Conecta primero Google Calendar — el horario de atención requiere una integración de calendario activa.",
       "closed": "cerrado",
@@ -1198,7 +1231,7 @@
         "slotGranularity": "Granularidad del slot",
         "slotGranularityHelp": "Cada cuánto se ofrece un turno.",
         "buffer": "Descanso entre citas",
-        "bufferHelp": "Tiempo extra entre reuniones consecutivas.",
+        "bufferHelp": "Tiempo extra entre citas consecutivas.",
         "minNotice": "Anticipación mínima",
         "minNoticeHelp": "Mínimo tiempo desde ahora para que el cliente pueda reservar.",
         "maxAdvance": "Máximo a futuro",
@@ -1518,7 +1551,7 @@
   },
   "leads": {
     "title": "Leads",
-    "subtitle": "Clientes con intención comercial real — preguntaron precios, pidieron una demo, dejaron datos o agendaron una reunión.",
+    "subtitle": "Clientes con intención comercial real — preguntaron precios, pidieron una demo, dejaron datos o agendaron una cita.",
     "totalLabel": "Total de leads",
     "matchingLabel": "Coincidencias",
     "stat": {
@@ -1548,7 +1581,7 @@
       "CREATED": "Lead creado",
       "SIGNAL_PRICE_ASKED": "Preguntó por precios",
       "SIGNAL_DEMO_REQUESTED": "Solicitó una demo",
-      "SIGNAL_MEETING_REQUESTED": "Solicitó una reunión",
+      "SIGNAL_MEETING_REQUESTED": "Solicitó una cita",
       "SIGNAL_QUOTE_REQUESTED": "Solicitó una cotización",
       "SIGNAL_EMAIL_CAPTURED": "Correo capturado",
       "SIGNAL_PHONE_CAPTURED": "Teléfono alternativo capturado",
@@ -1677,8 +1710,8 @@
     }
   },
   "meetings": {
-    "title": "Reuniones",
-    "subtitle": "Todas las reuniones agendadas por los bots. Filtra por bot, cliente o motivo, y agrúpalas como prefieras.",
+    "title": "Citas",
+    "subtitle": "Todas las citas agendadas por los bots. Filtra por bot, cliente o motivo, y agrúpalas como prefieras.",
     "explorer": {
       "tabUpcoming": "Próximas",
       "tabPast": "Pasadas",
@@ -1689,21 +1722,21 @@
       "groupFlat": "Lista",
       "groupByBot": "Por bot",
       "groupByCustomer": "Por cliente",
-      "emptyTitle": "Aún no hay reuniones agendadas.",
-      "emptyTitleFiltered": "No hay reuniones que coincidan con los filtros.",
+      "emptyTitle": "Aún no hay citas agendadas.",
+      "emptyTitleFiltered": "No hay citas que coincidan con los filtros.",
       "emptyBody": "Cuando uno de los bots agende, aparecerá aquí.",
       "emptyBodyFiltered": "Prueba con otra búsqueda o quita los filtros."
     },
     "card": {
-      "title": "Reuniones agendadas",
+      "title": "Citas agendadas",
       "subtitle": "Histórico de meets con este cliente",
-      "emptyTitle": "Sin reuniones agendadas",
-      "emptyBody": "Cuando el bot agende una reunión con este cliente, aparecerá aquí.",
+      "emptyTitle": "Sin citas agendadas",
+      "emptyBody": "Cuando el bot agende una cita con este cliente, aparecerá aquí.",
       "groupUpcoming": "Próximas ({n})",
       "groupPast": "Pasadas ({n})",
       "groupCancelled": "Canceladas ({n})",
       "cancelled": "Cancelada",
-      "fallbackTopic": "Reunión",
+      "fallbackTopic": "Cita",
       "relativeInMin": "en {n} min",
       "relativeAgoMin": "hace {n} min",
       "relativeInHr": "en {n} h",
@@ -2056,7 +2089,7 @@
         "navLeads": "Leads",
         "navCustomers": "Clientes",
         "navConversations": "Conversaciones",
-        "navMeetings": "Reuniones",
+        "navMeetings": "Citas",
         "navBilling": "Facturación"
       },
       "hero": {
@@ -2119,7 +2152,7 @@
           "documentsTitle": "Base de conocimiento",
           "documentsHint": "Sube .md / .txt / .pdf para RAG",
           "calendarLabel": "Google Calendar",
-          "calendarTitle": "Reservas de reuniones",
+          "calendarTitle": "Reservas de citas",
           "calendarHint": "Conecta y gestiona disponibilidad"
         }
       },
@@ -2144,8 +2177,8 @@
     },
     "companyMeetings": {
       "back": "← Volver a la empresa",
-      "title": "Reuniones",
-      "subtitle": "Todas las reuniones agendadas por los bots de esta empresa."
+      "title": "Citas",
+      "subtitle": "Todas las citas agendadas por los bots de esta empresa."
     },
     "companyCustomers": {
       "back": "← Volver a la empresa",

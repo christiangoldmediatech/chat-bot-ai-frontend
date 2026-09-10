@@ -1169,6 +1169,39 @@
       "saveEscalation": "Save escalation",
       "defaultDuration": "Default duration"
     },
+    "calendarView": {
+      "title": "Calendar",
+      "badge": "Bot calendar",
+      "subtitle": "Appointments and blocked periods for this bot, in the business timezone.",
+      "backToBot": "Back to bot",
+      "viewWeek": "Week",
+      "viewDay": "Day",
+      "today": "Today",
+      "closed": "Closed",
+      "empty": "No appointments or blocks in this range.",
+      "filters": {
+        "hideCancelled": "Hide cancelled",
+        "allServices": "All services"
+      },
+      "status": {
+        "created": "Scheduled",
+        "cancelled": "Cancelled",
+        "completed": "Completed",
+        "no_show": "No-show",
+        "rescheduled": "Rescheduled"
+      },
+      "drawer": {
+        "appointment": "Appointment",
+        "confirmed": "Confirmed by customer",
+        "when": "When",
+        "until": "Until",
+        "customer": "Customer",
+        "service": "Service",
+        "openMeet": "Open Google Meet",
+        "viewConversation": "View conversation",
+        "viewCustomer": "View customer profile"
+      }
+    },
     "businessHours": {
       "title": "Business hours",
       "subtitle": "Days and time ranges when the bot can schedule meetings. Two blocks per day are supported (morning + afternoon).",

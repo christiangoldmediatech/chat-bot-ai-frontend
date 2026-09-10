@@ -151,6 +151,13 @@ await load()
             {{ $t('admin.bot.revenueLink') }}
           </NuxtLink>
           <NuxtLink
+            :to="`/admin/bots/${bot.id}/calendar`"
+            class="rounded-xl border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-800 hover:bg-amber-100 transition inline-flex items-center gap-1.5"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+            {{ $t('admin.calendarView.title') }}
+          </NuxtLink>
+          <NuxtLink
             :to="`/admin/bots/${bot.id}/edit`"
             class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white transition"
           >
