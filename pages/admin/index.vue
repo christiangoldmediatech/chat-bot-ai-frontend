@@ -218,7 +218,7 @@ const kpiMeetingsHint = computed(() => {
     <div class="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-12 lg:flex-1 lg:min-h-0">
       <div class="lg:col-span-8 lg:min-h-0 lg:grid lg:grid-rows-[minmax(0,1fr)_320px_minmax(0,1fr)] flex flex-col gap-3">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 lg:min-h-0">
-          <div class="md:col-span-2 lg:min-h-0">
+          <div class="md:col-span-2 lg:min-h-0 h-[280px] md:h-[300px] lg:h-auto">
             <DashboardActivityCompareCard
               :from="range.from"
               :to="range.to"
@@ -226,7 +226,7 @@ const kpiMeetingsHint = computed(() => {
               fill-height
             />
           </div>
-          <div class="grid grid-cols-1 gap-3 lg:min-h-0">
+          <div class="grid grid-cols-2 md:grid-cols-1 gap-3 lg:min-h-0">
             <KpiCard
               :label="t('admin.dashboard.kpi.conversations')"
               :value="totals.conversationsTotal"
@@ -249,7 +249,7 @@ const kpiMeetingsHint = computed(() => {
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 lg:h-[320px] lg:min-h-[320px] lg:overflow-hidden">
-          <div class="lg:h-full lg:min-h-0 lg:overflow-hidden">
+          <div class="h-[280px] md:h-[300px] lg:h-full lg:min-h-0 lg:overflow-hidden">
             <DashboardAttendedBarCard
               :from="range.from"
               :to="range.to"
@@ -257,7 +257,7 @@ const kpiMeetingsHint = computed(() => {
               fill-height
             />
           </div>
-          <div class="lg:h-full lg:min-h-0 lg:overflow-hidden">
+          <div class="h-[280px] md:h-[300px] lg:h-full lg:min-h-0 lg:overflow-hidden">
             <DashboardServicesDonutCard
               :from="range.from"
               :to="range.to"
@@ -267,11 +267,11 @@ const kpiMeetingsHint = computed(() => {
         </div>
 
         <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-3 lg:min-h-0 flex flex-col">
-          <header class="flex items-center justify-between gap-3 mb-2 shrink-0">
+          <header class="flex flex-wrap items-center justify-between gap-2 mb-2 shrink-0">
             <div class="inline-flex rounded-xl bg-slate-100 p-1">
               <button
                 type="button"
-                class="rounded-lg px-3 py-1 text-xs font-medium transition"
+                class="rounded-lg px-2.5 sm:px-3 py-1 text-xs font-medium transition"
                 :class="bottomTab === 'meetings' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'"
                 @click="bottomTab = 'meetings'"
               >
@@ -280,7 +280,7 @@ const kpiMeetingsHint = computed(() => {
               </button>
               <button
                 type="button"
-                class="rounded-lg px-3 py-1 text-xs font-medium transition"
+                class="rounded-lg px-2.5 sm:px-3 py-1 text-xs font-medium transition"
                 :class="bottomTab === 'services' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'"
                 @click="bottomTab = 'services'"
               >
@@ -294,7 +294,7 @@ const kpiMeetingsHint = computed(() => {
               {{ $t('admin.dashboard.dense.seeAll') }}
             </NuxtLink>
           </header>
-          <div class="flex-1 lg:min-h-0 overflow-y-auto -mx-1 px-1">
+          <div class="flex-1 min-h-0 lg:overflow-y-auto -mx-1 px-1">
             <MeetingsByCustomerTable
               v-if="bottomTab === 'meetings'"
               :data="meetingsByCustomer"
@@ -314,7 +314,7 @@ const kpiMeetingsHint = computed(() => {
         </section>
       </div>
 
-      <aside class="lg:col-span-4 lg:min-h-0 lg:overflow-y-auto pr-1 flex flex-col gap-3">
+      <aside class="lg:col-span-4 lg:min-h-0 lg:overflow-y-auto lg:pr-1 flex flex-col gap-3">
         <DashboardHeroKpiCard
           :label="$t('admin.dashboard.kpi.messagesSentByBot')"
           :hint="$t('admin.dashboard.kpi.messagesSentByBotHint')"

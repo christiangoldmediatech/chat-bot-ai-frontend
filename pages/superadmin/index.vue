@@ -431,7 +431,7 @@ await load()
     <div v-else-if="data" class="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-12 lg:flex-1 lg:min-h-0">
       <div class="lg:col-span-8 lg:min-h-0 lg:grid lg:grid-rows-[minmax(0,1fr)_320px_minmax(0,1fr)] flex flex-col gap-3">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 lg:min-h-0">
-          <div class="md:col-span-2 lg:min-h-0 rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/60 p-3 flex flex-col overflow-hidden">
+          <div class="md:col-span-2 lg:min-h-0 h-[280px] md:h-[300px] lg:h-auto rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/60 p-3 flex flex-col overflow-hidden">
             <header class="mb-2 shrink-0">
               <h3 class="text-sm font-semibold text-slate-100">{{ $t('superadmin.dashboard.overviewChart.title') }}</h3>
               <p class="text-[11px] text-slate-400 mt-0.5">{{ $t('superadmin.dashboard.overviewChart.subtitle') }}</p>
@@ -443,7 +443,7 @@ await load()
               <div v-else class="h-full rounded-xl bg-slate-800/60 animate-pulse" />
             </div>
           </div>
-          <div class="grid grid-cols-1 gap-3 lg:min-h-0">
+          <div class="grid grid-cols-2 md:grid-cols-1 gap-3 lg:min-h-0">
             <div
               v-for="kpi in platformKpis.slice(0, 2)"
               :key="kpi.key"
@@ -459,13 +459,13 @@ await load()
                   {{ kpi.delta.text }}
                 </span>
               </div>
-              <div class="text-2xl font-semibold text-slate-100 tabular-nums leading-tight">{{ full(kpi.value) }}</div>
+              <div class="mt-1 text-2xl font-semibold text-slate-100 tabular-nums leading-tight">{{ full(kpi.value) }}</div>
             </div>
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 lg:h-[320px] lg:min-h-[320px] lg:overflow-hidden">
-          <div class="lg:h-full lg:min-h-0 lg:overflow-hidden rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-3 flex flex-col">
+          <div class="h-[280px] md:h-[300px] lg:h-full lg:min-h-0 lg:overflow-hidden rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-3 flex flex-col">
             <header class="mb-2 flex items-start justify-between gap-2 shrink-0">
               <div class="min-w-0">
                 <h3 class="text-sm font-semibold text-slate-100 truncate">{{ $t('admin.dashboard.platform.byBot.title') }}</h3>
@@ -492,7 +492,7 @@ await load()
               </ClientOnly>
             </div>
           </div>
-          <div class="lg:h-full lg:min-h-0 lg:overflow-hidden rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-3 flex flex-col">
+          <div class="h-[280px] md:h-[300px] lg:h-full lg:min-h-0 lg:overflow-hidden rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-3 flex flex-col">
             <header class="mb-2 shrink-0">
               <h3 class="text-sm font-semibold text-slate-100">{{ $t('admin.dashboard.chart.mixedTitle') }}</h3>
               <p class="text-[10px] text-slate-500 truncate">{{ $t('admin.dashboard.chart.mixedSubtitle') }}</p>
@@ -514,11 +514,11 @@ await load()
         </div>
 
         <section class="rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-3 lg:min-h-0 flex flex-col">
-          <header class="flex items-center justify-between gap-3 mb-2 shrink-0">
+          <header class="flex flex-wrap items-center justify-between gap-2 mb-2 shrink-0">
             <div class="inline-flex rounded-xl bg-slate-800/70 p-1">
               <button
                 type="button"
-                class="rounded-lg px-3 py-1 text-xs font-medium transition"
+                class="rounded-lg px-2.5 sm:px-3 py-1 text-xs font-medium transition"
                 :class="bottomTab === 'bots' ? 'bg-slate-900 text-slate-100 shadow-sm' : 'text-slate-400 hover:text-slate-200'"
                 @click="bottomTab = 'bots'"
               >
@@ -527,7 +527,7 @@ await load()
               </button>
               <button
                 type="button"
-                class="rounded-lg px-3 py-1 text-xs font-medium transition"
+                class="rounded-lg px-2.5 sm:px-3 py-1 text-xs font-medium transition"
                 :class="bottomTab === 'tenants' ? 'bg-slate-900 text-slate-100 shadow-sm' : 'text-slate-400 hover:text-slate-200'"
                 @click="bottomTab = 'tenants'"
               >
@@ -536,7 +536,7 @@ await load()
               </button>
             </div>
           </header>
-          <div class="flex-1 lg:min-h-0 overflow-y-auto -mx-1 px-1">
+          <div class="flex-1 min-h-0 lg:overflow-y-auto -mx-1 px-1">
             <div v-if="bottomTab === 'bots'">
               <div v-if="platformLoading && groupedByTenant.length === 0" class="h-40 rounded-xl bg-slate-800/60 animate-pulse" />
               <div v-else-if="groupedByTenant.length > 0" class="space-y-3">
@@ -667,7 +667,7 @@ await load()
         </section>
       </div>
 
-      <aside class="lg:col-span-4 lg:min-h-0 lg:overflow-y-auto pr-1 flex flex-col gap-3">
+      <aside class="lg:col-span-4 lg:min-h-0 lg:overflow-y-auto lg:pr-1 flex flex-col gap-3">
         <div class="rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/60 p-3 flex flex-col">
           <div class="flex items-start justify-between gap-2">
             <div class="min-w-0 flex-1">
