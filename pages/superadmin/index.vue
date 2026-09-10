@@ -23,11 +23,32 @@ const data = ref<SuperadminDashboardSummary | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
 
-const range = ref<{ from: string; to: string }>({ from: '', to: '' })
+function isoStart(d: Date): string {
+  const dd = new Date(d)
+  dd.setHours(0, 0, 0, 0)
+  return dd.toISOString()
+}
+function isoEnd(d: Date): string {
+  const dd = new Date(d)
+  dd.setHours(23, 59, 59, 999)
+  return dd.toISOString()
+}
+function daysAgo(n: number): Date {
+  const d = new Date()
+  d.setDate(d.getDate() - n)
+  return d
+}
+
+const range = ref<{ from: string; to: string }>({
+  from: isoStart(daysAgo(29)),
+  to: isoEnd(new Date()),
+})
 const activityInterval = ref<'day' | 'month' | 'year'>('day')
 const platformSummary = ref<MetricsSummaryResponse | null>(null)
 const platformConvSeries = ref<MetricsTimeseriesResponse | null>(null)
 const platformLeadSeries = ref<MetricsTimeseriesResponse | null>(null)
+const platformMsgsSeries = ref<MetricsTimeseriesResponse | null>(null)
+const platformMeetingsSeries = ref<MetricsTimeseriesResponse | null>(null)
 const byTenant = ref<PlatformByTenantRow[]>([])
 const byBot = ref<PlatformByBotRow[]>([])
 const platformLoading = ref(true)
@@ -49,16 +70,20 @@ async function loadPlatform(): Promise<void> {
   platformLoading.value = true
   try {
     const q = { ...range.value, interval: activityInterval.value }
-    const [s, conv, leads, byT, byB] = await Promise.all([
+    const [s, conv, leads, msgs, meets, byT, byB] = await Promise.all([
       metrics.summary(range.value),
       metrics.timeseries('conversations', q),
       metrics.timeseries('leads', q),
+      metrics.timeseries('messagesSentByBot', q).catch(() => null),
+      metrics.timeseries('meetingsScheduled', q).catch(() => null),
       metrics.byTenant(range.value),
       metrics.byBot(range.value),
     ])
     platformSummary.value = s
     platformConvSeries.value = conv
     platformLeadSeries.value = leads
+    platformMsgsSeries.value = msgs
+    platformMeetingsSeries.value = meets
     byTenant.value = byT.rows
     byBot.value = byB.rows
   } catch (err) {
@@ -71,11 +96,129 @@ async function loadPlatform(): Promise<void> {
 watch(
   () => JSON.stringify(range.value) + activityInterval.value,
   () => loadPlatform(),
+  { immediate: true },
 )
 
 const CHART_COLOR_CONVERSATIONS = '#38bdf8'
 const CHART_COLOR_LEADS = '#34d399'
 const CHART_COLOR_CUSTOMERS = '#818cf8'
+const CHART_COLOR_PRIMARY = '#077ddc'
+const CHART_COLOR_ACCENT = '#5be9ec'
+
+function darkSparkline(values: number[], color: string) {
+  return {
+    options: {
+      chart: {
+        type: 'area' as const,
+        sparkline: { enabled: true },
+        animations: { enabled: false },
+        fontFamily: 'inherit',
+      },
+      colors: [color],
+      stroke: { curve: 'smooth' as const, width: 2 },
+      fill: {
+        type: 'gradient',
+        gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.02, stops: [0, 100] },
+      },
+      tooltip: { enabled: false },
+    },
+    series: [{ name: '', data: values }],
+  }
+}
+
+const heroMsgsSpark = computed(() =>
+  darkSparkline(platformMsgsSeries.value?.buckets.map(b => b.value) ?? [], CHART_COLOR_PRIMARY),
+)
+const heroConvSpark = computed(() =>
+  darkSparkline(platformConvSeries.value?.buckets.map(b => b.value) ?? [], CHART_COLOR_ACCENT),
+)
+
+function deltaPct(current: number, previous: number): { text: string, positive: boolean } | null {
+  if (previous === 0) return current > 0 ? { text: '+∞', positive: true } : null
+  const pct = Math.round(((current - previous) / previous) * 100)
+  if (pct === 0) return { text: '0%', positive: true }
+  return { text: `${pct > 0 ? '+' : ''}${pct}%`, positive: pct > 0 }
+}
+
+const platformKpis = computed(() => {
+  const totals = platformSummary.value?.totals
+  const previous = platformSummary.value?.previous
+  return [
+    {
+      key: 'uniqueCustomers',
+      label: t('admin.dashboard.kpi.uniqueCustomers'),
+      value: totals?.uniqueCustomers ?? 0,
+      delta: totals && previous ? deltaPct(totals.uniqueCustomers, previous.uniqueCustomers) : null,
+      spark: [] as number[],
+      color: CHART_COLOR_CUSTOMERS,
+    },
+    {
+      key: 'meetingsScheduled',
+      label: t('admin.dashboard.kpi.meetingsScheduled'),
+      value: totals?.meetingsScheduled ?? 0,
+      delta: totals && previous ? deltaPct(totals.meetingsScheduled, previous.meetingsScheduled) : null,
+      spark: platformMeetingsSeries.value?.buckets.map(b => b.value) ?? [],
+      color: CHART_COLOR_ACCENT,
+    },
+    {
+      key: 'leadsTotal',
+      label: t('admin.dashboard.kpi.leads'),
+      value: totals?.leadsTotal ?? 0,
+      delta: totals && previous ? deltaPct(totals.leadsTotal, previous.leadsTotal) : null,
+      spark: platformLeadSeries.value?.buckets.map(b => b.value) ?? [],
+      color: CHART_COLOR_LEADS,
+    },
+    {
+      key: 'meetingsCancelled',
+      label: t('admin.dashboardRedesign.compare.metrics.meetingsCancelled'),
+      value: totals?.meetingsCancelled ?? 0,
+      delta: totals && previous ? deltaPct(totals.meetingsCancelled, previous.meetingsCancelled) : null,
+      spark: [] as number[],
+      color: '#f43f5e',
+    },
+  ]
+})
+
+const overviewChart = computed(() => {
+  if (!data.value) return null
+  const s = data.value
+  const rows: Array<{ label: string, value: number }> = [
+    { label: t('superadmin.dashboard.stat.companies'), value: s.totalCompanies },
+    { label: t('superadmin.dashboard.stat.users'), value: s.totalUsers },
+    { label: t('superadmin.dashboard.stat.bots'), value: s.totalBots },
+    { label: t('superadmin.dashboard.stat.conversations'), value: s.totalConversations },
+    { label: t('superadmin.dashboard.stat.documents'), value: s.totalDocuments },
+  ]
+  return {
+    options: {
+      chart: { type: 'bar' as const, toolbar: { show: false }, background: 'transparent', fontFamily: 'inherit' },
+      theme: { mode: 'dark' as const },
+      colors: [CHART_COLOR_PRIMARY],
+      plotOptions: {
+        bar: { horizontal: true, borderRadius: 6, barHeight: '65%', distributed: false, dataLabels: { position: 'top' } },
+      },
+      dataLabels: {
+        enabled: true,
+        offsetX: 32,
+        formatter: (v: number) => full(v),
+        style: { fontSize: '12px', fontWeight: 700, colors: ['#e2e8f0'] },
+      },
+      grid: { borderColor: '#334155', strokeDashArray: 3 },
+      xaxis: {
+        categories: rows.map(r => r.label),
+        labels: { style: { colors: '#94a3b8', fontSize: '11px' } },
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+      },
+      yaxis: {
+        labels: { style: { colors: '#cbd5e1', fontSize: '12px', fontWeight: 600 }, maxWidth: 180 },
+      },
+      tooltip: { theme: 'dark' as const, y: { formatter: (v: number) => full(v) } },
+      legend: { show: false },
+    },
+    series: [{ name: t('superadmin.dashboard.overviewChart.series'), data: rows.map(r => r.value) }],
+  }
+})
 
 const mixedChart = computed(() => {
   if (!platformConvSeries.value || !platformLeadSeries.value) return null
@@ -273,55 +416,90 @@ await load()
     <SpinnerInline v-if="loading" class="mt-6" tone="dark" />
 
     <template v-else-if="data">
+      <!-- ── HERO ROW: Messages + Conversations stacked (col-4) | Overview chart (col-8) ─── -->
       <section class="mt-6">
-        <h2 class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('superadmin.dashboard.groupTenants') }}</h2>
-        <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <SuperadminStatCard
-            :label="$t('superadmin.dashboard.stat.companies')"
-            icon="companies"
-            tone="indigo"
-            :value="data.totalCompanies"
-            :hint="$t('superadmin.dashboard.stat.companiesHint', { active: data.activeCompanies, suspended: data.suspendedCompanies })"
-          />
-          <SuperadminStatCard
-            :label="$t('superadmin.dashboard.stat.users')"
-            icon="users"
-            tone="emerald"
-            :value="data.totalUsers"
-            :hint="$t('superadmin.dashboard.stat.usersHint')"
-          />
-        </div>
-      </section>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <div class="lg:col-span-4 flex flex-col gap-4">
+            <div class="rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/60 p-5 flex flex-col">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                  <p class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">
+                    {{ $t('admin.dashboard.kpi.messagesSentByBot') }}
+                  </p>
+                  <p class="text-[11px] text-slate-500 mt-0.5">{{ $t('admin.dashboard.kpi.messagesSentByBotHint') }}</p>
+                </div>
+                <div class="shrink-0 flex size-9 items-center justify-center rounded-xl ring-1 ring-slate-700" :style="{ backgroundColor: `${CHART_COLOR_PRIMARY}25`, color: CHART_COLOR_PRIMARY }" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+                </div>
+              </div>
+              <div class="mt-3 flex items-baseline gap-3">
+                <p class="text-4xl font-bold text-slate-100 tabular-nums leading-none">
+                  {{ full(platformSummary?.totals.messagesSentByBot ?? 0) }}
+                </p>
+                <span
+                  v-if="platformSummary && deltaPct(platformSummary.totals.messagesSentByBot, platformSummary.previous.messagesSentByBot)"
+                  class="text-xs font-semibold"
+                  :class="deltaPct(platformSummary.totals.messagesSentByBot, platformSummary.previous.messagesSentByBot)?.positive ? 'text-emerald-400' : 'text-danger-400'"
+                >
+                  {{ deltaPct(platformSummary.totals.messagesSentByBot, platformSummary.previous.messagesSentByBot)?.text }}
+                </span>
+              </div>
+              <ClientOnly>
+                <div class="mt-3 -mx-2 min-h-[70px]">
+                  <apexchart type="area" height="80" :options="heroMsgsSpark.options" :series="heroMsgsSpark.series" />
+                </div>
+              </ClientOnly>
+            </div>
 
-      <section class="mt-6">
-        <h2 class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('superadmin.dashboard.groupActivity') }}</h2>
-        <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <SuperadminStatCard
-            :label="$t('superadmin.dashboard.stat.bots')"
-            icon="bots"
-            tone="amber"
-            :value="data.totalBots"
-            :hint="$t('superadmin.dashboard.stat.botsHint', { n: data.activeBots })"
-          />
-          <SuperadminStatCard
-            :label="$t('superadmin.dashboard.stat.conversations')"
-            icon="conversations"
-            tone="indigo"
-            :value="data.totalConversations"
-            :hint="$t('superadmin.dashboard.stat.conversationsHint')"
-          />
-          <SuperadminStatCard
-            :label="$t('superadmin.dashboard.stat.documents')"
-            icon="documents"
-            tone="rose"
-            :value="data.totalDocuments"
-            :hint="$t('superadmin.dashboard.stat.documentsHint')"
-          />
+            <div class="rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/60 p-5 flex flex-col">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                  <p class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">
+                    {{ $t('admin.dashboard.kpi.conversations') }}
+                  </p>
+                  <p class="text-[11px] text-slate-500 mt-0.5">{{ $t('superadmin.dashboard.stat.conversationsHint') }}</p>
+                </div>
+                <div class="shrink-0 flex size-9 items-center justify-center rounded-xl ring-1 ring-slate-700" :style="{ backgroundColor: `${CHART_COLOR_ACCENT}25`, color: CHART_COLOR_ACCENT }" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>
+                </div>
+              </div>
+              <div class="mt-3 flex items-baseline gap-3">
+                <p class="text-4xl font-bold text-slate-100 tabular-nums leading-none">
+                  {{ full(platformSummary?.totals.conversationsTotal ?? 0) }}
+                </p>
+                <span
+                  v-if="platformSummary && deltaPct(platformSummary.totals.conversationsTotal, platformSummary.previous.conversationsTotal)"
+                  class="text-xs font-semibold"
+                  :class="deltaPct(platformSummary.totals.conversationsTotal, platformSummary.previous.conversationsTotal)?.positive ? 'text-emerald-400' : 'text-danger-400'"
+                >
+                  {{ deltaPct(platformSummary.totals.conversationsTotal, platformSummary.previous.conversationsTotal)?.text }}
+                </span>
+              </div>
+              <ClientOnly>
+                <div class="mt-3 -mx-2 min-h-[70px]">
+                  <apexchart type="area" height="80" :options="heroConvSpark.options" :series="heroConvSpark.series" />
+                </div>
+              </ClientOnly>
+            </div>
+          </div>
+
+          <div class="lg:col-span-8">
+            <div class="rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/60 p-5 h-full">
+              <div class="mb-3">
+                <h3 class="text-sm font-semibold text-slate-100">{{ $t('superadmin.dashboard.overviewChart.title') }}</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">{{ $t('superadmin.dashboard.overviewChart.subtitle') }}</p>
+              </div>
+              <ClientOnly v-if="overviewChart">
+                <apexchart type="bar" height="360" :options="overviewChart.options" :series="overviewChart.series" />
+              </ClientOnly>
+              <div v-else class="h-72 rounded-xl bg-slate-800/60 animate-pulse" />
+            </div>
+          </div>
         </div>
       </section>
 
       <section class="mt-8">
-        <h2 class="text-[11px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('superadmin.dashboard.groupOperations') }}</h2>
+        <h2 class="text-[11px] uppercase tracking-wider font-semibold text-slate-400">{{ $t('superadmin.dashboard.groupOperations') }}</h2>
         <div class="mt-2">
           <SuperadminBillingSweepCard />
         </div>
@@ -355,33 +533,38 @@ await load()
       </div>
 
       <div v-if="platformLoading && !platformSummary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div v-for="i in 4" :key="i" class="h-24 rounded-2xl bg-slate-800/60 animate-pulse" />
+        <div v-for="i in 4" :key="i" class="h-32 rounded-2xl bg-slate-800/60 animate-pulse" />
       </div>
 
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-4">
-          <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
-            {{ $t('admin.dashboard.kpi.messagesSentByBot') }}
+        <div
+          v-for="kpi in platformKpis"
+          :key="kpi.key"
+          class="rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-4 flex flex-col"
+        >
+          <div class="flex items-start justify-between gap-2">
+            <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
+              {{ kpi.label }}
+            </div>
+            <span
+              v-if="kpi.delta"
+              class="text-[11px] font-semibold"
+              :class="kpi.delta.positive ? 'text-emerald-400' : 'text-danger-400'"
+            >
+              {{ kpi.delta.text }}
+            </span>
           </div>
-          <div class="mt-2 text-3xl font-semibold text-slate-100">{{ full(platformSummary?.totals.messagesSentByBot ?? 0) }}</div>
-        </div>
-        <div class="rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-4">
-          <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
-            {{ $t('admin.dashboard.kpi.conversations') }}
-          </div>
-          <div class="mt-2 text-3xl font-semibold text-slate-100">{{ full(platformSummary?.totals.conversationsTotal ?? 0) }}</div>
-        </div>
-        <div class="rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-4">
-          <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
-            {{ $t('admin.dashboard.kpi.uniqueCustomers') }}
-          </div>
-          <div class="mt-2 text-3xl font-semibold text-slate-100">{{ full(platformSummary?.totals.uniqueCustomers ?? 0) }}</div>
-        </div>
-        <div class="rounded-2xl bg-slate-900/70 ring-1 ring-slate-700/50 p-4">
-          <div class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
-            {{ $t('admin.dashboard.kpi.meetingsScheduled') }}
-          </div>
-          <div class="mt-2 text-3xl font-semibold text-slate-100">{{ full(platformSummary?.totals.meetingsScheduled ?? 0) }}</div>
+          <div class="mt-2 text-3xl font-semibold text-slate-100 tabular-nums">{{ full(kpi.value) }}</div>
+          <ClientOnly v-if="kpi.spark.length >= 2">
+            <div class="-mx-1 mt-2">
+              <apexchart
+                type="area"
+                height="42"
+                :options="darkSparkline(kpi.spark, kpi.color).options"
+                :series="darkSparkline(kpi.spark, kpi.color).series"
+              />
+            </div>
+          </ClientOnly>
         </div>
       </div>
 

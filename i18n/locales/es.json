@@ -2118,6 +2118,11 @@
         "viewAll": "Ver todas",
         "emptyTitle": "Aún no hay empresas registradas",
         "emptyBody": "Los tenants aparecerán aquí cuando se auto-registren."
+      },
+      "overviewChart": {
+        "title": "Vista general de la plataforma",
+        "subtitle": "Totales de empresas, usuarios, bots, conversaciones y documentos.",
+        "series": "Total"
       }
     },
     "profile": {

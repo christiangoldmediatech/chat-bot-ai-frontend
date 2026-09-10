@@ -365,20 +365,20 @@ const meetingsChart = computed(() => {
     <section class="mt-6">
       <div class="flex items-center justify-between gap-3 mb-3">
         <div class="flex items-center gap-2">
-          <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-white/80">
             {{ $t('admin.dashboard.sections.activity') }}
           </h2>
-          <span class="text-[10px] text-slate-400">
+          <span class="text-[10px] text-white/55">
             {{ $t('admin.dashboard.sections.appliesToBelow') }}
           </span>
         </div>
         <div class="flex items-center gap-2">
-          <label class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">
+          <label class="text-[10px] uppercase tracking-wider font-semibold text-white/75">
             {{ $t('admin.dashboard.sections.groupBy') }}
           </label>
           <select
             v-model="activityInterval"
-            class="rounded-lg border border-slate-200 bg-white/70 backdrop-blur-md px-2 py-1.5 text-xs"
+            class="rounded-lg border border-white/30 bg-white px-2 py-1.5 text-xs text-slate-900 shadow-sm"
           >
             <option value="day">{{ $t('admin.dashboard.interval.day') }}</option>
             <option value="month">{{ $t('admin.dashboard.interval.month') }}</option>
@@ -442,7 +442,7 @@ const meetingsChart = computed(() => {
 
     <!-- ── SECCIÓN RESUMEN (KPIs con sparklines + chart comparativo) ────── -->
     <section class="mt-8">
-      <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
+      <h2 class="text-xs font-semibold uppercase tracking-wider text-white/80 mb-3">
         {{ $t('admin.dashboard.sections.summary') }}
       </h2>
 
@@ -521,10 +521,10 @@ const meetingsChart = computed(() => {
     <section class="mt-8">
       <div class="flex items-center justify-between gap-3 mb-3">
         <div class="flex items-center gap-2">
-          <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-white/80">
             {{ $t('admin.dashboard.sections.meetings') }}
           </h2>
-          <span class="text-[10px] text-slate-400">
+          <span class="text-[10px] text-white/55">
             {{ $t('admin.dashboard.sections.appliesToBelow') }}
           </span>
         </div>
@@ -552,10 +552,10 @@ const meetingsChart = computed(() => {
     <section v-if="legacyData" class="mt-8">
       <div class="flex items-end justify-between gap-3 flex-wrap mb-3">
         <div>
-          <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-white/80">
             {{ $t('admin.dashboard.sections.conversations') }}
           </h2>
-          <p class="text-sm text-slate-500 mt-0.5">{{ $t('admin.dashboard.recentConversationsHint') }}</p>
+          <p class="text-sm text-white/70 mt-0.5">{{ $t('admin.dashboard.recentConversationsHint') }}</p>
         </div>
         <NuxtLink
           to="/admin/conversations"

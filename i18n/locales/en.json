@@ -2118,6 +2118,11 @@
         "viewAll": "View all",
         "emptyTitle": "No companies registered yet",
         "emptyBody": "Tenants will appear here once they self-register."
+      },
+      "overviewChart": {
+        "title": "Platform overview",
+        "subtitle": "Totals across companies, users, bots, conversations and documents.",
+        "series": "Total"
       }
     },
     "profile": {

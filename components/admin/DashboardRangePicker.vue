@@ -99,7 +99,7 @@ onMounted(() => {
         type="date"
         class="rounded-lg border border-slate-200 bg-white backdrop-blur-md px-2 py-1.5 text-xs"
       >
-      <span class="text-xs text-slate-400">→</span>
+      <span class="text-xs text-white/60">→</span>
       <input
         v-model="customTo"
         type="date"
