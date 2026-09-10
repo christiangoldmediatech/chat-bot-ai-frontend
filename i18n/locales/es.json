@@ -1169,6 +1169,29 @@
       "saveEscalation": "Guardar escalado",
       "defaultDuration": "Duración por defecto"
     },
+    "dashboardServices": {
+      "title": "Servicios realizados",
+      "subtitle": "Cuenta las citas atendidas en el período (usa los mismos filtros de fecha del resto del dashboard).",
+      "empty": "Sin servicios realizados en este período.",
+      "rankingTitle": "Distribución de servicios por estado",
+      "chartHint": "Atendidas · Agendadas · No asistió · Reagendadas · Canceladas",
+      "tooltipUnit": "citas",
+      "kpi": {
+        "performed": "Servicios realizados",
+        "revenue": "Ingresos",
+        "attendanceRate": "Tasa de asistencia",
+        "rescheduled": "Reagendadas"
+      },
+      "col": {
+        "service": "Servicio",
+        "attended": "Atendidas",
+        "scheduled": "Agendadas",
+        "noShow": "No asistió",
+        "rescheduled": "Reagendadas",
+        "rate": "Tasa",
+        "revenue": "Ingresos"
+      }
+    },
     "calendarView": {
       "title": "Calendario",
       "badge": "Calendario del bot",
@@ -1664,6 +1687,56 @@
     }
   },
   "customers": {
+    "serviceHistory": {
+      "title": "Historial de servicios",
+      "subtitle": "Todas las citas de este cliente, con asistencia y monto.",
+      "empty": "Este cliente aún no tiene citas registradas.",
+      "markSuccess": "Asistencia registrada.",
+      "markAttended": "Asistió",
+      "markNoShow": "No asistió",
+      "confirmAttendedTitle": "¿Marcar esta cita como atendida?",
+      "confirmNoShowTitle": "¿Marcar esta cita como no asistió?",
+      "confirmMessage": "Queda registrado en auditoría con tu usuario y no se puede cambiar en silencio.",
+      "viewConversation": "Conversación",
+      "rescheduledNTimes": "Reagendada {n} vez(es)",
+      "viewChain": "Ver detalle de reagendamientos",
+      "pagination": "Página {page} de {total}",
+      "summary": {
+        "total": "Citas",
+        "attended": "Atendidas",
+        "noShow": "No asistió",
+        "rescheduled": "Reagendadas",
+        "pendingUnreg": "Pendientes + sin registrar",
+        "attendanceRate": "Tasa de asistencia",
+        "totalSpent": "Total gastado",
+        "lastVisit": "Última visita"
+      },
+      "filter": {
+        "all": "Todos los resultados",
+        "attended": "Atendidas",
+        "noShow": "No asistió",
+        "rescheduled": "Reagendadas",
+        "cancelled": "Canceladas",
+        "pending": "Pendientes",
+        "unregistered": "Sin registrar",
+        "allServices": "Todos los servicios"
+      },
+      "col": {
+        "when": "Cuándo",
+        "service": "Servicio",
+        "amount": "Monto",
+        "result": "Resultado",
+        "actions": "Acciones"
+      },
+      "status": {
+        "attended": "Asistió",
+        "no_show": "No asistió",
+        "rescheduled": "Reagendada",
+        "cancelled": "Cancelada",
+        "pending": "Pendiente",
+        "unregistered": "Sin registrar"
+      }
+    },
     "title": "Clientes",
     "subtitle": "Todas las personas que han escrito a tus bots, ordenadas por actividad más reciente.",
     "filterByBot": "Filtrar por bot",
