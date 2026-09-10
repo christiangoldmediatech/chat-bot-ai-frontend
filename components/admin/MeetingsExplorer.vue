@@ -17,6 +17,7 @@ const props = defineProps<{
 
 const tone = computed(() => props.tone ?? 'light')
 
+const { t } = useI18n()
 const meetingsApi = useMeetings(props.tenantId)
 const botsApi = useBots(props.tenantId)
 
@@ -227,11 +228,11 @@ function canMarkOutcome(m: Meeting): boolean {
 function outcomeLabel(status: MeetingStatus): string {
   switch (status) {
     case 'COMPLETED':
-      return 'Asistió'
+      return t('meetings.outcome.attended')
     case 'NO_SHOW':
-      return 'No asistió'
+      return t('meetings.outcome.noShow')
     case 'RESCHEDULED':
-      return 'Reagendada'
+      return t('meetings.outcome.rescheduled')
     default:
       return ''
   }
@@ -792,17 +793,23 @@ await load()
                   type="button"
                   class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium bg-emerald-600 text-white hover:bg-emerald-700"
                   @click="openOutcome(m, 'COMPLETED')"
-                >Asistió</button>
+                >
+                  {{ $t('meetings.outcome.attended') }}
+                </button>
                 <button
                   type="button"
                   class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium bg-danger-600 text-white hover:bg-danger-700"
                   @click="openOutcome(m, 'NO_SHOW')"
-                >No asistió</button>
+                >
+                  {{ $t('meetings.outcome.noShow') }}
+                </button>
                 <button
                   type="button"
                   class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium bg-slate-500 text-white hover:bg-slate-600"
                   @click="openOutcome(m, 'RESCHEDULED')"
-                >Reagendada</button>
+                >
+                  {{ $t('meetings.outcome.rescheduled') }}
+                </button>
               </div>
             </div>
           </article>
@@ -862,9 +869,9 @@ await load()
 
     <Modal
       :open="outcomeOpen"
-      :title="outcomeChoice === 'COMPLETED' ? 'Marcar como asistió'
-        : outcomeChoice === 'NO_SHOW' ? 'Marcar como no asistió'
-        : 'Marcar como reagendada'"
+      :title="outcomeChoice === 'COMPLETED' ? t('meetings.outcome.markAttended')
+        : outcomeChoice === 'NO_SHOW' ? t('meetings.outcome.markNoShow')
+        : t('meetings.outcome.markRescheduled')"
       size="sm"
       @close="outcomeOpen = false; outcomeMeeting = null"
     >

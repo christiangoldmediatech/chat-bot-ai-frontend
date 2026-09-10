@@ -1878,6 +1878,14 @@
       "emptyBodyFiltered": "Prueba con otra búsqueda o quita los filtros.",
       "paginationRange": "{from}–{to} de {total}"
     },
+    "outcome": {
+      "attended": "Asistió",
+      "noShow": "No asistió",
+      "rescheduled": "Reagendada",
+      "markAttended": "Marcar como asistió",
+      "markNoShow": "Marcar como no asistió",
+      "markRescheduled": "Marcar como reagendada"
+    },
     "card": {
       "title": "Citas agendadas",
       "subtitle": "Histórico de meets con este cliente",

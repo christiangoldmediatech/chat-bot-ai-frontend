@@ -1878,6 +1878,14 @@
       "emptyBodyFiltered": "Try another search or clear the filters.",
       "paginationRange": "{from}–{to} of {total}"
     },
+    "outcome": {
+      "attended": "Attended",
+      "noShow": "No-show",
+      "rescheduled": "Rescheduled",
+      "markAttended": "Mark as attended",
+      "markNoShow": "Mark as no-show",
+      "markRescheduled": "Mark as rescheduled"
+    },
     "card": {
       "title": "Booked meetings",
       "subtitle": "Meeting history with this customer",
