@@ -216,7 +216,7 @@ const kpiMeetingsHint = computed(() => {
     </p>
 
     <div class="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-12 lg:flex-1 lg:min-h-0">
-      <div class="lg:col-span-8 lg:min-h-0 lg:grid lg:grid-rows-[minmax(0,30fr)_minmax(0,35fr)_minmax(0,35fr)] flex flex-col gap-3">
+      <div class="lg:col-span-8 lg:min-h-0 lg:grid lg:grid-rows-[minmax(0,1fr)_320px_minmax(0,1fr)] flex flex-col gap-3">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 lg:min-h-0">
           <div class="md:col-span-2 lg:min-h-0">
             <DashboardActivityCompareCard
@@ -248,8 +248,8 @@ const kpiMeetingsHint = computed(() => {
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 lg:min-h-0">
-          <div class="lg:min-h-0">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 lg:h-[320px] lg:min-h-[320px] lg:overflow-hidden">
+          <div class="lg:h-full lg:min-h-0 lg:overflow-hidden">
             <DashboardAttendedBarCard
               :from="range.from"
               :to="range.to"
@@ -257,7 +257,7 @@ const kpiMeetingsHint = computed(() => {
               fill-height
             />
           </div>
-          <div class="lg:min-h-0">
+          <div class="lg:h-full lg:min-h-0 lg:overflow-hidden">
             <DashboardServicesDonutCard
               :from="range.from"
               :to="range.to"
