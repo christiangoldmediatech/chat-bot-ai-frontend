@@ -341,6 +341,15 @@
         "groupBy": "Agrupar por",
         "appliesToBelow": "aplica a los gráficos de esta sección"
       },
+      "dense": {
+        "tabMeetings": "Citas por cliente",
+        "tabServices": "Servicios realizados",
+        "seeAll": "Ver todo →",
+        "showSummary": "Comparar todos los KPIs",
+        "showRecent": "Conversaciones recientes",
+        "showFunnel": "Embudo de leads",
+        "moreKpis": "Más KPIs"
+      },
       "kpi": {
         "messagesSentByBot": "Mensajes del bot",
         "messagesSentByBotHint": "Enviados por el bot en el periodo",
@@ -2093,6 +2102,10 @@
       "groupActivity": "Actividad",
       "groupCommercial": "Comercial",
       "groupOperations": "Operaciones",
+      "dense": {
+        "tabBots": "Bots por empresa",
+        "tabTenants": "Resumen por empresa"
+      },
       "stat": {
         "companies": "Empresas",
         "companiesHint": "{active} activas · {suspended} suspendidas",

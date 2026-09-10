@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
-import type { DashboardSummary } from '~/types/dashboard'
 import type {
+  DashboardSummary,
   MeetingsByCustomerResponse,
   MeetingsSummaryResponse,
   MetricsSummaryResponse,
@@ -14,7 +14,7 @@ definePageMeta({ layout: 'admin', middleware: 'auth' })
 const { t } = useI18n()
 const legacy = useDashboard()
 const metrics = useTenantDashboardMetrics()
-const { percent, day, full } = useDateFormat()
+const { percent } = useDateFormat()
 
 const route = useRoute()
 
@@ -60,6 +60,7 @@ const meetingsSummary = ref<MeetingsSummaryResponse | null>(null)
 const meetingsByCustomer = ref<MeetingsByCustomerResponse | null>(null)
 const meetingsSort = ref<'scheduled' | 'cancelled' | 'cancellationRate' | 'lastMeetingAt'>('scheduled')
 const meetingsPage = ref(1)
+const bottomTab = ref<'meetings' | 'services'>('meetings')
 
 const ZERO_TOTALS = {
   messagesSentByBot: 0,
@@ -183,391 +184,253 @@ const kpiMeetingsHint = computed(() => {
   })
 })
 
-const CHART_COLOR_CONVERSATIONS = '#0ea5e9'
-const CHART_COLOR_LEADS = '#10b981'
-const CHART_COLOR_SCHEDULED = '#6366f1'
-const CHART_COLOR_CANCELLED = '#f43f5e'
-
-function baseChartOptions(color: string) {
-  return {
-    chart: {
-      toolbar: { show: false },
-      zoom: { enabled: false },
-      animations: { enabled: false },
-      fontFamily: 'inherit',
-    },
-    colors: [color],
-    stroke: { curve: 'smooth' as const, width: 2 },
-    grid: {
-      borderColor: '#e2e8f0',
-      strokeDashArray: 4,
-      padding: { left: 4, right: 4 },
-    },
-    dataLabels: { enabled: false },
-    xaxis: {
-      type: 'category' as const,
-      labels: { style: { colors: '#64748b', fontSize: '11px' }, rotate: -30 },
-      axisBorder: { color: '#e2e8f0' },
-      axisTicks: { color: '#e2e8f0' },
-    },
-    yaxis: {
-      labels: { style: { colors: '#64748b', fontSize: '11px' }, formatter: (v: number) => full(v) },
-    },
-    tooltip: {
-      theme: 'light' as const,
-      y: { formatter: (v: number) => full(v) },
-    },
-  }
-}
-
-const conversationsChart = computed(() => {
-  if (!conversationsSeries.value) return null
-  return {
-    options: {
-      ...baseChartOptions(CHART_COLOR_CONVERSATIONS),
-      xaxis: {
-        ...baseChartOptions(CHART_COLOR_CONVERSATIONS).xaxis,
-        categories: conversationsSeries.value.buckets.map((b) => b.date),
-      },
-    },
-    series: [
-      {
-        name: t('admin.dashboard.kpi.conversations'),
-        data: conversationsSeries.value.buckets.map((b) => b.value),
-      },
-    ],
-  }
-})
-
-const leadsChart = computed(() => {
-  if (!leadsSeries.value) return null
-  return {
-    options: {
-      ...baseChartOptions(CHART_COLOR_LEADS),
-      xaxis: {
-        ...baseChartOptions(CHART_COLOR_LEADS).xaxis,
-        categories: leadsSeries.value.buckets.map((b) => b.date),
-      },
-    },
-    series: [
-      {
-        name: t('admin.dashboard.kpi.leads'),
-        data: leadsSeries.value.buckets.map((b) => b.value),
-      },
-    ],
-  }
-})
-
-const mixedChart = computed(() => {
-  if (!conversationsSeries.value || !leadsSeries.value) return null
-  return {
-    options: {
-      chart: {
-        toolbar: { show: false },
-        zoom: { enabled: false },
-        animations: { enabled: false },
-        fontFamily: 'inherit',
-      },
-      colors: [CHART_COLOR_CONVERSATIONS, CHART_COLOR_LEADS],
-      stroke: { curve: 'smooth' as const, width: [0, 3] },
-      plotOptions: { bar: { columnWidth: '55%', borderRadius: 4 } },
-      grid: { borderColor: '#e2e8f0', strokeDashArray: 4 },
-      dataLabels: { enabled: false },
-      xaxis: {
-        type: 'category' as const,
-        categories: conversationsSeries.value.buckets.map((b) => b.date),
-        labels: { style: { colors: '#64748b', fontSize: '11px' }, rotate: -30 },
-      },
-      yaxis: [
-        {
-          seriesName: t('admin.dashboard.kpi.conversations'),
-          labels: { style: { colors: '#64748b', fontSize: '11px' } },
-        },
-        {
-          seriesName: t('admin.dashboard.kpi.leads'),
-          opposite: true,
-          labels: { style: { colors: '#64748b', fontSize: '11px' } },
-        },
-      ],
-      tooltip: { shared: true, intersect: false, y: { formatter: (v: number) => full(v) } },
-      legend: { position: 'bottom' as const },
-    },
-    series: [
-      {
-        name: t('admin.dashboard.kpi.conversations'),
-        type: 'column',
-        data: conversationsSeries.value.buckets.map((b) => b.value),
-      },
-      {
-        name: t('admin.dashboard.kpi.leads'),
-        type: 'line',
-        data: leadsSeries.value.buckets.map((b) => b.value),
-      },
-    ],
-  }
-})
-
-const meetingsChart = computed(() => {
-  if (!meetingsScheduledSeries.value || !meetingsCancelledSeries.value) return null
-  const categories = meetingsScheduledSeries.value.buckets.map((b) => b.date)
-  return {
-    options: {
-      chart: {
-        id: 'meetings-bar',
-        type: 'bar' as const,
-        toolbar: { show: false },
-        animations: { enabled: false },
-        fontFamily: 'inherit',
-      },
-      colors: [CHART_COLOR_SCHEDULED, CHART_COLOR_CANCELLED],
-      plotOptions: { bar: { columnWidth: '55%', borderRadius: 4 } },
-      dataLabels: { enabled: false },
-      grid: { borderColor: '#e2e8f0', strokeDashArray: 4 },
-      xaxis: {
-        categories,
-        labels: { style: { colors: '#64748b', fontSize: '11px' }, rotate: -30 },
-      },
-      yaxis: { labels: { style: { colors: '#64748b', fontSize: '11px' } } },
-      tooltip: { shared: true, intersect: false, y: { formatter: (v: number) => full(v) } },
-      legend: { position: 'bottom' as const },
-    },
-    series: [
-      {
-        name: t('admin.dashboard.meetings.col.held'),
-        data: meetingsScheduledSeries.value.buckets.map((b) => b.value),
-      },
-      {
-        name: t('admin.dashboard.meetings.col.cancelled'),
-        data: meetingsCancelledSeries.value.buckets.map((b) => b.value),
-      },
-    ],
-  }
-})
 </script>
 
 <template>
-  <div>
-    <header class="flex flex-wrap items-start justify-between gap-4 sticky top-0 z-20 -mx-4 sm:mx-0 px-4 sm:px-0 py-3 sm:py-0 sm:mb-2 backdrop-blur-sm">
+  <div class="dashboard-dense lg:h-full lg:min-h-0 lg:overflow-hidden lg:flex lg:flex-col -m-4 sm:-m-6 p-4 sm:p-6">
+    <header class="flex flex-wrap items-center justify-between gap-3 shrink-0">
       <div class="min-w-0">
-        <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
+        <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 leading-tight">
           {{ $t('admin.dashboard.title') }}
         </h1>
-        <p class="mt-1 text-sm text-slate-500 max-w-2xl">{{ $t('admin.dashboard.subtitle') }}</p>
+        <p class="text-xs text-slate-500 max-w-2xl">{{ $t('admin.dashboard.subtitle') }}</p>
       </div>
-      <DashboardRangePicker v-model="range" />
+      <div class="flex items-center gap-2">
+        <label class="text-[10px] uppercase tracking-wider font-semibold text-white/75">
+          {{ $t('admin.dashboard.sections.groupBy') }}
+        </label>
+        <select
+          v-model="activityInterval"
+          class="rounded-lg border border-white/30 bg-white px-2 py-1.5 text-xs text-slate-900 shadow-sm"
+        >
+          <option value="day">{{ $t('admin.dashboard.interval.day') }}</option>
+          <option value="month">{{ $t('admin.dashboard.interval.month') }}</option>
+          <option value="year">{{ $t('admin.dashboard.interval.year') }}</option>
+        </select>
+        <DashboardRangePicker v-model="range" />
+      </div>
     </header>
 
-    <p v-if="error" class="mt-4 rounded-xl border border-danger-200 bg-danger-50 px-4 py-3 text-sm text-danger-700">
+    <p v-if="error" class="mt-2 rounded-xl border border-danger-200 bg-danger-50 px-3 py-2 text-xs text-danger-700 shrink-0">
       {{ error }}
     </p>
 
-    <!-- ── SECCIÓN ACTIVITY (charts prominentes primero) ─────────────────── -->
-    <section class="mt-6">
-      <div class="flex items-center justify-between gap-3 mb-3">
-        <div class="flex items-center gap-2">
-          <h2 class="text-xs font-semibold uppercase tracking-wider text-white/80">
-            {{ $t('admin.dashboard.sections.activity') }}
-          </h2>
-          <span class="text-[10px] text-white/55">
-            {{ $t('admin.dashboard.sections.appliesToBelow') }}
-          </span>
+    <div class="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-12 lg:flex-1 lg:min-h-0">
+      <div class="lg:col-span-8 lg:min-h-0 lg:grid lg:grid-rows-[minmax(0,1fr)_320px_minmax(0,1fr)] flex flex-col gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 lg:min-h-0">
+          <div class="md:col-span-2 lg:min-h-0">
+            <DashboardActivityCompareCard
+              :from="range.from"
+              :to="range.to"
+              :interval="activityInterval"
+              fill-height
+            />
+          </div>
+          <div class="grid grid-cols-1 gap-3 lg:min-h-0">
+            <KpiCard
+              :label="t('admin.dashboard.kpi.conversations')"
+              :value="totals.conversationsTotal"
+              :previous="previousTotals.conversationsTotal"
+              :hint="kpiConversationsHint"
+              tone="sky"
+              to="/admin/conversations"
+              compact
+            />
+            <KpiCard
+              :label="t('admin.dashboard.kpi.leads')"
+              :value="totals.leadsTotal"
+              :previous="previousTotals.leadsTotal"
+              :hint="kpiLeadsHint"
+              tone="emerald"
+              to="/admin/leads"
+              compact
+            />
+          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <label class="text-[10px] uppercase tracking-wider font-semibold text-white/75">
-            {{ $t('admin.dashboard.sections.groupBy') }}
-          </label>
-          <select
-            v-model="activityInterval"
-            class="rounded-lg border border-white/30 bg-white px-2 py-1.5 text-xs text-slate-900 shadow-sm"
-          >
-            <option value="day">{{ $t('admin.dashboard.interval.day') }}</option>
-            <option value="month">{{ $t('admin.dashboard.interval.month') }}</option>
-            <option value="year">{{ $t('admin.dashboard.interval.year') }}</option>
-          </select>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 lg:h-[320px] lg:min-h-[320px] lg:overflow-hidden">
+          <div class="lg:h-full lg:min-h-0 lg:overflow-hidden">
+            <DashboardAttendedBarCard
+              :from="range.from"
+              :to="range.to"
+              :interval="activityInterval"
+              fill-height
+            />
+          </div>
+          <div class="lg:h-full lg:min-h-0 lg:overflow-hidden">
+            <DashboardServicesDonutCard
+              :from="range.from"
+              :to="range.to"
+              fill-height
+            />
+          </div>
         </div>
+
+        <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-3 lg:min-h-0 flex flex-col">
+          <header class="flex items-center justify-between gap-3 mb-2 shrink-0">
+            <div class="inline-flex rounded-xl bg-slate-100 p-1">
+              <button
+                type="button"
+                class="rounded-lg px-3 py-1 text-xs font-medium transition"
+                :class="bottomTab === 'meetings' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'"
+                @click="bottomTab = 'meetings'"
+              >
+                {{ $t('admin.dashboard.dense.tabMeetings') }}
+                <span v-if="meetingsByCustomer" class="ml-1 text-[10px] text-slate-500 tabular-nums">({{ meetingsByCustomer.total }})</span>
+              </button>
+              <button
+                type="button"
+                class="rounded-lg px-3 py-1 text-xs font-medium transition"
+                :class="bottomTab === 'services' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'"
+                @click="bottomTab = 'services'"
+              >
+                {{ $t('admin.dashboard.dense.tabServices') }}
+              </button>
+            </div>
+            <NuxtLink
+              :to="bottomTab === 'meetings' ? '/admin/meetings' : '/admin/services'"
+              class="text-xs font-medium text-primary-600 hover:text-primary-700"
+            >
+              {{ $t('admin.dashboard.dense.seeAll') }}
+            </NuxtLink>
+          </header>
+          <div class="flex-1 lg:min-h-0 overflow-y-auto -mx-1 px-1">
+            <MeetingsByCustomerTable
+              v-if="bottomTab === 'meetings'"
+              :data="meetingsByCustomer"
+              :loading="meetingsLoading"
+              :sort="meetingsSort"
+              class="dense-embed"
+              @update:sort="(v) => { meetingsSort = v; meetingsPage = 1 }"
+              @update:page="(v) => meetingsPage = v"
+            />
+            <DashboardServicesPerformedBlock
+              v-else
+              :from="range.from"
+              :to="range.to"
+              class="dense-embed"
+            />
+          </div>
+        </section>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        <div class="lg:col-span-4 flex flex-col gap-4">
-          <DashboardHeroKpiCard
-            :label="$t('admin.dashboard.kpi.messagesSentByBot')"
-            :hint="$t('admin.dashboard.kpi.messagesSentByBotHint')"
-            :value="totals.messagesSentByBot"
-            :previous-value="previousTotals.messagesSentByBot"
-            :sparkline="messagesSentSeries?.buckets.map(b => b.value) ?? []"
-            icon="chat"
-            tone="primary"
-          />
-          <DashboardHeroKpiCard
-            :label="$t('admin.dashboardRedesign.hero.upcomingTitle')"
-            :hint="$t('admin.dashboardRedesign.hero.upcomingHint')"
-            :value="totals.meetingsUpcoming"
-            :previous-value="previousTotals.meetingsUpcoming"
-            :sparkline="meetingsScheduledSeries?.buckets.map(b => b.value) ?? []"
-            icon="calendar"
-            tone="accent"
-          />
-        </div>
-        <div class="lg:col-span-8">
-          <DashboardActivityCompareCard
-            :from="range.from"
-            :to="range.to"
-            :interval="activityInterval"
-          />
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-4">
-        <div class="lg:col-span-5">
-          <DashboardServicesDonutCard :from="range.from" :to="range.to" />
-        </div>
-        <div class="lg:col-span-7">
-          <DashboardLeadFunnelCard
-            :total="totals.leadsTotal"
-            :new_="totals.leadsNew"
-            :qualified="totals.leadsQualified"
-            :won="totals.leadsWon"
-          />
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 gap-4 mt-4">
-        <DashboardAttendedBarCard
-          :from="range.from"
-          :to="range.to"
-          :interval="activityInterval"
+      <aside class="lg:col-span-4 lg:min-h-0 lg:overflow-y-auto pr-1 flex flex-col gap-3">
+        <DashboardHeroKpiCard
+          :label="$t('admin.dashboard.kpi.messagesSentByBot')"
+          :hint="$t('admin.dashboard.kpi.messagesSentByBotHint')"
+          :value="totals.messagesSentByBot"
+          :previous-value="previousTotals.messagesSentByBot"
+          :sparkline="messagesSentSeries?.buckets.map(b => b.value) ?? []"
+          icon="chat"
+          tone="primary"
+          compact
         />
-      </div>
-    </section>
-
-    <!-- ── SECCIÓN RESUMEN (KPIs con sparklines + chart comparativo) ────── -->
-    <section class="mt-8">
-      <h2 class="text-xs font-semibold uppercase tracking-wider text-white/80 mb-3">
-        {{ $t('admin.dashboard.sections.summary') }}
-      </h2>
-
-      <div v-if="loading && !summary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div v-for="i in 4" :key="i" class="h-32 rounded-2xl bg-slate-100/60 animate-pulse" />
-      </div>
-
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard
-          :label="t('admin.dashboard.kpi.conversations')"
-          :value="totals.conversationsTotal"
-          :previous="previousTotals.conversationsTotal"
-          :hint="kpiConversationsHint"
-          tone="sky"
-          to="/admin/conversations"
-          :sparkline="conversationsSeries?.buckets.map(b => b.value) ?? []"
-        />
-        <KpiCard
-          :label="t('admin.dashboard.kpi.leads')"
-          :value="totals.leadsTotal"
-          :previous="previousTotals.leadsTotal"
-          :hint="kpiLeadsHint"
-          tone="emerald"
-          to="/admin/leads"
-          :sparkline="leadsSeries?.buckets.map(b => b.value) ?? []"
-        />
-        <KpiCard
-          :label="t('admin.dashboard.kpi.meetingsScheduled')"
-          :value="totals.meetingsScheduled"
-          :previous="previousTotals.meetingsScheduled"
-          :hint="kpiMeetingsHint"
-          tone="amber"
-          to="/admin/meetings"
+        <DashboardHeroKpiCard
+          :label="$t('admin.dashboardRedesign.hero.upcomingTitle')"
+          :hint="$t('admin.dashboardRedesign.hero.upcomingHint')"
+          :value="totals.meetingsUpcoming"
+          :previous-value="previousTotals.meetingsUpcoming"
           :sparkline="meetingsScheduledSeries?.buckets.map(b => b.value) ?? []"
+          icon="calendar"
+          tone="accent"
+          compact
         />
-        <KpiCard
-          :label="t('admin.dashboard.kpi.uniqueCustomers')"
-          :value="totals.uniqueCustomers"
-          :previous="previousTotals.uniqueCustomers"
-          :hint="t('admin.dashboard.kpi.uniqueCustomersHint')"
-          tone="slate"
-          to="/admin/customers"
-        />
-        <KpiCard
-          :label="t('admin.dashboard.kpi.humanHandled')"
-          :value="totals.conversationsHandledByHuman"
-          :hint="t('admin.dashboard.kpi.humanHandledHint')"
-          tone="rose"
-          to="/admin/cases"
-        />
-        <KpiCard
-          :label="t('admin.dashboard.kpi.leadsNew')"
-          :value="totals.leadsNew"
-          tone="slate"
-          to="/admin/leads"
-        />
-        <KpiCard
-          :label="t('admin.dashboard.kpi.leadsWon')"
-          :value="totals.leadsWon"
-          tone="emerald"
-          to="/admin/leads"
-        />
-      </div>
 
-      <div class="mt-4">
-        <DashboardSummaryChartCard :totals="totals" :previous="previousTotals" />
-      </div>
-    </section>
+        <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-3">
+          <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500 mb-2">
+            {{ $t('admin.dashboard.dense.moreKpis') }}
+          </p>
+          <div class="grid grid-cols-2 gap-2">
+            <KpiCard
+              :label="t('admin.dashboard.kpi.meetingsScheduled')"
+              :value="totals.meetingsScheduled"
+              :previous="previousTotals.meetingsScheduled"
+              :hint="kpiMeetingsHint"
+              tone="amber"
+              to="/admin/meetings"
+              compact
+            />
+            <KpiCard
+              :label="t('admin.dashboard.kpi.uniqueCustomers')"
+              :value="totals.uniqueCustomers"
+              :previous="previousTotals.uniqueCustomers"
+              :hint="t('admin.dashboard.kpi.uniqueCustomersHint')"
+              tone="slate"
+              to="/admin/customers"
+              compact
+            />
+            <KpiCard
+              :label="t('admin.dashboard.kpi.humanHandled')"
+              :value="totals.conversationsHandledByHuman"
+              :hint="t('admin.dashboard.kpi.humanHandledHint')"
+              tone="rose"
+              to="/admin/cases"
+              compact
+            />
+            <KpiCard
+              :label="t('admin.dashboard.kpi.leadsNew')"
+              :value="totals.leadsNew"
+              tone="slate"
+              to="/admin/leads"
+              compact
+            />
+            <KpiCard
+              :label="t('admin.dashboard.kpi.leadsWon')"
+              :value="totals.leadsWon"
+              tone="emerald"
+              to="/admin/leads"
+              compact
+            />
+          </div>
+        </section>
 
-    <section class="mt-8">
-      <div class="grid grid-cols-1 gap-4">
+        <DashboardLeadFunnelCard
+          :total="totals.leadsTotal"
+          :new_="totals.leadsNew"
+          :qualified="totals.leadsQualified"
+          :won="totals.leadsWon"
+        />
+
         <TodayTimeline :data="today" :loading="loading" />
-      </div>
-    </section>
 
-    <section class="mt-8">
-      <div class="flex items-center justify-between gap-3 mb-3">
-        <div class="flex items-center gap-2">
-          <h2 class="text-xs font-semibold uppercase tracking-wider text-white/80">
-            {{ $t('admin.dashboard.sections.meetings') }}
-          </h2>
-          <span class="text-[10px] text-white/55">
-            {{ $t('admin.dashboard.sections.appliesToBelow') }}
-          </span>
-        </div>
-      </div>
+        <details class="group rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass">
+          <summary class="cursor-pointer list-none flex items-center justify-between px-4 py-3 text-sm font-semibold text-slate-900">
+            <span>{{ $t('admin.dashboard.dense.showSummary') }}</span>
+            <span class="text-slate-400 transition group-open:rotate-180">▾</span>
+          </summary>
+          <div class="px-2 pb-2">
+            <DashboardSummaryChartCard :totals="totals" :previous="previousTotals" />
+          </div>
+        </details>
 
-      <div>
-        <MeetingsByCustomerTable
-          :data="meetingsByCustomer"
-          :loading="meetingsLoading"
-          :sort="meetingsSort"
-          @update:sort="(v) => { meetingsSort = v; meetingsPage = 1 }"
-          @update:page="(v) => meetingsPage = v"
-        />
-      </div>
-
-      <div class="mt-6">
-        <DashboardServicesPerformedBlock
-          :from="range.from"
-          :to="range.to"
-        />
-      </div>
-    </section>
-
-    <!-- ── SECCIÓN CONVERSACIONES RECIENTES (legacy) ──────────────────── -->
-    <section v-if="legacyData" class="mt-8">
-      <div class="flex items-end justify-between gap-3 flex-wrap mb-3">
-        <div>
-          <h2 class="text-xs font-semibold uppercase tracking-wider text-white/80">
-            {{ $t('admin.dashboard.sections.conversations') }}
-          </h2>
-          <p class="text-sm text-white/70 mt-0.5">{{ $t('admin.dashboard.recentConversationsHint') }}</p>
-        </div>
-        <NuxtLink
-          to="/admin/conversations"
-          class="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700 transition"
-        >
-          {{ $t('admin.dashboard.viewAllConversations') }} →
-        </NuxtLink>
-      </div>
-      <ConversationList
-        :conversations="legacyData.recentConversations"
-        :empty-label="t('admin.dashboard.noConversations')"
-      />
-    </section>
+        <details v-if="legacyData" class="group rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass">
+          <summary class="cursor-pointer list-none flex items-center justify-between px-4 py-3 text-sm font-semibold text-slate-900">
+            <span>{{ $t('admin.dashboard.dense.showRecent') }}</span>
+            <NuxtLink
+              to="/admin/conversations"
+              class="text-xs font-medium text-primary-600 hover:text-primary-700"
+              @click.stop
+            >
+              {{ $t('admin.dashboard.viewAllConversations') }} →
+            </NuxtLink>
+          </summary>
+          <div class="px-3 pb-3">
+            <ConversationList
+              :conversations="legacyData.recentConversations"
+              :empty-label="t('admin.dashboard.noConversations')"
+            />
+          </div>
+        </details>
+      </aside>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.dashboard-dense :deep(.dense-embed) {
+  background: transparent;
+  box-shadow: none;
+  --tw-ring-shadow: 0 0 #0000;
+  padding: 0;
+}
+</style>
