@@ -23,7 +23,7 @@ const statusStyles: Record<ConversationStatus, { chip: string, dot: string }> = 
 </script>
 
 <template>
-  <ul class="divide-y divide-slate-100/80 overflow-hidden rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/60 shadow-glass">
+  <ul class="divide-y divide-slate-100 overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass">
     <li
       v-if="conversations.length === 0"
       class="flex flex-col items-center gap-2 px-4 py-10 text-center"
@@ -39,7 +39,7 @@ const statusStyles: Record<ConversationStatus, { chip: string, dot: string }> = 
       v-for="c in conversations"
       v-else
       :key="c.id"
-      class="group transition hover:bg-white/80"
+      class="group transition hover:bg-slate-50"
     >
       <NuxtLink
         :to="`/admin/conversations/${c.id}`"

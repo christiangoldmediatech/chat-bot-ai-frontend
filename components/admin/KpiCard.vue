@@ -1,8 +1,6 @@
 <script setup lang="ts">
-/**
- * Tarjeta KPI: valor grande + label + delta vs periodo anterior + hint
- * secundario. Todo el estilo se mantiene consistente con StatCard existente.
- */
+import { DASHBOARD_PALETTE } from '~/utils/dashboard-palette'
+
 const props = defineProps<{
   label: string
   value: number
@@ -10,9 +8,49 @@ const props = defineProps<{
   hint?: string | null
   tone?: 'indigo' | 'emerald' | 'amber' | 'sky' | 'rose' | 'slate'
   to?: string
+  sparkline?: number[]
+  sparklineColor?: string
 }>()
 
 const { compact, full, percent } = useDateFormat()
+
+const hasSparkline = computed<boolean>(() =>
+  Array.isArray(props.sparkline) && props.sparkline.length >= 2,
+)
+
+const sparklineChart = computed(() => {
+  const data = props.sparkline ?? []
+  const color = props.sparklineColor ?? DASHBOARD_PALETTE.primary
+  return {
+    options: {
+      chart: {
+        type: 'area' as const,
+        sparkline: { enabled: true },
+        animations: { enabled: false },
+        toolbar: { show: false },
+        fontFamily: 'inherit',
+      },
+      colors: [color],
+      stroke: { curve: 'smooth' as const, width: 2 },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 1,
+          opacityFrom: 0.35,
+          opacityTo: 0.02,
+          stops: [0, 100],
+        },
+      },
+      tooltip: {
+        theme: 'light' as const,
+        y: { formatter: (v: number) => full(v) },
+        marker: { show: false },
+        x: { show: false },
+      },
+    },
+    series: [{ name: props.label, data }],
+  }
+})
 
 const delta = computed<{ ratio: number | null; kind: 'up' | 'down' | 'flat' | 'na' }>(() => {
   if (props.previous === undefined || props.previous === null) return { ratio: null, kind: 'na' }
@@ -46,7 +84,7 @@ const Tag = computed(() => (props.to ? resolveComponent('NuxtLink') : 'div'))
   <component
     :is="Tag"
     :to="to"
-    class="block rounded-2xl bg-white/70 backdrop-blur-xl ring-1 ring-white/60 shadow-glass p-4 transition hover:ring-white/90"
+    class="block rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-4 transition hover:ring-slate-300"
   >
     <div class="flex items-start justify-between gap-2">
       <span
@@ -77,5 +115,11 @@ const Tag = computed(() => (props.to ? resolveComponent('NuxtLink') : 'div'))
     </div>
 
     <div v-if="hint" class="mt-1 text-xs text-slate-500">{{ hint }}</div>
+
+    <ClientOnly v-if="hasSparkline">
+      <div class="-mx-1 mt-2">
+        <apexchart type="area" height="42" :options="sparklineChart.options" :series="sparklineChart.series" />
+      </div>
+    </ClientOnly>
   </component>
 </template>
