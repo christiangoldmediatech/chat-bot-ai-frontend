@@ -113,15 +113,22 @@ const Tag = computed(() => (props.to ? resolveComponent('NuxtLink') : 'div'))
     </div>
 
     <div
-      class="font-semibold text-slate-900 tabular-nums"
-      :class="props.compact ? 'mt-1 text-xl leading-tight' : 'mt-2 text-3xl'"
+      v-if="props.compact"
+      class="flex-1 min-h-0 flex items-center font-bold text-slate-900 tabular-nums text-4xl sm:text-5xl leading-none"
+      :title="full(value)"
+    >
+      {{ compactFmt(value) }}
+    </div>
+    <div
+      v-else
+      class="mt-2 text-3xl font-semibold text-slate-900 tabular-nums"
       :title="full(value)"
     >
       {{ compactFmt(value) }}
     </div>
 
     <div v-if="hint && !props.compact" class="mt-1 text-xs text-slate-500">{{ hint }}</div>
-    <div v-else-if="hint && props.compact" class="mt-0.5 text-[10px] text-slate-500 truncate">{{ hint }}</div>
+    <div v-else-if="hint && props.compact" class="text-[10px] text-slate-500 truncate">{{ hint }}</div>
 
     <ClientOnly v-if="hasSparkline && !props.compact">
       <div class="-mx-1 mt-2">
