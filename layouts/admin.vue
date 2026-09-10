@@ -1,5 +1,5 @@
 <template>
-  <div class="relative min-h-screen flex bg-home-mesh text-pearl">
+  <div class="relative min-h-screen flex bg-home-mesh-dark text-pearl">
     <AdminSidebar />
     <div class="flex-1 flex flex-col min-w-0">
       <AdminHeader />

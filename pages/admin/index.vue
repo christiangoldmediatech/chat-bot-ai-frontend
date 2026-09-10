@@ -52,6 +52,7 @@ const legacyData = ref<DashboardSummary | null>(null)
 const summary = ref<MetricsSummaryResponse | null>(null)
 const conversationsSeries = ref<MetricsTimeseriesResponse | null>(null)
 const leadsSeries = ref<MetricsTimeseriesResponse | null>(null)
+const messagesSentSeries = ref<MetricsTimeseriesResponse | null>(null)
 const meetingsScheduledSeries = ref<MetricsTimeseriesResponse | null>(null)
 const meetingsCancelledSeries = ref<MetricsTimeseriesResponse | null>(null)
 const today = ref<TodayTimelineResponse | null>(null)
@@ -107,12 +108,14 @@ async function loadCharts(): Promise<void> {
   chartsLoading.value = true
   try {
     const q = { ...range.value, interval: activityInterval.value }
-    const [conv, leads] = await Promise.all([
+    const [conv, leads, msgs] = await Promise.all([
       metrics.timeseries('conversations', q),
       metrics.timeseries('leads', q),
+      metrics.timeseries('messagesSentByBot', q).catch(() => null),
     ])
     conversationsSeries.value = conv
     leadsSeries.value = leads
+    messagesSentSeries.value = msgs
   } finally {
     chartsLoading.value = false
   }
@@ -358,24 +361,96 @@ const meetingsChart = computed(() => {
       {{ error }}
     </p>
 
-    <!-- ── SECCIÓN RESUMEN ────────────────────────────────────────────── -->
+    <!-- ── SECCIÓN ACTIVITY (charts prominentes primero) ─────────────────── -->
     <section class="mt-6">
+      <div class="flex items-center justify-between gap-3 mb-3">
+        <div class="flex items-center gap-2">
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            {{ $t('admin.dashboard.sections.activity') }}
+          </h2>
+          <span class="text-[10px] text-slate-400">
+            {{ $t('admin.dashboard.sections.appliesToBelow') }}
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">
+            {{ $t('admin.dashboard.sections.groupBy') }}
+          </label>
+          <select
+            v-model="activityInterval"
+            class="rounded-lg border border-slate-200 bg-white/70 backdrop-blur-md px-2 py-1.5 text-xs"
+          >
+            <option value="day">{{ $t('admin.dashboard.interval.day') }}</option>
+            <option value="month">{{ $t('admin.dashboard.interval.month') }}</option>
+            <option value="year">{{ $t('admin.dashboard.interval.year') }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div class="lg:col-span-4 flex flex-col gap-4">
+          <DashboardHeroKpiCard
+            :label="$t('admin.dashboard.kpi.messagesSentByBot')"
+            :hint="$t('admin.dashboard.kpi.messagesSentByBotHint')"
+            :value="totals.messagesSentByBot"
+            :previous-value="previousTotals.messagesSentByBot"
+            :sparkline="messagesSentSeries?.buckets.map(b => b.value) ?? []"
+            icon="chat"
+            tone="primary"
+          />
+          <DashboardHeroKpiCard
+            :label="$t('admin.dashboardRedesign.hero.upcomingTitle')"
+            :hint="$t('admin.dashboardRedesign.hero.upcomingHint')"
+            :value="totals.meetingsUpcoming"
+            :previous-value="previousTotals.meetingsUpcoming"
+            :sparkline="meetingsScheduledSeries?.buckets.map(b => b.value) ?? []"
+            icon="calendar"
+            tone="accent"
+          />
+        </div>
+        <div class="lg:col-span-8">
+          <DashboardActivityCompareCard
+            :from="range.from"
+            :to="range.to"
+            :interval="activityInterval"
+          />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-4">
+        <div class="lg:col-span-5">
+          <DashboardServicesDonutCard :from="range.from" :to="range.to" />
+        </div>
+        <div class="lg:col-span-7">
+          <DashboardLeadFunnelCard
+            :total="totals.leadsTotal"
+            :new_="totals.leadsNew"
+            :qualified="totals.leadsQualified"
+            :won="totals.leadsWon"
+          />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4 mt-4">
+        <DashboardAttendedBarCard
+          :from="range.from"
+          :to="range.to"
+          :interval="activityInterval"
+        />
+      </div>
+    </section>
+
+    <!-- ── SECCIÓN RESUMEN (KPIs con sparklines + chart comparativo) ────── -->
+    <section class="mt-8">
       <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
         {{ $t('admin.dashboard.sections.summary') }}
       </h2>
 
       <div v-if="loading && !summary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div v-for="i in 4" :key="i" class="h-24 rounded-2xl bg-slate-100/60 animate-pulse" />
+        <div v-for="i in 4" :key="i" class="h-32 rounded-2xl bg-slate-100/60 animate-pulse" />
       </div>
 
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard
-          :label="t('admin.dashboard.kpi.messagesSentByBot')"
-          :value="totals.messagesSentByBot"
-          :previous="previousTotals.messagesSentByBot"
-          :hint="t('admin.dashboard.kpi.messagesSentByBotHint')"
-          tone="indigo"
-        />
         <KpiCard
           :label="t('admin.dashboard.kpi.conversations')"
           :value="totals.conversationsTotal"
@@ -383,6 +458,7 @@ const meetingsChart = computed(() => {
           :hint="kpiConversationsHint"
           tone="sky"
           to="/admin/conversations"
+          :sparkline="conversationsSeries?.buckets.map(b => b.value) ?? []"
         />
         <KpiCard
           :label="t('admin.dashboard.kpi.leads')"
@@ -391,6 +467,7 @@ const meetingsChart = computed(() => {
           :hint="kpiLeadsHint"
           tone="emerald"
           to="/admin/leads"
+          :sparkline="leadsSeries?.buckets.map(b => b.value) ?? []"
         />
         <KpiCard
           :label="t('admin.dashboard.kpi.meetingsScheduled')"
@@ -399,6 +476,7 @@ const meetingsChart = computed(() => {
           :hint="kpiMeetingsHint"
           tone="amber"
           to="/admin/meetings"
+          :sparkline="meetingsScheduledSeries?.buckets.map(b => b.value) ?? []"
         />
         <KpiCard
           :label="t('admin.dashboard.kpi.uniqueCustomers')"
@@ -428,92 +506,14 @@ const meetingsChart = computed(() => {
           to="/admin/leads"
         />
       </div>
+
+      <div class="mt-4">
+        <DashboardSummaryChartCard :totals="totals" :previous="previousTotals" />
+      </div>
     </section>
 
     <section class="mt-8">
-      <div class="flex items-center justify-between gap-3 mb-3">
-        <div class="flex items-center gap-2">
-          <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500">
-            {{ $t('admin.dashboard.sections.activity') }}
-          </h2>
-          <span class="text-[10px] text-slate-400">
-            {{ $t('admin.dashboard.sections.appliesToBelow') }}
-          </span>
-        </div>
-        <div class="flex items-center gap-2">
-          <label class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">
-            {{ $t('admin.dashboard.sections.groupBy') }}
-          </label>
-          <select
-            v-model="activityInterval"
-            class="rounded-lg border border-slate-200 bg-white/70 backdrop-blur-md px-2 py-1.5 text-xs"
-          >
-            <option value="day">{{ $t('admin.dashboard.interval.day') }}</option>
-            <option value="month">{{ $t('admin.dashboard.interval.month') }}</option>
-            <option value="year">{{ $t('admin.dashboard.interval.year') }}</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <DashboardChartCard
-          :title="$t('admin.dashboard.chart.leadsTitle')"
-          :subtitle="$t('admin.dashboard.chart.leadsSubtitle')"
-          :loading="chartsLoading && !leadsChart"
-          :empty="!!(leadsSeries && leadsSeries.total === 0)"
-        >
-          <ClientOnly>
-            <apexchart
-              v-if="leadsChart"
-              :key="`leads-${activityInterval}-${leadsSeries?.buckets.length ?? 0}`"
-              type="line"
-              height="280"
-              :options="leadsChart.options"
-              :series="leadsChart.series"
-            />
-          </ClientOnly>
-        </DashboardChartCard>
-
-        <DashboardChartCard
-          :title="$t('admin.dashboard.chart.conversationsTitle')"
-          :subtitle="$t('admin.dashboard.chart.conversationsSubtitle')"
-          :loading="chartsLoading && !conversationsChart"
-          :empty="!!(conversationsSeries && conversationsSeries.total === 0)"
-        >
-          <ClientOnly>
-            <apexchart
-              v-if="conversationsChart"
-              :key="`conv-${activityInterval}-${conversationsSeries?.buckets.length ?? 0}`"
-              type="line"
-              height="280"
-              :options="conversationsChart.options"
-              :series="conversationsChart.series"
-            />
-          </ClientOnly>
-        </DashboardChartCard>
-      </div>
-
-      <div class="grid grid-cols-1 gap-4 mt-4">
-        <DashboardChartCard
-          :title="$t('admin.dashboard.chart.mixedTitle')"
-          :subtitle="$t('admin.dashboard.chart.mixedSubtitle')"
-          :loading="chartsLoading && !mixedChart"
-          :empty="!!(conversationsSeries && conversationsSeries.total === 0 && leadsSeries && leadsSeries.total === 0)"
-        >
-          <ClientOnly>
-            <apexchart
-              v-if="mixedChart"
-              :key="`mixed-${activityInterval}-${conversationsSeries?.buckets.length ?? 0}`"
-              type="line"
-              height="320"
-              :options="mixedChart.options"
-              :series="mixedChart.series"
-            />
-          </ClientOnly>
-        </DashboardChartCard>
-      </div>
-
-      <div class="grid grid-cols-1 gap-4 mt-4">
+      <div class="grid grid-cols-1 gap-4">
         <TodayTimeline :data="today" :loading="loading" />
       </div>
     </section>
@@ -528,46 +528,9 @@ const meetingsChart = computed(() => {
             {{ $t('admin.dashboard.sections.appliesToBelow') }}
           </span>
         </div>
-        <div class="flex items-center gap-2">
-          <p
-            v-if="meetingsSummary?.cancellationDataSince"
-            class="text-[10px] text-slate-400"
-          >
-            {{ $t('admin.dashboard.meetings.dataSince', { date: day(meetingsSummary.cancellationDataSince) }) }}
-          </p>
-          <label class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">
-            {{ $t('admin.dashboard.sections.groupBy') }}
-          </label>
-          <select
-            v-model="meetingsInterval"
-            class="rounded-lg border border-slate-200 bg-white/70 backdrop-blur-md px-2 py-1.5 text-xs"
-          >
-            <option value="day">{{ $t('admin.dashboard.interval.day') }}</option>
-            <option value="month">{{ $t('admin.dashboard.interval.month') }}</option>
-            <option value="year">{{ $t('admin.dashboard.interval.year') }}</option>
-          </select>
-        </div>
       </div>
 
-      <DashboardChartCard
-        :title="$t('admin.dashboard.meetings.chartTitle')"
-        :subtitle="$t('admin.dashboard.meetings.chartSubtitle')"
-        :loading="meetingsLoading && !meetingsChart"
-        :empty="!!(meetingsScheduledSeries && meetingsCancelledSeries && meetingsScheduledSeries.total === 0 && meetingsCancelledSeries.total === 0)"
-      >
-        <ClientOnly>
-          <apexchart
-            v-if="meetingsChart"
-            :key="`meetings-${meetingsInterval}-${meetingsScheduledSeries?.buckets.map(b => b.date + ':' + b.value).join(',')}`"
-            type="bar"
-            height="280"
-            :options="meetingsChart.options"
-            :series="meetingsChart.series"
-          />
-        </ClientOnly>
-      </DashboardChartCard>
-
-      <div class="mt-4">
+      <div>
         <MeetingsByCustomerTable
           :data="meetingsByCustomer"
           :loading="meetingsLoading"

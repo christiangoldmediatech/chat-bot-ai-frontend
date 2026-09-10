@@ -76,7 +76,7 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-wrap items-center gap-2">
-    <div class="inline-flex rounded-xl border border-slate-200 bg-white/70 backdrop-blur-md p-1 text-xs">
+    <div class="inline-flex rounded-xl border border-slate-200 bg-white backdrop-blur-md p-1 text-xs">
       <button
         v-for="p in (['today', '7d', '30d', '90d'] as Preset[])"
         :key="p"
@@ -97,13 +97,13 @@ onMounted(() => {
       <input
         v-model="customFrom"
         type="date"
-        class="rounded-lg border border-slate-200 bg-white/70 backdrop-blur-md px-2 py-1.5 text-xs"
+        class="rounded-lg border border-slate-200 bg-white backdrop-blur-md px-2 py-1.5 text-xs"
       >
       <span class="text-xs text-slate-400">→</span>
       <input
         v-model="customTo"
         type="date"
-        class="rounded-lg border border-slate-200 bg-white/70 backdrop-blur-md px-2 py-1.5 text-xs"
+        class="rounded-lg border border-slate-200 bg-white backdrop-blur-md px-2 py-1.5 text-xs"
       >
       <button
         type="button"

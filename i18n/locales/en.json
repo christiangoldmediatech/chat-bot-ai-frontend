@@ -1169,6 +1169,74 @@
       "saveEscalation": "Save escalation",
       "defaultDuration": "Default duration"
     },
+    "dashboardRedesign": {
+      "summaryChart": {
+        "title": "Summary at a glance",
+        "subtitle": "All KPIs compared side by side with the previous period",
+        "empty": "No activity in this period.",
+        "currentPeriod": "This period",
+        "previousPeriod": "Previous period",
+        "metric": {
+          "messagesSentByBot": "Messages sent by bot",
+          "conversations": "Conversations",
+          "leads": "Leads",
+          "meetingsScheduled": "Meetings scheduled",
+          "uniqueCustomers": "Unique customers",
+          "handledByHuman": "Handled by human",
+          "leadsNew": "New leads",
+          "leadsWon": "Won leads"
+        }
+      },
+      "hero": {
+        "upcomingTitle": "Upcoming appointments",
+        "upcomingHint": "Confirmed and future in the range",
+        "conversationsTitle": "Conversations",
+        "leadsTitle": "Leads",
+        "revenueTitle": "Revenue"
+      },
+      "donut": {
+        "title": "Services performed",
+        "subtitle": "Attended appointments grouped by service",
+        "revenue": "Revenue",
+        "centerLabel": "Attended",
+        "unit": "appointments",
+        "empty": "No services attended in this period yet."
+      },
+      "funnel": {
+        "title": "Lead funnel",
+        "subtitle": "Every step from first touch to won",
+        "total": "Total leads",
+        "new": "New",
+        "qualified": "Qualified",
+        "won": "Won",
+        "empty": "No leads yet in this period."
+      },
+      "compare": {
+        "title": "Activity comparison",
+        "subtitle": "Volume trend of two metrics side by side",
+        "pair": {
+          "convVsLeads": "Conversations vs Leads",
+          "schedVsHeld": "Scheduled vs Attended",
+          "sentVsRecv": "Sent vs Received"
+        },
+        "metrics": {
+          "conversations": "Conversations",
+          "leads": "Leads",
+          "meetingsScheduled": "Scheduled",
+          "meetingsHeld": "Attended",
+          "meetingsCancelled": "Cancelled",
+          "messagesSentByBot": "Sent by bot",
+          "messagesReceived": "Received"
+        }
+      },
+      "attended": {
+        "title": "Appointments attended over time",
+        "subtitle": "Count of appointments actually attended per period",
+        "seriesName": "Attended",
+        "avg": "avg",
+        "empty": "No attended appointments yet in this period."
+      }
+    },
     "dashboardServices": {
       "title": "Services performed",
       "subtitle": "Counts attended appointments in the selected period (uses the same date filters as the rest of the dashboard).",

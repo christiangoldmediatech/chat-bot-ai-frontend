@@ -1169,6 +1169,74 @@
       "saveEscalation": "Guardar escalado",
       "defaultDuration": "Duración por defecto"
     },
+    "dashboardRedesign": {
+      "summaryChart": {
+        "title": "Resumen de un vistazo",
+        "subtitle": "Todos los KPIs comparados lado a lado con el período anterior",
+        "empty": "Sin actividad en este período.",
+        "currentPeriod": "Este período",
+        "previousPeriod": "Período anterior",
+        "metric": {
+          "messagesSentByBot": "Mensajes enviados por bot",
+          "conversations": "Conversaciones",
+          "leads": "Leads",
+          "meetingsScheduled": "Citas agendadas",
+          "uniqueCustomers": "Clientes únicos",
+          "handledByHuman": "Atendidas por humano",
+          "leadsNew": "Leads nuevos",
+          "leadsWon": "Leads ganados"
+        }
+      },
+      "hero": {
+        "upcomingTitle": "Próximas citas",
+        "upcomingHint": "Confirmadas y futuras en el rango",
+        "conversationsTitle": "Conversaciones",
+        "leadsTitle": "Leads",
+        "revenueTitle": "Ingresos"
+      },
+      "donut": {
+        "title": "Servicios realizados",
+        "subtitle": "Citas atendidas agrupadas por servicio",
+        "revenue": "Ingresos",
+        "centerLabel": "Atendidas",
+        "unit": "citas",
+        "empty": "Aún no hay servicios atendidos en este período."
+      },
+      "funnel": {
+        "title": "Embudo de leads",
+        "subtitle": "Cada paso desde el primer contacto hasta la venta",
+        "total": "Total de leads",
+        "new": "Nuevos",
+        "qualified": "Calificados",
+        "won": "Ganados",
+        "empty": "Aún no hay leads en este período."
+      },
+      "compare": {
+        "title": "Comparativa de actividad",
+        "subtitle": "Tendencia de volumen de dos métricas lado a lado",
+        "pair": {
+          "convVsLeads": "Conversaciones vs Leads",
+          "schedVsHeld": "Agendadas vs Atendidas",
+          "sentVsRecv": "Enviados vs Recibidos"
+        },
+        "metrics": {
+          "conversations": "Conversaciones",
+          "leads": "Leads",
+          "meetingsScheduled": "Agendadas",
+          "meetingsHeld": "Atendidas",
+          "meetingsCancelled": "Canceladas",
+          "messagesSentByBot": "Enviados por el bot",
+          "messagesReceived": "Recibidos"
+        }
+      },
+      "attended": {
+        "title": "Citas atendidas por período",
+        "subtitle": "Conteo de citas realmente atendidas por franja",
+        "seriesName": "Atendidas",
+        "avg": "prom",
+        "empty": "Aún no hay citas atendidas en este período."
+      }
+    },
     "dashboardServices": {
       "title": "Servicios realizados",
       "subtitle": "Cuenta las citas atendidas en el período (usa los mismos filtros de fecha del resto del dashboard).",
