@@ -8,6 +8,7 @@ const props = defineProps<{
   to: string
   botId?: string
   tenantId?: string
+  fillHeight?: boolean
 }>()
 
 const { t, locale } = useI18n()
@@ -52,7 +53,7 @@ const donutChart = computed(() => {
   const rows = topRows.value
   return {
     options: {
-      chart: { type: 'donut', fontFamily: 'inherit', foreColor: '#475569' },
+      chart: { type: 'donut', fontFamily: 'inherit', foreColor: '#475569', parentHeightOffset: 0, offsetY: 0 },
       colors: CHART_DONUT_SERIES_COLORS,
       labels: rows.map(r => r.name),
       legend: { show: false },
@@ -61,7 +62,7 @@ const donutChart = computed(() => {
       plotOptions: {
         pie: {
           donut: {
-            size: '72%',
+            size: '78%',
             labels: {
               show: true,
               name: { show: false },
@@ -118,8 +119,11 @@ const totalRevenue = computed(() => {
 </script>
 
 <template>
-  <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5 h-full">
-    <header class="mb-4 flex items-start justify-between gap-3">
+  <section
+    class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass h-full"
+    :class="fillHeight ? 'p-3 flex flex-col min-h-0 min-w-0 overflow-hidden' : 'p-5'"
+  >
+    <header class="mb-2 flex items-start justify-between gap-3 shrink-0">
       <div>
         <h3 class="text-sm font-semibold text-slate-900">{{ $t('admin.dashboardRedesign.donut.title') }}</h3>
         <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.dashboardRedesign.donut.subtitle') }}</p>
@@ -130,24 +134,41 @@ const totalRevenue = computed(() => {
       </div>
     </header>
 
-    <div v-if="loading && !data" class="h-64 rounded-xl bg-slate-100/60 animate-pulse" />
+    <div v-if="loading && !data" :class="fillHeight ? 'flex-1 min-h-0 rounded-xl bg-slate-100/60 animate-pulse' : 'h-64 rounded-xl bg-slate-100/60 animate-pulse'" />
 
     <p v-else-if="error" class="rounded-xl border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">{{ error }}</p>
 
-    <div v-else-if="topRows.length === 0" class="h-64 flex items-center justify-center text-sm text-slate-400 text-center px-4">
+    <div v-else-if="topRows.length === 0" :class="fillHeight ? 'flex-1 min-h-0 flex items-center justify-center text-sm text-slate-400 text-center px-4' : 'h-64 flex items-center justify-center text-sm text-slate-400 text-center px-4'">
       {{ $t('admin.dashboardRedesign.donut.empty') }}
     </div>
 
-    <div v-else class="grid grid-cols-1 md:grid-cols-[220px,1fr] gap-4 items-center">
-      <ClientOnly>
-        <apexchart type="donut" height="240" :options="donutChart.options" :series="donutChart.series" />
-      </ClientOnly>
-      <ul class="space-y-2 max-h-64 overflow-y-auto pr-2">
-        <li v-for="(row, i) in topRows" :key="row.serviceId ?? row.name" class="flex items-center gap-2.5 text-sm">
-          <span class="size-2.5 shrink-0 rounded-full" :style="{ backgroundColor: CHART_DONUT_SERIES_COLORS[i % CHART_DONUT_SERIES_COLORS.length] }" />
+    <div
+      v-else
+      class="gap-3 items-center"
+      :class="fillHeight
+        ? 'flex-1 min-h-0 min-w-0 flex flex-row'
+        : 'grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]'"
+    >
+      <div :class="fillHeight ? 'relative h-full aspect-square shrink-0 min-h-0 min-w-0 overflow-hidden' : ''">
+        <ClientOnly>
+          <apexchart
+            type="donut"
+            :height="fillHeight ? '100%' : 240"
+            :width="fillHeight ? '100%' : undefined"
+            :options="donutChart.options"
+            :series="donutChart.series"
+          />
+        </ClientOnly>
+      </div>
+      <ul
+        class="grid grid-cols-1 gap-x-3 gap-y-1 pr-1 min-w-0"
+        :class="fillHeight ? 'flex-1 h-full min-h-0 overflow-y-auto content-start' : 'max-h-64 overflow-y-auto'"
+      >
+        <li v-for="(row, i) in topRows" :key="row.serviceId ?? row.name" class="flex items-center gap-2 text-xs">
+          <span class="size-2 shrink-0 rounded-full" :style="{ backgroundColor: CHART_DONUT_SERIES_COLORS[i % CHART_DONUT_SERIES_COLORS.length] }" />
           <span class="flex-1 min-w-0 text-slate-800 truncate">{{ row.name }}</span>
           <span class="tabular-nums text-slate-900 font-semibold">{{ row.attended }}</span>
-          <span class="tabular-nums text-slate-500 text-xs w-10 text-right">{{ pctOfTotal(row.attended) }}%</span>
+          <span class="tabular-nums text-slate-500 w-9 text-right">{{ pctOfTotal(row.attended) }}%</span>
         </li>
       </ul>
     </div>

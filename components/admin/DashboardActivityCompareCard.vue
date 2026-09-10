@@ -9,6 +9,7 @@ const props = defineProps<{
   interval: MetricsInterval
   botId?: string
   tenantId?: string
+  fillHeight?: boolean
 }>()
 
 const { t } = useI18n()
@@ -89,8 +90,11 @@ const chart = computed(() => {
 </script>
 
 <template>
-  <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5 h-full">
-    <header class="flex items-start justify-between gap-3 mb-3 flex-wrap">
+  <section
+    class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass h-full"
+    :class="fillHeight ? 'p-4 flex flex-col min-h-0' : 'p-5'"
+  >
+    <header class="flex items-start justify-between gap-3 mb-3 flex-wrap shrink-0">
       <div>
         <h3 class="text-sm font-semibold text-slate-900">{{ $t('admin.dashboardRedesign.compare.title') }}</h3>
         <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.dashboardRedesign.compare.subtitle') }}</p>
@@ -107,20 +111,24 @@ const chart = computed(() => {
       </div>
     </header>
 
-    <div class="mb-3 inline-flex rounded-xl bg-slate-100 p-1">
-      <button v-for="p in PAIRS" :key="p.key" type="button"
-              class="rounded-lg px-3 py-1.5 text-xs font-medium transition"
-              :class="activePair.key === p.key ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'"
-              @click="activePair = p">
+    <div class="mb-3 inline-flex rounded-xl bg-slate-100 p-1 shrink-0">
+      <button
+        v-for="p in PAIRS"
+        :key="p.key"
+        type="button"
+        class="rounded-lg px-3 py-1.5 text-xs font-medium transition"
+        :class="activePair.key === p.key ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'"
+        @click="activePair = p"
+      >
         {{ $t(`admin.dashboardRedesign.compare.pair.${p.labelKey}`) }}
       </button>
     </div>
 
-    <div v-if="loading && !seriesA" class="h-64 rounded-xl bg-slate-100/60 animate-pulse" />
+    <div v-if="loading && !seriesA" :class="fillHeight ? 'flex-1 min-h-0 rounded-xl bg-slate-100/60 animate-pulse' : 'h-64 rounded-xl bg-slate-100/60 animate-pulse'" />
     <p v-else-if="error" class="rounded-xl border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">{{ error }}</p>
-    <div v-else>
+    <div v-else :class="fillHeight ? 'flex-1 min-h-0' : ''">
       <ClientOnly>
-        <apexchart type="area" height="260" :options="chart.options" :series="chart.series" />
+        <apexchart type="area" :height="fillHeight ? '100%' : 260" :options="chart.options" :series="chart.series" />
       </ClientOnly>
     </div>
   </section>

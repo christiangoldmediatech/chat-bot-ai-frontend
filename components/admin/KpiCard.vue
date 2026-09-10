@@ -10,9 +10,10 @@ const props = defineProps<{
   to?: string
   sparkline?: number[]
   sparklineColor?: string
+  compact?: boolean
 }>()
 
-const { compact, full, percent } = useDateFormat()
+const { compact: compactFmt, full, percent } = useDateFormat()
 
 const hasSparkline = computed<boolean>(() =>
   Array.isArray(props.sparkline) && props.sparkline.length >= 2,
@@ -84,12 +85,13 @@ const Tag = computed(() => (props.to ? resolveComponent('NuxtLink') : 'div'))
   <component
     :is="Tag"
     :to="to"
-    class="block rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-4 transition hover:ring-slate-300"
+    class="block rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass transition hover:ring-slate-300"
+    :class="props.compact ? 'p-3 h-full flex flex-col justify-between' : 'p-4'"
   >
     <div class="flex items-start justify-between gap-2">
       <span
-        class="text-[10px] uppercase tracking-wider font-semibold ring-1 rounded-full px-2 py-0.5"
-        :class="tonePill"
+        class="uppercase tracking-wider font-semibold ring-1 rounded-full px-2 py-0.5"
+        :class="[tonePill, props.compact ? 'text-[9px]' : 'text-[10px]']"
       >
         {{ label }}
       </span>
@@ -110,13 +112,18 @@ const Tag = computed(() => (props.to ? resolveComponent('NuxtLink') : 'div'))
       </span>
     </div>
 
-    <div class="mt-2 text-3xl font-semibold text-slate-900" :title="full(value)">
-      {{ compact(value) }}
+    <div
+      class="font-semibold text-slate-900 tabular-nums"
+      :class="props.compact ? 'mt-1 text-xl leading-tight' : 'mt-2 text-3xl'"
+      :title="full(value)"
+    >
+      {{ compactFmt(value) }}
     </div>
 
-    <div v-if="hint" class="mt-1 text-xs text-slate-500">{{ hint }}</div>
+    <div v-if="hint && !props.compact" class="mt-1 text-xs text-slate-500">{{ hint }}</div>
+    <div v-else-if="hint && props.compact" class="mt-0.5 text-[10px] text-slate-500 truncate">{{ hint }}</div>
 
-    <ClientOnly v-if="hasSparkline">
+    <ClientOnly v-if="hasSparkline && !props.compact">
       <div class="-mx-1 mt-2">
         <apexchart type="area" height="42" :options="sparklineChart.options" :series="sparklineChart.series" />
       </div>

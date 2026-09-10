@@ -9,6 +9,7 @@ const props = defineProps<{
   interval: MetricsInterval
   botId?: string
   tenantId?: string
+  fillHeight?: boolean
 }>()
 
 const { t } = useI18n()
@@ -96,8 +97,11 @@ const chart = computed(() => {
 </script>
 
 <template>
-  <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5 h-full">
-    <header class="flex items-start justify-between gap-3 mb-3 flex-wrap">
+  <section
+    class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass h-full"
+    :class="fillHeight ? 'p-4 flex flex-col min-h-0' : 'p-5'"
+  >
+    <header class="flex items-start justify-between gap-3 mb-3 flex-wrap shrink-0">
       <div>
         <h3 class="text-sm font-semibold text-slate-900">{{ $t('admin.dashboardRedesign.attended.title') }}</h3>
         <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.dashboardRedesign.attended.subtitle') }}</p>
@@ -108,14 +112,14 @@ const chart = computed(() => {
       </div>
     </header>
 
-    <div v-if="loading && !data" class="h-56 rounded-xl bg-slate-100/60 animate-pulse" />
+    <div v-if="loading && !data" :class="fillHeight ? 'flex-1 min-h-0 rounded-xl bg-slate-100/60 animate-pulse' : 'h-56 rounded-xl bg-slate-100/60 animate-pulse'" />
     <p v-else-if="error" class="rounded-xl border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">{{ error }}</p>
-    <div v-else-if="total === 0" class="h-56 flex items-center justify-center text-sm text-slate-400 text-center px-4">
+    <div v-else-if="total === 0" :class="fillHeight ? 'flex-1 min-h-0 flex items-center justify-center text-sm text-slate-400 text-center px-4' : 'h-56 flex items-center justify-center text-sm text-slate-400 text-center px-4'">
       {{ $t('admin.dashboardRedesign.attended.empty') }}
     </div>
-    <div v-else>
+    <div v-else :class="fillHeight ? 'flex-1 min-h-0' : ''">
       <ClientOnly>
-        <apexchart type="bar" height="220" :options="chart.options" :series="chart.series" />
+        <apexchart type="bar" :height="fillHeight ? '100%' : 220" :options="chart.options" :series="chart.series" />
       </ClientOnly>
     </div>
   </section>
