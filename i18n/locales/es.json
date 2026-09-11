@@ -181,12 +181,30 @@
       "titleB": "ya hace por ti.",
       "copy": "Todo esto corre hoy en tu WhatsApp Business. Sin apps nuevas para tu equipo, sin turnos, sin respuestas robóticas.",
       "items": {
-        "1": { "title": "API oficial de WhatsApp Cloud (Meta)", "body": "Integración directa con la API oficial de WhatsApp Cloud sobre tu propio número de WhatsApp Business. Sin scraping, sin riesgo de bloqueo, sin números personales. Tono, personalidad, mensajes de bienvenida y fuera de horario, todo desde el panel." },
-        "2": { "title": "Agenda citas en Google Calendar", "body": "Consulta la agenda real del asesor, ofrece huecos disponibles y crea el evento en tu nombre. Configuración por bot: horario laboral, zona horaria, duración, email y WhatsApp del asesor, recordatorios post-cita." },
-        "3": { "title": "Aprende tu negocio", "body": "Sube PDFs, catálogos y manuales — el bot los indexa y responde con información real de tu empresa. Configura productos y servicios desde el panel para preguntas de precio, disponibilidad y características." },
-        "4": { "title": "Conversaciones que se sienten humanas", "body": "Memoria persistente por cliente entre sesiones, agrupa mensajes en ráfaga y responde en un solo turno coherente, typing indicator y tiempos de respuesta proporcionales al mensaje. Cualquier asesor toma el control desde el panel — el bot se calla hasta que se libere." },
-        "5": { "title": "Multimedia nativa en los dos sentidos", "body": "Envía y recibe imágenes, PDFs, videos, notas de voz (con transcripción automática), ubicaciones y stickers como mensajes nativos de WhatsApp, no como link. Sube tus recursos una vez a la librería del bot y los usa cuando corresponde." },
-        "6": { "title": "Escalación inteligente + detección de leads", "body": "Detecta cuándo pasar la conversación a una persona, crea un case con todo el historial y notifica al asesor por email y WhatsApp. Cada mensaje se analiza en segundo plano para que el equipo comercial vea primero a los clientes calientes." }
+        "1": {
+          "title": "API oficial de WhatsApp Cloud (Meta)",
+          "body": "Integración directa con la API oficial de WhatsApp Cloud sobre tu propio número de WhatsApp Business. Sin scraping, sin riesgo de bloqueo, sin números personales. Tono, personalidad, mensajes de bienvenida y fuera de horario, todo desde el panel."
+        },
+        "2": {
+          "title": "Agenda citas en Google Calendar",
+          "body": "Consulta la agenda real del asesor, ofrece huecos disponibles y crea el evento en tu nombre. Configuración por bot: horario laboral, zona horaria, duración, email y WhatsApp del asesor, recordatorios post-cita."
+        },
+        "3": {
+          "title": "Aprende tu negocio",
+          "body": "Sube PDFs, catálogos y manuales — el bot los indexa y responde con información real de tu empresa. Configura productos y servicios desde el panel para preguntas de precio, disponibilidad y características."
+        },
+        "4": {
+          "title": "Conversaciones que se sienten humanas",
+          "body": "Memoria persistente por cliente entre sesiones, agrupa mensajes en ráfaga y responde en un solo turno coherente, typing indicator y tiempos de respuesta proporcionales al mensaje. Cualquier asesor toma el control desde el panel — el bot se calla hasta que se libere."
+        },
+        "5": {
+          "title": "Multimedia nativa en los dos sentidos",
+          "body": "Envía y recibe imágenes, PDFs, videos, notas de voz (con transcripción automática), ubicaciones y stickers como mensajes nativos de WhatsApp, no como link. Sube tus recursos una vez a la librería del bot y los usa cuando corresponde."
+        },
+        "6": {
+          "title": "Escalación inteligente + detección de leads",
+          "body": "Detecta cuándo pasar la conversación a una persona, crea un case con todo el historial y notifica al asesor por email y WhatsApp. Cada mensaje se analiza en segundo plano para que el equipo comercial vea primero a los clientes calientes."
+        }
       }
     },
     "process": {
@@ -195,9 +213,24 @@
       "titleB": "producción.",
       "copy": "Tres etapas en orden estricto: sin la primera, la segunda no tiene con qué entrenar. Tiempo total estimado, 3 semanas.",
       "items": {
-        "1": { "week": "Sem 1", "title": "Alimentamos", "body": "Cargamos catálogo, lista de precios, políticas de envío y devolución, y 30 días de conversaciones reales de tu equipo. De ahí sale el tono, no de una plantilla.", "tags": "Catálogo|Precios|Históricos|Políticas" },
-        "2": { "week": "Sem 2", "title": "Entrenamos y limitamos", "body": "Definimos qué puede prometer y qué no, las rutas de escalamiento y los descuentos máximos. Tu equipo prueba en un entorno cerrado y corrige respuestas con un clic.", "tags": "Tono|Límites|Escalamiento|QA interno" },
-        "3": { "week": "Sem 3", "title": "Publicamos y ajustamos", "body": "Sale a producción en tus canales con monitoreo diario la primera semana. Después, una revisión semanal donde ajustamos con base en conversaciones reales.", "tags": "Go-live|Monitoreo|Ajuste semanal|Reportes" }
+        "1": {
+          "week": "Sem 1",
+          "title": "Alimentamos",
+          "body": "Cargamos catálogo, lista de precios, políticas de envío y devolución, y 30 días de conversaciones reales de tu equipo. De ahí sale el tono, no de una plantilla.",
+          "tags": "Catálogo|Precios|Históricos|Políticas"
+        },
+        "2": {
+          "week": "Sem 2",
+          "title": "Entrenamos y limitamos",
+          "body": "Definimos qué puede prometer y qué no, las rutas de escalamiento y los descuentos máximos. Tu equipo prueba en un entorno cerrado y corrige respuestas con un clic.",
+          "tags": "Tono|Límites|Escalamiento|QA interno"
+        },
+        "3": {
+          "week": "Sem 3",
+          "title": "Publicamos y ajustamos",
+          "body": "Sale a producción en tus canales con monitoreo diario la primera semana. Después, una revisión semanal donde ajustamos con base en conversaciones reales.",
+          "tags": "Go-live|Monitoreo|Ajuste semanal|Reportes"
+        }
       }
     },
     "results": {
@@ -207,9 +240,18 @@
       "copy": "Rangos de referencia observados en operaciones de atención similares. Los números finales dependen de tu volumen y tu catálogo.",
       "footnote": "Cifras ilustrativas para efectos de esta propuesta de diseño.",
       "items": {
-        "1": { "title": "de las consultas se cierran sin intervención humana", "desc": "Preguntas de precio, stock, horarios y estado de pedido" },
-        "2": { "title": "de tiempo de primera respuesta, a cualquier hora", "desc": "Frente a un promedio manual de 4 a 6 horas fuera de horario" },
-        "3": { "title": "más citas agendadas desde el mismo tráfico", "desc": "La conversación no se enfría esperando a alguien disponible" }
+        "1": {
+          "title": "de las consultas se cierran sin intervención humana",
+          "desc": "Preguntas de precio, stock, horarios y estado de pedido"
+        },
+        "2": {
+          "title": "de tiempo de primera respuesta, a cualquier hora",
+          "desc": "Frente a un promedio manual de 4 a 6 horas fuera de horario"
+        },
+        "3": {
+          "title": "más citas agendadas desde el mismo tráfico",
+          "desc": "La conversación no se enfría esperando a alguien disponible"
+        }
       }
     },
     "plans": {
@@ -284,6 +326,73 @@
       "errorPasswordLength": "La contraseña debe tener al menos 12 caracteres.",
       "errorSlugFormat": "El slug debe estar en kebab-case (minúsculas, números y guiones).",
       "errorGeneric": "No se pudo crear la empresa."
+    },
+    "password": {
+      "forgotLink": "¿Olvidaste tu contraseña?",
+      "backToLogin": "Volver al inicio de sesión",
+      "steps": {
+        "email": "Correo",
+        "code": "Código",
+        "newPassword": "Nueva contraseña"
+      },
+      "forgot": {
+        "title": "Restablece tu contraseña",
+        "subtitle": "Te enviaremos un código de 6 dígitos a tu correo.",
+        "emailPlaceholder": "Correo",
+        "submit": "Enviar código",
+        "submitting": "Enviando…",
+        "sentGeneric": "Si el correo está registrado, recibirás un código en unos minutos."
+      },
+      "code": {
+        "title": "Ingresa el código",
+        "subtitle": "Revisa tu correo. El código expira en {minutes} minutos.",
+        "inputLabel": "Código de verificación",
+        "verify": "Verificar",
+        "verifying": "Verificando…",
+        "resend": "Reenviar código",
+        "resendIn": "Reenviar en {seconds}s",
+        "expiresAt": "Expira en {mm}:{ss}",
+        "expired": "El código expiró. Solicita uno nuevo."
+      },
+      "reset": {
+        "title": "Elige tu nueva contraseña",
+        "subtitle": "Mínimo 12 caracteres, incluye letras y números.",
+        "newLabel": "Nueva contraseña",
+        "confirmLabel": "Confirmar contraseña",
+        "submit": "Guardar contraseña",
+        "submitting": "Guardando…",
+        "successTitle": "Contraseña actualizada",
+        "successBody": "Ya puedes iniciar sesión con tu nueva contraseña.",
+        "goToLogin": "Ir al inicio de sesión"
+      },
+      "change": {
+        "title": "Cambiar contraseña",
+        "subtitle": "Te enviaremos un código a tu correo para confirmar el cambio.",
+        "requestSubmit": "Enviar código",
+        "requestSubmitting": "Enviando…",
+        "requestSent": "Enviamos un código a tu correo.",
+        "currentLabel": "Contraseña actual",
+        "successTitle": "Contraseña actualizada",
+        "successBody": "Tu contraseña se actualizó y las otras sesiones fueron cerradas.",
+        "startOver": "Empezar de nuevo"
+      },
+      "strength": {
+        "label": "Fortaleza:",
+        "veryWeak": "Muy débil",
+        "weak": "Débil",
+        "medium": "Media",
+        "strong": "Fuerte",
+        "veryStrong": "Muy fuerte"
+      },
+      "policy": "La contraseña debe tener al menos 12 caracteres e incluir letras y números.",
+      "confirmMismatch": "Las contraseñas no coinciden.",
+      "sameAsCurrent": "La nueva contraseña no puede ser igual a la anterior.",
+      "errors": {
+        "generic": "No se pudo completar la operación. Intenta de nuevo.",
+        "codeInvalid": "Código inválido o expirado.",
+        "rateLimited": "Demasiadas solicitudes. Espera unos minutos.",
+        "tokenExpired": "La sesión de verificación expiró. Empieza de nuevo."
+      }
     }
   },
   "nav": {
@@ -554,7 +663,9 @@
       "cycleDaysRemaining": "Queda {days} día. | Quedan {days} días.",
       "loadPlanError": "No se pudo cargar tu plan.",
       "paymentLinkLabel": "Renovar",
-      "paymentLinkTitle": "Pago con transferencia"
+      "paymentLinkTitle": "Pago con transferencia",
+      "changeCodeExplainer": "Por seguridad, te enviaremos un código de 6 dígitos a tu correo {email}. Solo después de verificarlo podrás definir la nueva contraseña.",
+      "currentPasswordWrong": "La contraseña actual es incorrecta."
     },
     "planCard": {
       "unlimitedBots": "Bots ilimitados",

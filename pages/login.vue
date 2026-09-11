@@ -137,6 +137,12 @@ async function onSubmit(): Promise<void> {
         </button>
       </form>
 
+      <p class="mt-4 text-center text-sm">
+        <NuxtLink to="/forgot-password" class="text-slate-700 hover:text-slate-900 hover:underline font-medium">
+          {{ $t('auth.password.forgotLink') }}
+        </NuxtLink>
+      </p>
+
       <p class="mt-6 text-center text-sm text-slate-500">
         {{ $t('auth.login.noAccount') }}
         <NuxtLink to="/register" class="text-slate-900 hover:underline font-medium">
