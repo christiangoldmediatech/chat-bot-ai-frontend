@@ -181,12 +181,30 @@
       "titleB": "already does for you.",
       "copy": "All of this runs today on your WhatsApp Business. No new apps for your team, no shifts, no robotic answers.",
       "items": {
-        "1": { "title": "Official WhatsApp Cloud (Meta) API", "body": "Direct integration with Meta's WhatsApp Cloud API on your own business number. No scraping, no risk of bans, no personal numbers. Tone, personality, welcome and out-of-hours messages configured from the panel." },
-        "2": { "title": "Books appointments in Google Calendar", "body": "Checks the rep's real calendar, offers available slots and creates the event on your behalf. Configure per bot: working hours, timezone, duration, rep email and WhatsApp, post-visit reminders." },
-        "3": { "title": "Learns your business", "body": "Upload PDFs, catalogs and manuals — the bot indexes them and answers with your real information. Configure products and services from the panel for price, availability and specs questions." },
-        "4": { "title": "Conversations that feel human", "body": "Per-customer memory across sessions, groups burst messages and replies in one coherent turn, typing indicator and response times that match the message. Any rep can take over from the panel — the bot stays silent until released." },
-        "5": { "title": "Native multimedia both ways", "body": "Sends and receives images, PDFs, videos, voice notes (with auto-transcription), locations and stickers as native WhatsApp messages, not links. Upload resources once to the bot library and it uses them when relevant." },
-        "6": { "title": "Smart escalation + lead detection", "body": "Detects when to hand a conversation to a person, opens a case with the full history, notifies the rep by email and WhatsApp. Every message is scored in the background so your sales team sees the hot leads first." }
+        "1": {
+          "title": "Official WhatsApp Cloud (Meta) API",
+          "body": "Direct integration with Meta's WhatsApp Cloud API on your own business number. No scraping, no risk of bans, no personal numbers. Tone, personality, welcome and out-of-hours messages configured from the panel."
+        },
+        "2": {
+          "title": "Books appointments in Google Calendar",
+          "body": "Checks the rep's real calendar, offers available slots and creates the event on your behalf. Configure per bot: working hours, timezone, duration, rep email and WhatsApp, post-visit reminders."
+        },
+        "3": {
+          "title": "Learns your business",
+          "body": "Upload PDFs, catalogs and manuals — the bot indexes them and answers with your real information. Configure products and services from the panel for price, availability and specs questions."
+        },
+        "4": {
+          "title": "Conversations that feel human",
+          "body": "Per-customer memory across sessions, groups burst messages and replies in one coherent turn, typing indicator and response times that match the message. Any rep can take over from the panel — the bot stays silent until released."
+        },
+        "5": {
+          "title": "Native multimedia both ways",
+          "body": "Sends and receives images, PDFs, videos, voice notes (with auto-transcription), locations and stickers as native WhatsApp messages, not links. Upload resources once to the bot library and it uses them when relevant."
+        },
+        "6": {
+          "title": "Smart escalation + lead detection",
+          "body": "Detects when to hand a conversation to a person, opens a case with the full history, notifies the rep by email and WhatsApp. Every message is scored in the background so your sales team sees the hot leads first."
+        }
       }
     },
     "process": {
@@ -195,9 +213,24 @@
       "titleB": "to production.",
       "copy": "Three stages in strict order: without the first, the second has nothing to train on. Total estimated time, 3 weeks.",
       "items": {
-        "1": { "week": "Week 1", "title": "We feed it", "body": "We load catalog, price list, shipping and return policies, and 30 days of real conversations from your team. That's where the tone comes from, not a template.", "tags": "Catalog|Prices|History|Policies" },
-        "2": { "week": "Week 2", "title": "We train and limit", "body": "We define what it can promise and what it can't, escalation paths and maximum discounts. Your team tests in a closed environment and corrects answers with one click.", "tags": "Tone|Limits|Escalation|Internal QA" },
-        "3": { "week": "Week 3", "title": "We ship and tune", "body": "It goes live on your channels with daily monitoring the first week. Then, weekly reviews where we tune based on real conversations.", "tags": "Go-live|Monitoring|Weekly tuning|Reports" }
+        "1": {
+          "week": "Week 1",
+          "title": "We feed it",
+          "body": "We load catalog, price list, shipping and return policies, and 30 days of real conversations from your team. That's where the tone comes from, not a template.",
+          "tags": "Catalog|Prices|History|Policies"
+        },
+        "2": {
+          "week": "Week 2",
+          "title": "We train and limit",
+          "body": "We define what it can promise and what it can't, escalation paths and maximum discounts. Your team tests in a closed environment and corrects answers with one click.",
+          "tags": "Tone|Limits|Escalation|Internal QA"
+        },
+        "3": {
+          "week": "Week 3",
+          "title": "We ship and tune",
+          "body": "It goes live on your channels with daily monitoring the first week. Then, weekly reviews where we tune based on real conversations.",
+          "tags": "Go-live|Monitoring|Weekly tuning|Reports"
+        }
       }
     },
     "results": {
@@ -207,9 +240,18 @@
       "copy": "Reference ranges observed in similar customer support operations. Final numbers depend on your volume and your catalog.",
       "footnote": "Illustrative figures for the purposes of this design proposal.",
       "items": {
-        "1": { "title": "of inquiries close without human intervention", "desc": "Price, stock, hours and order status questions" },
-        "2": { "title": "first response time, at any hour", "desc": "Compared to a manual average of 4 to 6 hours after hours" },
-        "3": { "title": "more appointments booked from the same traffic", "desc": "The conversation doesn't cool waiting for someone available" }
+        "1": {
+          "title": "of inquiries close without human intervention",
+          "desc": "Price, stock, hours and order status questions"
+        },
+        "2": {
+          "title": "first response time, at any hour",
+          "desc": "Compared to a manual average of 4 to 6 hours after hours"
+        },
+        "3": {
+          "title": "more appointments booked from the same traffic",
+          "desc": "The conversation doesn't cool waiting for someone available"
+        }
       }
     },
     "plans": {
@@ -284,6 +326,73 @@
       "errorPasswordLength": "Password must be at least 12 characters.",
       "errorSlugFormat": "Slug must be kebab-case (lowercase letters, numbers, and hyphens).",
       "errorGeneric": "Could not create the company."
+    },
+    "password": {
+      "forgotLink": "Forgot your password?",
+      "backToLogin": "Back to sign in",
+      "steps": {
+        "email": "Email",
+        "code": "Code",
+        "newPassword": "New password"
+      },
+      "forgot": {
+        "title": "Reset your password",
+        "subtitle": "We'll send a 6-digit code to your email.",
+        "emailPlaceholder": "Email",
+        "submit": "Send code",
+        "submitting": "Sending…",
+        "sentGeneric": "If the email is registered, you'll receive a code in a few minutes."
+      },
+      "code": {
+        "title": "Enter the code",
+        "subtitle": "Check your inbox. The code expires in {minutes} minutes.",
+        "inputLabel": "Verification code",
+        "verify": "Verify",
+        "verifying": "Verifying…",
+        "resend": "Resend code",
+        "resendIn": "Resend in {seconds}s",
+        "expiresAt": "Expires in {mm}:{ss}",
+        "expired": "The code expired. Request a new one."
+      },
+      "reset": {
+        "title": "Choose your new password",
+        "subtitle": "At least 12 characters, with letters and numbers.",
+        "newLabel": "New password",
+        "confirmLabel": "Confirm password",
+        "submit": "Save password",
+        "submitting": "Saving…",
+        "successTitle": "Password updated",
+        "successBody": "You can now sign in with your new password.",
+        "goToLogin": "Go to sign in"
+      },
+      "change": {
+        "title": "Change password",
+        "subtitle": "We'll email you a code to confirm the change.",
+        "requestSubmit": "Send code",
+        "requestSubmitting": "Sending…",
+        "requestSent": "We sent a code to your email.",
+        "currentLabel": "Current password",
+        "successTitle": "Password updated",
+        "successBody": "Your password was updated and other sessions were closed.",
+        "startOver": "Start over"
+      },
+      "strength": {
+        "label": "Strength:",
+        "veryWeak": "Very weak",
+        "weak": "Weak",
+        "medium": "Medium",
+        "strong": "Strong",
+        "veryStrong": "Very strong"
+      },
+      "policy": "The password must be at least 12 characters and include letters and numbers.",
+      "confirmMismatch": "Passwords don't match.",
+      "sameAsCurrent": "The new password can't be the same as the current one.",
+      "errors": {
+        "generic": "We couldn't complete the operation. Try again.",
+        "codeInvalid": "Invalid or expired code.",
+        "rateLimited": "Too many requests. Wait a few minutes.",
+        "tokenExpired": "Verification session expired. Start again."
+      }
     }
   },
   "nav": {
