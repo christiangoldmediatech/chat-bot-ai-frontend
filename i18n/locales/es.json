@@ -663,7 +663,9 @@
       "cycleDaysRemaining": "Queda {days} día. | Quedan {days} días.",
       "loadPlanError": "No se pudo cargar tu plan.",
       "paymentLinkLabel": "Renovar",
-      "paymentLinkTitle": "Pago con transferencia"
+      "paymentLinkTitle": "Pago con transferencia",
+      "changeCodeExplainer": "Por seguridad, te enviaremos un código de 6 dígitos a tu correo {email}. Solo después de verificarlo podrás definir la nueva contraseña.",
+      "currentPasswordWrong": "La contraseña actual es incorrecta."
     },
     "planCard": {
       "unlimitedBots": "Bots ilimitados",

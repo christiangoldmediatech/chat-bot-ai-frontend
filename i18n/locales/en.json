@@ -663,7 +663,9 @@
       "cycleDaysRemaining": "{days} day remaining. | {days} days remaining.",
       "loadPlanError": "Could not load your plan.",
       "paymentLinkLabel": "Renew",
-      "paymentLinkTitle": "Pay by bank transfer"
+      "paymentLinkTitle": "Pay by bank transfer",
+      "changeCodeExplainer": "For security, we will send a 6-digit code to your email {email}. You can only define a new password after verifying it.",
+      "currentPasswordWrong": "Current password is incorrect."
     },
     "planCard": {
       "unlimitedBots": "Unlimited bots",

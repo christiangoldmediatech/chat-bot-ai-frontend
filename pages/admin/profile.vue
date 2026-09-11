@@ -2,6 +2,7 @@
 import type { ApiError } from '~/types/api'
 import type { BillingState } from '~/types/billing'
 import type { Tenant } from '~/types/company'
+import { scorePassword } from '~/composables/usePasswordStrength'
 
 definePageMeta({
   layout: 'admin',
@@ -11,24 +12,180 @@ definePageMeta({
 const { t } = useI18n()
 const auth = useAuthStore()
 const router = useRouter()
-const { changePassword, logout } = useAuth()
+const {
+  logout,
+  requestPasswordChange,
+  verifyPasswordChangeCode,
+  changePasswordWithCode,
+} = useAuth()
 const tenant = useTenant()
 const bots = useBots()
 const billing = useBilling()
 
-const form = reactive({
-  currentPassword: '',
-  newPassword: '',
-  confirmPassword: '',
-})
+// ─── Password change flow (3 steps + success) ─────────────────────────────
 
+type ChangeStep = 'idle' | 'code' | 'password' | 'done'
+const changeStep = ref<ChangeStep>('idle')
+const changeCode = ref('')
+const changeToken = ref<string | null>(null)
+const codeExpiresAt = ref<number | null>(null)
+const nextResendAt = ref<number | null>(null)
+
+const currentPassword = ref('')
+const newPassword = ref('')
+const confirmPassword = ref('')
 const showCurrent = ref(false)
 const showNew = ref(false)
-const showConfirm = ref(false)
 
 const saving = ref(false)
 const error = ref<string | null>(null)
 const success = ref<string | null>(null)
+
+const now = ref(Date.now())
+let clockTimer: ReturnType<typeof setInterval> | null = null
+onMounted(() => {
+  clockTimer = setInterval(() => {
+    now.value = Date.now()
+  }, 1000)
+})
+onBeforeUnmount(() => {
+  if (clockTimer) clearInterval(clockTimer)
+})
+
+const codeRemainingMs = computed(() =>
+  codeExpiresAt.value ? Math.max(0, codeExpiresAt.value - now.value) : 0,
+)
+const codeExpired = computed(
+  () => codeExpiresAt.value !== null && codeRemainingMs.value === 0,
+)
+const codeCountdown = computed(() => {
+  const s = Math.floor(codeRemainingMs.value / 1000)
+  return {
+    mm: String(Math.floor(s / 60)).padStart(2, '0'),
+    ss: String(s % 60).padStart(2, '0'),
+  }
+})
+const resendCooldownSec = computed(() =>
+  nextResendAt.value ? Math.max(0, Math.ceil((nextResendAt.value - now.value) / 1000)) : 0,
+)
+const canResend = computed(() => resendCooldownSec.value === 0)
+
+const strength = computed(() => scorePassword(newPassword.value))
+const passwordsMatch = computed(
+  () => newPassword.value.length > 0 && newPassword.value === confirmPassword.value,
+)
+const canSubmitPassword = computed(
+  () => Boolean(currentPassword.value) && strength.value.meetsPolicy && passwordsMatch.value,
+)
+
+function normalizeChangeError(err: unknown): string {
+  const apiError = err as ApiError
+  const msg = apiError?.message ?? ''
+  if (apiError?.status === 429) return t('auth.password.errors.rateLimited')
+  if (apiError?.status === 401 && /actual/i.test(msg)) return t('admin.profile.currentPasswordWrong')
+  if (apiError?.status === 400 && /expira|expired|inv[aá]lido/i.test(msg)) {
+    return t('auth.password.errors.codeInvalid')
+  }
+  return msg || t('auth.password.errors.generic')
+}
+
+async function startChange(): Promise<void> {
+  error.value = null
+  success.value = null
+  saving.value = true
+  try {
+    await requestPasswordChange()
+    codeExpiresAt.value = Date.now() + 10 * 60 * 1000
+    nextResendAt.value = Date.now() + 60 * 1000
+    changeCode.value = ''
+    changeToken.value = null
+    changeStep.value = 'code'
+  } catch (err) {
+    error.value = normalizeChangeError(err)
+  } finally {
+    saving.value = false
+  }
+}
+
+async function submitCode(): Promise<void> {
+  if (changeCode.value.length !== 6) return
+  error.value = null
+  saving.value = true
+  try {
+    const res = await verifyPasswordChangeCode(changeCode.value)
+    changeToken.value = res.token
+    currentPassword.value = ''
+    newPassword.value = ''
+    confirmPassword.value = ''
+    changeStep.value = 'password'
+  } catch (err) {
+    error.value = normalizeChangeError(err)
+  } finally {
+    saving.value = false
+  }
+}
+
+async function resendChangeCode(): Promise<void> {
+  if (!canResend.value || saving.value) return
+  error.value = null
+  saving.value = true
+  try {
+    await requestPasswordChange()
+    codeExpiresAt.value = Date.now() + 10 * 60 * 1000
+    nextResendAt.value = Date.now() + 60 * 1000
+    changeCode.value = ''
+    success.value = t('auth.password.change.requestSent')
+    setTimeout(() => {
+      success.value = null
+    }, 3000)
+  } catch (err) {
+    error.value = normalizeChangeError(err)
+  } finally {
+    saving.value = false
+  }
+}
+
+async function submitPasswordChange(): Promise<void> {
+  if (!canSubmitPassword.value || !changeToken.value) return
+  error.value = null
+  saving.value = true
+  try {
+    await changePasswordWithCode({
+      changeToken: changeToken.value,
+      currentPassword: currentPassword.value,
+      newPassword: newPassword.value,
+      confirmPassword: confirmPassword.value,
+    })
+    currentPassword.value = ''
+    newPassword.value = ''
+    confirmPassword.value = ''
+    changeStep.value = 'done'
+  } catch (err) {
+    const apiError = err as ApiError
+    if (apiError?.status === 400 && /Token/i.test(apiError.message ?? '')) {
+      error.value = t('auth.password.errors.tokenExpired')
+      changeStep.value = 'code'
+      changeToken.value = null
+    } else {
+      error.value = normalizeChangeError(err)
+    }
+  } finally {
+    saving.value = false
+  }
+}
+
+function resetChangeFlow(): void {
+  changeStep.value = 'idle'
+  changeCode.value = ''
+  changeToken.value = null
+  codeExpiresAt.value = null
+  nextResendAt.value = null
+  currentPassword.value = ''
+  newPassword.value = ''
+  confirmPassword.value = ''
+  error.value = null
+  success.value = null
+}
 
 const tenantData = ref<Tenant | null>(null)
 const botCount = ref<number>(0)
@@ -80,31 +237,6 @@ async function loadPlan(): Promise<void> {
 }
 
 loadPlan()
-
-const passwordsMatch = computed(() => form.newPassword === form.confirmPassword)
-const meetsMinLength = computed(() => form.newPassword.length >= 12)
-const canSubmit = computed(() => Boolean(
-  form.currentPassword && form.newPassword && form.confirmPassword
-  && passwordsMatch.value && meetsMinLength.value,
-))
-
-async function onSubmit(): Promise<void> {
-  if (!canSubmit.value) return
-  saving.value = true
-  error.value = null
-  success.value = null
-  try {
-    await changePassword(form.currentPassword, form.newPassword)
-    success.value = t('admin.profile.successMessage')
-    form.currentPassword = ''
-    form.newPassword = ''
-    form.confirmPassword = ''
-  } catch (err) {
-    error.value = (err as ApiError).message || t('admin.profile.errorGeneric')
-  } finally {
-    saving.value = false
-  }
-}
 
 async function onLogout(): Promise<void> {
   logout()
@@ -191,11 +323,10 @@ const cardShadow = {
           </p>
         </section>
 
-        <!-- Change password — emerald tone -->
-        <form
+        <!-- Change password — emerald tone, 3-step verified flow -->
+        <section
           class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-50 via-white to-white ring-1 ring-emerald-200/70 p-6 space-y-5"
           :class="cardShadow.emerald"
-          @submit.prevent="onSubmit"
         >
           <span class="pointer-events-none absolute -top-12 -right-12 size-40 rounded-full bg-emerald-300/30 blur-3xl" aria-hidden="true" />
           <header class="relative flex items-start gap-3">
@@ -205,10 +336,18 @@ const cardShadow = {
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
             </div>
-            <div>
+            <div class="flex-1">
               <h2 class="text-base font-semibold text-slate-900">{{ $t('admin.profile.changePasswordTitle') }}</h2>
-              <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.profile.changePasswordSubtitle') }}</p>
+              <p class="text-xs text-slate-500 mt-0.5">{{ $t('auth.password.change.subtitle') }}</p>
             </div>
+            <button
+              v-if="changeStep !== 'idle' && changeStep !== 'done'"
+              type="button"
+              class="shrink-0 text-xs font-medium text-slate-500 hover:text-slate-800 transition"
+              @click="resetChangeFlow"
+            >
+              {{ $t('auth.password.change.startOver') }}
+            </button>
           </header>
 
           <p v-if="error" class="relative rounded-xl border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">
@@ -218,117 +357,203 @@ const cardShadow = {
             {{ success }}
           </p>
 
-          <!-- Current password -->
-          <div class="relative">
-            <label class="block text-sm font-medium text-slate-700">{{ $t('admin.profile.currentPassword') }}</label>
-            <div class="mt-1 flex items-center gap-2 rounded-xl border border-slate-200 bg-white/90 px-3 py-2 focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-primary-500 transition">
-              <input
-                v-model="form.currentPassword"
-                :type="showCurrent ? 'text' : 'password'"
-                required
-                autocomplete="current-password"
-                class="flex-1 bg-transparent text-sm text-slate-900 focus:outline-none"
-              >
-              <button
-                type="button"
-                class="text-slate-400 hover:text-slate-700 transition"
-                :aria-label="showCurrent ? $t('auth.login.hidePassword') : $t('auth.login.showPassword')"
-                :aria-pressed="showCurrent"
-                @click="showCurrent = !showCurrent"
-              >
-                <svg v-if="showCurrent" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
-                  <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.77 19.77 0 0 1 5.06-5.94" />
-                  <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.77 19.77 0 0 1-3.16 4.19" />
-                  <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24" />
-                  <line x1="1" y1="1" x2="23" y2="23" />
-                </svg>
-                <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- New password -->
-          <div class="relative">
-            <label class="block text-sm font-medium text-slate-700">{{ $t('admin.profile.newPassword') }}</label>
-            <div class="mt-1 flex items-center gap-2 rounded-xl border bg-white/90 px-3 py-2 focus-within:ring-1 transition" :class="form.newPassword && !meetsMinLength ? 'border-danger-300 focus-within:border-danger-500 focus-within:ring-danger-500' : 'border-slate-200 focus-within:border-primary-500 focus-within:ring-primary-500'">
-              <input
-                v-model="form.newPassword"
-                :type="showNew ? 'text' : 'password'"
-                required
-                minlength="12"
-                autocomplete="new-password"
-                class="flex-1 bg-transparent text-sm text-slate-900 focus:outline-none"
-              >
-              <button
-                type="button"
-                class="text-slate-400 hover:text-slate-700 transition"
-                :aria-label="showNew ? $t('auth.login.hidePassword') : $t('auth.login.showPassword')"
-                :aria-pressed="showNew"
-                @click="showNew = !showNew"
-              >
-                <svg v-if="showNew" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
-                  <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.77 19.77 0 0 1 5.06-5.94" />
-                  <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.77 19.77 0 0 1-3.16 4.19" />
-                  <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24" />
-                  <line x1="1" y1="1" x2="23" y2="23" />
-                </svg>
-                <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-              </button>
-            </div>
-            <p class="mt-1 text-xs" :class="form.newPassword && !meetsMinLength ? 'text-danger-600' : 'text-slate-500'">
-              {{ $t('admin.profile.minChars') }} <span v-if="form.newPassword">{{ form.newPassword.length }}/12</span>
+          <!-- Step: idle → button to request the code -->
+          <div v-if="changeStep === 'idle'" class="relative space-y-4">
+            <p class="text-sm text-slate-600 leading-relaxed">
+              {{ $t('admin.profile.changeCodeExplainer', { email: auth.user?.email ?? '' }) }}
             </p>
-          </div>
-
-          <!-- Confirm new password -->
-          <div class="relative">
-            <label class="block text-sm font-medium text-slate-700">{{ $t('admin.profile.confirmPassword') }}</label>
-            <div class="mt-1 flex items-center gap-2 rounded-xl border bg-white/90 px-3 py-2 focus-within:ring-1 transition" :class="form.confirmPassword && !passwordsMatch ? 'border-danger-300 focus-within:border-danger-500 focus-within:ring-danger-500' : 'border-slate-200 focus-within:border-primary-500 focus-within:ring-primary-500'">
-              <input
-                v-model="form.confirmPassword"
-                :type="showConfirm ? 'text' : 'password'"
-                required
-                autocomplete="new-password"
-                class="flex-1 bg-transparent text-sm text-slate-900 focus:outline-none"
-              >
+            <div class="flex items-center justify-end pt-1 border-t border-emerald-100">
               <button
                 type="button"
-                class="text-slate-400 hover:text-slate-700 transition"
-                :aria-label="showConfirm ? $t('auth.login.hidePassword') : $t('auth.login.showPassword')"
-                :aria-pressed="showConfirm"
-                @click="showConfirm = !showConfirm"
+                class="rounded-xl bg-slate-900 px-5 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 shadow-glass transition"
+                :disabled="saving"
+                @click="startChange"
               >
-                <svg v-if="showConfirm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
-                  <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.77 19.77 0 0 1 5.06-5.94" />
-                  <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.77 19.77 0 0 1-3.16 4.19" />
-                  <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24" />
-                  <line x1="1" y1="1" x2="23" y2="23" />
-                </svg>
-                <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
+                {{ saving ? $t('auth.password.change.requestSubmitting') : $t('auth.password.change.requestSubmit') }}
               </button>
             </div>
-            <p v-if="form.confirmPassword && !passwordsMatch" class="mt-1 text-xs text-danger-600">{{ $t('admin.profile.passwordsDontMatch') }}</p>
           </div>
 
-          <div class="relative flex items-center justify-end gap-2 pt-2 border-t border-emerald-100">
+          <!-- Step: code -->
+          <div v-else-if="changeStep === 'code'" class="relative space-y-4">
+            <p class="text-sm text-slate-600">
+              {{ $t('auth.password.code.subtitle', { minutes: 10 }) }}
+            </p>
+            <p class="text-xs font-medium text-slate-700 break-all">
+              {{ auth.user?.email }}
+            </p>
+            <div class="flex justify-center">
+              <PasswordCodeInput
+                v-model="changeCode"
+                :disabled="saving || codeExpired"
+                :has-error="!!error"
+                @complete="submitCode"
+              />
+            </div>
+            <div class="flex items-center justify-center gap-4 text-xs text-slate-500">
+              <span v-if="!codeExpired">
+                {{ $t('auth.password.code.expiresAt', codeCountdown) }}
+              </span>
+              <span v-else class="text-danger-600 font-medium">
+                {{ $t('auth.password.code.expired') }}
+              </span>
+              <span aria-hidden="true">·</span>
+              <button
+                type="button"
+                class="font-medium text-slate-700 hover:text-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                :disabled="!canResend || saving"
+                @click="resendChangeCode"
+              >
+                {{ canResend
+                  ? $t('auth.password.code.resend')
+                  : $t('auth.password.code.resendIn', { seconds: resendCooldownSec }) }}
+              </button>
+            </div>
+            <div class="flex items-center justify-end pt-1 border-t border-emerald-100">
+              <button
+                type="button"
+                class="rounded-xl bg-slate-900 px-5 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 shadow-glass transition"
+                :disabled="saving || changeCode.length !== 6 || codeExpired"
+                @click="submitCode"
+              >
+                {{ saving ? $t('auth.password.code.verifying') : $t('auth.password.code.verify') }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Step: new password -->
+          <form v-else-if="changeStep === 'password'" class="relative space-y-4" @submit.prevent="submitPasswordChange">
+            <div>
+              <label class="block text-sm font-medium text-slate-700">{{ $t('auth.password.change.currentLabel') }}</label>
+              <div class="mt-1 flex items-center gap-2 rounded-xl border border-slate-200 bg-white/90 px-3 py-2 focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-primary-500 transition">
+                <input
+                  v-model="currentPassword"
+                  :type="showCurrent ? 'text' : 'password'"
+                  required
+                  autocomplete="current-password"
+                  class="flex-1 bg-transparent text-sm text-slate-900 focus:outline-none"
+                >
+                <button
+                  type="button"
+                  class="text-slate-400 hover:text-slate-700 transition"
+                  :aria-pressed="showCurrent"
+                  @click="showCurrent = !showCurrent"
+                >
+                  <svg v-if="showCurrent" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+                    <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.77 19.77 0 0 1 5.06-5.94" />
+                    <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.77 19.77 0 0 1-3.16 4.19" />
+                    <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                  <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700">{{ $t('auth.password.reset.newLabel') }}</label>
+              <div class="mt-1 flex items-center gap-2 rounded-xl border bg-white/90 px-3 py-2 focus-within:ring-1 transition" :class="newPassword && !strength.meetsPolicy ? 'border-danger-300 focus-within:border-danger-500 focus-within:ring-danger-500' : 'border-slate-200 focus-within:border-primary-500 focus-within:ring-primary-500'">
+                <input
+                  v-model="newPassword"
+                  :type="showNew ? 'text' : 'password'"
+                  required
+                  autocomplete="new-password"
+                  class="flex-1 bg-transparent text-sm text-slate-900 focus:outline-none"
+                >
+                <button
+                  type="button"
+                  class="text-slate-400 hover:text-slate-700 transition"
+                  :aria-pressed="showNew"
+                  @click="showNew = !showNew"
+                >
+                  <svg v-if="showNew" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+                    <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.77 19.77 0 0 1 5.06-5.94" />
+                    <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.77 19.77 0 0 1-3.16 4.19" />
+                    <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                  <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
+              <div v-if="newPassword.length > 0" class="mt-2">
+                <div class="flex gap-1">
+                  <span
+                    v-for="i in 5"
+                    :key="i"
+                    :class="[
+                      'h-1 flex-1 rounded-full transition-colors',
+                      i - 1 <= strength.score ? strength.color : 'bg-slate-200',
+                    ]"
+                  />
+                </div>
+                <div class="mt-1.5 flex items-center justify-between text-xs">
+                  <span class="text-slate-500">
+                    {{ $t('auth.password.strength.label') }}
+                    <span class="font-medium text-slate-700">{{ $t(strength.label) }}</span>
+                  </span>
+                  <span v-if="!strength.meetsPolicy" class="text-slate-500 text-right ml-2">
+                    {{ $t('auth.password.policy') }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700">{{ $t('auth.password.reset.confirmLabel') }}</label>
+              <div class="mt-1 flex items-center gap-2 rounded-xl border bg-white/90 px-3 py-2 focus-within:ring-1 transition"
+                :class="confirmPassword && !passwordsMatch ? 'border-danger-300 focus-within:border-danger-500 focus-within:ring-danger-500' : 'border-slate-200 focus-within:border-primary-500 focus-within:ring-primary-500'">
+                <input
+                  v-model="confirmPassword"
+                  :type="showNew ? 'text' : 'password'"
+                  required
+                  autocomplete="new-password"
+                  class="flex-1 bg-transparent text-sm text-slate-900 focus:outline-none"
+                >
+              </div>
+              <p v-if="confirmPassword && !passwordsMatch" class="mt-1 text-xs text-danger-600">
+                {{ $t('auth.password.confirmMismatch') }}
+              </p>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-emerald-100">
+              <button
+                type="submit"
+                class="rounded-xl bg-slate-900 px-5 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 shadow-glass transition"
+                :disabled="saving || !canSubmitPassword"
+              >
+                {{ saving ? $t('auth.password.reset.submitting') : $t('auth.password.reset.submit') }}
+              </button>
+            </div>
+          </form>
+
+          <!-- Step: done -->
+          <div v-else class="relative flex flex-col items-center text-center py-2">
+            <div class="flex size-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-6">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+            <h3 class="mt-3 text-base font-semibold text-slate-900">
+              {{ $t('auth.password.change.successTitle') }}
+            </h3>
+            <p class="mt-1 text-sm text-slate-600 max-w-sm">
+              {{ $t('auth.password.change.successBody') }}
+            </p>
             <button
-              type="submit"
-              class="rounded-xl bg-slate-900 px-5 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 shadow-glass transition"
-              :disabled="saving || !canSubmit"
+              type="button"
+              class="mt-4 rounded-xl bg-white ring-1 ring-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+              @click="resetChangeFlow"
             >
-              {{ saving ? $t('admin.profile.updating') : $t('admin.profile.updatePassword') }}
+              {{ $t('admin.profile.changePasswordTitle') }}
             </button>
           </div>
-        </form>
+        </section>
       </div>
 
       <!-- RIGHT COLUMN — plan + session -->
