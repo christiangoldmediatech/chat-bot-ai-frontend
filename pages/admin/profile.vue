@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
-import type { BillingState } from '~/types/billing'
-import type { Tenant } from '~/types/company'
 import { scorePassword } from '~/composables/usePasswordStrength'
 
 definePageMeta({
@@ -18,9 +16,6 @@ const {
   verifyPasswordChangeCode,
   changePasswordWithCode,
 } = useAuth()
-const tenant = useTenant()
-const bots = useBots()
-const billing = useBilling()
 
 // ─── Password change flow (3 steps + success) ─────────────────────────────
 
@@ -187,57 +182,6 @@ function resetChangeFlow(): void {
   success.value = null
 }
 
-const tenantData = ref<Tenant | null>(null)
-const botCount = ref<number>(0)
-const planLoading = ref(true)
-const planError = ref<string | null>(null)
-const billingState = ref<BillingState | null>(null)
-
-const botsLimit = computed(() => resolveBotsLimit(tenantData.value))
-const atBotLimit = computed(() =>
-  botsLimit.value !== null && botCount.value >= botsLimit.value,
-)
-
-const activeUntilFormatted = computed<string | null>(() => {
-  const ends = billingState.value?.activeCycle?.endsAt
-  if (!ends) return null
-  return new Date(ends).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-})
-
-const cycleTone = computed<'trial' | 'warning' | 'expired' | 'ok'>(() => {
-  if (!billingState.value) return 'ok'
-  if (billingState.value.tenantStatus !== 'ACTIVE') return 'expired'
-  if (billingState.value.activeCycle?.isTrial) return 'trial'
-  const days = billingState.value.daysRemaining
-  if (days !== null && days <= 10) return 'warning'
-  return 'ok'
-})
-
-async function loadPlan(): Promise<void> {
-  planLoading.value = true
-  planError.value = null
-  try {
-    const [me, list, bs] = await Promise.all([
-      tenant.me(),
-      bots.list(),
-      billing.me(),
-    ])
-    tenantData.value = me
-    botCount.value = list.length
-    billingState.value = bs
-  } catch (err) {
-    planError.value = (err as ApiError).message || t('admin.profile.loadPlanError')
-  } finally {
-    planLoading.value = false
-  }
-}
-
-loadPlan()
-
 async function onLogout(): Promise<void> {
   logout()
   await router.replace('/login')
@@ -249,7 +193,6 @@ async function onLogout(): Promise<void> {
 const cardShadow = {
   indigo: 'shadow-[0_8px_28px_-12px_rgba(79,70,229,0.22),0_4px_10px_-6px_rgba(79,70,229,0.10),0_-2px_8px_-4px_rgba(79,70,229,0.05)]',
   emerald: 'shadow-[0_8px_28px_-12px_rgba(16,185,129,0.22),0_4px_10px_-6px_rgba(16,185,129,0.10),0_-2px_8px_-4px_rgba(16,185,129,0.05)]',
-  amber: 'shadow-[0_8px_28px_-12px_rgba(245,158,11,0.24),0_4px_10px_-6px_rgba(245,158,11,0.12),0_-2px_8px_-4px_rgba(245,158,11,0.06)]',
   rose: 'shadow-[0_8px_28px_-12px_rgba(244,63,94,0.22),0_4px_10px_-6px_rgba(244,63,94,0.10),0_-2px_8px_-4px_rgba(244,63,94,0.05)]',
 }
 </script>
@@ -278,9 +221,9 @@ const cardShadow = {
       </button>
     </header>
 
-    <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <!-- LEFT COLUMN — account + change password -->
-      <div class="lg:col-span-2 space-y-4">
+    <div class="mt-6 space-y-4">
+      <!-- Account + change password -->
+      <div class="space-y-4">
         <!-- Account snapshot — indigo tone -->
         <section
           v-if="auth.user"
@@ -556,175 +499,6 @@ const cardShadow = {
         </section>
       </div>
 
-      <!-- RIGHT COLUMN — plan + session -->
-      <div class="lg:col-span-1 space-y-4">
-        <!-- Plan — amber tone (matches dashboard "humans handled" / value/usage feel) -->
-        <section
-          class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-50 via-white to-white ring-1 ring-amber-200/70 p-6"
-          :class="cardShadow.amber"
-        >
-          <span class="pointer-events-none absolute -top-12 -right-12 size-40 rounded-full bg-amber-300/30 blur-3xl" aria-hidden="true" />
-          <header class="relative flex items-start gap-3">
-            <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white ring-1 ring-amber-300/60 shadow-sm">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5" aria-hidden="true">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-            </div>
-            <div>
-              <h2 class="text-base font-semibold text-slate-900">{{ $t('admin.profile.planSectionTitle') }}</h2>
-              <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.profile.planSectionSubtitle') }}</p>
-            </div>
-          </header>
-
-          <SpinnerInline v-if="planLoading" class="relative mt-4" />
-
-          <p v-else-if="planError" class="relative mt-4 rounded-xl border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">
-            {{ planError }}
-          </p>
-
-          <template v-else-if="tenantData">
-            <div class="relative mt-4">
-              <PlanCard :plan="tenantData.planDetails" />
-            </div>
-
-            <!-- Bot usage row -->
-            <div
-              class="relative mt-4 rounded-xl p-3 ring-1"
-              :class="atBotLimit
-                ? 'bg-amber-50/80 ring-amber-200'
-                : 'bg-white/80 ring-slate-200/70'"
-            >
-              <div class="flex items-center justify-between gap-3">
-                <div class="min-w-0">
-                  <p class="text-[10px] uppercase tracking-wider font-semibold" :class="atBotLimit ? 'text-amber-700' : 'text-slate-500'">
-                    {{ $t('admin.profile.botsUsageLabel') }}
-                  </p>
-                  <p class="mt-0.5 text-sm font-semibold" :class="atBotLimit ? 'text-amber-800' : 'text-slate-800'">
-                    <template v-if="botsLimit === null">
-                      {{ $t('admin.profile.botsUsageUnlimited', { used: botCount }) }}
-                    </template>
-                    <template v-else>
-                      {{ $t('admin.profile.botsUsageWithLimit', { used: botCount, limit: botsLimit }) }}
-                    </template>
-                  </p>
-                </div>
-                <div v-if="botsLimit !== null" class="flex items-center gap-1 shrink-0">
-                  <span
-                    v-for="i in botsLimit"
-                    :key="i"
-                    class="size-2 rounded-full"
-                    :class="i <= botCount
-                      ? (atBotLimit ? 'bg-amber-500' : 'bg-primary-500')
-                      : 'bg-slate-200'"
-                  />
-                </div>
-              </div>
-              <p v-if="atBotLimit" class="mt-2 text-xs text-amber-800/90 leading-relaxed">
-                {{ $t('admin.profile.botsAtLimitNote') }}
-              </p>
-            </div>
-
-            <!-- Billing cycle — keeps its semantic tone (ok/trial/warning/expired) -->
-            <div
-              v-if="billingState"
-              class="relative mt-3 rounded-xl p-3 ring-1"
-              :class="{
-                'bg-emerald-50/80 ring-emerald-200': cycleTone === 'ok',
-                'bg-sky-50/80 ring-sky-200': cycleTone === 'trial',
-                'bg-amber-50/80 ring-amber-200': cycleTone === 'warning',
-                'bg-rose-50/80 ring-rose-200': cycleTone === 'expired',
-              }"
-            >
-              <div class="flex items-start justify-between gap-3">
-                <div class="min-w-0">
-                  <p
-                    class="text-[10px] uppercase tracking-wider font-semibold"
-                    :class="{
-                      'text-emerald-700': cycleTone === 'ok',
-                      'text-sky-700': cycleTone === 'trial',
-                      'text-amber-700': cycleTone === 'warning',
-                      'text-rose-700': cycleTone === 'expired',
-                    }"
-                  >
-                    {{ $t('admin.profile.cycleLabel') }}
-                  </p>
-                  <template v-if="cycleTone === 'expired'">
-                    <p class="mt-0.5 text-sm font-semibold text-rose-800">
-                      {{ billingState.tenantStatus === 'SUSPENDED'
-                        ? $t('admin.profile.cycleSuspended')
-                        : $t('admin.profile.cycleExpired') }}
-                    </p>
-                  </template>
-                  <template v-else-if="activeUntilFormatted">
-                    <p
-                      class="mt-0.5 text-sm font-semibold"
-                      :class="{
-                        'text-emerald-800': cycleTone === 'ok',
-                        'text-sky-800': cycleTone === 'trial',
-                        'text-amber-800': cycleTone === 'warning',
-                      }"
-                    >
-                      <template v-if="billingState.activeCycle?.isTrial">
-                        {{ $t('admin.profile.cycleTrialUntil', { date: activeUntilFormatted }) }}
-                      </template>
-                      <template v-else>
-                        {{ $t('admin.profile.cycleActiveUntil', { date: activeUntilFormatted }) }}
-                      </template>
-                    </p>
-                    <p
-                      v-if="billingState.daysRemaining !== null"
-                      class="mt-0.5 text-xs"
-                      :class="{
-                        'text-emerald-700/80': cycleTone === 'ok',
-                        'text-sky-700/80': cycleTone === 'trial',
-                        'text-amber-700/90': cycleTone === 'warning',
-                      }"
-                    >
-                      {{ billingState.daysRemaining === 0
-                        ? $t('admin.profile.cycleDaysToday')
-                        : $t('admin.profile.cycleDaysRemaining', { days: billingState.daysRemaining }, billingState.daysRemaining) }}
-                    </p>
-                  </template>
-                  <template v-else>
-                    <p class="mt-0.5 text-sm font-semibold text-rose-800">
-                      {{ $t('admin.profile.cycleNoActive') }}
-                    </p>
-                  </template>
-                </div>
-              </div>
-            </div>
-
-            <!-- Pay-by-transfer entry point — visually distinct so it doesn't
-                 read as part of the billing-cycle status. -->
-            <NuxtLink
-              to="/admin/payment"
-              class="relative mt-3 flex items-center justify-between gap-3 rounded-xl bg-white/90 ring-1 ring-slate-200/80 p-3 hover:bg-white hover:ring-amber-300 transition group"
-            >
-              <div class="flex items-center gap-3 min-w-0">
-                <div class="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#FFDD00] text-slate-900 ring-1 ring-amber-300/60 shadow-sm">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
-                    <rect x="2" y="6" width="20" height="14" rx="2" />
-                    <path d="M2 10h20" />
-                    <path d="M6 14h4" />
-                  </svg>
-                </div>
-                <div class="min-w-0">
-                  <p class="text-[10px] uppercase tracking-wider font-semibold text-amber-700">
-                    {{ $t('admin.profile.paymentLinkLabel') }}
-                  </p>
-                  <p class="mt-0.5 text-sm font-semibold text-slate-800 truncate">
-                    {{ $t('admin.profile.paymentLinkTitle') }}
-                  </p>
-                </div>
-              </div>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0 text-slate-400 group-hover:text-amber-600 group-hover:translate-x-0.5 transition" aria-hidden="true">
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
-            </NuxtLink>
-          </template>
-        </section>
-      </div>
     </div>
   </div>
 </template>
