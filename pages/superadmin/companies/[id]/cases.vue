@@ -79,7 +79,14 @@ function upsert(c: Case): void {
 async function markAttended(id: string): Promise<void> {
   busyId.value = id
   try {
-    upsert(await casesApi.markAttended(id))
+    // Bug fix 2026-09-16: unified attend endpoint (case ATTENDED + conv HUMAN
+    // atomically). Superadmin still navigates to the tenant conversation
+    // detail — path is the same `/admin/conversations/:id` under this session.
+    const res = await casesApi.attend(id)
+    upsert(res.case)
+    if (typeof window !== 'undefined') {
+      window.open(`/admin/conversations/${res.conversation.id}`, '_blank', 'noopener')
+    }
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {

@@ -2058,6 +2058,8 @@
       "actionsTitle": "Acciones",
       "takeOver": "Tomar conversación (HUMAN)",
       "handBack": "Devolver al bot",
+      "handBackConfirmTitle": "¿Devolver la conversación al bot?",
+      "handBackConfirmMessage": "El bot volverá a responder automáticamente al próximo mensaje del cliente. Tú dejarás de tener el control. Puedes volver a tomar la conversación después si lo necesitas.",
       "close": "Cerrar",
       "noMessages": "Sin mensajes",
       "sendAsAgent": "Enviar como agente",

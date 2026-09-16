@@ -46,8 +46,14 @@ async function markAttended(id: string): Promise<void> {
   busyId.value = id
   error.value = null
   try {
-    const updated = await casesApi.markAttended(id)
-    upsert(updated)
+    // Bug fix 2026-09-16: unified attend endpoint (case ATTENDED + conv HUMAN
+    // atomically). Open the chat in a new tab so the customer detail stays
+    // behind for the advisor.
+    const res = await casesApi.attend(id)
+    upsert(res.case)
+    if (typeof window !== 'undefined') {
+      window.open(`/admin/conversations/${res.conversation.id}`, '_blank', 'noopener')
+    }
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {

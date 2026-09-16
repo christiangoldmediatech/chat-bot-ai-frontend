@@ -2058,6 +2058,8 @@
       "actionsTitle": "Actions",
       "takeOver": "Take over (HUMAN)",
       "handBack": "Hand back to bot",
+      "handBackConfirmTitle": "Hand the conversation back to the bot?",
+      "handBackConfirmMessage": "The bot will start replying automatically to the next customer message. You will lose control. You can take the conversation back later if you need to.",
       "close": "Close",
       "noMessages": "No messages",
       "sendAsAgent": "Send as agent",

@@ -21,6 +21,10 @@ const statusError = ref<string | null>(null)
 const sending = ref(false)
 const sendError = ref<string | null>(null)
 const newMessage = ref('')
+// Confirm dialog state for "Devolver al bot" (hand back to bot). Bug 2026-09-16:
+// this action was implicit before — now we surface a confirm so an advisor
+// doesn't accidentally release the conversation mid-triage.
+const handBackConfirmOpen = ref(false)
 
 async function load(): Promise<void> {
   loading.value = true
@@ -44,6 +48,16 @@ async function changeStatus(status: ConversationStatus): Promise<void> {
   } catch (err) {
     statusError.value = (err as ApiError).message
   }
+}
+
+function onClickHandBack(): void {
+  if (!data.value || data.value.status !== 'HUMAN') return
+  handBackConfirmOpen.value = true
+}
+
+async function confirmHandBack(): Promise<void> {
+  handBackConfirmOpen.value = false
+  await changeStatus('BOT')
 }
 
 async function onSend(): Promise<void> {
@@ -194,7 +208,7 @@ function statusBadgeClass(s: ConversationStatus): string {
                 type="button"
                 :disabled="data.status === 'BOT'"
                 class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-sky-200 bg-sky-50 px-3 py-1.5 text-sm font-medium text-sky-800 hover:bg-sky-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                @click="changeStatus('BOT')"
+                @click="onClickHandBack"
               >
                 {{ $t('conversations.detail.handBack') }}
               </button>
@@ -233,5 +247,15 @@ function statusBadgeClass(s: ConversationStatus): string {
         </aside>
       </div>
     </template>
+
+    <ConfirmDialog
+      :open="handBackConfirmOpen"
+      tone="warning"
+      :title="$t('conversations.detail.handBackConfirmTitle')"
+      :message="$t('conversations.detail.handBackConfirmMessage')"
+      :confirm-label="$t('conversations.detail.handBack')"
+      @confirm="confirmHandBack"
+      @cancel="handBackConfirmOpen = false"
+    />
   </div>
 </template>

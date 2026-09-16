@@ -71,6 +71,17 @@ export function useCases(tenantId?: string) {
       api.patch<Case>(`${casesBase}/${id}`, payload),
     markAttended: (id: string): Promise<Case> =>
       api.patch<Case>(`${casesBase}/${id}`, { status: 'ATTENDED' }),
+    /**
+     * Unified attend action (bug fix 2026-09-16): marks the case as ATTENDED
+     * AND flips the conversation to HUMAN atomically on the backend. Returns
+     * both so the caller can update local state AND navigate to the chat
+     * without a second fetch.
+     */
+    attend: (id: string): Promise<{ case: Case; conversation: { id: string; status: 'BOT' | 'HUMAN' | 'CLOSED' } }> =>
+      api.post<{ case: Case; conversation: { id: string; status: 'BOT' | 'HUMAN' | 'CLOSED' } }>(
+        `${casesBase}/${id}/attend`,
+        {},
+      ),
     markResolved: (id: string, resolution?: string): Promise<Case> =>
       api.patch<Case>(`${casesBase}/${id}`, {
         status: 'RESOLVED',

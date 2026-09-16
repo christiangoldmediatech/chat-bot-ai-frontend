@@ -157,8 +157,16 @@ function upsert(c: Case): void {
 async function markAttended(id: string): Promise<void> {
   busyId.value = id
   try {
-    upsert(await casesApi.markAttended(id))
+    // Bug fix 2026-09-16: use the unified attend endpoint so the case AND the
+    // conversation flip together (case→ATTENDED + conv→HUMAN in one atomic
+    // backend transaction). The bot is silenced immediately. Open the chat
+    // in a new tab so the advisor keeps the cases list intact for triage.
+    const res = await casesApi.attend(id)
+    upsert(res.case)
     void loadCounts()
+    if (typeof window !== 'undefined') {
+      window.open(`/admin/conversations/${res.conversation.id}`, '_blank', 'noopener')
+    }
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
