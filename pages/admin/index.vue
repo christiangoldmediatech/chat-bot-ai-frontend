@@ -74,8 +74,11 @@ const ZERO_TOTALS = {
   leadsNew: 0,
   leadsQualified: 0,
   leadsWon: 0,
-  meetingsScheduled: 0,
-  meetingsCancelled: 0,
+  meetingsNewChains: 0,
+  meetingsReschedules: 0,
+  meetingsCancelledChains: 0,
+  meetingsRescheduledChains: 0,
+  meetingsActiveChains: 0,
   meetingsNoShow: 0,
   meetingsUpcoming: 0,
 }
@@ -174,14 +177,41 @@ const kpiLeadsHint = computed(() => {
     rate: percent(totals.value.leadsTotal / totals.value.conversationsTotal, 0),
   })
 })
-const kpiMeetingsHint = computed(() => {
-  const rate = totals.value.meetingsScheduled === 0
+const kpiMeetingsNewHint = computed(() =>
+  t('admin.dashboard.kpi.meetingsNewHint'),
+)
+const kpiMeetingsReschedulesHint = computed(() =>
+  t('admin.dashboard.kpi.meetingsReschedulesHint'),
+)
+const kpiMeetingsCancelledHint = computed(() => {
+  const rate = totals.value.meetingsNewChains === 0
     ? 0
-    : totals.value.meetingsCancelled / totals.value.meetingsScheduled
-  return t('admin.dashboard.kpi.meetingsScheduledHint', {
-    cancelled: totals.value.meetingsCancelled,
+    : totals.value.meetingsCancelledChains / totals.value.meetingsNewChains
+  return t('admin.dashboard.kpi.meetingsCancelledHint', {
     rate: percent(rate, 0),
   })
+})
+const kpiMeetingsActiveHint = computed(() =>
+  t('admin.dashboard.kpi.meetingsActiveHint'),
+)
+
+// Human-friendly summary of the active period filter. Rendered as a chip in
+// the header so the user always knows what window they are looking at.
+const activeRangeLabel = computed(() => {
+  const from = range.value.from ? new Date(range.value.from) : null
+  const to = range.value.to ? new Date(range.value.to) : null
+  if (!from || !to) return t('admin.dashboard.activeFilter.all')
+  const sameDay =
+    from.getFullYear() === to.getFullYear() &&
+    from.getMonth() === to.getMonth() &&
+    from.getDate() === to.getDate()
+  const fmt = (d: Date) =>
+    d.toLocaleDateString(undefined, {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    })
+  return sameDay ? fmt(from) : `${fmt(from)} → ${fmt(to)}`
 })
 
 </script>
@@ -194,6 +224,15 @@ const kpiMeetingsHint = computed(() => {
           {{ $t('admin.dashboard.title') }}
         </h1>
         <p class="text-xs text-slate-500 max-w-2xl">{{ $t('admin.dashboard.subtitle') }}</p>
+        <!-- Active-filter chip (bug fix 2026-09-17): always visible so a KPI
+             like "2 canceladas" cannot be misread as an all-time total. -->
+        <div class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-slate-900 text-white px-2.5 py-1 text-[11px] font-medium">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+          </svg>
+          <span>{{ $t('admin.dashboard.activeFilter.periodLabel') }}:</span>
+          <span class="font-semibold tabular-nums">{{ activeRangeLabel }}</span>
+        </div>
       </div>
       <div class="flex items-center gap-2">
         <label class="text-[10px] uppercase tracking-wider font-semibold text-white/75">
@@ -342,11 +381,38 @@ const kpiMeetingsHint = computed(() => {
           </p>
           <div class="grid grid-cols-2 gap-2">
             <KpiCard
-              :label="t('admin.dashboard.kpi.meetingsScheduled')"
-              :value="totals.meetingsScheduled"
-              :previous="previousTotals.meetingsScheduled"
-              :hint="kpiMeetingsHint"
+              :label="t('admin.dashboard.kpi.meetingsNew')"
+              :value="totals.meetingsNewChains"
+              :previous="previousTotals.meetingsNewChains"
+              :hint="kpiMeetingsNewHint"
               tone="amber"
+              to="/admin/meetings"
+              compact
+            />
+            <KpiCard
+              :label="t('admin.dashboard.kpi.meetingsReschedules')"
+              :value="totals.meetingsReschedules"
+              :previous="previousTotals.meetingsReschedules"
+              :hint="kpiMeetingsReschedulesHint"
+              tone="sky"
+              to="/admin/meetings"
+              compact
+            />
+            <KpiCard
+              :label="t('admin.dashboard.kpi.meetingsCancelled')"
+              :value="totals.meetingsCancelledChains"
+              :previous="previousTotals.meetingsCancelledChains"
+              :hint="kpiMeetingsCancelledHint"
+              tone="rose"
+              to="/admin/meetings"
+              compact
+            />
+            <KpiCard
+              :label="t('admin.dashboard.kpi.meetingsActive')"
+              :value="totals.meetingsActiveChains"
+              :previous="previousTotals.meetingsActiveChains"
+              :hint="kpiMeetingsActiveHint"
+              tone="emerald"
               to="/admin/meetings"
               compact
             />
@@ -365,20 +431,6 @@ const kpiMeetingsHint = computed(() => {
               :hint="t('admin.dashboard.kpi.humanHandledHint')"
               tone="rose"
               to="/admin/cases"
-              compact
-            />
-            <KpiCard
-              :label="t('admin.dashboard.kpi.leadsNew')"
-              :value="totals.leadsNew"
-              tone="slate"
-              to="/admin/leads"
-              compact
-            />
-            <KpiCard
-              :label="t('admin.dashboard.kpi.leadsWon')"
-              :value="totals.leadsWon"
-              tone="emerald"
-              to="/admin/leads"
               compact
             />
           </div>

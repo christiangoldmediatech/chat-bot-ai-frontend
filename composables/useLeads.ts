@@ -57,6 +57,25 @@ export function useLeads(tenantId?: string) {
       )
     },
 
+    /**
+     * Funnel summary: counts by status across the filtered universe (not the
+     * current page). Bug fix 2026-09-17: replaces the previous UI logic that
+     * derived card counts from 4 separate paginated queries and skipped
+     * CONTACTED / PROPOSAL_SENT / NEGOTIATION.
+     */
+    summary: (opts: Omit<ListLeadsOptions, 'status' | 'search' | 'page' | 'pageSize'> = {}): Promise<{
+      total: number
+      byStatus: Record<string, number>
+      unknown: number
+    }> => {
+      const query = buildQuery({ ...opts, status: undefined })
+      return api.get<{
+        total: number
+        byStatus: Record<string, number>
+        unknown: number
+      }>(`${base}/summary`, Object.keys(query).length > 0 ? { query } : undefined)
+    },
+
     get: (id: string): Promise<LeadDetail> =>
       api.get<LeadDetail>(`${base}/${id}`),
 

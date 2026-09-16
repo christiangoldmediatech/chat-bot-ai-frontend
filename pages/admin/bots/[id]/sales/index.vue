@@ -225,9 +225,9 @@ watch(
           class="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
         >
           <option value="">{{ $t('admin.sales.filter.allStatuses') }}</option>
-          <option value="PENDING">PENDING</option>
-          <option value="WON">WON</option>
-          <option value="LOST">LOST</option>
+          <option value="PENDING">{{ $t('admin.sales.status.PENDING') }}</option>
+          <option value="WON">{{ $t('admin.sales.status.WON') }}</option>
+          <option value="LOST">{{ $t('admin.sales.status.LOST') }}</option>
         </select>
       </div>
       <div>

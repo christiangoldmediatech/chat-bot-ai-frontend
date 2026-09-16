@@ -468,13 +468,21 @@
         "leadsHint": "{rate} de conversión",
         "meetingsScheduled": "Citas agendadas",
         "meetingsScheduledHint": "{cancelled} canceladas · {rate} cancelación",
+        "meetingsNew": "Citas nuevas",
+        "meetingsNewHint": "Cadenas de citas distintas cuya fecha vigente cae en el periodo. Una cita reprogramada 3 veces cuenta como 1.",
+        "meetingsReschedules": "Reprogramaciones",
+        "meetingsReschedulesHint": "Cantidad de veces que se movieron citas en el periodo.",
+        "meetingsCancelled": "Canceladas",
+        "meetingsCancelledHint": "Cadenas cuya cita vigente quedó cancelada · {rate} sobre las citas nuevas del periodo",
+        "meetingsActive": "Citas activas",
+        "meetingsActiveHint": "Cadenas cuya cita vigente sigue agendada (no cancelada) en el periodo.",
         "uniqueCustomers": "Clientes únicos",
         "uniqueCustomersHint": "Con actividad en el periodo",
         "humanHandled": "Atendidas por humano",
         "humanHandledHint": "En estado HUMAN ahora",
-        "leadsNew": "NEW",
-        "leadsQualified": "QUALIFIED",
-        "leadsWon": "WON"
+        "leadsNew": "Nuevos",
+        "leadsQualified": "Calificados",
+        "leadsWon": "Ganados"
       },
       "range": {
         "today": "Hoy",
@@ -487,6 +495,10 @@
         "day": "Día",
         "month": "Mes",
         "year": "Año"
+      },
+      "activeFilter": {
+        "periodLabel": "Filtro activo",
+        "all": "Todo el histórico"
       },
       "chart": {
         "leadsTitle": "Leads por día",
@@ -1562,6 +1574,11 @@
       "markLostTitle": "Marcar como perdida",
       "markLostSubmit": "Marcar como perdida",
       "markSoldConfirmSubmit": "Confirmar venta",
+      "status": {
+        "PENDING": "Pendiente",
+        "WON": "Ganada",
+        "LOST": "Perdida"
+      },
       "filter": {
         "status": "Estado",
         "allStatuses": "Todos",
@@ -1766,7 +1783,9 @@
     "totalLabel": "Total de leads",
     "matchingLabel": "Coincidencias",
     "stat": {
-      "all": "Todos"
+      "all": "Todos",
+      "other": "Otros",
+      "otherHint": "Leads en etapas que no muestra el embudo principal (por ejemplo Propuesta enviada, Negociación) o estados inesperados."
     },
     "status": {
       "NEW": "Nuevo",

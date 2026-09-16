@@ -472,9 +472,17 @@
         "uniqueCustomersHint": "Active in this period",
         "humanHandled": "Handled by human",
         "humanHandledHint": "Currently in HUMAN state",
-        "leadsNew": "NEW",
-        "leadsQualified": "QUALIFIED",
-        "leadsWon": "WON"
+        "leadsNew": "New",
+        "leadsQualified": "Qualified",
+        "leadsWon": "Won",
+        "meetingsNew": "New appointments",
+        "meetingsNewHint": "Distinct appointment chains whose currently-effective date falls in the period. A meeting rescheduled 3 times counts as 1.",
+        "meetingsReschedules": "Reschedules",
+        "meetingsReschedulesHint": "How many times appointments were moved in the period.",
+        "meetingsCancelled": "Cancelled",
+        "meetingsCancelledHint": "Chains whose current appointment ended cancelled · {rate} over new appointments in the period",
+        "meetingsActive": "Active",
+        "meetingsActiveHint": "Chains whose current appointment is still on the calendar (not cancelled) in the period."
       },
       "range": {
         "today": "Today",
@@ -487,6 +495,10 @@
         "day": "Day",
         "month": "Month",
         "year": "Year"
+      },
+      "activeFilter": {
+        "periodLabel": "Active filter",
+        "all": "All time"
       },
       "chart": {
         "leadsTitle": "Leads per day",
@@ -1562,6 +1574,11 @@
       "markLostTitle": "Mark as lost",
       "markLostSubmit": "Mark as lost",
       "markSoldConfirmSubmit": "Confirm sale",
+      "status": {
+        "PENDING": "Pending",
+        "WON": "Won",
+        "LOST": "Lost"
+      },
       "filter": {
         "status": "Status",
         "allStatuses": "All",
@@ -1766,7 +1783,9 @@
     "totalLabel": "Total leads",
     "matchingLabel": "Matching",
     "stat": {
-      "all": "All"
+      "all": "All",
+      "other": "Others",
+      "otherHint": "Leads in stages not shown in the main funnel (e.g. Proposal Sent, Negotiation) or unexpected statuses."
     },
     "status": {
       "NEW": "New",
