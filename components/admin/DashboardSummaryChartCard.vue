@@ -21,7 +21,7 @@ const rows = computed<MetricRow[]>(() => {
     { key: 'messagesSentByBot', labelKey: 'messagesSentByBot' },
     { key: 'conversationsTotal', labelKey: 'conversations' },
     { key: 'leadsTotal', labelKey: 'leads' },
-    { key: 'meetingsScheduled', labelKey: 'meetingsScheduled' },
+    { key: 'meetingsNewChains', labelKey: 'meetingsNew' },
     { key: 'uniqueCustomers', labelKey: 'uniqueCustomers' },
     { key: 'conversationsHandledByHuman', labelKey: 'handledByHuman' },
     { key: 'leadsNew', labelKey: 'leadsNew' },

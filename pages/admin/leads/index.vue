@@ -33,10 +33,21 @@ const botFilter = ref<string>('')
 const interestFilter = ref<LeadInterest | ''>('')
 const search = ref('')
 
-// Stat tabs at the top — these are the 4 buckets that matter most to a
-// commercial team: brand-new leads, ones already qualified, and the final
-// outcomes (won/lost). Numbers come from cheap pageSize=1 fetches per status.
-const counts = ref({ new: 0, qualified: 0, won: 0, lost: 0, total: 0 })
+// Stat tabs at the top — the full funnel:
+// NEW → CONTACTED → QUALIFIED → WON / LOST.
+// Bug fix 2026-09-17: prior version derived counts from 4 paginated queries
+// and skipped CONTACTED/PROPOSAL_SENT/NEGOTIATION → leads were invisible.
+// Now one call to /leads/summary returns every enum value (zero-filled),
+// plus `unknown` collects statuses outside the enum (should be always 0).
+const counts = ref({
+  new: 0,
+  contacted: 0,
+  qualified: 0,
+  won: 0,
+  lost: 0,
+  other: 0, // PROPOSAL_SENT + NEGOTIATION + unknown (defensive)
+  total: 0,
+})
 
 const pageCount = computed(() => Math.max(1, Math.ceil(total.value / PAGE_SIZE)))
 const fromIndex = computed(() => total.value === 0 ? 0 : (page.value - 1) * PAGE_SIZE + 1)
@@ -70,25 +81,24 @@ async function loadList(): Promise<void> {
 
 async function loadCounts(): Promise<void> {
   try {
-    const baseOpts = {
+    const res = await leadsApi.summary({
       botId: botFilter.value || undefined,
       interest: interestFilter.value || undefined,
-      search: search.value.trim() || undefined,
-      page: 1,
-      pageSize: 1,
+    })
+    const s = res.byStatus
+    const primary = ['NEW', 'CONTACTED', 'QUALIFIED', 'WON', 'LOST']
+    let other = res.unknown
+    for (const [k, v] of Object.entries(s)) {
+      if (!primary.includes(k)) other += v
     }
-    const [n, q, w, l] = await Promise.all([
-      leadsApi.listPaginated({ ...baseOpts, status: 'NEW' }),
-      leadsApi.listPaginated({ ...baseOpts, status: 'QUALIFIED' }),
-      leadsApi.listPaginated({ ...baseOpts, status: 'WON' }),
-      leadsApi.listPaginated({ ...baseOpts, status: 'LOST' }),
-    ])
     counts.value = {
-      new: n.total,
-      qualified: q.total,
-      won: w.total,
-      lost: l.total,
-      total: n.total + q.total + w.total + l.total,
+      new: s.NEW ?? 0,
+      contacted: s.CONTACTED ?? 0,
+      qualified: s.QUALIFIED ?? 0,
+      won: s.WON ?? 0,
+      lost: s.LOST ?? 0,
+      other,
+      total: res.total,
     }
   } catch {
     // Counts are decoration — list-load already surfaces errors.
@@ -243,6 +253,22 @@ const tabPalette = {
     value: 'text-sky-900',
     halo: 'bg-sky-300/40',
   },
+  CONTACTED: {
+    inactive: 'bg-gradient-to-br from-amber-50 via-white to-white ring-amber-200/70 shadow-[0_8px_24px_-12px_rgba(245,158,11,0.18)]',
+    active: 'bg-gradient-to-br from-amber-100 via-amber-50 to-white ring-2 ring-amber-400 shadow-[0_14px_32px_-14px_rgba(245,158,11,0.34)]',
+    pill: 'bg-gradient-to-br from-amber-500 to-orange-600 ring-amber-300/60',
+    label: 'text-amber-700/80',
+    value: 'text-amber-900',
+    halo: 'bg-amber-300/40',
+  },
+  OTHER: {
+    inactive: 'bg-gradient-to-br from-slate-50 via-white to-white ring-slate-200/70 shadow-[0_8px_24px_-12px_rgba(100,116,139,0.14)]',
+    active: 'bg-gradient-to-br from-slate-100 via-slate-50 to-white ring-2 ring-slate-400 shadow-[0_14px_32px_-14px_rgba(100,116,139,0.28)]',
+    pill: 'bg-gradient-to-br from-slate-500 to-slate-600 ring-slate-300/60',
+    label: 'text-slate-700/80',
+    value: 'text-slate-900',
+    halo: 'bg-slate-300/40',
+  },
   QUALIFIED: {
     inactive: 'bg-gradient-to-br from-violet-50 via-white to-white ring-violet-200/70 shadow-[0_8px_24px_-12px_rgba(139,92,246,0.18)]',
     active: 'bg-gradient-to-br from-violet-100 via-violet-50 to-white ring-2 ring-violet-400 shadow-[0_14px_32px_-14px_rgba(139,92,246,0.34)]',
@@ -346,7 +372,7 @@ await Promise.all([loadBots(), load()])
     >{{ backfillResult }}</p>
 
     <!-- Stat tabs -->
-    <div class="mt-6 grid grid-cols-2 lg:grid-cols-5 gap-3">
+    <div class="mt-6 grid grid-cols-2 lg:grid-cols-6 gap-3">
       <button
         type="button"
         class="group relative overflow-hidden text-left rounded-2xl px-4 py-3.5 ring-1 transition-all duration-200 hover:-translate-y-0.5"
@@ -385,6 +411,26 @@ await Promise.all([loadBots(), load()])
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
               <circle cx="12" cy="12" r="10" />
               <polyline points="12 6 12 12 16 14" />
+            </svg>
+          </div>
+        </div>
+      </button>
+
+      <button
+        type="button"
+        class="group relative overflow-hidden text-left rounded-2xl px-4 py-3.5 ring-1 transition-all duration-200 hover:-translate-y-0.5"
+        :class="statusFilter === 'CONTACTED' ? tabPalette.CONTACTED.active : tabPalette.CONTACTED.inactive"
+        @click="onTabChange('CONTACTED')"
+      >
+        <span class="pointer-events-none absolute -top-10 -right-10 size-28 rounded-full blur-3xl opacity-70" :class="tabPalette.CONTACTED.halo" aria-hidden="true" />
+        <div class="relative flex items-start justify-between gap-2">
+          <div class="min-w-0">
+            <div class="text-[10px] uppercase tracking-wider font-semibold" :class="tabPalette.CONTACTED.label">{{ $t('leads.status.CONTACTED') }}</div>
+            <div class="mt-1 text-3xl font-bold tabular-nums tracking-tight" :class="tabPalette.CONTACTED.value">{{ counts.contacted }}</div>
+          </div>
+          <div class="flex size-9 shrink-0 items-center justify-center rounded-xl text-white ring-1 shadow-sm" :class="tabPalette.CONTACTED.pill">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
           </div>
         </div>
@@ -450,6 +496,28 @@ await Promise.all([loadBots(), load()])
           </div>
         </div>
       </button>
+
+      <div
+        v-if="counts.other > 0"
+        class="group relative overflow-hidden text-left rounded-2xl px-4 py-3.5 ring-1"
+        :class="tabPalette.OTHER.inactive"
+        :title="$t('leads.stat.otherHint')"
+      >
+        <span class="pointer-events-none absolute -top-10 -right-10 size-28 rounded-full blur-3xl opacity-70" :class="tabPalette.OTHER.halo" aria-hidden="true" />
+        <div class="relative flex items-start justify-between gap-2">
+          <div class="min-w-0">
+            <div class="text-[10px] uppercase tracking-wider font-semibold" :class="tabPalette.OTHER.label">{{ $t('leads.stat.other') }}</div>
+            <div class="mt-1 text-3xl font-bold tabular-nums tracking-tight" :class="tabPalette.OTHER.value">{{ counts.other }}</div>
+          </div>
+          <div class="flex size-9 shrink-0 items-center justify-center rounded-xl text-white ring-1 shadow-sm" :class="tabPalette.OTHER.pill">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+              <circle cx="12" cy="12" r="1" />
+              <circle cx="19" cy="12" r="1" />
+              <circle cx="5" cy="12" r="1" />
+            </svg>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Filter bar -->

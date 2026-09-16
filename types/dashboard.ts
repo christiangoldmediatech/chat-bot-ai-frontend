@@ -88,8 +88,13 @@ export interface MetricsSummaryTotals {
   leadsNew: number
   leadsQualified: number
   leadsWon: number
-  meetingsScheduled: number
-  meetingsCancelled: number
+  // Meetings — chain-aware totals (bug fix 2026-09-17). See the backend
+  // SummaryTotals JSDoc in `metrics.service.ts` for exact definitions.
+  meetingsNewChains: number
+  meetingsReschedules: number
+  meetingsCancelledChains: number
+  meetingsRescheduledChains: number
+  meetingsActiveChains: number
   meetingsNoShow: number
   meetingsUpcoming: number
 }
