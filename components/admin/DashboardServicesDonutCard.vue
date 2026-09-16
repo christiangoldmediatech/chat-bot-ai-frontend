@@ -49,11 +49,90 @@ const topRows = computed(() => {
 
 const totalAttended = computed(() => data.value?.totals.attended ?? 0)
 
+// Bug fix 2026-09-17 (second follow-up): the ApexCharts custom tooltip lives
+// inside `.apexcharts-canvas` which is nested under several `overflow-hidden`
+// ancestors (the dashboard shell has `lg:overflow-hidden` and cannot be
+// removed without changing the app-shell scroll UX). We disable ApexCharts's
+// tooltip entirely and render our own tooltip via `<Teleport to="body">`,
+// positioned with `position: fixed` and clamped to the viewport with a flip
+// when it would overflow. This way the tooltip is legible regardless of the
+// chart's position on screen and regardless of any ancestor's overflow.
+interface DonutTooltipContent {
+  name: string
+  value: number
+  pct: number
+  color: string
+}
+const tooltipVisible = ref(false)
+const tooltipContent = ref<DonutTooltipContent | null>(null)
+const tooltipPos = ref<{ x: number; y: number }>({ x: 0, y: 0 })
+const TOOLTIP_MAX_WIDTH = 260
+const TOOLTIP_EST_HEIGHT = 64
+const TOOLTIP_OFFSET = 12
+
+function updateTooltipPos(clientX: number, clientY: number): void {
+  const vw = typeof window === 'undefined' ? 1280 : window.innerWidth
+  const vh = typeof window === 'undefined' ? 800 : window.innerHeight
+  // Prefer to the right of the cursor; flip left if it would overflow.
+  let x = clientX + TOOLTIP_OFFSET
+  if (x + TOOLTIP_MAX_WIDTH > vw - 8) {
+    x = clientX - TOOLTIP_OFFSET - TOOLTIP_MAX_WIDTH
+  }
+  x = Math.max(8, x)
+  // Prefer below the cursor; flip up if it would overflow.
+  let y = clientY + TOOLTIP_OFFSET
+  if (y + TOOLTIP_EST_HEIGHT > vh - 8) {
+    y = clientY - TOOLTIP_OFFSET - TOOLTIP_EST_HEIGHT
+  }
+  y = Math.max(8, y)
+  tooltipPos.value = { x, y }
+}
+
+function onDataPointEnter(
+  event: MouseEvent | undefined,
+  _ctx: unknown,
+  config: { dataPointIndex: number },
+): void {
+  const i = config?.dataPointIndex
+  if (i == null || i < 0) return
+  const row = topRows.value[i]
+  if (!row) return
+  tooltipContent.value = {
+    name: row.name,
+    value: row.attended,
+    pct: pctOfTotal(row.attended),
+    color: CHART_DONUT_SERIES_COLORS[i % CHART_DONUT_SERIES_COLORS.length],
+  }
+  if (event) updateTooltipPos(event.clientX, event.clientY)
+  tooltipVisible.value = true
+}
+
+function onDataPointLeave(): void {
+  tooltipVisible.value = false
+}
+
+function onMouseMove(event: MouseEvent | undefined): void {
+  if (!tooltipVisible.value || !event) return
+  updateTooltipPos(event.clientX, event.clientY)
+}
+
 const donutChart = computed(() => {
   const rows = topRows.value
   return {
     options: {
-      chart: { type: 'donut', fontFamily: 'inherit', foreColor: '#475569', parentHeightOffset: 0, offsetY: 0 },
+      chart: {
+        type: 'donut',
+        fontFamily: 'inherit',
+        foreColor: '#475569',
+        parentHeightOffset: 0,
+        offsetY: 0,
+        events: {
+          dataPointMouseEnter: onDataPointEnter,
+          dataPointMouseLeave: onDataPointLeave,
+          mouseMove: onMouseMove,
+          mouseLeave: onDataPointLeave,
+        },
+      },
       colors: CHART_DONUT_SERIES_COLORS,
       labels: rows.map(r => r.name),
       legend: { show: false },
@@ -87,11 +166,9 @@ const donutChart = computed(() => {
           },
         },
       },
-      tooltip: {
-        y: {
-          formatter: (val: number) => `${val} ${t('admin.dashboardRedesign.donut.unit')}`,
-        },
-      },
+      // ApexCharts tooltip disabled: we render our own via <Teleport to="body">
+      // so it escapes all `overflow-hidden` ancestors (see the state block above).
+      tooltip: { enabled: false },
     },
     series: rows.map(r => r.attended),
   }
@@ -121,7 +198,7 @@ const totalRevenue = computed(() => {
 <template>
   <section
     class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass h-full"
-    :class="fillHeight ? 'p-3 flex flex-col min-h-0 min-w-0 overflow-hidden' : 'p-5'"
+    :class="fillHeight ? 'p-3 flex flex-col min-h-0 min-w-0' : 'p-5'"
   >
     <header class="mb-2 flex items-start justify-between gap-3 shrink-0">
       <div>
@@ -149,7 +226,7 @@ const totalRevenue = computed(() => {
         ? 'flex-1 min-h-0 min-w-0 flex flex-row'
         : 'grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]'"
     >
-      <div :class="fillHeight ? 'relative h-full aspect-square shrink-0 min-h-0 min-w-0 overflow-hidden' : ''">
+      <div :class="fillHeight ? 'relative h-full aspect-square shrink-0 min-h-0 min-w-0' : ''">
         <ClientOnly>
           <apexchart
             type="donut"
@@ -164,13 +241,55 @@ const totalRevenue = computed(() => {
         class="grid grid-cols-1 gap-x-3 gap-y-1 pr-1 min-w-0"
         :class="fillHeight ? 'flex-1 h-full min-h-0 overflow-y-auto content-start' : 'max-h-64 overflow-y-auto'"
       >
+        <!-- Bug fix 2026-09-17: legend items used `truncate` without a `title`
+             attribute, so long service names collapsed to "Li..." "Tra..."
+             with no way to recover the full name. Now the full name is always
+             readable via the native browser tooltip; if the flex row is still
+             too narrow, at least the hover restores context. -->
         <li v-for="(row, i) in topRows" :key="row.serviceId ?? row.name" class="flex items-center gap-2 text-xs">
           <span class="size-2 shrink-0 rounded-full" :style="{ backgroundColor: CHART_DONUT_SERIES_COLORS[i % CHART_DONUT_SERIES_COLORS.length] }" />
-          <span class="flex-1 min-w-0 text-slate-800 truncate">{{ row.name }}</span>
+          <span class="flex-1 min-w-0 text-slate-800 truncate" :title="row.name">{{ row.name }}</span>
           <span class="tabular-nums text-slate-900 font-semibold">{{ row.attended }}</span>
           <span class="tabular-nums text-slate-500 w-9 text-right">{{ pctOfTotal(row.attended) }}%</span>
         </li>
       </ul>
     </div>
+
+    <!-- Portalized tooltip: lives in <body> so no ancestor `overflow-hidden`
+         can clip it. Positioned via `position: fixed` with viewport-edge
+         detection (see `updateTooltipPos`). -->
+    <ClientOnly>
+      <Teleport to="body">
+        <div
+          v-if="tooltipVisible && tooltipContent"
+          role="tooltip"
+          class="pointer-events-none"
+          :style="{
+            position: 'fixed',
+            left: tooltipPos.x + 'px',
+            top: tooltipPos.y + 'px',
+            zIndex: 9999,
+            maxWidth: '260px',
+          }"
+        >
+          <div
+            class="rounded-lg shadow-lg"
+            style="padding: 8px 10px; background: #0f172a; color: #f8fafc; line-height: 1.35; font-family: inherit;"
+          >
+            <div class="flex items-center gap-1.5 font-semibold" style="margin-bottom: 2px; word-break: break-word; white-space: normal;">
+              <span
+                class="inline-block rounded-full shrink-0"
+                style="width: 8px; height: 8px;"
+                :style="{ backgroundColor: tooltipContent.color }"
+              />
+              <span style="font-size: 12px;">{{ tooltipContent.name }}</span>
+            </div>
+            <div style="font-size: 11px; color: #cbd5e1;">
+              {{ tooltipContent.value }} {{ $t('admin.dashboardRedesign.donut.unit') }} · {{ tooltipContent.pct }}%
+            </div>
+          </div>
+        </div>
+      </Teleport>
+    </ClientOnly>
   </section>
 </template>
