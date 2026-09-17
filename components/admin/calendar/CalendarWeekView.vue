@@ -5,6 +5,7 @@ import type {
   CalendarViewResponse,
 } from '~/types/calendar'
 import {
+  addDaysToDayKey,
   cancelledTone,
   formatCompactTimeRange,
   formatMinutesAsTime,
@@ -107,16 +108,19 @@ function rawBlocksForDay(dayKey: string): RawBlockRow[] {
   for (const block of props.data.blocks) {
     const startDayKey = toWallDayKey(block.startsAt, props.data.timezone)
     const endDayKey = toWallDayKey(block.endsAt, props.data.timezone)
-    if (dayKey < startDayKey || dayKey > endDayKey) continue
+    const lastDayKeyInclusive = block.allDay
+      ? addDaysToDayKey(endDayKey, -1)
+      : endDayKey
+    if (dayKey < startDayKey || dayKey > lastDayKeyInclusive) continue
     const rawStart = dayKey === startDayKey
       ? toWallMinutes(block.startsAt, props.data.timezone)
       : gridRange.value.startMin
-    let rawEnd = dayKey === endDayKey
+    let rawEnd = !block.allDay && dayKey === endDayKey
       ? toWallMinutes(block.endsAt, props.data.timezone)
       : gridRange.value.endMin
     if (rawEnd === 0 && dayKey !== endDayKey) rawEnd = gridRange.value.endMin
     const startsAtDayStart = dayKey !== startDayKey || rawStart <= gridRange.value.startMin
-    const spansEndOfDay = dayKey !== endDayKey
+    const spansEndOfDay = dayKey !== lastDayKeyInclusive
     const fullDay = block.allDay || (startsAtDayStart && spansEndOfDay)
     const startMin = fullDay ? gridRange.value.startMin : Math.max(rawStart, gridRange.value.startMin)
     const endMin = fullDay ? gridRange.value.endMin : Math.min(rawEnd, gridRange.value.endMin)

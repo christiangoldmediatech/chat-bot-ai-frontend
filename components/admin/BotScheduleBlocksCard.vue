@@ -5,14 +5,24 @@ import type {
   CreateScheduleBlockPayload,
   ScheduleBlock,
 } from '~/types/schedule'
+import {
+  addDaysToDayKey,
+  getBrowserTimezone,
+  toWallDayKey,
+} from '~/utils/calendar-layout'
 
 const props = defineProps<{
   botId: string
   tenantId?: string
+  timezone?: string
 }>()
+
+const emit = defineEmits<{ changed: [] }>()
 
 const { t, locale } = useI18n()
 const blocks = useScheduleBlocks(props.tenantId)
+
+const businessTz = computed(() => props.timezone ?? getBrowserTimezone())
 
 type BlockType = 'FULL_DAY' | 'DATE_RANGE' | 'HOURS'
 
@@ -57,13 +67,31 @@ const visibleBlocks = computed(() =>
 )
 
 function formatBlockPeriod(b: ScheduleBlock): string {
+  if (b.allDay) {
+    const startDay = toWallDayKey(b.startsAt, businessTz.value)
+    const endDayExclusive = toWallDayKey(b.endsAt, businessTz.value)
+    const lastDayInclusive = addDaysToDayKey(endDayExclusive, -1)
+    const startLabel = formatDayKey(startDay)
+    if (startDay === lastDayInclusive) return startLabel
+    return `${startLabel} — ${formatDayKey(lastDayInclusive)}`
+  }
   const start = new Date(b.startsAt)
   const end = new Date(b.endsAt)
-  const opts: Intl.DateTimeFormatOptions = b.allDay
-    ? { dateStyle: 'medium' }
-    : { dateStyle: 'medium', timeStyle: 'short' }
-  const fmt = new Intl.DateTimeFormat(locale.value, opts)
+  const fmt = new Intl.DateTimeFormat(locale.value, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: businessTz.value,
+  })
   return `${fmt.format(start)} — ${fmt.format(end)}`
+}
+
+function formatDayKey(dayKey: string): string {
+  const [y, m, d] = dayKey.split('-').map(Number)
+  const date = new Date(Date.UTC(y, m - 1, d, 12))
+  return new Intl.DateTimeFormat(locale.value, {
+    dateStyle: 'medium',
+    timeZone: 'UTC',
+  }).format(date)
 }
 
 function formatMeetingWhen(m: AffectedMeeting): string {
@@ -115,8 +143,9 @@ function openEdit(block: ScheduleBlock): void {
   const start = new Date(block.startsAt)
   const end = new Date(block.endsAt)
   if (block.allDay) {
-    const startDay = start.toISOString().slice(0, 10)
-    const endDay = new Date(end.getTime() - 1).toISOString().slice(0, 10)
+    const startDay = toWallDayKey(block.startsAt, businessTz.value)
+    const endDayExclusive = toWallDayKey(block.endsAt, businessTz.value)
+    const endDay = addDaysToDayKey(endDayExclusive, -1)
     if (startDay === endDay) {
       form.type = 'FULL_DAY'
       form.singleDate = startDay
@@ -138,6 +167,25 @@ function toLocalInput(d: Date): string {
   const pad = (n: number): string => String(n).padStart(2, '0')
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
+
+const allDayPreview = computed<{ count: number, label: string } | null>(() => {
+  if (form.type === 'FULL_DAY') {
+    if (!form.singleDate) return null
+    return { count: 1, label: formatDayKey(form.singleDate) }
+  }
+  if (form.type === 'DATE_RANGE') {
+    if (!form.startDate || !form.endDate) return null
+    if (form.endDate < form.startDate) return null
+    const days: string[] = []
+    let cursor = form.startDate
+    while (cursor <= form.endDate && days.length < 62) {
+      days.push(cursor)
+      cursor = addDaysToDayKey(cursor, 1)
+    }
+    return { count: days.length, label: days.map(formatDayKey).join(', ') }
+  }
+  return null
+})
 
 function buildPayload(): { payload: CreateScheduleBlockPayload, valid: boolean, errorMsg?: string } {
   const reason = form.reason.trim()
@@ -200,6 +248,8 @@ async function onSave(): Promise<void> {
       items.value = items.value.map(b => (b.id === updated.id ? updated : b))
       success.value = t('admin.scheduleBlocks.savedUpdate')
     }
+    emit('changed')
+    void load()
     if ((affectedPreview.value?.length ?? 0) === 0) {
       modalOpen.value = false
     }
@@ -222,6 +272,8 @@ async function onDelete(): Promise<void> {
     items.value = items.value.filter(b => b.id !== confirmDelete.value!.id)
     success.value = t('admin.scheduleBlocks.savedDelete')
     confirmDelete.value = null
+    emit('changed')
+    void load()
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -349,6 +401,13 @@ watch(() => props.botId, () => { void load() })
             <input v-model="form.endDateTime" type="datetime-local" step="900" class="mt-1 w-full rounded-lg border border-slate-200 bg-white/90 px-3 py-2 text-sm text-slate-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500">
           </div>
         </div>
+
+        <p
+          v-if="allDayPreview"
+          class="rounded-lg border border-primary-200 bg-primary-50/70 px-3 py-2 text-xs text-primary-800"
+        >
+          {{ $t('admin.scheduleBlocks.willBlockDays', { count: allDayPreview.count, days: allDayPreview.label }) }}
+        </p>
 
         <div>
           <label class="block text-xs font-medium text-slate-700">{{ $t('admin.scheduleBlocks.reasonLabel') }}</label>
