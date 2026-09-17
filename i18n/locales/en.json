@@ -1503,6 +1503,7 @@
       "affectedTitle": "{n} scheduled meeting(s) fall within this block",
       "affectedWarning": "These meetings are NOT cancelled automatically. Review them and decide what to do.",
       "saveBlock": "Save block",
+      "willBlockDays": "This will block {count} full day(s): {days}",
       "savedCreate": "Block created.",
       "savedUpdate": "Block updated.",
       "savedDelete": "Block deleted.",
