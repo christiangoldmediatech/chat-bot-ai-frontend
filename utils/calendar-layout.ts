@@ -112,6 +112,30 @@ export function todayDayKeyInTz(tz: string): string {
   return toWallDayKey(new Date().toISOString(), tz)
 }
 
+export function getBrowserTimezone(): string {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+    if (tz && tz.length > 0) return tz
+  } catch {
+    // ignore and fall through
+  }
+  return 'UTC'
+}
+
+export function formatTimezoneOffset(tz: string, at: Date = new Date()): string {
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: tz,
+      timeZoneName: 'shortOffset',
+      hour: 'numeric',
+    }).formatToParts(at)
+    const name = parts.find(p => p.type === 'timeZoneName')?.value ?? ''
+    return name.replace(/^GMT/, 'UTC')
+  } catch {
+    return ''
+  }
+}
+
 export function startOfIsoWeek(dayKey: string): string {
   const weekday = isoWeekdayFromDayKey(dayKey)
   return addDaysToDayKey(dayKey, -(weekday - 1))

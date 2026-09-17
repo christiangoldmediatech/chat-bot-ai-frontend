@@ -3,6 +3,7 @@ import {
   isoWeekdayFromDayKey,
   layoutOverlappingItems,
   startOfIsoWeek,
+  todayDayKeyInTz,
 } from './calendar-layout'
 
 describe('layoutOverlappingItems', () => {
@@ -73,5 +74,56 @@ describe('date helpers', () => {
     expect(startOfIsoWeek('2026-09-17')).toBe('2026-09-14')
     expect(startOfIsoWeek('2026-09-14')).toBe('2026-09-14')
     expect(startOfIsoWeek('2026-09-20')).toBe('2026-09-14')
+  })
+})
+
+describe('todayDayKeyInTz', () => {
+  beforeEach(() => {
+    jest.useFakeTimers()
+  })
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
+  const GYE = 'America/Guayaquil'
+  const MEX = 'America/Mexico_City'
+  const MAD = 'Europe/Madrid'
+
+  it('returns wednesday when clock is wed 21:43 Guayaquil (bug from field report: was returning thu in UTC)', () => {
+    jest.setSystemTime(new Date('2026-09-17T02:43:00Z'))
+    expect(todayDayKeyInTz(GYE)).toBe('2026-09-16')
+  })
+
+  it('returns the same day at 09:00 local Guayaquil', () => {
+    jest.setSystemTime(new Date('2026-09-16T14:00:00Z'))
+    expect(todayDayKeyInTz(GYE)).toBe('2026-09-16')
+  })
+
+  it('returns the same day at 14:00 local Guayaquil', () => {
+    jest.setSystemTime(new Date('2026-09-16T19:00:00Z'))
+    expect(todayDayKeyInTz(GYE)).toBe('2026-09-16')
+  })
+
+  it('returns the same day at 19:30 local Guayaquil', () => {
+    jest.setSystemTime(new Date('2026-09-17T00:30:00Z'))
+    expect(todayDayKeyInTz(GYE)).toBe('2026-09-16')
+  })
+
+  it('returns the same day at 23:59 local Guayaquil', () => {
+    jest.setSystemTime(new Date('2026-09-17T04:59:00Z'))
+    expect(todayDayKeyInTz(GYE)).toBe('2026-09-16')
+  })
+
+  it('returns the correct day at 00:30 local Guayaquil (UTC still previous day only outside America)', () => {
+    jest.setSystemTime(new Date('2026-09-17T05:30:00Z'))
+    expect(todayDayKeyInTz(GYE)).toBe('2026-09-17')
+  })
+
+  it('picks business timezone independent of caller zone (Madrid vs Mexico City at same instant)', () => {
+    // 2026-09-17T00:30:00Z is 2026-09-16 at 18:30 Mexico City (UTC-6)
+    // and 2026-09-17 at 02:30 Madrid (UTC+2 DST)
+    jest.setSystemTime(new Date('2026-09-17T00:30:00Z'))
+    expect(todayDayKeyInTz(MEX)).toBe('2026-09-16')
+    expect(todayDayKeyInTz(MAD)).toBe('2026-09-17')
   })
 })
