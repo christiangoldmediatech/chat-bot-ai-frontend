@@ -4,6 +4,8 @@ import type { CalendarAppointment, CalendarViewResponse } from '~/types/calendar
 import type { Service } from '~/types/service'
 import {
   addDaysToDayKey,
+  formatTimezoneOffset,
+  getBrowserTimezone,
   startOfIsoWeek,
   todayDayKeyInTz,
 } from '~/utils/calendar-layout'
@@ -37,11 +39,19 @@ if (initialViewParam === 'day' || initialViewParam === 'week') {
   view.value = initialViewParam
 }
 
-const activeTimezone = computed(() => data.value?.timezone ?? 'UTC')
+const activeTimezone = computed(() => data.value?.timezone ?? getBrowserTimezone())
+
+const timezoneLabel = computed(() => {
+  const tz = activeTimezone.value
+  const offset = formatTimezoneOffset(tz)
+  return offset ? `${tz} · ${offset}` : tz
+})
+
+const hasUrlDate = typeof initialDateParam === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(initialDateParam)
 
 function initAnchor(): void {
-  if (typeof initialDateParam === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(initialDateParam)) {
-    anchorDay.value = initialDateParam
+  if (hasUrlDate) {
+    anchorDay.value = initialDateParam as string
     return
   }
   anchorDay.value = todayDayKeyInTz(activeTimezone.value)
@@ -137,6 +147,12 @@ onMounted(async () => {
   initAnchor()
   await loadServices()
   await load()
+  if (!hasUrlDate && data.value) {
+    const trueToday = todayDayKeyInTz(activeTimezone.value)
+    if (trueToday !== anchorDay.value) {
+      anchorDay.value = trueToday
+    }
+  }
 })
 
 function onEventClick(appt: CalendarAppointment): void {
@@ -174,7 +190,10 @@ function onEventClick(appt: CalendarAppointment): void {
         </button>
       </div>
 
-      <div class="text-base font-semibold text-slate-900 capitalize">{{ rangeLabel }}</div>
+      <div class="flex flex-col leading-tight">
+        <span class="text-base font-semibold text-slate-900 capitalize">{{ rangeLabel }}</span>
+        <span class="text-[11px] font-medium text-slate-500" :title="activeTimezone">{{ timezoneLabel }}</span>
+      </div>
 
       <div class="ml-auto flex items-center gap-3 flex-wrap">
         <label class="inline-flex items-center gap-2 text-sm text-slate-600">
