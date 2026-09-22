@@ -362,6 +362,7 @@ await Promise.all([load(), loadActivity()])
             <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.bot.sections.documentsDesc') }}</p>
           </div>
         </header>
+        <BotDocumentsCoverageCard :bot-id="bot.id" :tenant-id="tenantId" class="mb-4" />
         <BotDocumentsCard :bot-id="bot.id" :tenant-id="tenantId" />
       </section>
 
