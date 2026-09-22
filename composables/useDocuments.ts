@@ -1,4 +1,8 @@
-import type { DocumentContent, DocumentItem } from '~/types/document'
+import type {
+  DocumentContent,
+  DocumentCoverage,
+  DocumentItem,
+} from '~/types/document'
 
 /**
  * Document (RAG) management. Without a tenantId, hits the tenant-scoped
@@ -53,6 +57,18 @@ export function useDocuments(tenantId?: string) {
         return api.get<DocumentContent>(`${baseForBot(botId)}/${id}/content`)
       }
       return api.get<DocumentContent>(`/documents/${id}/content`)
+    },
+    /**
+     * Reporte "qué falta por configurar" (Paso 2.2 audit): servicios sin
+     * documento, documentos sin servicio, servicios con campos vacíos.
+     */
+    getCoverage: (botId: string): Promise<DocumentCoverage> => {
+      if (tenantId) {
+        return api.get<DocumentCoverage>(`${baseForBot(botId)}/coverage`)
+      }
+      return api.get<DocumentCoverage>('/documents/coverage', {
+        query: { botId },
+      })
     },
   }
 }

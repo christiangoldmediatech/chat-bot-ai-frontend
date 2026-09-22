@@ -751,9 +751,9 @@
         "detailsSubtitle": "Identidad y comportamiento base — solo visible dentro del admin.",
         "nameLabel": "Nombre",
         "namePlaceholder": "ej. Asistente de ventas",
-        "systemPromptLabel": "System prompt",
-        "systemPromptPlaceholder": "Eres un asistente de ventas amable para…",
-        "systemPromptHelp": "Instrucciones base que el modelo recibe en cada conversación.",
+        "systemPromptLabel": "Identidad del bot",
+        "systemPromptPlaceholder": "Eres el asistente del consultorio del Dr. X. Nuestros pacientes son… Nuestro enfoque es…",
+        "systemPromptHelp": "Escribe solo la IDENTIDAD del bot: nombre del consultorio y del doctor, especialidad, tono, indicaciones específicas del negocio. Las reglas duras (no diagnosticar, no inventar precios, formato WhatsApp, límites clínicos, jerarquía de fuentes) ya están cargadas por la plataforma — no las escribas de nuevo. Si tu texto contradice las reglas de la plataforma, ganan las reglas de la plataforma.",
         "activateLabel": "Activar el bot al crearse",
         "waConnectionTitle": "Conexión WhatsApp Business",
         "waConnectionSubtitleBefore": "Cópialos desde ",
@@ -1569,6 +1569,7 @@
       "emptyDescription": "Cuando marques una venta como cerrada aquí o desde la conversación aparecerá en esta lista.",
       "markSold": "Marcar vendido",
       "markLost": "Marcar perdida",
+      "unmarkWon": "Quitar WON",
       "paginationCount": "Total: {total}",
       "markSoldTitle": "Marcar como vendido",
       "markSoldSubmit": "Registrar venta",
@@ -1611,7 +1612,30 @@
         "scheduledAt": "Agendada {when}",
         "noShow": "No asistió",
         "cancelled": "Cancelada",
-        "noMeeting": "Sin cita vinculada"
+        "noMeeting": "Sin cita vinculada",
+        "ambiguous": "Varias citas posibles"
+      },
+      "linkAppointment": {
+        "action": "Vincular cita",
+        "actionCompact": "Vincular",
+        "unlinkAction": "Desvincular cita",
+        "title": "Vincular cita a esta venta",
+        "subtitle": "Elige la cita del cliente que corresponde a este servicio.",
+        "empty": "Este cliente no tiene citas registradas todavía.",
+        "loading": "Buscando citas del cliente…",
+        "select": "Vincular",
+        "cancel": "Cancelar",
+        "confirmUnlink": "¿Seguro que quieres desvincular la cita actual?",
+        "successLinked": "Cita vinculada",
+        "successUnlinked": "Cita desvinculada",
+        "error": "No se pudo vincular la cita",
+        "statusLabel": {
+          "CREATED": "Agendada",
+          "COMPLETED": "Atendida",
+          "NO_SHOW": "No asistió",
+          "CANCELLED": "Cancelada",
+          "RESCHEDULED": "Reagendada"
+        }
       },
       "field": {
         "service": "Servicio",

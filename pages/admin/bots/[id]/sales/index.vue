@@ -58,6 +58,7 @@ watch(searchInput, (v) => {
 const workingSale = ref<Sale | null>(null)
 const showMarkLost = ref(false)
 const showMarkSold = ref(false)
+const showLinkAppointment = ref(false)
 const submitting = ref(false)
 
 const detail = ref<SaleDetail | null>(null)
@@ -109,6 +110,16 @@ function openMarkSold(sale: Sale): void {
 function openMarkLost(sale: Sale): void {
   workingSale.value = sale
   showMarkLost.value = true
+}
+
+function openLinkModal(sale: Sale): void {
+  workingSale.value = sale
+  showLinkAppointment.value = true
+}
+
+function onAppointmentLinkChanged(updated: Sale): void {
+  const idx = rows.value.findIndex((r) => r.id === updated.id)
+  if (idx >= 0) rows.value.splice(idx, 1, updated)
 }
 
 async function onSubmitMarkSold(payload: { reason: string | undefined }): Promise<void> {
@@ -364,11 +375,22 @@ watch(
               </span>
             </td>
             <td class="px-3 py-2 align-top">
-              <AttendanceBadge
-                :attendance="row.attendanceSummary"
-                :appointment="row.appointment"
-                compact
-              />
+              <div class="flex items-center gap-2">
+                <AttendanceBadge
+                  :attendance="row.attendanceSummary"
+                  :appointment="row.appointment"
+                  :unlinked-candidates-count="row.unlinkedCandidatesCount"
+                  compact
+                />
+                <button
+                  v-if="row.attendanceSummary === 'NO_MEETING' || (row.unlinkedCandidatesCount ?? 0) >= 1"
+                  type="button"
+                  class="text-[10px] font-medium text-slate-600 underline underline-offset-2 hover:text-slate-900"
+                  @click.stop="openLinkModal(row)"
+                >
+                  {{ $t('admin.sales.linkAppointment.actionCompact') }}
+                </button>
+              </div>
             </td>
             <td class="px-3 py-2 align-top">
               <span
@@ -393,12 +415,21 @@ watch(
                   {{ $t('admin.sales.markSold') }}
                 </button>
                 <button
-                  v-if="row.status !== 'LOST'"
+                  v-if="row.status === 'PENDING'"
                   type="button"
                   class="text-xs font-medium text-slate-500 hover:text-slate-800"
                   @click="openMarkLost(row)"
                 >
                   {{ $t('admin.sales.markLost') }}
+                </button>
+                <button
+                  v-if="row.status === 'WON'"
+                  type="button"
+                  class="text-xs font-medium text-rose-600 hover:text-rose-800"
+                  title="Revertir esta venta (por ejemplo si la cita fue NO_SHOW)"
+                  @click="openMarkLost(row)"
+                >
+                  {{ $t('admin.sales.unmarkWon') }}
                 </button>
               </div>
             </td>
@@ -451,6 +482,16 @@ watch(
       :detail="detail"
       :loading="detailLoading"
       @close="showDetail = false; detail = null"
+    />
+
+    <LinkAppointmentModal
+      v-if="workingSale"
+      :bot-id="botId"
+      :sale="workingSale"
+      :open="showLinkAppointment"
+      @close="showLinkAppointment = false; workingSale = null"
+      @linked="onAppointmentLinkChanged"
+      @unlinked="onAppointmentLinkChanged"
     />
 
     <Transition name="toast">

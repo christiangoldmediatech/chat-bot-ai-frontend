@@ -1,4 +1,5 @@
 import type {
+  CalendarEventStatus,
   CreateSaleInput,
   CustomerSalesHistory,
   ListSalesQuery,
@@ -9,6 +10,14 @@ import type {
   SaleDetail,
   UpdateSaleInput,
 } from '~/types/sale'
+
+export interface CandidateAppointment {
+  id: string
+  startTime: string
+  endTime: string
+  status: CalendarEventStatus
+  topic: string | null
+}
 
 export function useSales() {
   const api = useApi()
@@ -53,5 +62,25 @@ export function useSales() {
       input: MarkWonInput & { serviceId: string },
     ): Promise<Sale> =>
       api.post<Sale>(`/appointments/${appointmentId}/sales/won`, input),
+
+    listCandidateAppointments: (
+      botId: string,
+      saleId: string,
+    ): Promise<CandidateAppointment[]> =>
+      api.get<CandidateAppointment[]>(
+        `${base(botId)}/${saleId}/candidate-appointments`,
+      ),
+
+    linkAppointment: (
+      botId: string,
+      saleId: string,
+      appointmentId: string,
+    ): Promise<Sale> =>
+      api.post<Sale>(`${base(botId)}/${saleId}/link-appointment`, {
+        appointmentId,
+      }),
+
+    unlinkAppointment: (botId: string, saleId: string): Promise<Sale> =>
+      api.delete<Sale>(`${base(botId)}/${saleId}/link-appointment`),
   }
 }

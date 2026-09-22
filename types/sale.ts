@@ -14,6 +14,13 @@ export type AttendanceSummary =
   | 'CANCELLED'
   | 'NO_MEETING'
 
+/**
+ * UI-side extension of AttendanceSummary. Not emitted by the backend directly:
+ * the API returns NO_MEETING with `unlinkedCandidatesCount >= 2`, and the
+ * badge widget maps that combination to 'AMBIGUOUS'.
+ */
+export type AttendanceBadgeState = AttendanceSummary | 'AMBIGUOUS'
+
 export type SaleAuditEventType =
   | 'CREATED'
   | 'MARKED_WON'
@@ -70,6 +77,7 @@ export interface Sale {
   appointment: SaleAppointmentRef | null
   statusChangedBy: SaleActorRef | null
   attendanceSummary: AttendanceSummary
+  unlinkedCandidatesCount?: number
   createdAt: string
   updatedAt: string
 }

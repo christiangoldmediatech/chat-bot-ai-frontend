@@ -751,9 +751,9 @@
         "detailsSubtitle": "Identity and base behavior — only visible inside the admin.",
         "nameLabel": "Name",
         "namePlaceholder": "e.g. Sales assistant",
-        "systemPromptLabel": "System prompt",
-        "systemPromptPlaceholder": "You are a friendly sales assistant for…",
-        "systemPromptHelp": "Base instructions the model will receive on every conversation.",
+        "systemPromptLabel": "Bot identity",
+        "systemPromptPlaceholder": "You are the assistant for Dr. X's practice. Our patients are… Our approach is…",
+        "systemPromptHelp": "Write ONLY the bot's IDENTITY: practice name, doctor name, specialty, tone, business-specific notes. The hard rules (no diagnosis, no invented prices, WhatsApp format, clinical limits, source hierarchy) are already loaded by the platform — don't rewrite them. If your text contradicts the platform's rules, the platform's rules win.",
         "activateLabel": "Activate bot on creation",
         "waConnectionTitle": "WhatsApp Business connection",
         "waConnectionSubtitleBefore": "Copy these from ",
@@ -1569,6 +1569,7 @@
       "emptyDescription": "When you mark a sale as closed here or from the conversation, it will show up in this list.",
       "markSold": "Mark sold",
       "markLost": "Mark lost",
+      "unmarkWon": "Undo WON",
       "paginationCount": "Total: {total}",
       "markSoldTitle": "Mark as sold",
       "markSoldSubmit": "Register sale",
@@ -1611,7 +1612,30 @@
         "scheduledAt": "Scheduled {when}",
         "noShow": "No show",
         "cancelled": "Cancelled",
-        "noMeeting": "No appointment linked"
+        "noMeeting": "No appointment linked",
+        "ambiguous": "Multiple possible appointments"
+      },
+      "linkAppointment": {
+        "action": "Link appointment",
+        "actionCompact": "Link",
+        "unlinkAction": "Unlink appointment",
+        "title": "Link appointment to this sale",
+        "subtitle": "Pick the appointment that matches this sale.",
+        "empty": "This customer has no appointments yet.",
+        "loading": "Loading customer appointments…",
+        "select": "Link",
+        "cancel": "Cancel",
+        "confirmUnlink": "Unlink the current appointment?",
+        "successLinked": "Appointment linked",
+        "successUnlinked": "Appointment unlinked",
+        "error": "Could not link the appointment",
+        "statusLabel": {
+          "CREATED": "Scheduled",
+          "COMPLETED": "Attended",
+          "NO_SHOW": "No show",
+          "CANCELLED": "Cancelled",
+          "RESCHEDULED": "Rescheduled"
+        }
       },
       "field": {
         "service": "Service",
