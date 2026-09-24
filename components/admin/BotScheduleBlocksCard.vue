@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
-import type {
-  AffectedMeeting,
-  CreateScheduleBlockPayload,
-  ScheduleBlock,
-} from '~/types/schedule'
+import type { ScheduleBlock } from '~/types/schedule'
 import {
   addDaysToDayKey,
   getBrowserTimezone,
@@ -24,8 +20,6 @@ const blocks = useScheduleBlocks(props.tenantId)
 
 const businessTz = computed(() => props.timezone ?? getBrowserTimezone())
 
-type BlockType = 'FULL_DAY' | 'DATE_RANGE' | 'HOURS'
-
 const items = ref<ScheduleBlock[]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
@@ -34,21 +28,7 @@ const tab = ref<'active' | 'past'>('active')
 
 const modalOpen = ref(false)
 const modalMode = ref<'create' | 'edit'>('create')
-const modalError = ref<string | null>(null)
-const modalSaving = ref(false)
-const editingId = ref<string | null>(null)
-
-const form = reactive({
-  type: 'FULL_DAY' as BlockType,
-  singleDate: '',
-  startDate: '',
-  endDate: '',
-  startDateTime: '',
-  endDateTime: '',
-  reason: '',
-  publicMessage: '',
-})
-const affectedPreview = ref<AffectedMeeting[]>([])
+const editing = ref<ScheduleBlock | null>(null)
 
 const confirmDelete = ref<ScheduleBlock | null>(null)
 const deleting = ref(false)
@@ -94,14 +74,6 @@ function formatDayKey(dayKey: string): string {
   }).format(date)
 }
 
-function formatMeetingWhen(m: AffectedMeeting): string {
-  const start = new Date(m.startTime)
-  return new Intl.DateTimeFormat(locale.value, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(start)
-}
-
 async function load(): Promise<void> {
   loading.value = true
   error.value = null
@@ -114,158 +86,37 @@ async function load(): Promise<void> {
   }
 }
 
-function resetForm(): void {
-  form.type = 'FULL_DAY'
-  form.singleDate = ''
-  form.startDate = ''
-  form.endDate = ''
-  form.startDateTime = ''
-  form.endDateTime = ''
-  form.reason = ''
-  form.publicMessage = ''
-  affectedPreview.value = []
-  modalError.value = null
-}
-
-type PresetKey = 'holiday' | 'vacation' | 'maintenance'
-const PRESET_KEYS: PresetKey[] = ['holiday', 'vacation', 'maintenance']
-
-function applyPreset(key: PresetKey): void {
-  form.reason = t(`admin.scheduleBlocks.presets.${key}Reason`)
-  form.publicMessage = t(`admin.scheduleBlocks.presets.${key}Message`)
-}
-
 function openCreate(): void {
-  resetForm()
   modalMode.value = 'create'
-  editingId.value = null
+  editing.value = null
   modalOpen.value = true
 }
 
 function openEdit(block: ScheduleBlock): void {
-  resetForm()
   modalMode.value = 'edit'
-  editingId.value = block.id
-  form.reason = block.reason
-  form.publicMessage = block.publicMessage ?? ''
-  const start = new Date(block.startsAt)
-  const end = new Date(block.endsAt)
-  if (block.allDay) {
-    const startDay = toWallDayKey(block.startsAt, businessTz.value)
-    const endDayExclusive = toWallDayKey(block.endsAt, businessTz.value)
-    const endDay = addDaysToDayKey(endDayExclusive, -1)
-    if (startDay === endDay) {
-      form.type = 'FULL_DAY'
-      form.singleDate = startDay
-    } else {
-      form.type = 'DATE_RANGE'
-      form.startDate = startDay
-      form.endDate = endDay
-    }
-  } else {
-    form.type = 'HOURS'
-    form.startDateTime = toLocalInput(start)
-    form.endDateTime = toLocalInput(end)
-  }
-  affectedPreview.value = block.affectedMeetings ?? []
+  editing.value = block
   modalOpen.value = true
 }
 
-function toLocalInput(d: Date): string {
-  const pad = (n: number): string => String(n).padStart(2, '0')
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
-}
-
-const allDayPreview = computed<{ count: number, label: string } | null>(() => {
-  if (form.type === 'FULL_DAY') {
-    if (!form.singleDate) return null
-    return { count: 1, label: formatDayKey(form.singleDate) }
-  }
-  if (form.type === 'DATE_RANGE') {
-    if (!form.startDate || !form.endDate) return null
-    if (form.endDate < form.startDate) return null
-    const days: string[] = []
-    let cursor = form.startDate
-    while (cursor <= form.endDate && days.length < 62) {
-      days.push(cursor)
-      cursor = addDaysToDayKey(cursor, 1)
-    }
-    return { count: days.length, label: days.map(formatDayKey).join(', ') }
-  }
-  return null
-})
-
-function buildPayload(): { payload: CreateScheduleBlockPayload, valid: boolean, errorMsg?: string } {
-  const reason = form.reason.trim()
-  if (reason.length === 0) {
-    return { payload: {} as CreateScheduleBlockPayload, valid: false, errorMsg: t('admin.scheduleBlocks.errors.reasonRequired') }
-  }
-  const publicMessage = form.publicMessage.trim() === '' ? null : form.publicMessage.trim()
-  let startsAt = ''
-  let endsAt = ''
-  let allDay = false
-  if (form.type === 'FULL_DAY') {
-    if (!form.singleDate) return { payload: {} as CreateScheduleBlockPayload, valid: false, errorMsg: t('admin.scheduleBlocks.errors.dateRequired') }
-    const s = new Date(`${form.singleDate}T00:00:00`)
-    const e = new Date(`${form.singleDate}T00:00:00`)
-    e.setDate(e.getDate() + 1)
-    startsAt = s.toISOString()
-    endsAt = e.toISOString()
-    allDay = true
-  } else if (form.type === 'DATE_RANGE') {
-    if (!form.startDate || !form.endDate) return { payload: {} as CreateScheduleBlockPayload, valid: false, errorMsg: t('admin.scheduleBlocks.errors.rangeRequired') }
-    const s = new Date(`${form.startDate}T00:00:00`)
-    const e = new Date(`${form.endDate}T00:00:00`)
-    e.setDate(e.getDate() + 1)
-    if (e <= s) return { payload: {} as CreateScheduleBlockPayload, valid: false, errorMsg: t('admin.scheduleBlocks.errors.endBeforeStart') }
-    startsAt = s.toISOString()
-    endsAt = e.toISOString()
-    allDay = true
+function onSaved(result: ScheduleBlock): void {
+  if (modalMode.value === 'create') {
+    items.value = [...items.value.filter(b => b.id !== result.id), result].sort(
+      (a, b) => a.startsAt.localeCompare(b.startsAt),
+    )
+    success.value = t('admin.scheduleBlocks.savedCreate')
   } else {
-    if (!form.startDateTime || !form.endDateTime) return { payload: {} as CreateScheduleBlockPayload, valid: false, errorMsg: t('admin.scheduleBlocks.errors.rangeRequired') }
-    const s = new Date(form.startDateTime)
-    const e = new Date(form.endDateTime)
-    if (e <= s) return { payload: {} as CreateScheduleBlockPayload, valid: false, errorMsg: t('admin.scheduleBlocks.errors.endBeforeStart') }
-    startsAt = s.toISOString()
-    endsAt = e.toISOString()
-    allDay = false
+    items.value = items.value.map(b => (b.id === result.id ? result : b))
+    success.value = t('admin.scheduleBlocks.savedUpdate')
   }
-  return {
-    payload: { startsAt, endsAt, allDay, reason, publicMessage },
-    valid: true,
-  }
+  emit('changed')
+  void load()
 }
 
-async function onSave(): Promise<void> {
-  modalError.value = null
-  const built = buildPayload()
-  if (!built.valid) {
-    modalError.value = built.errorMsg ?? ''
-    return
-  }
-  modalSaving.value = true
-  try {
-    if (modalMode.value === 'create') {
-      const created = await blocks.create(props.botId, built.payload)
-      affectedPreview.value = created.affectedMeetings ?? []
-      items.value = [...items.value, created].sort((a, b) => a.startsAt.localeCompare(b.startsAt))
-      success.value = t('admin.scheduleBlocks.savedCreate')
-    } else if (editingId.value) {
-      const updated = await blocks.update(props.botId, editingId.value, built.payload)
-      affectedPreview.value = updated.affectedMeetings ?? []
-      items.value = items.value.map(b => (b.id === updated.id ? updated : b))
-      success.value = t('admin.scheduleBlocks.savedUpdate')
-    }
-    emit('changed')
-    void load()
-    if ((affectedPreview.value?.length ?? 0) === 0) {
-      modalOpen.value = false
-    }
-  } catch (err) {
-    modalError.value = (err as ApiError).message
-  } finally {
-    modalSaving.value = false
-  }
+function onDeletedFromModal(id: string): void {
+  items.value = items.value.filter(b => b.id !== id)
+  success.value = t('admin.scheduleBlocks.savedDelete')
+  emit('changed')
+  void load()
 }
 
 function askDelete(block: ScheduleBlock): void {
@@ -360,113 +211,17 @@ watch(() => props.botId, () => { void load() })
       </li>
     </ul>
 
-    <Modal :open="modalOpen" :title="modalMode === 'create' ? t('admin.scheduleBlocks.modalTitleCreate') : t('admin.scheduleBlocks.modalTitleEdit')" size="lg" @close="modalOpen = false">
-      <div class="space-y-4">
-        <div>
-          <label class="block text-xs font-medium text-slate-700 mb-1">{{ $t('admin.scheduleBlocks.typeLabel') }}</label>
-          <div class="flex flex-wrap gap-2">
-            <button type="button" class="rounded-full px-3 py-1 text-xs font-medium ring-1 transition"
-                    :class="form.type === 'FULL_DAY' ? 'bg-primary-600 text-white ring-primary-600' : 'bg-white/80 text-slate-600 ring-slate-200 hover:ring-slate-300'"
-                    @click="form.type = 'FULL_DAY'">
-              {{ $t('admin.scheduleBlocks.type.fullDay') }}
-            </button>
-            <button type="button" class="rounded-full px-3 py-1 text-xs font-medium ring-1 transition"
-                    :class="form.type === 'DATE_RANGE' ? 'bg-primary-600 text-white ring-primary-600' : 'bg-white/80 text-slate-600 ring-slate-200 hover:ring-slate-300'"
-                    @click="form.type = 'DATE_RANGE'">
-              {{ $t('admin.scheduleBlocks.type.dateRange') }}
-            </button>
-            <button type="button" class="rounded-full px-3 py-1 text-xs font-medium ring-1 transition"
-                    :class="form.type === 'HOURS' ? 'bg-primary-600 text-white ring-primary-600' : 'bg-white/80 text-slate-600 ring-slate-200 hover:ring-slate-300'"
-                    @click="form.type = 'HOURS'">
-              {{ $t('admin.scheduleBlocks.type.hours') }}
-            </button>
-          </div>
-        </div>
-
-        <div v-if="form.type === 'FULL_DAY'">
-          <label class="block text-xs font-medium text-slate-700">{{ $t('admin.scheduleBlocks.dateLabel') }}</label>
-          <input v-model="form.singleDate" type="date" class="mt-1 w-full rounded-lg border border-slate-200 bg-white/90 px-3 py-2 text-sm text-slate-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500">
-        </div>
-
-        <div v-else-if="form.type === 'DATE_RANGE'" class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-slate-700">{{ $t('admin.scheduleBlocks.fromDate') }}</label>
-            <input v-model="form.startDate" type="date" class="mt-1 w-full rounded-lg border border-slate-200 bg-white/90 px-3 py-2 text-sm text-slate-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500">
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-slate-700">{{ $t('admin.scheduleBlocks.toDate') }}</label>
-            <input v-model="form.endDate" type="date" class="mt-1 w-full rounded-lg border border-slate-200 bg-white/90 px-3 py-2 text-sm text-slate-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500">
-          </div>
-        </div>
-
-        <div v-else class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-slate-700">{{ $t('admin.scheduleBlocks.fromDateTime') }}</label>
-            <input v-model="form.startDateTime" type="datetime-local" step="900" class="mt-1 w-full rounded-lg border border-slate-200 bg-white/90 px-3 py-2 text-sm text-slate-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500">
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-slate-700">{{ $t('admin.scheduleBlocks.toDateTime') }}</label>
-            <input v-model="form.endDateTime" type="datetime-local" step="900" class="mt-1 w-full rounded-lg border border-slate-200 bg-white/90 px-3 py-2 text-sm text-slate-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500">
-          </div>
-        </div>
-
-        <p
-          v-if="allDayPreview"
-          class="rounded-lg border border-primary-200 bg-primary-50/70 px-3 py-2 text-xs text-primary-800"
-        >
-          {{ $t('admin.scheduleBlocks.willBlockDays', { count: allDayPreview.count, days: allDayPreview.label }) }}
-        </p>
-
-        <div>
-          <span class="block text-xs font-medium text-slate-700 mb-1">{{ $t('admin.scheduleBlocks.presetsLabel') }}</span>
-          <div class="flex flex-wrap gap-2">
-            <button v-for="key in PRESET_KEYS" :key="key" type="button"
-                    class="rounded-full px-3 py-1 text-xs font-medium ring-1 ring-primary-200 bg-primary-50/60 text-primary-800 hover:bg-primary-100/70 transition"
-                    @click="applyPreset(key)">
-              {{ $t(`admin.scheduleBlocks.presets.${key}`) }}
-            </button>
-          </div>
-        </div>
-
-        <div class="rounded-xl border border-primary-200 bg-primary-50/50 p-3">
-          <label class="block text-sm font-semibold text-slate-900">{{ $t('admin.scheduleBlocks.publicMessageInputLabel') }}</label>
-          <p class="mt-0.5 text-[11px] text-slate-600">{{ $t('admin.scheduleBlocks.publicMessageHelp') }}</p>
-          <textarea v-model="form.publicMessage" rows="2" maxlength="500" :placeholder="$t('admin.scheduleBlocks.publicMessagePlaceholder')" class="mt-2 w-full rounded-lg border border-primary-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500" />
-        </div>
-
-        <div>
-          <label class="block text-xs font-medium text-slate-700">{{ $t('admin.scheduleBlocks.reasonLabel') }}</label>
-          <input v-model="form.reason" type="text" maxlength="500" :placeholder="$t('admin.scheduleBlocks.reasonPlaceholder')" class="mt-1 w-full rounded-lg border border-slate-200 bg-white/90 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500">
-          <p class="mt-1 text-[11px] text-slate-500">{{ $t('admin.scheduleBlocks.reasonHelp') }}</p>
-        </div>
-
-        <div v-if="affectedPreview.length > 0" class="rounded-xl border border-amber-200 bg-amber-50/80 p-3 text-sm text-amber-900">
-          <p class="font-medium">{{ $t('admin.scheduleBlocks.affectedTitle', { n: affectedPreview.length }) }}</p>
-          <p class="mt-1 text-xs">{{ $t('admin.scheduleBlocks.affectedWarning') }}</p>
-          <ul class="mt-2 space-y-1 text-xs">
-            <li v-for="m in affectedPreview" :key="m.id" class="flex flex-wrap items-center gap-2">
-              <span class="font-medium">{{ formatMeetingWhen(m) }}</span>
-              <span class="text-amber-700">·</span>
-              <span>{{ m.attendeeName ?? m.attendeeEmail }}</span>
-              <span v-if="m.topic" class="text-amber-700">— {{ m.topic }}</span>
-            </li>
-          </ul>
-        </div>
-
-        <p v-if="modalError" class="rounded-lg border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">{{ modalError }}</p>
-      </div>
-
-      <template #footer>
-        <div class="flex items-center justify-end gap-2">
-          <button type="button" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition" @click="modalOpen = false">
-            {{ $t('common.close') }}
-          </button>
-          <button type="button" :disabled="modalSaving" class="rounded-xl bg-slate-900 px-5 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 shadow-glass transition" @click="onSave">
-            {{ modalSaving ? $t('common.saving') : $t('admin.scheduleBlocks.saveBlock') }}
-          </button>
-        </div>
-      </template>
-    </Modal>
+    <ScheduleBlockModal
+      :open="modalOpen"
+      :bot-id="botId"
+      :tenant-id="tenantId"
+      :timezone="timezone"
+      :mode="modalMode"
+      :initial="editing"
+      @close="modalOpen = false"
+      @saved="onSaved"
+      @deleted="onDeletedFromModal"
+    />
 
     <ConfirmDialog
       :open="confirmDelete !== null"

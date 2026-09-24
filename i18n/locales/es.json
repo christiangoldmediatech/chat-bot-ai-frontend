@@ -1401,6 +1401,8 @@
       "viewDay": "Día",
       "today": "Hoy",
       "closed": "Cerrado",
+      "newBlock": "Nuevo bloqueo",
+      "editBlockHint": "Click para editar este bloqueo",
       "empty": "Sin citas ni bloqueos en este rango.",
       "filters": {
         "hideCancelled": "Ocultar canceladas",
@@ -1515,6 +1517,7 @@
       "affectedTitle": "{n} cita(s) agendada(s) caen dentro de este bloqueo",
       "affectedWarning": "Estas citas NO se cancelan automáticamente. Revísalas y decide qué hacer.",
       "saveBlock": "Guardar bloqueo",
+      "deleteBlock": "Eliminar bloqueo",
       "willBlockDays": "Se bloquearán {count} día(s) completo(s): {days}",
       "savedCreate": "Bloqueo creado.",
       "savedUpdate": "Bloqueo actualizado.",
