@@ -8,6 +8,8 @@ export interface TestBenchIntent {
   type: 'text' | 'image' | 'document' | 'video' | 'audio' | 'location'
   message?: string
   resourceKey?: string
+  /** MediaAsset.id set by the enricher for service images. */
+  assetId?: string
   caption?: string
   latitude?: number
   longitude?: number

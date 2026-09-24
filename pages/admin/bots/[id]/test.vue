@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
 import type {
+  TestBenchIntent,
   TestBenchResponse,
   TestBenchTurn,
 } from '~/composables/useTestBench'
@@ -12,17 +13,55 @@ definePageMeta({
 
 const route = useRoute()
 const bench = useTestBench()
+const mediaAssets = useMediaAssets()
 const botId = route.params.id as string
 
 // Historial local — solo vive en memoria mientras el admin está en la
 // página. Cada turno se envía completo al backend porque el backend NO
 // persiste NADA de esta ruta (por diseño — es un banco en seco).
-const history = ref<TestBenchTurn[]>([])
+// Cada turno del asistente puede incluir intents image ya resueltas contra
+// el catálogo real del bot; guardamos su URL firmada para renderizar la
+// miniatura tal cual la vería el cliente en WhatsApp.
+interface AssistantAttachment {
+  type: 'image'
+  url: string
+  caption?: string
+  resourceKey?: string
+}
+interface RichTurn extends TestBenchTurn {
+  attachments?: AssistantAttachment[]
+}
+const history = ref<RichTurn[]>([])
 const draft = ref('')
 const loading = ref(false)
 const error = ref<string | null>(null)
 const lastResponse = ref<TestBenchResponse | null>(null)
 const showPromptPreview = ref(false)
+
+async function resolveImageAttachments(
+  intents: TestBenchIntent[],
+): Promise<AssistantAttachment[]> {
+  const out: AssistantAttachment[] = []
+  for (const i of intents) {
+    if (i.type !== 'image') continue
+    if (!i.assetId) continue
+    try {
+      const { url } = await mediaAssets.getDownloadUrl(botId, i.assetId)
+      if (url) {
+        out.push({
+          type: 'image',
+          url,
+          caption: i.caption,
+          resourceKey: i.resourceKey,
+        })
+      }
+    } catch {
+      // La imagen no se pudo resolver — no rompe la respuesta; sigue
+      // apareciendo como tag en el panel de debug de abajo.
+    }
+  }
+  return out
+}
 
 async function send(): Promise<void> {
   const text = draft.value.trim()
@@ -30,7 +69,7 @@ async function send(): Promise<void> {
   loading.value = true
   error.value = null
   try {
-    const priorHistory = [...history.value]
+    const priorHistory = history.value.map((t) => ({ role: t.role, content: t.content }))
     history.value.push({ role: 'USER', content: text })
     draft.value = ''
     const res = await bench.run(botId, text, priorHistory)
@@ -41,8 +80,13 @@ async function send(): Promise<void> {
       .filter((i) => i.type === 'text' && i.message)
       .map((i) => i.message)
       .join('\n')
-    if (assistantReply) {
-      history.value.push({ role: 'ASSISTANT', content: assistantReply })
+    const attachments = await resolveImageAttachments(res.intents)
+    if (assistantReply || attachments.length > 0) {
+      history.value.push({
+        role: 'ASSISTANT',
+        content: assistantReply,
+        attachments: attachments.length > 0 ? attachments : undefined,
+      })
     }
   } catch (err) {
     error.value = (err as ApiError).message
@@ -107,11 +151,28 @@ function onKey(ev: KeyboardEvent): void {
         class="flex"
         :class="turn.role === 'USER' ? 'justify-end' : 'justify-start'"
       >
-        <div
-          class="max-w-[75%] rounded-lg px-3 py-2 text-sm whitespace-pre-wrap"
-          :class="turn.role === 'USER' ? 'bg-slate-900 text-slate-50' : 'bg-slate-100 text-slate-900'"
-        >
-          {{ turn.content }}
+        <div class="max-w-[75%] space-y-2">
+          <div
+            v-if="turn.content"
+            class="rounded-lg px-3 py-2 text-sm whitespace-pre-wrap"
+            :class="turn.role === 'USER' ? 'bg-slate-900 text-slate-50' : 'bg-slate-100 text-slate-900'"
+          >
+            {{ turn.content }}
+          </div>
+          <div
+            v-for="(att, k) in (turn.attachments ?? [])"
+            :key="k"
+            class="rounded-lg overflow-hidden bg-slate-100 border border-slate-200"
+          >
+            <img
+              :src="att.url"
+              :alt="att.resourceKey ?? 'imagen'"
+              class="block max-w-full h-auto"
+            >
+            <div v-if="att.caption" class="px-3 py-1.5 text-xs text-slate-700">
+              {{ att.caption }}
+            </div>
+          </div>
         </div>
       </div>
       <div v-if="loading" class="text-xs text-slate-500 italic">

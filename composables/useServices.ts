@@ -32,5 +32,7 @@ export function useServices(tenantId?: string) {
       fd.append('file', file)
       return api.post<Service>(`${base(botId)}/${id}/image`, fd)
     },
+    deleteImage: (botId: string, id: string): Promise<Service> =>
+      api.delete<Service>(`${base(botId)}/${id}/image`),
   }
 }

@@ -127,6 +127,14 @@ function resetForm(): void {
   modalError.value = null
 }
 
+type PresetKey = 'holiday' | 'vacation' | 'maintenance'
+const PRESET_KEYS: PresetKey[] = ['holiday', 'vacation', 'maintenance']
+
+function applyPreset(key: PresetKey): void {
+  form.reason = t(`admin.scheduleBlocks.presets.${key}Reason`)
+  form.publicMessage = t(`admin.scheduleBlocks.presets.${key}Message`)
+}
+
 function openCreate(): void {
   resetForm()
   modalMode.value = 'create'
@@ -410,15 +418,26 @@ watch(() => props.botId, () => { void load() })
         </p>
 
         <div>
-          <label class="block text-xs font-medium text-slate-700">{{ $t('admin.scheduleBlocks.reasonLabel') }}</label>
-          <input v-model="form.reason" type="text" maxlength="500" :placeholder="$t('admin.scheduleBlocks.reasonPlaceholder')" class="mt-1 w-full rounded-lg border border-slate-200 bg-white/90 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500">
-          <p class="mt-1 text-[11px] text-slate-500">{{ $t('admin.scheduleBlocks.reasonHelp') }}</p>
+          <span class="block text-xs font-medium text-slate-700 mb-1">{{ $t('admin.scheduleBlocks.presetsLabel') }}</span>
+          <div class="flex flex-wrap gap-2">
+            <button v-for="key in PRESET_KEYS" :key="key" type="button"
+                    class="rounded-full px-3 py-1 text-xs font-medium ring-1 ring-primary-200 bg-primary-50/60 text-primary-800 hover:bg-primary-100/70 transition"
+                    @click="applyPreset(key)">
+              {{ $t(`admin.scheduleBlocks.presets.${key}`) }}
+            </button>
+          </div>
+        </div>
+
+        <div class="rounded-xl border border-primary-200 bg-primary-50/50 p-3">
+          <label class="block text-sm font-semibold text-slate-900">{{ $t('admin.scheduleBlocks.publicMessageInputLabel') }}</label>
+          <p class="mt-0.5 text-[11px] text-slate-600">{{ $t('admin.scheduleBlocks.publicMessageHelp') }}</p>
+          <textarea v-model="form.publicMessage" rows="2" maxlength="500" :placeholder="$t('admin.scheduleBlocks.publicMessagePlaceholder')" class="mt-2 w-full rounded-lg border border-primary-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500" />
         </div>
 
         <div>
-          <label class="block text-xs font-medium text-slate-700">{{ $t('admin.scheduleBlocks.publicMessageInputLabel') }}</label>
-          <textarea v-model="form.publicMessage" rows="2" maxlength="500" :placeholder="$t('admin.scheduleBlocks.publicMessagePlaceholder')" class="mt-1 w-full rounded-lg border border-slate-200 bg-white/90 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500" />
-          <p class="mt-1 text-[11px] text-slate-500">{{ $t('admin.scheduleBlocks.publicMessageHelp') }}</p>
+          <label class="block text-xs font-medium text-slate-700">{{ $t('admin.scheduleBlocks.reasonLabel') }}</label>
+          <input v-model="form.reason" type="text" maxlength="500" :placeholder="$t('admin.scheduleBlocks.reasonPlaceholder')" class="mt-1 w-full rounded-lg border border-slate-200 bg-white/90 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500">
+          <p class="mt-1 text-[11px] text-slate-500">{{ $t('admin.scheduleBlocks.reasonHelp') }}</p>
         </div>
 
         <div v-if="affectedPreview.length > 0" class="rounded-xl border border-amber-200 bg-amber-50/80 p-3 text-sm text-amber-900">

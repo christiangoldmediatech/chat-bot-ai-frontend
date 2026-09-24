@@ -19,6 +19,8 @@ const uploading = ref(false)
 const error = ref<string | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
 const confirmingDelete = ref(false)
+const confirmingImageDelete = ref(false)
+const deletingImage = ref(false)
 
 const mediaAssets = useMediaAssets(tenantId)
 
@@ -89,6 +91,21 @@ async function onDelete(): Promise<void> {
   }
 }
 
+async function onDeleteImage(): Promise<void> {
+  if (!service.value) return
+  deletingImage.value = true
+  error.value = null
+  try {
+    service.value = await services.deleteImage(botId, service.value.id)
+    await refreshImagePreview()
+    confirmingImageDelete.value = false
+  } catch (err) {
+    error.value = (err as ApiError).message
+  } finally {
+    deletingImage.value = false
+  }
+}
+
 await load()
 </script>
 
@@ -145,6 +162,15 @@ await load()
             <span v-if="service.mediaAssetId" class="text-[10px] text-emerald-700">
               ✓ {{ $t('admin.services.willBeSent') }}
             </span>
+            <button
+              v-if="service.mediaAssetId"
+              type="button"
+              class="mt-1 self-start text-[11px] font-medium text-danger-600 hover:text-danger-800 disabled:opacity-50"
+              :disabled="deletingImage || uploading"
+              @click="confirmingImageDelete = true"
+            >
+              {{ $t('admin.services.deleteImage') }}
+            </button>
           </div>
         </div>
       </div>
@@ -152,6 +178,16 @@ await load()
       <div class="mt-6 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-xl p-5">
         <ServiceForm :initial="service" :saving="saving" @submit="onSubmit" />
       </div>
+
+      <ConfirmDialog
+        :open="confirmingImageDelete"
+        :title="$t('admin.services.deleteImageTitle')"
+        :message="$t('admin.services.deleteImageDescription')"
+        :confirm-label="$t('admin.services.deleteImage')"
+        tone="danger"
+        @cancel="confirmingImageDelete = false"
+        @confirm="onDeleteImage"
+      />
 
       <ConfirmDialog
         :open="confirmingDelete"
