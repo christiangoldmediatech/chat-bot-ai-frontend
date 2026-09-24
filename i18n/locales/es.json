@@ -2221,6 +2221,23 @@
     }
   },
   "superadmin": {
+    "testBench": {
+      "title": "Banco de pruebas",
+      "subtitle": "Conversa con este bot usando su configuración real (prompt, catálogo, documentos, tools). No se envía nada por WhatsApp, no se crean citas ni ventas — es una simulación.",
+      "reset": "Reiniciar",
+      "warning": "Modo prueba — los efectos de las tools están simulados con datos ficticios. Este historial se pierde al salir de la página.",
+      "processing": "El bot está procesando…",
+      "placeholder": "Escribe como si fueras un cliente…",
+      "send": "Enviar",
+      "keyHint": "Enter para enviar, Shift+Enter para nueva línea.",
+      "intentsSent": "Intents enviados ({n})",
+      "toolsInvoked": "Tools invocadas ({n})",
+      "docsConsulted": "Documentos consultados ({n})",
+      "detail": "detalle",
+      "noBody": "(sin cuerpo)",
+      "showPrompt": "Ver preview del system prompt (primeros 4000 caracteres)",
+      "hidePrompt": "Ocultar preview del system prompt"
+    },
     "leads": {
       "kicker": "Leads",
       "title": "Todos los leads",
