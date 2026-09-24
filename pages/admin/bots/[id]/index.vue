@@ -158,13 +158,6 @@ await load()
             {{ $t('admin.calendarView.title') }}
           </NuxtLink>
           <NuxtLink
-            :to="`/admin/bots/${bot.id}/test`"
-            class="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-800 hover:bg-emerald-100 transition inline-flex items-center gap-1.5"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true"><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            Banco de pruebas
-          </NuxtLink>
-          <NuxtLink
             :to="`/admin/bots/${bot.id}/edit`"
             class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white transition"
           >

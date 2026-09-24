@@ -7,21 +7,19 @@ import type {
 } from '~/composables/useTestBench'
 
 definePageMeta({
-  layout: 'admin',
-  middleware: 'auth',
+  layout: 'superadmin',
+  middleware: 'superadmin-auth',
 })
 
 const route = useRoute()
-const bench = useTestBench()
-const mediaAssets = useMediaAssets()
-const botId = route.params.id as string
+const tenantId = String(route.params.id)
+const botId = String(route.params.botId)
+const bench = useTestBench(tenantId)
+const mediaAssets = useMediaAssets(tenantId)
 
-// Historial local — solo vive en memoria mientras el admin está en la
-// página. Cada turno se envía completo al backend porque el backend NO
+// Historial local — solo vive en memoria mientras el super admin está en
+// la página. Cada turno se envía completo al backend porque el backend NO
 // persiste NADA de esta ruta (por diseño — es un banco en seco).
-// Cada turno del asistente puede incluir intents image ya resueltas contra
-// el catálogo real del bot; guardamos su URL firmada para renderizar la
-// miniatura tal cual la vería el cliente en WhatsApp.
 interface AssistantAttachment {
   type: 'image'
   url: string
@@ -74,8 +72,6 @@ async function send(): Promise<void> {
     draft.value = ''
     const res = await bench.run(botId, text, priorHistory)
     lastResponse.value = res
-    // Concatenar las intents de tipo text como una sola respuesta del
-    // assistant en el historial local (para mantener el flujo).
     const assistantReply = res.intents
       .filter((i) => i.type === 'text' && i.message)
       .map((i) => i.message)
@@ -90,8 +86,6 @@ async function send(): Promise<void> {
     }
   } catch (err) {
     error.value = (err as ApiError).message
-    // Revertir el turno de usuario si el request falló para que pueda
-    // reintentar sin dejar historial huérfano.
     if (history.value[history.value.length - 1]?.role === 'USER') {
       history.value.pop()
     }
@@ -121,12 +115,10 @@ function onKey(ev: KeyboardEvent): void {
       <div class="flex items-center justify-between gap-4">
         <div>
           <h1 class="text-lg font-semibold text-slate-900">
-            Banco de pruebas en seco
+            {{ $t('superadmin.testBench.title') }}
           </h1>
           <p class="text-sm text-slate-500 mt-1">
-            Conversa con este bot usando su configuración real (prompt,
-            catálogo, documentos, tools). No se envía nada por WhatsApp, no se
-            crean citas ni ventas — es una simulación.
+            {{ $t('superadmin.testBench.subtitle') }}
           </p>
         </div>
         <button
@@ -134,16 +126,14 @@ function onKey(ev: KeyboardEvent): void {
           class="text-xs text-slate-500 hover:text-slate-700"
           @click="reset"
         >
-          Reiniciar
+          {{ $t('superadmin.testBench.reset') }}
         </button>
       </div>
       <div class="mt-3 rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-800 border border-amber-200">
-        Modo prueba — los efectos de las tools están simulados con datos
-        ficticios. Este historial se pierde al salir de la página.
+        {{ $t('superadmin.testBench.warning') }}
       </div>
     </header>
 
-    <!-- Historial de mensajes -->
     <section class="mb-4 space-y-3 min-h-[240px]">
       <div
         v-for="(turn, i) in history"
@@ -176,20 +166,19 @@ function onKey(ev: KeyboardEvent): void {
         </div>
       </div>
       <div v-if="loading" class="text-xs text-slate-500 italic">
-        El bot está procesando…
+        {{ $t('superadmin.testBench.processing') }}
       </div>
       <div v-if="error" class="rounded-md bg-rose-50 px-3 py-2 text-sm text-rose-700">
         {{ error }}
       </div>
     </section>
 
-    <!-- Input -->
     <section class="mb-6">
       <div class="flex gap-2">
         <textarea
           v-model="draft"
           rows="2"
-          placeholder="Escribe como si fueras un paciente…"
+          :placeholder="$t('superadmin.testBench.placeholder')"
           class="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
           @keydown="onKey"
         />
@@ -199,19 +188,18 @@ function onKey(ev: KeyboardEvent): void {
           :disabled="loading || !draft.trim()"
           @click="send"
         >
-          Enviar
+          {{ $t('superadmin.testBench.send') }}
         </button>
       </div>
       <p class="mt-1 text-xs text-slate-500">
-        Enter para enviar, Shift+Enter para nueva línea.
+        {{ $t('superadmin.testBench.keyHint') }}
       </p>
     </section>
 
-    <!-- Debug de la última respuesta -->
     <section v-if="lastResponse" class="space-y-4">
       <div class="rounded-lg border border-slate-200 bg-white p-4">
         <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">
-          Intents enviados ({{ lastResponse.intents.length }})
+          {{ $t('superadmin.testBench.intentsSent', { n: lastResponse.intents.length }) }}
         </h3>
         <ul class="space-y-1 text-sm text-slate-700">
           <li
@@ -223,7 +211,7 @@ function onKey(ev: KeyboardEvent): void {
               {{ intent.type }}
             </span>
             <span class="whitespace-pre-wrap flex-1">{{
-              intent.message ?? intent.caption ?? intent.resourceKey ?? '(sin cuerpo)'
+              intent.message ?? intent.caption ?? intent.resourceKey ?? $t('superadmin.testBench.noBody')
             }}</span>
           </li>
         </ul>
@@ -234,7 +222,7 @@ function onKey(ev: KeyboardEvent): void {
         class="rounded-lg border border-slate-200 bg-white p-4"
       >
         <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">
-          Tools invocadas ({{ lastResponse.toolCalls.length }})
+          {{ $t('superadmin.testBench.toolsInvoked', { n: lastResponse.toolCalls.length }) }}
         </h3>
         <ul class="space-y-2 text-sm text-slate-700">
           <li
@@ -244,7 +232,7 @@ function onKey(ev: KeyboardEvent): void {
           >
             <div class="font-mono text-xs text-slate-900">{{ call.name }}</div>
             <details class="text-xs text-slate-500 mt-1">
-              <summary class="cursor-pointer hover:text-slate-700">detalle</summary>
+              <summary class="cursor-pointer hover:text-slate-700">{{ $t('superadmin.testBench.detail') }}</summary>
               <pre class="mt-1 whitespace-pre-wrap break-all bg-slate-50 p-2 rounded text-[11px]">input: {{ JSON.stringify(call.input, null, 2) }}
 result: {{ JSON.stringify(call.result, null, 2) }}</pre>
             </details>
@@ -257,7 +245,7 @@ result: {{ JSON.stringify(call.result, null, 2) }}</pre>
         class="rounded-lg border border-slate-200 bg-white p-4"
       >
         <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">
-          Documentos consultados ({{ lastResponse.ragChunks.length }})
+          {{ $t('superadmin.testBench.docsConsulted', { n: lastResponse.ragChunks.length }) }}
         </h3>
         <ul class="space-y-1 text-sm text-slate-700">
           <li
@@ -277,7 +265,7 @@ result: {{ JSON.stringify(call.result, null, 2) }}</pre>
           class="text-xs text-slate-500 hover:text-slate-700"
           @click="showPromptPreview = !showPromptPreview"
         >
-          {{ showPromptPreview ? 'Ocultar' : 'Ver' }} preview del system prompt (primeros 4000 caracteres)
+          {{ showPromptPreview ? $t('superadmin.testBench.hidePrompt') : $t('superadmin.testBench.showPrompt') }}
         </button>
         <pre
           v-if="showPromptPreview"

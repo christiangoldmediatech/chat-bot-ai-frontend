@@ -2221,6 +2221,23 @@
     }
   },
   "superadmin": {
+    "testBench": {
+      "title": "Test bench",
+      "subtitle": "Chat with this bot using its real configuration (prompt, catalog, documents, tools). Nothing is sent over WhatsApp, no meetings or sales are created — it's a dry run.",
+      "reset": "Reset",
+      "warning": "Test mode — tool side-effects are simulated with fake data. This transcript is lost when you leave the page.",
+      "processing": "The bot is processing…",
+      "placeholder": "Type as if you were a customer…",
+      "send": "Send",
+      "keyHint": "Enter to send, Shift+Enter for a new line.",
+      "intentsSent": "Intents sent ({n})",
+      "toolsInvoked": "Tools invoked ({n})",
+      "docsConsulted": "Documents consulted ({n})",
+      "detail": "detail",
+      "noBody": "(no body)",
+      "showPrompt": "Show system prompt preview (first 4000 chars)",
+      "hidePrompt": "Hide system prompt preview"
+    },
     "leads": {
       "kicker": "Leads",
       "title": "All leads",

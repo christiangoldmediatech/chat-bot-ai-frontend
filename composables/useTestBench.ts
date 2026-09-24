@@ -36,9 +36,14 @@ export interface TestBenchTurn {
 /**
  * Cliente del banco de pruebas en seco. Corre turnos contra `runTestTurn`
  * del backend — sin persistencia, sin WhatsApp, sin side-effects.
+ *
+ * El endpoint vive únicamente bajo `/superadmin/companies/:tenantId/...`;
+ * es exclusivo del super admin. Por eso `tenantId` es requerido.
  */
-export function useTestBench() {
+export function useTestBench(tenantId: string) {
   const api = useApi()
+  const base = (botId: string): string =>
+    `/superadmin/companies/${tenantId}/bots/${botId}/test-bench`
 
   return {
     run: (
@@ -46,7 +51,7 @@ export function useTestBench() {
       message: string,
       priorHistory: TestBenchTurn[] = [],
     ): Promise<TestBenchResponse> => {
-      return api.post<TestBenchResponse>(`/bots/${botId}/test-bench/run`, {
+      return api.post<TestBenchResponse>(`${base(botId)}/run`, {
         message,
         priorHistory,
       })

@@ -164,6 +164,13 @@ await Promise.all([load(), loadActivity()])
             {{ $t('admin.calendarView.title') }}
           </NuxtLink>
           <NuxtLink
+            :to="`/superadmin/companies/${tenantId}/bots/${bot.id}/test`"
+            class="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-sm font-medium text-emerald-200 hover:bg-emerald-500/20 transition inline-flex items-center gap-1.5"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true"><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            {{ $t('superadmin.testBench.title') }}
+          </NuxtLink>
+          <NuxtLink
             :to="`/superadmin/companies/${tenantId}/bots/${bot.id}/edit`"
             class="rounded-xl border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm font-medium text-slate-200 hover:bg-slate-800 transition"
           >
