@@ -336,11 +336,14 @@ function apptDisplayService(appt: CalendarAppointment): string {
           <span class="text-xs uppercase tracking-wider text-slate-500">{{ $t('admin.calendarView.closed') }}</span>
         </div>
 
-        <div
+        <button
           v-for="b in dayBlocks(d.dayKey)"
           :key="`blk-${b.block.id}-${d.dayKey}`"
-          class="pointer-events-none absolute inset-x-2 flex items-start justify-center overflow-hidden rounded-xl border-2 border-dashed border-primary-400/60 bg-primary-100/40"
+          type="button"
+          class="absolute inset-x-2 flex items-start justify-center overflow-hidden rounded-xl border-2 border-dashed border-primary-400/60 bg-primary-100/40 text-left transition hover:border-primary-500 hover:bg-primary-100/60 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
           :style="{ top: `${b.topPx + 4}px`, height: `${Math.max(b.heightPx - 8, 60)}px` }"
+          :title="$t('admin.calendarView.editBlockHint')"
+          @click.stop="emit('clickBlock', b.block)"
         >
           <div v-if="b.fullDay" class="mx-2 mt-6 rounded-xl bg-white/85 backdrop-blur-sm px-3 py-3 text-center ring-1 ring-primary-200 shadow-sm max-w-[92%]">
             <p class="text-sm font-semibold text-primary-900">{{ b.block.reason }}</p>
@@ -349,7 +352,7 @@ function apptDisplayService(appt: CalendarAppointment): string {
           <div v-else class="mt-2 rounded-md bg-white/85 backdrop-blur-sm px-2 py-1 text-[11px] font-medium text-primary-900 ring-1 ring-primary-200 shadow-sm max-w-[90%] truncate">
             {{ b.block.reason }} · {{ apptHourLabel(b.startMin) }} — {{ apptEndLabel(b.endMin) }}
           </div>
-        </div>
+        </button>
 
         <button
           v-for="item in dayAppointments(d.dayKey)"

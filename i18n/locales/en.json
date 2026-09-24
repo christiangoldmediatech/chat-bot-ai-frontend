@@ -1401,6 +1401,8 @@
       "viewDay": "Day",
       "today": "Today",
       "closed": "Closed",
+      "newBlock": "New block",
+      "editBlockHint": "Click to edit this block",
       "empty": "No appointments or blocks in this range.",
       "filters": {
         "hideCancelled": "Hide cancelled",
@@ -1515,6 +1517,7 @@
       "affectedTitle": "{n} scheduled meeting(s) fall within this block",
       "affectedWarning": "These meetings are NOT cancelled automatically. Review them and decide what to do.",
       "saveBlock": "Save block",
+      "deleteBlock": "Delete block",
       "willBlockDays": "This will block {count} full day(s): {days}",
       "savedCreate": "Block created.",
       "savedUpdate": "Block updated.",

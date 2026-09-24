@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
-import type { CalendarAppointment, CalendarViewResponse } from '~/types/calendar'
+import type { CalendarAppointment, CalendarBlock, CalendarViewResponse } from '~/types/calendar'
+import type { ScheduleBlock } from '~/types/schedule'
 import type { Service } from '~/types/service'
 import {
   addDaysToDayKey,
@@ -20,6 +21,7 @@ const route = useRoute()
 const router = useRouter()
 const cal = useCalendar(props.tenantId)
 const services = useServices(props.tenantId)
+const scheduleBlocksApi = useScheduleBlocks(props.tenantId)
 
 type ViewMode = 'week' | 'day'
 
@@ -158,6 +160,44 @@ onMounted(async () => {
 function onEventClick(appt: CalendarAppointment): void {
   selected.value = appt
 }
+
+// ── Schedule blocks (create / edit from the calendar view) ───────────────────
+const blockModalOpen = ref(false)
+const blockModalMode = ref<'create' | 'edit'>('create')
+const editingBlockFull = ref<ScheduleBlock | null>(null)
+const blockPrefill = ref<{ date?: string; startsAt?: string; endsAt?: string; type?: 'FULL_DAY' | 'HOURS' } | null>(null)
+const loadingBlockDetail = ref(false)
+
+function openCreateBlock(): void {
+  blockModalMode.value = 'create'
+  editingBlockFull.value = null
+  // Prefill with today's anchor day so the modal opens on the day the user is viewing.
+  blockPrefill.value = anchorDay.value ? { date: anchorDay.value, type: 'FULL_DAY' } : null
+  blockModalOpen.value = true
+}
+
+async function onBlockClick(block: CalendarBlock): Promise<void> {
+  // The calendar/view endpoint returns a slim shape; the modal wants the full
+  // ScheduleBlock (with affectedMeetings). Fetch the list on demand and pick
+  // the matching row — a small trade-off vs. adding a get-by-id endpoint.
+  blockModalMode.value = 'edit'
+  blockPrefill.value = null
+  editingBlockFull.value = null
+  loadingBlockDetail.value = true
+  blockModalOpen.value = true
+  try {
+    const list = await scheduleBlocksApi.list(props.botId)
+    editingBlockFull.value = list.find((b) => b.id === block.id) ?? null
+  } catch {
+    editingBlockFull.value = null
+  } finally {
+    loadingBlockDetail.value = false
+  }
+}
+
+function onBlockSaved(): void {
+  void load()
+}
 </script>
 
 <template>
@@ -205,6 +245,17 @@ function onEventClick(appt: CalendarAppointment): void {
           <option v-for="s in serviceOptions" :key="s.id" :value="s.name">{{ s.name }}</option>
         </select>
         <input type="date" :value="anchorDay" class="rounded-lg border border-slate-200 bg-white/80 px-2 py-1.5 text-sm text-slate-700 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500" @change="(e) => { const v = (e.target as HTMLInputElement).value; if (v) anchorDay = v }">
+        <button
+          type="button"
+          class="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-700 shadow-sm transition"
+          @click="openCreateBlock"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          {{ $t('admin.calendarView.newBlock') }}
+        </button>
       </div>
     </header>
 
@@ -222,6 +273,7 @@ function onEventClick(appt: CalendarAppointment): void {
       :service-filter="serviceFilter"
       :locale="locale"
       @click-event="onEventClick"
+      @click-block="onBlockClick"
     />
 
     <div v-if="data && data.appointments.length === 0 && data.blocks.length === 0" class="rounded-xl border border-dashed border-slate-300 bg-white/50 p-6 text-center text-sm text-slate-500">
@@ -234,6 +286,19 @@ function onEventClick(appt: CalendarAppointment): void {
       :tenant-id="tenantId"
       :locale="locale"
       @close="selected = null"
+    />
+
+    <ScheduleBlockModal
+      :open="blockModalOpen"
+      :bot-id="botId"
+      :tenant-id="tenantId"
+      :timezone="activeTimezone"
+      :mode="blockModalMode"
+      :initial="editingBlockFull"
+      :prefill="blockPrefill"
+      @close="blockModalOpen = false"
+      @saved="onBlockSaved"
+      @deleted="onBlockSaved"
     />
   </section>
 </template>
