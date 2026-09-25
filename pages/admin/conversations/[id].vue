@@ -3,6 +3,7 @@ import type { ApiError } from '~/types/api'
 import type {
   ConversationDetail,
   ConversationStatus,
+  Message,
 } from '~/types/conversation'
 
 definePageMeta({
@@ -21,9 +22,6 @@ const statusError = ref<string | null>(null)
 const sending = ref(false)
 const sendError = ref<string | null>(null)
 const newMessage = ref('')
-// Confirm dialog state for "Devolver al bot" (hand back to bot). Bug 2026-09-16:
-// this action was implicit before — now we surface a confirm so an advisor
-// doesn't accidentally release the conversation mid-triage.
 const handBackConfirmOpen = ref(false)
 
 async function load(): Promise<void> {
@@ -77,6 +75,66 @@ async function onSend(): Promise<void> {
 }
 
 await load()
+
+// Live sync so the panel behaves like a real chat: new customer messages and
+// delivery-status updates arrive without a page refresh.
+// - Poll every 5s using `?after=<lastCreatedAt>` so only fresh rows travel.
+// - Merge by id — replace existing rows to pick up deliveryStatus/READ updates
+//   without duplicating, and append genuinely new ones.
+// - Pause when the tab is hidden (matches the LandingHeroCanvas pattern) to
+//   avoid burning API calls in a background tab.
+// - Also re-sync `status`/`lastMessageAt` so a takeover from another operator
+//   is reflected here.
+const POLL_INTERVAL_MS = 5000
+let pollHandle: ReturnType<typeof setInterval> | null = null
+
+function mergeMessages(incoming: Message[]): void {
+  if (!data.value || incoming.length === 0) return
+  const byId = new Map<string, Message>()
+  for (const m of data.value.messages) byId.set(m.id, m)
+  for (const m of incoming) byId.set(m.id, m)
+  const merged = Array.from(byId.values()).sort((a, b) =>
+    a.createdAt.localeCompare(b.createdAt),
+  )
+  data.value.messages = merged
+  const last = merged[merged.length - 1]
+  if (last) data.value.lastMessageAt = last.createdAt
+}
+
+async function pollTick(): Promise<void> {
+  if (!data.value) return
+  if (typeof document !== 'undefined' && document.hidden) return
+  try {
+    const last = data.value.messages[data.value.messages.length - 1]
+    const after = last ? last.createdAt : undefined
+    const incoming = await conversationsApi.getMessagesAfter(id, after)
+    mergeMessages(incoming)
+    // Refresh conversation status too — another user may have handed back to
+    // the bot or closed the conversation while this panel was open.
+    if (incoming.length > 0 || Math.random() < 0.2) {
+      const fresh = await conversationsApi.get(id)
+      if (data.value) {
+        data.value.status = fresh.status
+      }
+    }
+  } catch {
+    // Silent — the next tick will retry. Explicit errors surface on user
+    // actions (send / status change), not on background polling.
+  }
+}
+
+onMounted(() => {
+  pollHandle = setInterval(() => {
+    void pollTick()
+  }, POLL_INTERVAL_MS)
+})
+
+onBeforeUnmount(() => {
+  if (pollHandle) {
+    clearInterval(pollHandle)
+    pollHandle = null
+  }
+})
 
 function statusBadgeClass(s: ConversationStatus): string {
   return {

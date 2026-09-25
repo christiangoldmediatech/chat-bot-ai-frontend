@@ -2128,9 +2128,12 @@
       "composerPlaceholder": "Escribe tu respuesta…",
       "send": "Enviar",
       "sending": "Enviando…",
-      "composerNote": "El mensaje se almacena y queda en el historial. La entrega saliente a WhatsApp desde el lado del agente aún no está cableada — confirma con el cliente por otro canal mientras tanto.",
+      "composerNote": "Tu mensaje se envía directamente al WhatsApp del cliente. Mientras la conversación esté en modo humano el bot no responderá.",
       "closedNote": "Conversación cerrada. Vuelve automáticamente al estado BOT cuando el cliente envíe un nuevo mensaje.",
-      "botActiveNote": "El bot está respondiendo. Toma la conversación para responder como agente."
+      "botActiveNote": "El bot está respondiendo. Toma la conversación para responder como agente.",
+      "windowExpiredHint": "Han pasado más de 24 horas desde el último mensaje del cliente. WhatsApp no permite escribirle hasta que él vuelva a escribir.",
+      "sendErrorGeneric": "No se pudo enviar el mensaje. Intenta de nuevo en un momento.",
+      "sendErrorNoCredentials": "Este bot no tiene credenciales de WhatsApp configuradas. Completa la configuración de Meta antes de enviar mensajes."
     },
     "phone": {
       "statusBot": "bot activo",
