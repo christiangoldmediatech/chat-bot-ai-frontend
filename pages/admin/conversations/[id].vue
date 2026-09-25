@@ -193,6 +193,7 @@ function statusBadgeClass(s: ConversationStatus): string {
                 required
                 :placeholder="$t('conversations.detail.composerPlaceholder')"
                 class="min-h-[2.5rem] max-h-32 flex-1 resize-none rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+                @keydown.enter.exact.prevent="onSend"
               />
               <button
                 type="submit"
