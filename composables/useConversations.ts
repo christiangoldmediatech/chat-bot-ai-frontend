@@ -42,5 +42,9 @@ export function useConversations(tenantId?: string) {
       }
       return api.post<Message>(`/conversations/${id}/messages`, { content })
     },
+    getMessagesAfter: (id: string, after?: string): Promise<Message[]> =>
+      api.get<Message[]>(`${base}/${id}/messages`, {
+        query: after ? { after } : {},
+      }),
   }
 }

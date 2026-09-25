@@ -2128,9 +2128,12 @@
       "composerPlaceholder": "Type your reply…",
       "send": "Send",
       "sending": "Sending…",
-      "composerNote": "The message is stored and kept in the history. Outbound delivery to WhatsApp from the agent side is not wired up in the backend yet — confirm with the customer through another channel in the meantime.",
+      "composerNote": "Your message is sent directly to the customer's WhatsApp. While the conversation is in human mode the bot won't reply.",
       "closedNote": "Conversation closed. It automatically returns to BOT status when the customer sends a new message.",
-      "botActiveNote": "The bot is responding. Take over the conversation to reply as an agent."
+      "botActiveNote": "The bot is responding. Take over the conversation to reply as an agent.",
+      "windowExpiredHint": "More than 24 hours have passed since the customer's last message. WhatsApp does not allow you to message them until they write again.",
+      "sendErrorGeneric": "The message could not be sent. Please try again in a moment.",
+      "sendErrorNoCredentials": "This bot has no WhatsApp credentials configured. Please complete the Meta setup before sending messages."
     },
     "phone": {
       "statusBot": "bot active",
