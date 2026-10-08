@@ -1,8 +1,24 @@
 <script setup lang="ts">
+import BotSwitcher from '~/components/admin/BotSwitcher.vue'
+
 const auth = useAuthStore()
+const activeBot = useActiveBotStore()
 const router = useRouter()
 const { logout } = useAuth()
 const drawer = useNavDrawer()
+
+// Defensive: if the page lands here without the active-bot plugin having
+// populated the store (edge case: plugin ran before auth was authenticated),
+// trigger a refresh when the layout mounts.
+onMounted(() => {
+  if (auth.isAuthenticated && !activeBot.loaded) {
+    activeBot.refreshList().catch(() => undefined)
+  } else if (auth.isAuthenticated && activeBot.allBots.length === 0 && !activeBot.loading) {
+    // Already "loaded" but no bots — retry once in case the first attempt
+    // raced the auth hydration.
+    activeBot.refreshList().catch(() => undefined)
+  }
+})
 
 async function onLogout(): Promise<void> {
   logout()
@@ -27,9 +43,8 @@ async function onLogout(): Promise<void> {
       </button>
       <NuxtLink to="/admin" class="md:hidden flex items-center gap-2 min-w-0" aria-label="LURVIAX dashboard">
         <LurviaxLogo :size="28" rounded="rounded-lg" class="bg-white ring-1 ring-white/70 shadow-sm" />
-        <span class="text-sm font-semibold text-pearl truncate">LURVIAX</span>
       </NuxtLink>
-      <div class="hidden md:block text-sm text-mist">{{ $t('admin.panelTitle') }}</div>
+      <BotSwitcher />
     </div>
 
     <div v-if="auth.user" class="flex items-center gap-2 shrink-0">

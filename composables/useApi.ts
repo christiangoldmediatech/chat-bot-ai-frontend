@@ -12,6 +12,8 @@ interface NestErrorPayload {
   statusCode?: number
   message?: string | string[]
   error?: string
+  errorCode?: string
+  code?: string
 }
 
 function isSuperadminPath(path: string): boolean {
@@ -31,15 +33,20 @@ function normalizeError(
   }
   const status = fetchErr.response?.status ?? 0
   const payload = fetchErr.data
+  const errorCode = payload?.errorCode ?? payload?.code
   let message: string
-  if (payload?.message) {
+  const localizedKey = errorCode ? `errors.code.${errorCode}` : null
+  const localized = localizedKey ? t(localizedKey) : null
+  if (localized && localized !== localizedKey) {
+    message = localized
+  } else if (payload?.message) {
     message = Array.isArray(payload.message) ? payload.message.join(', ') : payload.message
   } else if (status > 0) {
     message = t('errors.apiWithStatus', { status })
   } else {
     message = t('errors.apiUnreachable')
   }
-  return { status, message }
+  return { status, message, errorCode }
 }
 
 /**

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { ApiError } from '~/types/api'
-import type { Bot } from '~/types/bot'
 import type { CustomerSummary } from '~/types/customer'
 
 definePageMeta({
@@ -9,15 +8,13 @@ definePageMeta({
 })
 
 const customersApi = useCustomers()
-const botsApi = useBots()
+const activeBot = useActiveBotStore()
 
 const PAGE_SIZE = 25
 
 const items = ref<CustomerSummary[]>([])
 const total = ref(0)
 const page = ref(1)
-const bots = ref<Bot[]>([])
-const filterBotId = ref<string | undefined>(undefined)
 const search = ref('')
 const loading = ref(true)
 const error = ref<string | null>(null)
@@ -25,21 +22,27 @@ const error = ref<string | null>(null)
 const pageCount = computed(() => Math.max(1, Math.ceil(total.value / PAGE_SIZE)))
 const fromIndex = computed(() => total.value === 0 ? 0 : (page.value - 1) * PAGE_SIZE + 1)
 const toIndex = computed(() => Math.min(total.value, page.value * PAGE_SIZE))
-const isFiltered = computed(() => Boolean(search.value.trim()) || Boolean(filterBotId.value))
+const isFiltered = computed(() => Boolean(search.value.trim()))
 
 async function load(): Promise<void> {
+  const bid = activeBot.botId
+  if (!bid) {
+    items.value = []
+    total.value = 0
+    loading.value = false
+    return
+  }
   loading.value = true
   error.value = null
   try {
     const res = await customersApi.listPaginated({
-      botId: filterBotId.value,
+      botId: bid,
       search: search.value.trim() || undefined,
       page: page.value,
       pageSize: PAGE_SIZE,
     })
     items.value = res.items
     total.value = res.total
-    // Server may clamp page if user requested past the end — sync local state.
     page.value = res.page
   } catch (err) {
     error.value = (err as ApiError).message
@@ -48,15 +51,6 @@ async function load(): Promise<void> {
   }
 }
 
-async function loadBots(): Promise<void> {
-  try {
-    bots.value = await botsApi.list()
-  } catch {
-    bots.value = []
-  }
-}
-
-// Debounce the search-as-you-type so we don't hammer the backend.
 let searchDebounce: ReturnType<typeof setTimeout> | null = null
 watch(search, () => {
   if (searchDebounce) clearTimeout(searchDebounce)
@@ -66,14 +60,8 @@ watch(search, () => {
   }, 300)
 })
 
-function onBotChange(): void {
-  page.value = 1
-  void load()
-}
-
 function clearFilters(): void {
   search.value = ''
-  filterBotId.value = undefined
   page.value = 1
   void load()
 }
@@ -89,7 +77,11 @@ function goNext(): void {
   void load()
 }
 
-await Promise.all([loadBots(), load()])
+watch(() => activeBot.botId, () => {
+  page.value = 1
+  void load()
+})
+await load()
 
 const notification = ref<{ kind: 'success' | 'error'; text: string } | null>(null)
 const { t } = useI18n()
@@ -175,16 +167,6 @@ function isBlocked(c: CustomerSummary): boolean {
           class="w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 py-2 text-sm text-slate-900 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 focus:outline-none transition"
         >
       </div>
-
-      <!-- Bot filter -->
-      <select
-        v-model="filterBotId"
-        class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 focus:outline-none transition"
-        @change="onBotChange"
-      >
-        <option :value="undefined">{{ $t('customers.all') }} · {{ $t('customers.filterByBot') }}</option>
-        <option v-for="b in bots" :key="b.id" :value="b.id">{{ b.name }}</option>
-      </select>
 
       <button
         v-if="isFiltered"

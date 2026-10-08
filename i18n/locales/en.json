@@ -15,6 +15,7 @@
     "close": "Close",
     "back": "Back",
     "next": "Next",
+    "previous": "Previous",
     "loading": "Loading…",
     "reload": "Reload",
     "search": "Search",
@@ -54,6 +55,14 @@
     "notFound": "Not found.",
     "fileRequired": "Please pick a file first.",
     "fieldRequired": "This field is required.",
+    "code": {
+      "BOT_ID_REQUIRED": "Pick a bot before loading this view.",
+      "SALE_REVERT_FORBIDDEN": "Only the account owner can revert this sale.",
+      "SALE_APPOINTMENT_INCONSISTENT": "The linked appointment does not allow this sale state.",
+      "UNIQUE_VIOLATION": "That value already exists.",
+      "NOT_FOUND": "That record no longer exists.",
+      "INTERNAL_ERROR": "Unexpected server error. We've been notified."
+    },
     "emailInvalid": "Enter a valid email.",
     "passwordTooShort": "Password is too short.",
     "apiWithStatus": "Request failed (Error {status}). Please try again.",
@@ -100,6 +109,14 @@
         "noHuman": "Resolved without a human",
         "channels": "Media formats on WhatsApp"
       }
+    },
+    "inbox": {
+      "panelTitle": "Team inbox",
+      "pendingCount": "{count} pending",
+      "allCaught": "All caught up",
+      "replied": "Replied by LURVIAX",
+      "summary": "A unified view across every bot in your account.",
+      "botActive": "Active"
     },
     "demo": {
       "eyebrow": "Real conversation",
@@ -402,6 +419,10 @@
     "conversations": "Conversations",
     "customers": "Customers",
     "meetings": "Meetings",
+    "calendar": "Calendar",
+    "sales": "Sales",
+    "services": "Services",
+    "schedule": "Business hours",
     "cases": "Cases",
     "leads": "Leads",
     "company": "Company",
@@ -412,7 +433,30 @@
     "closeMenu": "Close menu",
     "openMenu": "Open menu",
     "superadmin": "Super admin",
-    "companies": "Companies"
+    "companies": "Companies",
+    "group": {
+      "operations": "Operations",
+      "catalog": "Catalog",
+      "settings": "Settings"
+    }
+  },
+  "activeBot": {
+    "label": "Active bot",
+    "workingWith": "Working with",
+    "loading": "Loading bots",
+    "createFirst": "Create your first bot",
+    "pickerLabel": "Switch bot",
+    "pickerTitle": "Switch bot",
+    "pickerHint": "Everything in the panel reloads for the selected bot.",
+    "inactive": "Inactive",
+    "manage": "Manage bots",
+    "createNew": "Create new bot",
+    "switched": "Switched to {name}",
+    "noBots": "No bots yet",
+    "noBotsHint": "Create a bot to start using the panel.",
+    "noBotsCta": "Create a bot",
+    "loadErrorTitle": "Couldn't load your bots",
+    "loadErrorHint": "The backend returned: {error}. Open your browser console for the full response and try reloading."
   },
   "admin": {
     "panelTitle": "Admin panel",
@@ -1313,6 +1357,7 @@
           "conversations": "Conversations",
           "leads": "Leads",
           "meetingsScheduled": "Meetings scheduled",
+          "meetingsNew": "New appointments",
           "uniqueCustomers": "Unique customers",
           "handledByHuman": "Handled by human",
           "leadsNew": "New leads",
@@ -1545,6 +1590,9 @@
       "deleteDescription": "“{name}” will be archived. Historical sales keep their price and name.",
       "imageSection": "Main photo",
       "imageHint": "Sent via WhatsApp as a file attachment (not a link) whenever the bot offers this service.",
+      "imageSupportedHint": "jpeg / png / webp — max 5 MB",
+      "errorFormat": "Unsupported format. Use jpeg, png or webp.",
+      "errorSize": "Image exceeds 5 MB.",
       "chooseImage": "Choose image",
       "replaceImage": "Replace image",
       "willBeSent": "Sent on WhatsApp with the service",
@@ -1586,6 +1634,7 @@
       "emptyTitle": "No sales yet",
       "emptyDescription": "When you mark a sale as closed here or from the conversation, it will show up in this list.",
       "markSold": "Mark sold",
+      "unmarkWonHint": "Revert this sale (for example if the appointment was NO_SHOW).",
       "markLost": "Mark lost",
       "unmarkWon": "Undo WON",
       "paginationCount": "Total: {total}",
@@ -1771,8 +1820,18 @@
       "allBots": "All bots",
       "searchPlaceholder": "Search by customer, phone, or summary…"
     },
-    "totalLabel": "Total cases",
-    "matchingLabel": "Matching",
+    "totalLabel": "total",
+    "matchingLabel": "matching",
+    "status": {
+      "PENDING": "Pending",
+      "ATTENDED": "Attended",
+      "RESOLVED": "Resolved"
+    },
+    "priority": {
+      "HIGH": "High",
+      "NORMAL": "Normal",
+      "LOW": "Low"
+    },
     "pagination": {
       "summary": "Showing {from}–{to} of {total}",
       "previous": "Previous",
@@ -1887,6 +1946,8 @@
       "lastActivity": "Last activity:",
       "crmBadge": "View in CRM",
       "view": "Open",
+      "openConversation": "Open chat",
+      "openConversationTitle": "Open the WhatsApp conversation of this lead",
       "retrySync": "Retry sync",
       "exportCsv": "Export CSV",
       "exportingLabel": "Exporting…",

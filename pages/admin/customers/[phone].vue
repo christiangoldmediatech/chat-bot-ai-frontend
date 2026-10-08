@@ -10,7 +10,7 @@ definePageMeta({
 
 const route = useRoute()
 const customersApi = useCustomers()
-const botsApi = useBots()
+const activeBot = useActiveBotStore()
 
 const phone = decodeURIComponent(route.params.phone as string)
 
@@ -21,15 +21,18 @@ const loading = ref(true)
 const error = ref<string | null>(null)
 
 async function load(): Promise<void> {
+  const bid = activeBot.botId
+  if (!bid) {
+    data.value = null
+    bots.value = activeBot.allBots
+    loading.value = false
+    return
+  }
   loading.value = true
   error.value = null
   try {
-    const [detail, botList] = await Promise.all([
-      customersApi.get(phone),
-      botsApi.list().catch(() => [] as Bot[]),
-    ])
-    data.value = detail
-    bots.value = botList
+    data.value = await customersApi.get(phone, bid)
+    bots.value = activeBot.allBots
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -37,6 +40,7 @@ async function load(): Promise<void> {
   }
 }
 
+watch(() => activeBot.botId, () => { void load() })
 await load()
 
 const notification = ref<{ kind: 'success' | 'error'; text: string } | null>(null)

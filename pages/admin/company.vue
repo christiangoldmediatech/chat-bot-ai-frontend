@@ -127,20 +127,6 @@ await load()
             <h2 class="text-lg font-semibold text-slate-900 truncate">{{ data.name }}</h2>
             <p class="text-sm text-slate-500 font-mono truncate">{{ data.slug }}</p>
             <div class="mt-3 flex flex-wrap items-center gap-2">
-              <!-- Plan pill -->
-              <span
-                class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider ring-1"
-                :class="data.plan === 'PREMIUM'
-                  ? 'bg-violet-50 text-violet-700 ring-violet-200'
-                  : data.plan === 'PROFESSIONAL'
-                    ? 'bg-indigo-50 text-indigo-700 ring-indigo-200'
-                    : 'bg-emerald-50 text-emerald-700 ring-emerald-200'"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3" aria-hidden="true">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                </svg>
-                {{ data.planDetails.displayName }}
-              </span>
               <!-- Status pill -->
               <span
                 class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider ring-1"
@@ -156,14 +142,10 @@ await load()
         </div>
 
         <!-- Read-only quick facts grid -->
-        <div class="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div class="rounded-xl bg-slate-50/80 ring-1 ring-slate-200/70 px-3 py-2.5">
             <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('admin.company.slugLabel') }}</p>
             <p class="mt-0.5 text-sm font-mono text-slate-700 truncate">{{ data.slug }}</p>
-          </div>
-          <div class="rounded-xl bg-slate-50/80 ring-1 ring-slate-200/70 px-3 py-2.5">
-            <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('admin.company.planLabel') }}</p>
-            <p class="mt-0.5 text-sm font-medium text-slate-700">{{ data.planDetails.displayName }}</p>
           </div>
           <div class="rounded-xl bg-slate-50/80 ring-1 ring-slate-200/70 px-3 py-2.5">
             <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-500">{{ $t('admin.company.statusLabel') }}</p>

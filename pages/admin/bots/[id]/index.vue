@@ -8,7 +8,6 @@ definePageMeta({
   middleware: 'auth',
 })
 
-const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const bots = useBots()
@@ -23,7 +22,6 @@ const tenant = ref<Tenant | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
 const confirmingDelete = ref(false)
-const promptOpen = ref(false)
 const webhookOpen = ref(false)
 
 // Rename inline: modal simple con un solo campo. Se guarda vía PATCH /bots/:id
@@ -59,13 +57,6 @@ async function onRenameSubmit(): Promise<void> {
 
 const tenantPlan = computed<Plan>(() => tenant.value?.plan ?? 'BASIC')
 const isPremium = computed(() => tenantPlan.value === 'PREMIUM')
-
-// Plain-text preview of the system prompt for the overview tile (collapsed
-// to a single line so the card stays compact regardless of prompt length).
-const promptPreview = computed(() => {
-  if (!bot.value?.systemPrompt) return ''
-  return bot.value.systemPrompt.replace(/\s+/g, ' ').trim().slice(0, 220)
-})
 
 async function load(): Promise<void> {
   loading.value = true
@@ -133,41 +124,10 @@ await load()
 
         <div class="flex flex-wrap gap-2">
           <NuxtLink
-            :to="`/admin/bots/${bot.id}/services`"
-            class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white transition"
-          >
-            {{ $t('admin.bot.servicesLink') }}
-          </NuxtLink>
-          <NuxtLink
-            :to="`/admin/bots/${bot.id}/sales`"
-            class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white transition"
-          >
-            {{ $t('admin.bot.salesLink') }}
-          </NuxtLink>
-          <NuxtLink
-            :to="`/admin/bots/${bot.id}/reports/revenue`"
-            class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white transition"
-          >
-            {{ $t('admin.bot.revenueLink') }}
-          </NuxtLink>
-          <NuxtLink
-            :to="`/admin/bots/${bot.id}/calendar`"
-            class="rounded-xl border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-800 hover:bg-amber-100 transition inline-flex items-center gap-1.5"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
-            {{ $t('admin.calendarView.title') }}
-          </NuxtLink>
-          <NuxtLink
             :to="`/admin/bots/${bot.id}/edit`"
             class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-white transition"
           >
             {{ $t('admin.bot.editBot') }}
-          </NuxtLink>
-          <NuxtLink
-            :to="`/admin/bots/${bot.id}/config`"
-            class="rounded-xl bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800 shadow-glass transition"
-          >
-            {{ $t('admin.bot.configureAgent') }}
           </NuxtLink>
           <button
             type="button"
@@ -219,28 +179,6 @@ await load()
 
       <!-- Overview: 3-column on lg — AI / WhatsApp / System prompt tile -->
       <section id="overview" class="scroll-mt-24 mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- AI -->
-        <div class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5">
-          <div class="flex items-center gap-2">
-            <span class="flex size-7 items-center justify-center rounded-lg bg-emerald-50 ring-1 ring-emerald-100 text-emerald-600">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
-                <path d="M12 2 14 9l7 .5-5.5 4.5L17 21l-5-3-5 3 1.5-7L3 9.5 10 9z" />
-              </svg>
-            </span>
-            <h2 class="text-sm font-semibold text-slate-900">{{ $t('admin.bot.ai') }}</h2>
-          </div>
-          <dl class="mt-3 space-y-2 text-sm">
-            <div class="flex justify-between gap-2">
-              <dt class="text-slate-500">{{ $t('admin.bot.aiProvider') }}</dt>
-              <dd class="text-slate-900 truncate">{{ bot.aiProvider }}</dd>
-            </div>
-            <div class="flex justify-between gap-2">
-              <dt class="text-slate-500">{{ $t('admin.bot.aiModel') }}</dt>
-              <dd class="text-slate-900 font-mono text-xs truncate">{{ bot.aiModel }}</dd>
-            </div>
-          </dl>
-        </div>
-
         <!-- WhatsApp -->
         <div class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5">
           <div class="flex items-center gap-2">
@@ -284,46 +222,6 @@ await load()
           </button>
         </div>
 
-        <!-- System prompt tile -->
-        <div class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-5 flex flex-col">
-          <div class="flex items-center gap-2">
-            <span class="flex size-7 items-center justify-center rounded-lg bg-violet-50 ring-1 ring-violet-100 text-violet-600">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-            </span>
-            <h2 class="text-sm font-semibold text-slate-900">{{ $t('admin.bot.systemPrompt') }}</h2>
-          </div>
-          <p
-            v-if="promptPreview"
-            class="mt-3 text-xs text-slate-600 line-clamp-3 flex-1"
-          >
-            {{ promptPreview }}
-          </p>
-          <p v-else class="mt-3 text-xs text-slate-400 italic flex-1">
-            {{ $t('admin.bot.systemPromptEmpty') }}
-          </p>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <button
-              type="button"
-              :disabled="!bot.systemPrompt"
-              class="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition"
-              @click="promptOpen = true"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              {{ $t('admin.bot.viewSystemPrompt') }}
-            </button>
-            <NuxtLink
-              :to="`/admin/bots/${bot.id}/config`"
-              class="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition"
-            >
-              {{ $t('common.edit') }}
-            </NuxtLink>
-          </div>
-        </div>
       </section>
 
       <!-- Documents (knowledge base) — all plans -->
@@ -393,35 +291,6 @@ await load()
         </header>
         <BotCrmCard :bot-id="bot.id" :plan="tenantPlan" />
       </section>
-
-      <!-- System prompt modal -->
-      <Modal
-        :open="promptOpen"
-        :title="$t('admin.bot.systemPrompt')"
-        :subtitle="$t('admin.bot.systemPromptModalSubtitle')"
-        size="xl"
-        @close="promptOpen = false"
-      >
-        <pre class="whitespace-pre-wrap text-sm text-slate-700 font-mono leading-relaxed">{{ bot.systemPrompt }}</pre>
-
-        <template #footer>
-          <div class="flex items-center justify-between gap-2">
-            <NuxtLink
-              :to="`/admin/bots/${bot.id}/config`"
-              class="text-xs font-medium text-slate-600 hover:text-slate-900 underline"
-            >
-              {{ $t('admin.bot.editSystemPrompt') }}
-            </NuxtLink>
-            <button
-              type="button"
-              class="rounded-xl bg-slate-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-800 transition"
-              @click="promptOpen = false"
-            >
-              {{ $t('common.close') }}
-            </button>
-          </div>
-        </template>
-      </Modal>
 
       <!-- Webhook credentials modal -->
       <Modal

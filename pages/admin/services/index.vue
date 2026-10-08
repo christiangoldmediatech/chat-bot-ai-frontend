@@ -4,45 +4,45 @@ import type { Service } from '~/types/service'
 
 definePageMeta({ layout: 'admin', middleware: 'auth' })
 
-const route = useRoute()
-const botId = String(route.params.id)
+const activeBot = useActiveBotStore()
 const services = useServices()
-
 const mediaAssets = useMediaAssets()
 
+const botId = computed(() => activeBot.botId)
 const items = ref<Service[]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
 const toggling = ref<string | null>(null)
 const confirmingDelete = ref<Service | null>(null)
-/**
- * Presigned URLs indexed by mediaAssetId. Se cargan en paralelo después del
- * primer fetch — no bloqueamos el render del listado por la resolución de
- * las URLs (S3 puede tomar 100-300 ms cada una).
- */
 const imageUrls = reactive<Record<string, string>>({})
 
-async function loadImages(list: Service[]): Promise<void> {
-  const withImage = list.filter((s) => s.mediaAssetId)
+async function loadImages(id: string, list: Service[]): Promise<void> {
+  const withImage = list.filter(s => s.mediaAssetId)
   await Promise.all(
     withImage.map(async (s) => {
       if (!s.mediaAssetId || imageUrls[s.mediaAssetId]) return
       try {
-        const { url } = await mediaAssets.getDownloadUrl(botId, s.mediaAssetId)
+        const { url } = await mediaAssets.getDownloadUrl(id, s.mediaAssetId)
         if (url) imageUrls[s.mediaAssetId] = url
       } catch {
-        // Silently ignore per-image failures — el placeholder queda visible.
+        // Fallbacks to placeholder image.
       }
     }),
   )
 }
 
 async function load(): Promise<void> {
+  const id = botId.value
+  if (!id) {
+    items.value = []
+    loading.value = false
+    return
+  }
   loading.value = true
   error.value = null
   try {
-    items.value = await services.list(botId)
-    loadImages(items.value)
+    items.value = await services.list(id)
+    loadImages(id, items.value)
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -51,9 +51,11 @@ async function load(): Promise<void> {
 }
 
 async function onToggleActive(svc: Service): Promise<void> {
+  const id = botId.value
+  if (!id) return
   toggling.value = svc.id
   try {
-    const updated = await services.update(botId, svc.id, { isActive: !svc.isActive })
+    const updated = await services.update(id, svc.id, { isActive: !svc.isActive })
     Object.assign(svc, updated)
   } catch (err) {
     error.value = (err as ApiError).message
@@ -64,10 +66,11 @@ async function onToggleActive(svc: Service): Promise<void> {
 
 async function onConfirmDelete(): Promise<void> {
   const target = confirmingDelete.value
-  if (!target) return
+  const id = botId.value
+  if (!target || !id) return
   try {
-    await services.remove(botId, target.id)
-    items.value = items.value.filter((s) => s.id !== target.id)
+    await services.remove(id, target.id)
+    items.value = items.value.filter(s => s.id !== target.id)
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -75,19 +78,27 @@ async function onConfirmDelete(): Promise<void> {
   }
 }
 
-await load()
+watch(botId, () => {
+  for (const key of Object.keys(imageUrls)) {
+    Reflect.deleteProperty(imageUrls, key)
+  }
+  load()
+}, { immediate: true })
 </script>
 
 <template>
   <div>
-    <NuxtLink :to="`/admin/bots/${botId}`" class="inline-flex items-center gap-1 text-sm text-white/80 hover:text-pearl drop-shadow-sm transition">{{ $t('admin.services.back') }}</NuxtLink>
-    <div class="mt-3 flex flex-wrap items-start justify-between gap-3">
+    <div class="flex flex-wrap items-start justify-between gap-3">
       <div>
-        <h1 class="text-2xl font-semibold tracking-tight">{{ $t('admin.services.title') }}</h1>
-        <p class="text-slate-500 text-sm mt-1 max-w-2xl">{{ $t('admin.services.subtitle') }}</p>
+        <h1 class="text-2xl font-semibold tracking-tight">{{ $t('nav.services') }}</h1>
+        <p class="text-slate-500 text-sm mt-1 max-w-2xl">
+          {{ $t('admin.services.subtitle') }}
+          <span v-if="activeBot.bot"> — {{ activeBot.bot.name }}</span>
+        </p>
       </div>
       <NuxtLink
-        :to="`/admin/bots/${botId}/services/create`"
+        v-if="botId"
+        to="/admin/services/create"
         class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 shadow-glass transition"
       >
         {{ $t('admin.services.createButton') }}
@@ -98,7 +109,21 @@ await load()
       {{ error }}
     </p>
 
-    <div v-if="loading" class="mt-6 text-slate-500 text-sm">{{ $t('common.loading') }}…</div>
+    <EmptyState
+      v-if="!activeBot.loading && !botId"
+      :title="$t('activeBot.noBots')"
+      :description="$t('activeBot.noBotsHint')"
+      class="mt-6"
+    >
+      <NuxtLink
+        to="/admin/bots/create"
+        class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 transition"
+      >
+        {{ $t('activeBot.noBotsCta') }}
+      </NuxtLink>
+    </EmptyState>
+
+    <div v-else-if="loading" class="mt-6 text-slate-500 text-sm">{{ $t('common.loading') }}…</div>
 
     <EmptyState
       v-else-if="items.length === 0"
@@ -136,7 +161,7 @@ await load()
             class="absolute top-2 right-2 rounded-full bg-emerald-50/95 backdrop-blur px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-700 ring-1 ring-emerald-200"
             :title="$t('admin.services.willBeSent')"
           >
-            📎 {{ $t('admin.services.attachedShort') }}
+            {{ $t('admin.services.attachedShort') }}
           </span>
         </div>
 
@@ -176,7 +201,7 @@ await load()
               {{ svc.isActive ? $t('common.deactivate') : $t('common.activate') }}
             </button>
             <NuxtLink
-              :to="`/admin/bots/${botId}/services/${svc.id}/edit`"
+              :to="`/admin/services/${svc.id}/edit`"
               class="text-xs font-medium text-primary-700 hover:text-primary-800"
             >
               {{ $t('common.edit') }}
