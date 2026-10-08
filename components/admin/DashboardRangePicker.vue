@@ -31,6 +31,33 @@ function daysAgo(n: number): Date {
   return d
 }
 
+/**
+ * Parse a YYYY-MM-DD string (the value emitted by `<input type="date">`) as a
+ * local-time Date at midnight. We cannot use `new Date("2026-10-08")` because
+ * the HTML spec says date-only ISO strings are interpreted as UTC — which
+ * shifts the day backward for every tenant west of UTC. Building the Date
+ * through `new Date(y, m-1, d)` honors the browser's local timezone, matching
+ * what the user picked in the UI.
+ */
+function parseLocalDate(ymd: string): Date | null {
+  const m = ymd.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+  if (!m) return null
+  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))
+}
+
+/**
+ * Format a Date as YYYY-MM-DD using the browser's local timezone so we can
+ * hydrate the two <input type="date"> values from the URL without the same
+ * UTC-shift bug.
+ */
+function toYmdLocal(iso: string): string {
+  const d = new Date(iso)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+
 function computeRange(p: Preset): { from: string; to: string } {
   const now = new Date()
   switch (p) {
@@ -42,11 +69,14 @@ function computeRange(p: Preset): { from: string; to: string } {
       return { from: toIsoStart(daysAgo(29)), to: toIsoEnd(now) }
     case '90d':
       return { from: toIsoStart(daysAgo(89)), to: toIsoEnd(now) }
-    case 'custom':
+    case 'custom': {
+      const fromDate = customFrom.value ? parseLocalDate(customFrom.value) : null
+      const toDate = customTo.value ? parseLocalDate(customTo.value) : null
       return {
-        from: customFrom.value ? toIsoStart(new Date(customFrom.value)) : props.modelValue.from,
-        to: customTo.value ? toIsoEnd(new Date(customTo.value)) : props.modelValue.to,
+        from: fromDate ? toIsoStart(fromDate) : props.modelValue.from,
+        to: toDate ? toIsoEnd(toDate) : props.modelValue.to,
       }
+    }
   }
 }
 
@@ -67,7 +97,15 @@ function apply(p: Preset): void {
 onMounted(() => {
   const q = route.query
   if (q.from && q.to) {
-    emit('update:modelValue', { from: String(q.from), to: String(q.to) })
+    const fromIso = String(q.from)
+    const toIso = String(q.to)
+    emit('update:modelValue', { from: fromIso, to: toIso })
+    // Prefill the custom inputs so the user keeps editing the same range
+    // instead of starting from blank fields when they arrive via a direct link.
+    if (preset.value === 'custom') {
+      customFrom.value = toYmdLocal(fromIso)
+      customTo.value = toYmdLocal(toIso)
+    }
   } else {
     apply(preset.value)
   }
