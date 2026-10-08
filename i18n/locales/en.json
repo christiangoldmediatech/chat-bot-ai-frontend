@@ -1820,8 +1820,18 @@
       "allBots": "All bots",
       "searchPlaceholder": "Search by customer, phone, or summary…"
     },
-    "totalLabel": "Total cases",
-    "matchingLabel": "Matching",
+    "totalLabel": "total",
+    "matchingLabel": "matching",
+    "status": {
+      "PENDING": "Pending",
+      "ATTENDED": "Attended",
+      "RESOLVED": "Resolved"
+    },
+    "priority": {
+      "HIGH": "High",
+      "NORMAL": "Normal",
+      "LOW": "Low"
+    },
     "pagination": {
       "summary": "Showing {from}–{to} of {total}",
       "previous": "Previous",

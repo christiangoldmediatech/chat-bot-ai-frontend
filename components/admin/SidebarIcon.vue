@@ -25,7 +25,7 @@ defineProps<{ name: IconName }>()
     stroke-width="2"
     stroke-linecap="round"
     stroke-linejoin="round"
-    class="size-4 shrink-0 opacity-80"
+    class="size-[18px] shrink-0"
     aria-hidden="true"
   >
     <template v-if="name === 'dashboard'">

@@ -1820,8 +1820,18 @@
       "allBots": "Todos los bots",
       "searchPlaceholder": "Buscar por cliente, teléfono o resumen…"
     },
-    "totalLabel": "Casos totales",
-    "matchingLabel": "Coincidencias",
+    "totalLabel": "total",
+    "matchingLabel": "coincidencias",
+    "status": {
+      "PENDING": "Pendiente",
+      "ATTENDED": "Atendido",
+      "RESOLVED": "Resuelto"
+    },
+    "priority": {
+      "HIGH": "Alta",
+      "NORMAL": "Normal",
+      "LOW": "Baja"
+    },
     "pagination": {
       "summary": "Mostrando {from}–{to} de {total}",
       "previous": "Anterior",
