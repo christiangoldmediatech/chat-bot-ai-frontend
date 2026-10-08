@@ -17,7 +17,8 @@
     "reinstall": "rm -rf node_modules package-lock.json .nuxt .output && npm install",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "i18n:check": "node scripts/i18n-check.mjs"
   },
   "dependencies": {
     "@nuxtjs/i18n": "^9.5.6",

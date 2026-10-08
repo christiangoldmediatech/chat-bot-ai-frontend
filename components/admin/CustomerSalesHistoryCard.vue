@@ -69,7 +69,7 @@ await load()
         </p>
       </div>
       <NuxtLink
-        :to="`/admin/bots/${botId}/sales?customerId=${customerId}`"
+        :to="`/admin/sales?customerId=${customerId}`"
         class="text-xs font-medium text-primary-700 hover:text-primary-800"
       >
         {{ $t('admin.sales.customerHistory.viewAll') }}

@@ -6,9 +6,10 @@ definePageMeta({ layout: 'admin', middleware: 'auth' })
 
 const route = useRoute()
 const router = useRouter()
-const botId = String(route.params.id)
-const serviceId = String(route.params.serviceId)
+const serviceId = computed(() => String(route.params.id))
+const activeBot = useActiveBotStore()
 const services = useServices()
+const mediaAssets = useMediaAssets()
 
 const service = ref<Service | null>(null)
 const imageUrl = ref<string | null>(null)
@@ -17,16 +18,18 @@ const saving = ref(false)
 const uploading = ref(false)
 const error = ref<string | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
-
-const mediaAssets = useMediaAssets()
+const confirmingDelete = ref(false)
+const confirmingImageDelete = ref(false)
+const deletingImage = ref(false)
 
 async function refreshImagePreview(): Promise<void> {
-  if (!service.value?.mediaAssetId) {
+  const id = activeBot.botId
+  if (!id || !service.value?.mediaAssetId) {
     imageUrl.value = null
     return
   }
   try {
-    const { url } = await mediaAssets.getDownloadUrl(botId, service.value.mediaAssetId)
+    const { url } = await mediaAssets.getDownloadUrl(id, service.value.mediaAssetId)
     imageUrl.value = url
   } catch {
     imageUrl.value = null
@@ -34,10 +37,15 @@ async function refreshImagePreview(): Promise<void> {
 }
 
 async function load(): Promise<void> {
+  const id = activeBot.botId
+  if (!id) {
+    loading.value = false
+    return
+  }
   loading.value = true
   error.value = null
   try {
-    service.value = await services.get(botId, serviceId)
+    service.value = await services.get(id, serviceId.value)
     await refreshImagePreview()
   } catch (err) {
     error.value = (err as ApiError).message
@@ -47,12 +55,13 @@ async function load(): Promise<void> {
 }
 
 async function onSubmit(input: CreateServiceInput): Promise<void> {
-  if (!service.value) return
+  const id = activeBot.botId
+  if (!id || !service.value) return
   saving.value = true
   error.value = null
   try {
-    await services.update(botId, service.value.id, input)
-    await router.push(`/admin/bots/${botId}/services`)
+    await services.update(id, service.value.id, input)
+    await router.push('/admin/services')
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -60,18 +69,19 @@ async function onSubmit(input: CreateServiceInput): Promise<void> {
   }
 }
 
-async function onPickImage(): Promise<void> {
+function onPickImage(): void {
   fileInput.value?.click()
 }
 
 async function onFileChange(evt: Event): Promise<void> {
   const target = evt.target as HTMLInputElement
   const file = target.files?.[0]
-  if (!file || !service.value) return
+  const id = activeBot.botId
+  if (!file || !service.value || !id) return
   uploading.value = true
   error.value = null
   try {
-    service.value = await services.uploadImage(botId, service.value.id, file)
+    service.value = await services.uploadImage(id, service.value.id, file)
     await refreshImagePreview()
   } catch (err) {
     error.value = (err as ApiError).message
@@ -82,25 +92,23 @@ async function onFileChange(evt: Event): Promise<void> {
 }
 
 async function onDelete(): Promise<void> {
-  if (!service.value) return
+  const id = activeBot.botId
+  if (!id || !service.value) return
   try {
-    await services.remove(botId, service.value.id)
-    await router.push(`/admin/bots/${botId}/services`)
+    await services.remove(id, service.value.id)
+    await router.push('/admin/services')
   } catch (err) {
     error.value = (err as ApiError).message
   }
 }
 
-const confirmingDelete = ref(false)
-const confirmingImageDelete = ref(false)
-const deletingImage = ref(false)
-
 async function onDeleteImage(): Promise<void> {
-  if (!service.value) return
+  const id = activeBot.botId
+  if (!id || !service.value) return
   deletingImage.value = true
   error.value = null
   try {
-    service.value = await services.deleteImage(botId, service.value.id)
+    service.value = await services.deleteImage(id, service.value.id)
     await refreshImagePreview()
     confirmingImageDelete.value = false
   } catch (err) {
@@ -110,16 +118,32 @@ async function onDeleteImage(): Promise<void> {
   }
 }
 
-await load()
+watch([() => activeBot.botId, serviceId], ([id, sid]) => {
+  if (id && sid) load()
+}, { immediate: true })
 </script>
 
 <template>
   <div class="max-w-2xl">
-    <NuxtLink :to="`/admin/bots/${botId}/services`" class="text-xs text-slate-500 hover:text-slate-900">
+    <NuxtLink to="/admin/services" class="text-xs text-slate-500 hover:text-slate-900">
       ← {{ $t('admin.services.title') }}
     </NuxtLink>
 
-    <div v-if="loading" class="mt-6 text-slate-500 text-sm">{{ $t('common.loading') }}…</div>
+    <EmptyState
+      v-if="!activeBot.loading && !activeBot.botId"
+      :title="$t('activeBot.noBots')"
+      :description="$t('activeBot.noBotsHint')"
+      class="mt-6"
+    >
+      <NuxtLink
+        to="/admin/bots/create"
+        class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 transition"
+      >
+        {{ $t('activeBot.noBotsCta') }}
+      </NuxtLink>
+    </EmptyState>
+
+    <div v-else-if="loading" class="mt-6 text-slate-500 text-sm">{{ $t('common.loading') }}…</div>
 
     <template v-else-if="service">
       <div class="mt-2 flex items-start justify-between gap-3">
@@ -182,9 +206,9 @@ await load()
               class="hidden"
               @change="onFileChange"
             >
-            <span class="text-[10px] text-slate-400">jpeg / png / webp</span>
+            <span class="text-[10px] text-slate-400">{{ $t('admin.services.imageSupportedHint') }}</span>
             <span v-if="service.mediaAssetId" class="text-[10px] text-emerald-700">
-              ✓ {{ $t('admin.services.willBeSent') }}
+              {{ $t('admin.services.willBeSent') }}
             </span>
             <button
               v-if="service.mediaAssetId"

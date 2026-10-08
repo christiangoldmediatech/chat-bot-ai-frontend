@@ -20,6 +20,10 @@ const tone = computed(() => props.tone ?? 'light')
 const { t } = useI18n()
 const meetingsApi = useMeetings(props.tenantId)
 const botsApi = useBots(props.tenantId)
+const activeBot = useActiveBotStore()
+// Tenant admin ties the explorer to the globally-active bot. Superadmin (which
+// passes a `tenantId` prop) keeps the free-form bot filter instead.
+const isTenantAdmin = computed(() => !props.tenantId)
 
 /**
  * Per-tab tone for the light-mode (admin) surface. Mirrors the StatCard
@@ -151,18 +155,27 @@ const grouped = computed<Bucket[]>(() => {
 })
 
 async function load(): Promise<void> {
+  const effectiveBotId = isTenantAdmin.value ? activeBot.botId : (botFilter.value || undefined)
+  if (isTenantAdmin.value && !effectiveBotId) {
+    data.value = null
+    bots.value = activeBot.allBots
+    loading.value = false
+    return
+  }
   loading.value = true
   error.value = null
   try {
     const [pageData, botList] = await Promise.all([
       meetingsApi.list({
         tab: tab.value,
-        botId: botFilter.value || undefined,
+        botId: effectiveBotId ?? undefined,
         search: debouncedSearch.value || undefined,
         page: page.value,
         pageSize: PAGE_SIZE,
       }),
-      botsApi.list().catch(() => [] as Bot[]),
+      isTenantAdmin.value
+        ? Promise.resolve(activeBot.allBots)
+        : botsApi.list().catch(() => [] as Bot[]),
     ])
     data.value = pageData
     bots.value = botList
@@ -174,6 +187,12 @@ async function load(): Promise<void> {
 }
 
 watch([tab, botFilter, debouncedSearch], () => {
+  page.value = 1
+  void load()
+})
+
+watch(() => activeBot.botId, () => {
+  if (!isTenantAdmin.value) return
   page.value = 1
   void load()
 })
@@ -519,6 +538,7 @@ await load()
       </div>
 
       <select
+        v-if="!isTenantAdmin"
         v-model="botFilter"
         class="rounded-md px-3 py-1.5 text-sm"
         :class="

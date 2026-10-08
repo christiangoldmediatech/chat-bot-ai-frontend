@@ -14,8 +14,8 @@ definePageMeta({
 })
 
 const conversationsApi = useConversations()
-const botsApi = useBots()
 const dashboardApi = useDashboard()
+const activeBot = useActiveBotStore()
 
 // Activity dashboard (day / week / month) shown above the filter panel.
 const activity = reactive<Record<MessagesActivityRange, MessagesActivity | null>>({
@@ -27,13 +27,15 @@ const activityLoading = ref(true)
 const activityError = ref<string | null>(null)
 
 async function loadActivity(): Promise<void> {
+  const bid = activeBot.botId
+  if (!bid) return
   activityLoading.value = true
   activityError.value = null
   try {
     const [day, week, month] = await Promise.all([
-      dashboardApi.messagesActivity({ range: 'day' }),
-      dashboardApi.messagesActivity({ range: 'week' }),
-      dashboardApi.messagesActivity({ range: 'month' }),
+      dashboardApi.messagesActivity({ range: 'day', botId: bid }),
+      dashboardApi.messagesActivity({ range: 'week', botId: bid }),
+      dashboardApi.messagesActivity({ range: 'month', botId: bid }),
     ])
     activity.day = day
     activity.week = week
@@ -79,10 +81,19 @@ function clean<T extends Record<string, unknown>>(o: T): Partial<T> {
 }
 
 async function load(): Promise<void> {
+  const bid = activeBot.botId
+  if (!bid) {
+    data.value = null
+    loading.value = false
+    return
+  }
   loading.value = true
   error.value = null
   try {
-    data.value = await conversationsApi.list(clean(filters) as FindConversationsQuery)
+    data.value = await conversationsApi.list({
+      ...clean(filters) as FindConversationsQuery,
+      botId: bid,
+    })
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
@@ -90,12 +101,8 @@ async function load(): Promise<void> {
   }
 }
 
-async function loadBots(): Promise<void> {
-  try {
-    bots.value = await botsApi.list()
-  } catch {
-    bots.value = []
-  }
+function syncBotsFromStore(): void {
+  bots.value = activeBot.allBots
 }
 
 function onApplyFilters(): void {
@@ -104,7 +111,6 @@ function onApplyFilters(): void {
 }
 
 function onResetFilters(): void {
-  filters.botId = undefined
   filters.status = undefined
   filters.dateFrom = undefined
   filters.dateTo = undefined
@@ -121,7 +127,14 @@ function onPage(delta: number): void {
   void load()
 }
 
-await Promise.all([loadBots(), load(), loadActivity()])
+syncBotsFromStore()
+watch(() => activeBot.allBots, syncBotsFromStore)
+watch(() => activeBot.botId, () => {
+  filters.page = 1
+  void load()
+  void loadActivity()
+})
+await Promise.all([load(), loadActivity()])
 
 const statusOptions: ConversationStatus[] = ['BOT', 'HUMAN', 'CLOSED']
 
@@ -238,16 +251,6 @@ function formatDate(s: string): string {
           :placeholder="$t('conversations.filter.searchPlaceholder')"
           class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400"
         >
-      </div>
-      <div>
-        <label class="block text-xs font-medium text-slate-600">{{ $t('conversations.filter.bot') }}</label>
-        <select
-          v-model="filters.botId"
-          class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900"
-        >
-          <option :value="undefined">{{ $t('conversations.filter.all') }}</option>
-          <option v-for="b in bots" :key="b.id" :value="b.id">{{ b.name }}</option>
-        </select>
       </div>
       <div>
         <label class="block text-xs font-medium text-slate-600">{{ $t('conversations.filter.status') }}</label>

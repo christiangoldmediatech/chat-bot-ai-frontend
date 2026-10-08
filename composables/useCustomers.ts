@@ -44,8 +44,11 @@ export function useCustomers(tenantId?: string) {
         Object.keys(query).length > 0 ? { query } : undefined,
       )
     },
-    get: (phone: string): Promise<CustomerDetail> =>
-      api.get<CustomerDetail>(`${base}/${encodeURIComponent(phone)}`),
+    get: (phone: string, botId?: string): Promise<CustomerDetail> =>
+      api.get<CustomerDetail>(
+        `${base}/${encodeURIComponent(phone)}`,
+        botId ? { query: { botId } } : undefined,
+      ),
     conversations: (phone: string): Promise<Conversation[]> =>
       api.get<Conversation[]>(`${base}/${encodeURIComponent(phone)}/conversations`),
     meetings: (phone: string, filters?: MeetingFilters): Promise<Meeting[]> => {

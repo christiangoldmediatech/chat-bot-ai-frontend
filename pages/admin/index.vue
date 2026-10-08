@@ -14,9 +14,12 @@ definePageMeta({ layout: 'admin', middleware: 'auth' })
 const { t } = useI18n()
 const legacy = useDashboard()
 const metrics = useTenantDashboardMetrics()
+const activeBot = useActiveBotStore()
 const { percent } = useDateFormat()
 
 const route = useRoute()
+
+const botIdQuery = computed<string | undefined>(() => activeBot.botId ?? undefined)
 
 function isoStart(d: Date): string {
   const dd = new Date(d)
@@ -91,12 +94,13 @@ const meetingsLoading = ref(true)
 const error = ref<string | null>(null)
 
 async function loadHeader(): Promise<void> {
+  if (!botIdQuery.value) return
   loading.value = true
   try {
     const [legacyRes, summaryRes, todayRes] = await Promise.all([
       legacy.summary().catch(() => null),
-      metrics.summary(range.value),
-      metrics.todayTimeline().catch(() => null),
+      metrics.summary({ ...range.value, botId: botIdQuery.value }),
+      metrics.todayTimeline(botIdQuery.value).catch(() => null),
     ])
     legacyData.value = legacyRes
     summary.value = summaryRes
@@ -109,9 +113,10 @@ async function loadHeader(): Promise<void> {
 }
 
 async function loadCharts(): Promise<void> {
+  if (!botIdQuery.value) return
   chartsLoading.value = true
   try {
-    const q = { ...range.value, interval: activityInterval.value }
+    const q = { ...range.value, interval: activityInterval.value, botId: botIdQuery.value }
     const [conv, leads, msgs] = await Promise.all([
       metrics.timeseries('conversations', q),
       metrics.timeseries('leads', q),
@@ -126,15 +131,17 @@ async function loadCharts(): Promise<void> {
 }
 
 async function loadMeetings(): Promise<void> {
+  if (!botIdQuery.value) return
   meetingsLoading.value = true
   try {
-    const meetingsRange = { ...range.value, interval: meetingsInterval.value }
+    const meetingsRange = { ...range.value, interval: meetingsInterval.value, botId: botIdQuery.value }
     const [s, sched, canc, byCustomer] = await Promise.all([
-      metrics.meetingsSummary(range.value),
+      metrics.meetingsSummary({ ...range.value, botId: botIdQuery.value }),
       metrics.timeseries('meetingsHeld', meetingsRange),
       metrics.timeseries('meetingsCancelled', meetingsRange),
       metrics.meetingsByCustomer({
         ...range.value,
+        botId: botIdQuery.value,
         page: meetingsPage.value,
         pageSize: 25,
         sort: meetingsSort.value,
@@ -150,7 +157,7 @@ async function loadMeetings(): Promise<void> {
 }
 
 watch(
-  () => JSON.stringify(range.value),
+  () => [JSON.stringify(range.value), botIdQuery.value],
   () => {
     if (!range.value.from || !range.value.to) return
     loadHeader()
@@ -254,7 +261,34 @@ const activeRangeLabel = computed(() => {
       {{ error }}
     </p>
 
-    <div class="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-12 lg:flex-1 lg:min-h-0">
+    <div v-if="!activeBot.loaded" class="mt-6 flex items-center justify-center py-16">
+      <SpinnerInline />
+    </div>
+
+    <EmptyState
+      v-else-if="!activeBot.hasBots"
+      :title="activeBot.lastError ? $t('activeBot.loadErrorTitle') : $t('activeBot.noBots')"
+      :description="activeBot.lastError ? $t('activeBot.loadErrorHint', { error: activeBot.lastError }) : $t('activeBot.noBotsHint')"
+      class="mt-6"
+    >
+      <div class="flex items-center justify-center gap-2">
+        <button
+          type="button"
+          class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
+          @click="activeBot.refreshList()"
+        >
+          {{ $t('common.reload') }}
+        </button>
+        <NuxtLink
+          to="/admin/bots/create"
+          class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 transition"
+        >
+          {{ $t('activeBot.noBotsCta') }}
+        </NuxtLink>
+      </div>
+    </EmptyState>
+
+    <div v-else class="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-12 lg:flex-1 lg:min-h-0">
       <div class="lg:col-span-8 lg:min-h-0 lg:grid lg:grid-rows-[minmax(0,1fr)_320px_minmax(0,1fr)] flex flex-col gap-3">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 lg:min-h-0">
           <div class="md:col-span-2 lg:min-h-0 h-[280px] md:h-[300px] lg:h-auto">
@@ -262,6 +296,7 @@ const activeRangeLabel = computed(() => {
               :from="range.from"
               :to="range.to"
               :interval="activityInterval"
+              :bot-id="botIdQuery"
               fill-height
             />
           </div>
@@ -293,6 +328,7 @@ const activeRangeLabel = computed(() => {
               :from="range.from"
               :to="range.to"
               :interval="activityInterval"
+              :bot-id="botIdQuery"
               fill-height
             />
           </div>
@@ -300,6 +336,7 @@ const activeRangeLabel = computed(() => {
             <DashboardServicesDonutCard
               :from="range.from"
               :to="range.to"
+              :bot-id="botIdQuery"
               fill-height
             />
           </div>
@@ -347,6 +384,7 @@ const activeRangeLabel = computed(() => {
               v-else
               :from="range.from"
               :to="range.to"
+              :bot-id="botIdQuery"
               class="dense-embed"
             />
           </div>

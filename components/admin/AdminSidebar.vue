@@ -1,24 +1,70 @@
 <script setup lang="ts">
+type IconName =
+  | 'dashboard'
+  | 'conversations'
+  | 'customers'
+  | 'leads'
+  | 'cases'
+  | 'calendar'
+  | 'sales'
+  | 'services'
+  | 'schedule'
+  | 'bots'
+  | 'company'
+  | 'profile'
+
+interface NavLink {
+  to: string
+  label: string
+  icon: IconName
+}
+
+interface NavGroup {
+  key: string
+  label: string
+  links: NavLink[]
+}
+
 const { t } = useI18n()
-const links = computed(() => [
-  { to: '/admin', label: t('nav.dashboard') },
-  { to: '/admin/company', label: t('nav.myCompany') },
-  { to: '/admin/bots', label: t('nav.bots') },
-  { to: '/admin/conversations', label: t('nav.conversations') },
-  { to: '/admin/customers', label: t('nav.customers') },
-  { to: '/admin/meetings', label: t('nav.meetings') },
-  { to: '/admin/cases', label: t('nav.cases') },
-  { to: '/admin/leads', label: t('nav.leads') },
-  { to: '/admin/profile', label: t('nav.myProfile') },
+
+const groups = computed<NavGroup[]>(() => [
+  {
+    key: 'operations',
+    label: t('nav.group.operations'),
+    links: [
+      { to: '/admin', label: t('nav.dashboard'), icon: 'dashboard' },
+      { to: '/admin/conversations', label: t('nav.conversations'), icon: 'conversations' },
+      { to: '/admin/customers', label: t('nav.customers'), icon: 'customers' },
+      { to: '/admin/leads', label: t('nav.leads'), icon: 'leads' },
+      { to: '/admin/cases', label: t('nav.cases'), icon: 'cases' },
+      { to: '/admin/calendar', label: t('nav.calendar'), icon: 'calendar' },
+      { to: '/admin/sales', label: t('nav.sales'), icon: 'sales' },
+    ],
+  },
+  {
+    key: 'catalog',
+    label: t('nav.group.catalog'),
+    links: [
+      { to: '/admin/services', label: t('nav.services'), icon: 'services' },
+      { to: '/admin/schedule', label: t('nav.schedule'), icon: 'schedule' },
+    ],
+  },
+  {
+    key: 'settings',
+    label: t('nav.group.settings'),
+    links: [
+      { to: '/admin/bots', label: t('nav.bots'), icon: 'bots' },
+      { to: '/admin/company', label: t('nav.myCompany'), icon: 'company' },
+      { to: '/admin/profile', label: t('nav.myProfile'), icon: 'profile' },
+    ],
+  },
 ])
 
 const drawer = useNavDrawer()
 const route = useRoute()
 
-// Auto-close the mobile drawer on route change (after the user picks a link).
 watch(() => route.fullPath, () => drawer.close())
 
-// Lock body scroll while drawer is open, restore on close/unmount.
 watch(drawer.open, (isOpen) => {
   if (!import.meta.client) return
   document.body.style.overflow = isOpen ? 'hidden' : ''
@@ -27,7 +73,6 @@ onBeforeUnmount(() => {
   if (import.meta.client) document.body.style.overflow = ''
 })
 
-// Esc closes the drawer.
 onMounted(() => {
   if (!import.meta.client) return
   const onKey = (e: KeyboardEvent): void => {
@@ -39,7 +84,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- Mobile backdrop -->
   <Transition
     enter-active-class="transition-opacity duration-200"
     enter-from-class="opacity-0"
@@ -57,7 +101,7 @@ onMounted(() => {
   </Transition>
 
   <aside
-    class="fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-ink-deep/90 backdrop-blur-xl border-r border-halo-line/30 p-4 transform transition-transform duration-200 ease-out md:static md:translate-x-0 md:w-64 md:max-w-none md:bg-ink-deep/70 md:z-0"
+    class="fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-ink-deep/90 backdrop-blur-xl border-r border-halo-line/30 p-4 transform transition-transform duration-200 ease-out md:static md:translate-x-0 md:w-64 md:max-w-none md:bg-ink-deep/70 md:z-0 overflow-y-auto"
     :class="drawer.open.value ? 'translate-x-0 shadow-2xl' : '-translate-x-full md:shadow-none'"
     role="navigation"
     aria-label="Main navigation"
@@ -79,16 +123,23 @@ onMounted(() => {
         </svg>
       </button>
     </div>
-    <nav class="space-y-1">
-      <NuxtLink
-        v-for="link in links"
-        :key="link.to"
-        :to="link.to"
-        class="block px-3 py-2.5 rounded-xl text-sm text-mist hover:bg-ink-card/60 hover:text-pearl transition-colors"
-        active-class="!bg-brand-gradient !text-ink-tealDeep font-medium shadow-halo-glow"
-      >
-        {{ link.label }}
-      </NuxtLink>
+
+    <nav class="space-y-5">
+      <div v-for="group in groups" :key="group.key" class="space-y-1">
+        <p class="px-3 pt-1 pb-1 text-[10px] font-semibold uppercase tracking-wider text-mist-dim">
+          {{ group.label }}
+        </p>
+        <NuxtLink
+          v-for="link in group.links"
+          :key="link.to"
+          :to="link.to"
+          class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-mist hover:bg-ink-card/60 hover:text-pearl transition-colors"
+          active-class="!bg-brand-gradient !text-ink-tealDeep font-medium shadow-halo-glow"
+        >
+          <AdminSidebarIcon :name="link.icon" />
+          <span class="truncate">{{ link.label }}</span>
+        </NuxtLink>
+      </div>
     </nav>
   </aside>
 </template>

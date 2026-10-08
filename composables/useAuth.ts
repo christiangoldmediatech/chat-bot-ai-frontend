@@ -29,21 +29,25 @@ export function useAuth() {
   const api = useApi()
   const auth = useAuthStore()
   const superadminAuth = useSuperadminAuthStore()
+  const activeBot = useActiveBotStore()
 
   async function login(email: string, password: string): Promise<AuthResponse> {
     const res = await api.post<AuthResponse>('/auth/login', { email, password })
     auth.setSession(res.accessToken, res.user)
+    await activeBot.refreshList().catch(() => undefined)
     return res
   }
 
   async function register(input: RegisterInput): Promise<AuthResponse> {
     const res = await api.post<AuthResponse>('/auth/register', input)
     auth.setSession(res.accessToken, res.user)
+    await activeBot.refreshList().catch(() => undefined)
     return res
   }
 
   function logout(): void {
     auth.clear()
+    activeBot.clear()
   }
 
   /**

@@ -9,7 +9,7 @@ definePageMeta({
 })
 
 const casesApi = useCases()
-const botsApi = useBots()
+const activeBot = useActiveBotStore()
 
 const PAGE_SIZE = 25
 
@@ -27,7 +27,6 @@ const busyId = ref<string | null>(null)
 const resolveModal = ref<{ id: string; note: string } | null>(null)
 
 const statusFilter = ref<StatusTab>('OPEN')
-const botFilter = ref<string>('')
 const search = ref('')
 
 // Top-of-page counts per status — pulled from a separate small fetch so the
@@ -38,9 +37,16 @@ const counts = ref({ pending: 0, attended: 0, resolved: 0, total: 0 })
 const pageCount = computed(() => Math.max(1, Math.ceil(total.value / PAGE_SIZE)))
 const fromIndex = computed(() => total.value === 0 ? 0 : (page.value - 1) * PAGE_SIZE + 1)
 const toIndex = computed(() => Math.min(total.value, page.value * PAGE_SIZE))
-const isFiltered = computed(() => Boolean(search.value.trim()) || Boolean(botFilter.value))
+const isFiltered = computed(() => Boolean(search.value.trim()))
 
 async function loadList(): Promise<void> {
+  const bid = activeBot.botId
+  if (!bid) {
+    rows.value = []
+    total.value = 0
+    loading.value = false
+    return
+  }
   loading.value = true
   error.value = null
   try {
@@ -49,7 +55,7 @@ async function loadList(): Promise<void> {
       : statusFilter.value
     const res = await casesApi.listPaginated({
       status,
-      botId: botFilter.value || undefined,
+      botId: bid,
       search: search.value.trim() || undefined,
       page: page.value,
       pageSize: PAGE_SIZE,
@@ -73,9 +79,11 @@ async function loadList(): Promise<void> {
 // Lightweight count pass: one paginated call per status with pageSize=1
 // gives us the totals cheaply without a dedicated count endpoint.
 async function loadCounts(): Promise<void> {
+  const bid = activeBot.botId
+  if (!bid) return
   try {
     const baseOpts = {
-      botId: botFilter.value || undefined,
+      botId: bid,
       search: search.value.trim() || undefined,
       page: 1,
       pageSize: 1,
@@ -100,12 +108,8 @@ async function load(): Promise<void> {
   await Promise.all([loadList(), loadCounts()])
 }
 
-async function loadBots(): Promise<void> {
-  try {
-    bots.value = await botsApi.list()
-  } catch {
-    bots.value = []
-  }
+function syncBotsFromStore(): void {
+  bots.value = activeBot.allBots
 }
 
 // Debounced search; resets page to 1 each keystroke cycle.
@@ -125,14 +129,8 @@ function onTabChange(tab: StatusTab): void {
   void loadList()
 }
 
-function onBotChange(): void {
-  page.value = 1
-  void load()
-}
-
 function clearFilters(): void {
   search.value = ''
-  botFilter.value = ''
   page.value = 1
   void load()
 }
@@ -243,7 +241,13 @@ const tabPalette = {
   },
 } as const
 
-await Promise.all([loadBots(), load()])
+syncBotsFromStore()
+watch(() => activeBot.allBots, syncBotsFromStore)
+watch(() => activeBot.botId, () => {
+  page.value = 1
+  void load()
+})
+await load()
 </script>
 
 <template>
@@ -400,15 +404,6 @@ await Promise.all([loadBots(), load()])
           class="w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 py-2 text-sm text-slate-900 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 focus:outline-none transition"
         >
       </div>
-
-      <select
-        v-model="botFilter"
-        class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 focus:outline-none transition"
-        @change="onBotChange"
-      >
-        <option value="">{{ $t('cases.filter.allBots') }}</option>
-        <option v-for="b in bots" :key="b.id" :value="b.id">{{ b.name }}</option>
-      </select>
 
       <button
         v-if="isFiltered"

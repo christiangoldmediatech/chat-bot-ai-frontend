@@ -15,6 +15,7 @@
     "close": "Cerrar",
     "back": "Atrás",
     "next": "Siguiente",
+    "previous": "Anterior",
     "loading": "Cargando…",
     "reload": "Recargar",
     "search": "Buscar",
@@ -54,6 +55,14 @@
     "notFound": "No encontrado.",
     "fileRequired": "Selecciona un archivo primero.",
     "fieldRequired": "Este campo es obligatorio.",
+    "code": {
+      "BOT_ID_REQUIRED": "Selecciona un bot antes de cargar esta vista.",
+      "SALE_REVERT_FORBIDDEN": "Solo el dueño de la cuenta puede revertir esta venta.",
+      "SALE_APPOINTMENT_INCONSISTENT": "La cita vinculada no permite ese estado para la venta.",
+      "UNIQUE_VIOLATION": "Ese valor ya existe.",
+      "NOT_FOUND": "Ese registro ya no existe.",
+      "INTERNAL_ERROR": "Error inesperado del servidor. Ya nos notificaron."
+    },
     "emailInvalid": "Ingresa un correo válido.",
     "passwordTooShort": "La contraseña es muy corta.",
     "apiWithStatus": "La solicitud falló (Error {status}). Inténtalo de nuevo.",
@@ -100,6 +109,14 @@
         "noHuman": "Resuelto sin humano",
         "channels": "Formatos multimedia en WhatsApp"
       }
+    },
+    "inbox": {
+      "panelTitle": "Bandeja del equipo",
+      "pendingCount": "{count} pendientes",
+      "allCaught": "Todo al día",
+      "replied": "Respondido por LURVIAX",
+      "summary": "Una vista unificada de todos los bots de tu cuenta.",
+      "botActive": "Activo"
     },
     "demo": {
       "eyebrow": "Conversación real",
@@ -402,6 +419,10 @@
     "conversations": "Conversaciones",
     "customers": "Clientes",
     "meetings": "Citas",
+    "calendar": "Calendario",
+    "sales": "Ventas",
+    "services": "Servicios",
+    "schedule": "Horario de atención",
     "cases": "Casos",
     "leads": "Leads",
     "company": "Empresa",
@@ -412,7 +433,30 @@
     "closeMenu": "Cerrar menú",
     "openMenu": "Abrir menú",
     "superadmin": "Super admin",
-    "companies": "Empresas"
+    "companies": "Empresas",
+    "group": {
+      "operations": "Operación",
+      "catalog": "Catálogo",
+      "settings": "Configuración"
+    }
+  },
+  "activeBot": {
+    "label": "Bot activo",
+    "workingWith": "Trabajando con",
+    "loading": "Cargando bots",
+    "createFirst": "Crea tu primer bot",
+    "pickerLabel": "Cambiar de bot",
+    "pickerTitle": "Cambiar de bot",
+    "pickerHint": "Todo el panel se recarga con el bot seleccionado.",
+    "inactive": "Inactivo",
+    "manage": "Gestionar bots",
+    "createNew": "Crear nuevo bot",
+    "switched": "Cambiaste a {name}",
+    "noBots": "Aún no tienes bots",
+    "noBotsHint": "Crea un bot para empezar a usar el panel.",
+    "noBotsCta": "Crear un bot",
+    "loadErrorTitle": "No pudimos cargar tus bots",
+    "loadErrorHint": "El backend respondió: {error}. Abre la consola del navegador para ver el detalle y reintenta."
   },
   "admin": {
     "panelTitle": "Panel admin",
@@ -1313,6 +1357,7 @@
           "conversations": "Conversaciones",
           "leads": "Leads",
           "meetingsScheduled": "Citas agendadas",
+          "meetingsNew": "Citas nuevas",
           "uniqueCustomers": "Clientes únicos",
           "handledByHuman": "Atendidas por humano",
           "leadsNew": "Leads nuevos",
@@ -1545,6 +1590,9 @@
       "deleteDescription": "Se archivará “{name}”. Las ventas históricas conservan su precio y nombre.",
       "imageSection": "Foto principal",
       "imageHint": "Se enviará por WhatsApp como archivo adjunto (no como link) cada vez que el bot ofrezca este servicio.",
+      "imageSupportedHint": "jpeg / png / webp — máx 5 MB",
+      "errorFormat": "Formato no soportado. Usa jpeg, png o webp.",
+      "errorSize": "La imagen supera los 5 MB.",
       "chooseImage": "Elegir imagen",
       "replaceImage": "Cambiar imagen",
       "willBeSent": "Se envía por WhatsApp con el servicio",
@@ -1586,6 +1634,7 @@
       "emptyTitle": "Sin ventas registradas",
       "emptyDescription": "Cuando marques una venta como cerrada aquí o desde la conversación aparecerá en esta lista.",
       "markSold": "Marcar vendido",
+      "unmarkWonHint": "Revertir esta venta (por ejemplo si la cita fue NO_SHOW).",
       "markLost": "Marcar perdida",
       "unmarkWon": "Quitar WON",
       "paginationCount": "Total: {total}",
@@ -1887,6 +1936,8 @@
       "lastActivity": "Última actividad:",
       "crmBadge": "Ver en CRM",
       "view": "Abrir",
+      "openConversation": "Abrir chat",
+      "openConversationTitle": "Abrir la conversación de WhatsApp de este lead",
       "retrySync": "Reintentar sincronización",
       "exportCsv": "Exportar CSV",
       "exportingLabel": "Exportando…",

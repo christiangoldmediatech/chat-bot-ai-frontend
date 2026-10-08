@@ -9,7 +9,7 @@ definePageMeta({
 })
 
 const leadsApi = useLeads()
-const botsApi = useBots()
+const activeBot = useActiveBotStore()
 
 const PAGE_SIZE = 25
 
@@ -29,7 +29,6 @@ const backfilling = ref(false)
 const backfillResult = ref<string | null>(null)
 
 const statusFilter = ref<StatusTab>('ALL')
-const botFilter = ref<string>('')
 const interestFilter = ref<LeadInterest | ''>('')
 const search = ref('')
 
@@ -53,17 +52,24 @@ const pageCount = computed(() => Math.max(1, Math.ceil(total.value / PAGE_SIZE))
 const fromIndex = computed(() => total.value === 0 ? 0 : (page.value - 1) * PAGE_SIZE + 1)
 const toIndex = computed(() => Math.min(total.value, page.value * PAGE_SIZE))
 const isFiltered = computed(
-  () => Boolean(search.value.trim()) || Boolean(botFilter.value) || Boolean(interestFilter.value),
+  () => Boolean(search.value.trim()) || Boolean(interestFilter.value),
 )
 
 async function loadList(): Promise<void> {
+  const bid = activeBot.botId
+  if (!bid) {
+    rows.value = []
+    total.value = 0
+    loading.value = false
+    return
+  }
   loading.value = true
   error.value = null
   try {
     const status = statusFilter.value === 'ALL' ? undefined : statusFilter.value
     const res = await leadsApi.listPaginated({
       status,
-      botId: botFilter.value || undefined,
+      botId: bid,
       interest: interestFilter.value || undefined,
       search: search.value.trim() || undefined,
       page: page.value,
@@ -80,9 +86,11 @@ async function loadList(): Promise<void> {
 }
 
 async function loadCounts(): Promise<void> {
+  const bid = activeBot.botId
+  if (!bid) return
   try {
     const res = await leadsApi.summary({
-      botId: botFilter.value || undefined,
+      botId: bid,
       interest: interestFilter.value || undefined,
     })
     const s = res.byStatus
@@ -109,12 +117,8 @@ async function load(): Promise<void> {
   await Promise.all([loadList(), loadCounts()])
 }
 
-async function loadBots(): Promise<void> {
-  try {
-    bots.value = await botsApi.list()
-  } catch {
-    bots.value = []
-  }
+function syncBotsFromStore(): void {
+  bots.value = activeBot.allBots
 }
 
 let searchDebounce: ReturnType<typeof setTimeout> | null = null
@@ -140,7 +144,6 @@ function onFilterChange(): void {
 
 function clearFilters(): void {
   search.value = ''
-  botFilter.value = ''
   interestFilter.value = ''
   page.value = 1
   void load()
@@ -179,7 +182,7 @@ async function exportCsv(): Promise<void> {
     // matches what's on screen.
     await leadsApi.downloadCsv({
       status: statusFilter.value === 'ALL' ? undefined : statusFilter.value,
-      botId: botFilter.value || undefined,
+      botId: activeBot.botId ?? undefined,
       interest: interestFilter.value || undefined,
       search: search.value.trim() || undefined,
     })
@@ -195,7 +198,7 @@ async function backfillCrm(): Promise<void> {
   error.value = null
   backfillResult.value = null
   try {
-    const { enqueued } = await leadsApi.backfillCrm(botFilter.value || undefined)
+    const { enqueued } = await leadsApi.backfillCrm(activeBot.botId ?? undefined)
     backfillResult.value = enqueued > 0
       ? `${enqueued} job${enqueued === 1 ? '' : 's'} enqueued`
       : 'No leads needed backfilling'
@@ -297,7 +300,13 @@ const tabPalette = {
 
 const INTEREST_OPTIONS: LeadInterest[] = ['HIGH', 'MEDIUM', 'LOW']
 
-await Promise.all([loadBots(), load()])
+syncBotsFromStore()
+watch(() => activeBot.allBots, syncBotsFromStore)
+watch(() => activeBot.botId, () => {
+  page.value = 1
+  void load()
+})
+await load()
 </script>
 
 <template>
@@ -535,14 +544,6 @@ await Promise.all([loadBots(), load()])
         >
       </div>
 
-      <select
-        v-model="botFilter"
-        class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 focus:outline-none transition"
-        @change="onFilterChange"
-      >
-        <option value="">{{ $t('leads.filter.allBots') }}</option>
-        <option v-for="b in bots" :key="b.id" :value="b.id">{{ b.name }}</option>
-      </select>
 
       <select
         v-model="interestFilter"
@@ -665,6 +666,17 @@ await Promise.all([loadBots(), load()])
         </div>
 
         <div class="flex flex-col gap-2 shrink-0">
+          <NuxtLink
+            v-if="l.conversationId"
+            :to="`/admin/conversations/${l.conversationId}`"
+            class="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl font-medium bg-white ring-1 ring-primary-200 text-primary-700 hover:bg-primary-50 transition"
+            :title="$t('leads.list.openConversationTitle')"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            {{ $t('leads.list.openConversation') }}
+          </NuxtLink>
           <NuxtLink
             :to="`/admin/leads/${l.id}`"
             class="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl font-medium bg-slate-900 text-white shadow-sm hover:bg-slate-800 transition"

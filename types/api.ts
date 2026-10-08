@@ -10,5 +10,6 @@ export interface Paginated<T> {
 export interface ApiError {
   status: number
   message: string
+  errorCode?: string
   fieldErrors?: Record<string, string[]>
 }
