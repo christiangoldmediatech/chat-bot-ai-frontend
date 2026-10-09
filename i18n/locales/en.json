@@ -434,6 +434,7 @@
     "openMenu": "Open menu",
     "superadmin": "Super admin",
     "companies": "Companies",
+    "templates": "Templates",
     "group": {
       "operations": "Operations",
       "catalog": "Catalog",
@@ -1282,6 +1283,79 @@
         "failedAria": "Meta could not deliver the message",
         "failedReason": "Reason: {reason}",
         "failedNoReason": "No error details"
+      }
+    },
+    "templates": {
+      "pageTitle": "WhatsApp Templates",
+      "pageSubtitle": "Register the templates you already approved in Meta Business Suite. Use them to start conversations with customers outside the 24-hour window and to hand off chats to a human advisor.",
+      "sectionTitle": "WhatsApp Templates",
+      "sectionDescription": "Templates are created and approved in Meta Business Suite. Here you register the name, language and variables so the panel can fire them.",
+      "selectBotLabel": "Active bot",
+      "noBotTitle": "No bot selected",
+      "noBotHint": "Pick a bot from the switcher to manage its templates.",
+      "metaHelp": "Don't have the template approved yet? Create it in",
+      "metaHelpLink": "Meta Business Suite",
+      "metaHelpSuffix": "and come back to register it.",
+      "list": {
+        "empty": "You haven't registered any template yet.",
+        "emptyHint": "Click \"New template\" to register one.",
+        "variablesCount": "{n} variable | {n} variables",
+        "status": {
+          "ACTIVE": "Active",
+          "PAUSED": "Paused"
+        },
+        "category": {
+          "UTILITY": "Utility",
+          "MARKETING": "Marketing",
+          "AUTHENTICATION": "Authentication"
+        }
+      },
+      "actions": {
+        "create": "+ New template",
+        "edit": "Edit",
+        "delete": "Delete",
+        "testSend": "Test send",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving…",
+        "sending": "Sending…",
+        "confirmDelete": "Remove this template from the panel? This does NOT delete it in Meta."
+      },
+      "form": {
+        "title": {
+          "create": "New template",
+          "edit": "Edit template"
+        },
+        "name": "Exact name in Meta",
+        "nameHint": "Must match the approved name. Lowercase, digits and underscores only.",
+        "language": "Language",
+        "languageHint": "BCP-47 code as approved (e.g. es_MX, en_US).",
+        "category": "Category",
+        "bodyPreview": "Body text",
+        "bodyPreviewHint": "Copy the approved body with the {'{{1}}'}, {'{{2}}'} placeholders.",
+        "status": "Status",
+        "variables": "Variables",
+        "variablesHint": "Describe each placeholder. The index must match the number inside the braces.",
+        "addVariable": "+ Add variable",
+        "variableIndex": "Index",
+        "variableLabel": "Label",
+        "variableExample": "Example"
+      },
+      "testSend": {
+        "title": "Send test template",
+        "subtitle": "Fire a real send to a WhatsApp number. Does NOT touch any existing conversation.",
+        "to": "Target number (E.164)",
+        "toPlaceholder": "+15555551234",
+        "variable": "Value for {label}",
+        "successTitle": "Sent",
+        "successBody": "Meta accepted the send. wamid: {wamid}",
+        "errorTitle": "Meta rejected the send"
+      },
+      "errors": {
+        "generic": "We couldn't complete the operation. Please try again.",
+        "loadFailed": "We couldn't load the templates.",
+        "duplicate": "A template with that name and language already exists for this bot.",
+        "variablesMismatch": "The number of values doesn't match the declared variables."
       }
     },
     "documents": {
@@ -2638,13 +2712,16 @@
         "overview": "Overview",
         "documents": "Documents",
         "multimedia": "Multimedia",
-        "calendar": "Google Calendar"
+        "calendar": "Google Calendar",
+        "templates": "WhatsApp Templates"
       }
     },
     "bot": {
       "sections": {
         "multimedia": "Multimedia resources",
-        "multimediaDesc": "Sendable assets (images, PDFs, videos, audios, locations) the bot can attach natively in WhatsApp."
+        "multimediaDesc": "Sendable assets (images, PDFs, videos, audios, locations) the bot can attach natively in WhatsApp.",
+        "templates": "WhatsApp Templates",
+        "templatesDesc": "Meta-approved templates to start conversations with customers and hand off chats to a human advisor."
       }
     },
     "billing": {

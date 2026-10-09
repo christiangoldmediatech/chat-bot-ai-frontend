@@ -234,6 +234,15 @@ await Promise.all([load(), loadActivity()])
           </svg>
           {{ $t('admin.crm.navChip') }}
         </a>
+        <a href="#templates" class="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 ring-1 ring-emerald-500/30 px-3 py-1 text-emerald-300 hover:bg-emerald-500/20 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" aria-hidden="true">
+            <rect x="4" y="3" width="14" height="16" rx="2" />
+            <path d="M20 7v12a2 2 0 0 1-2 2H8" />
+            <line x1="8" y1="8" x2="14" y2="8" />
+            <line x1="8" y1="12" x2="14" y2="12" />
+          </svg>
+          {{ $t('superadmin.companyBotDetail.nav.templates') }}
+        </a>
       </nav>
 
       <!-- Activity dashboard: day / week / month, always visible together. -->
@@ -427,6 +436,26 @@ await Promise.all([load(), loadActivity()])
           </div>
         </header>
         <BotCrmCard :bot-id="bot.id" :plan="companyPlan" :tenant-id="tenantId" />
+      </section>
+
+      <!-- WhatsApp Templates -->
+      <section id="templates" class="scroll-mt-24 mt-6">
+        <header class="flex items-start gap-3 mb-3">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 ring-1 ring-emerald-500/30">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-emerald-300" aria-hidden="true">
+              <rect x="4" y="3" width="14" height="16" rx="2" />
+              <path d="M20 7v12a2 2 0 0 1-2 2H8" />
+              <line x1="8" y1="8" x2="14" y2="8" />
+              <line x1="8" y1="12" x2="14" y2="12" />
+              <line x1="8" y1="16" x2="11" y2="16" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-slate-100">{{ $t('superadmin.bot.sections.templates') }}</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $t('superadmin.bot.sections.templatesDesc') }}</p>
+          </div>
+        </header>
+        <BotTemplatesCard :bot-id="bot.id" :tenant-id="tenantId" />
       </section>
 
       <ConfirmDialog

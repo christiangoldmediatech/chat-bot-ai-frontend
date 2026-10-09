@@ -10,6 +10,7 @@ type IconName =
   | 'services'
   | 'schedule'
   | 'bots'
+  | 'templates'
   | 'company'
   | 'profile'
 
@@ -77,6 +78,13 @@ defineProps<{ name: IconName }>()
       <path d="M12 7V3" />
       <circle cx="8.5" cy="13" r="1" />
       <circle cx="15.5" cy="13" r="1" />
+    </template>
+    <template v-else-if="name === 'templates'">
+      <rect x="4" y="3" width="14" height="16" rx="2" />
+      <path d="M20 7v12a2 2 0 0 1-2 2H8" />
+      <line x1="8" y1="8" x2="14" y2="8" />
+      <line x1="8" y1="12" x2="14" y2="12" />
+      <line x1="8" y1="16" x2="11" y2="16" />
     </template>
     <template v-else-if="name === 'company'">
       <path d="M3 21h18" />
