@@ -1356,6 +1356,40 @@
         "loadFailed": "No pudimos cargar las plantillas.",
         "duplicate": "Ya existe una plantilla con ese nombre e idioma para este bot.",
         "variablesMismatch": "La cantidad de valores no coincide con las variables declaradas."
+      },
+      "convMedia": {
+        "openButton": "Enviar foto / video",
+        "title": "Enviar archivo al cliente",
+        "subtitle": "Imágenes, PDFs o videos. El archivo se sube a WhatsApp y aparece en el hilo como enviado por el asesor.",
+        "pickFile": "Selecciona un archivo",
+        "replaceFile": "Reemplazar archivo",
+        "caption": "Caption (opcional)",
+        "captionHint": "Texto corto que acompaña al archivo. Máximo 1024 caracteres.",
+        "fileHint": "Imagen ≤5 MB, video/audio ≤16 MB, documento ≤100 MB.",
+        "send": "Enviar",
+        "sending": "Enviando…",
+        "cancel": "Cancelar",
+        "errorTitle": "No se pudo enviar"
+      },
+      "windowClosed": {
+        "title": "Ventana de 24 h cerrada",
+        "hint": "El cliente lleva más de 24 horas sin escribir. Según las reglas de WhatsApp, solo puedes reabrir la conversación con una plantilla aprobada.",
+        "cta": "Enviar plantilla"
+      },
+      "convSend": {
+        "openButton": "Enviar plantilla",
+        "title": "Enviar plantilla al cliente",
+        "subtitle": "Elige una plantilla aprobada en Meta y rellena las variables. El mensaje aparecerá en el hilo como enviado por el asesor.",
+        "pickTemplate": "Plantilla",
+        "pickPlaceholder": "Selecciona una plantilla…",
+        "noTemplatesTitle": "Este bot aún no tiene plantillas",
+        "noTemplatesHint": "Regístralas desde el menú “Plantillas” antes de poder enviarlas desde una conversación.",
+        "preview": "Vista previa del mensaje",
+        "send": "Enviar",
+        "sending": "Enviando…",
+        "cancel": "Cancelar",
+        "successTitle": "Plantilla enviada",
+        "errorTitle": "No se pudo enviar"
       }
     },
     "documents": {
