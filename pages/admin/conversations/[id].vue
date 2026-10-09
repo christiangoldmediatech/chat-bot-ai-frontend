@@ -25,6 +25,7 @@ const newMessage = ref('')
 const handBackConfirmOpen = ref(false)
 const templateModalOpen = ref(false)
 const mediaModalOpen = ref(false)
+const casesRefreshSignal = ref(0)
 
 const WINDOW_MS = 24 * 60 * 60 * 1000
 const nowTick = ref<number>(Date.now())
@@ -152,6 +153,7 @@ async function pollTick(): Promise<void> {
     const after = last ? last.createdAt : undefined
     const incoming = await conversationsApi.getMessagesAfter(id, after)
     mergeMessages(incoming)
+    if (incoming.length > 0) casesRefreshSignal.value += 1
     // Refresh conversation status too — another user may have handed back to
     // the bot or closed the conversation while this panel was open.
     if (incoming.length > 0 || Math.random() < 0.2) {
@@ -159,6 +161,7 @@ async function pollTick(): Promise<void> {
       if (data.value) {
         data.value.status = fresh.status
       }
+      casesRefreshSignal.value += 1
     }
   } catch {
     // Silent — the next tick will retry. Explicit errors surface on user
@@ -339,6 +342,14 @@ function statusBadgeClass(s: ConversationStatus): string {
               {{ data.status }}
             </span>
           </section>
+
+          <ConversationCasesCard
+            :conversation-id="data.id"
+            :bot-id="data.botId"
+            :customer-phone="data.customerPhone"
+            :conversation-status="data.status"
+            :refresh-signal="casesRefreshSignal"
+          />
 
           <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-4">
             <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-500">

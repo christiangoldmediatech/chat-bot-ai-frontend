@@ -13,6 +13,7 @@ export interface Case {
   status: CaseStatus
   resolution: string | null
   resolvedBy: CaseResolvedBy | null
+  resolvedByUserId: string | null
   advisorEmail: string
   gmailMessageId: string | null
   /** CRM lead id (HubSpot/Salesforce/Zoho/custom) created at escalation, if any. */
@@ -30,6 +31,7 @@ export interface CaseFilters {
   status?: CaseStatus
   botId?: string
   customerPhone?: string
+  conversationId?: string
   dateFrom?: string
   dateTo?: string
 }
