@@ -434,6 +434,7 @@
     "openMenu": "Abrir menú",
     "superadmin": "Super admin",
     "companies": "Empresas",
+    "templates": "Plantillas",
     "group": {
       "operations": "Operación",
       "catalog": "Catálogo",
@@ -1282,6 +1283,79 @@
         "failedAria": "Meta no pudo entregar el mensaje",
         "failedReason": "Motivo: {reason}",
         "failedNoReason": "Sin detalles del error"
+      }
+    },
+    "templates": {
+      "pageTitle": "Plantillas de WhatsApp",
+      "pageSubtitle": "Registra aquí las plantillas aprobadas en Meta Business Suite. Las usarás para iniciar conversaciones con clientes fuera de la ventana de 24 h y para transferir el chat a un asesor humano.",
+      "sectionTitle": "Plantillas de WhatsApp",
+      "sectionDescription": "Las plantillas se crean y aprueban en Meta Business Suite. Aquí registras el nombre, el idioma y las variables para que el panel pueda dispararlas.",
+      "selectBotLabel": "Bot activo",
+      "noBotTitle": "No hay bot seleccionado",
+      "noBotHint": "Elige un bot desde el selector para gestionar sus plantillas.",
+      "metaHelp": "¿No tienes aún la plantilla aprobada? Créala en",
+      "metaHelpLink": "Meta Business Suite",
+      "metaHelpSuffix": "y vuelve aquí para registrarla.",
+      "list": {
+        "empty": "Aún no has registrado ninguna plantilla.",
+        "emptyHint": "Haz clic en “Nueva plantilla” para registrar una.",
+        "variablesCount": "{n} variable | {n} variables",
+        "status": {
+          "ACTIVE": "Activa",
+          "PAUSED": "Pausada"
+        },
+        "category": {
+          "UTILITY": "Utility",
+          "MARKETING": "Marketing",
+          "AUTHENTICATION": "Authentication"
+        }
+      },
+      "actions": {
+        "create": "+ Nueva plantilla",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "testSend": "Enviar prueba",
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "saving": "Guardando…",
+        "sending": "Enviando…",
+        "confirmDelete": "¿Eliminar esta plantilla del panel? Esta acción no borra la plantilla en Meta."
+      },
+      "form": {
+        "title": {
+          "create": "Nueva plantilla",
+          "edit": "Editar plantilla"
+        },
+        "name": "Nombre exacto en Meta",
+        "nameHint": "Debe coincidir con el nombre aprobado. Solo minúsculas, dígitos y guiones bajos.",
+        "language": "Idioma",
+        "languageHint": "Código BCP-47 tal como fue aprobado (ej. es_MX, en_US).",
+        "category": "Categoría",
+        "bodyPreview": "Texto del body",
+        "bodyPreviewHint": "Copia el body aprobado con los placeholders {'{{1}}'}, {'{{2}}'}, etc.",
+        "status": "Estado",
+        "variables": "Variables",
+        "variablesHint": "Describe cada placeholder. El índice debe coincidir con el número dentro de las llaves.",
+        "addVariable": "+ Agregar variable",
+        "variableIndex": "Índice",
+        "variableLabel": "Etiqueta",
+        "variableExample": "Ejemplo"
+      },
+      "testSend": {
+        "title": "Enviar plantilla de prueba",
+        "subtitle": "Dispara un envío real a un número de WhatsApp. No modifica ninguna conversación existente.",
+        "to": "Número destino (E.164)",
+        "toPlaceholder": "+5215512345678",
+        "variable": "Valor para {label}",
+        "successTitle": "Enviado",
+        "successBody": "Meta aceptó el envío. wamid: {wamid}",
+        "errorTitle": "Meta rechazó el envío"
+      },
+      "errors": {
+        "generic": "No pudimos completar la operación. Intenta de nuevo.",
+        "loadFailed": "No pudimos cargar las plantillas.",
+        "duplicate": "Ya existe una plantilla con ese nombre e idioma para este bot.",
+        "variablesMismatch": "La cantidad de valores no coincide con las variables declaradas."
       }
     },
     "documents": {
@@ -2638,13 +2712,16 @@
         "overview": "Resumen",
         "documents": "Documentos",
         "multimedia": "Multimedia",
-        "calendar": "Google Calendar"
+        "calendar": "Google Calendar",
+        "templates": "Plantillas WhatsApp"
       }
     },
     "bot": {
       "sections": {
         "multimedia": "Recursos multimedia",
-        "multimediaDesc": "Activos enviables (imágenes, PDFs, videos, audios, ubicaciones) que el bot puede adjuntar nativamente en WhatsApp."
+        "multimediaDesc": "Activos enviables (imágenes, PDFs, videos, audios, ubicaciones) que el bot puede adjuntar nativamente en WhatsApp.",
+        "templates": "Plantillas WhatsApp",
+        "templatesDesc": "Plantillas pre-aprobadas por Meta para iniciar conversaciones con clientes y transferir el chat a un asesor humano."
       }
     },
     "billing": {
