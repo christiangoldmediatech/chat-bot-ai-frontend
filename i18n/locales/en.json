@@ -1356,6 +1356,40 @@
         "loadFailed": "We couldn't load the templates.",
         "duplicate": "A template with that name and language already exists for this bot.",
         "variablesMismatch": "The number of values doesn't match the declared variables."
+      },
+      "convMedia": {
+        "openButton": "Send photo / video",
+        "title": "Send file to customer",
+        "subtitle": "Images, PDFs or videos. The file is uploaded to WhatsApp and appears in the thread as sent by the advisor.",
+        "pickFile": "Pick a file",
+        "replaceFile": "Replace file",
+        "caption": "Caption (optional)",
+        "captionHint": "Short text accompanying the file. Max 1024 characters.",
+        "fileHint": "Image ≤5 MB, video/audio ≤16 MB, document ≤100 MB.",
+        "send": "Send",
+        "sending": "Sending…",
+        "cancel": "Cancel",
+        "errorTitle": "Could not send"
+      },
+      "windowClosed": {
+        "title": "24-hour window closed",
+        "hint": "The customer has not written in over 24 hours. Per WhatsApp rules, you can only reopen the conversation with an approved template.",
+        "cta": "Send template"
+      },
+      "convSend": {
+        "openButton": "Send template",
+        "title": "Send template to customer",
+        "subtitle": "Pick a Meta-approved template and fill in the variables. The message will appear in the thread as sent by the advisor.",
+        "pickTemplate": "Template",
+        "pickPlaceholder": "Select a template…",
+        "noTemplatesTitle": "This bot has no templates yet",
+        "noTemplatesHint": "Register them from the “Templates” menu before you can send them from a conversation.",
+        "preview": "Message preview",
+        "send": "Send",
+        "sending": "Sending…",
+        "cancel": "Cancel",
+        "successTitle": "Template sent",
+        "errorTitle": "Could not send"
       }
     },
     "documents": {
