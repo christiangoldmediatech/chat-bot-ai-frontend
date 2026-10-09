@@ -2302,7 +2302,43 @@
       "botActiveNote": "El bot está respondiendo. Toma la conversación para responder como agente.",
       "windowExpiredHint": "Han pasado más de 24 horas desde el último mensaje del cliente. WhatsApp no permite escribirle hasta que él vuelva a escribir.",
       "sendErrorGeneric": "No se pudo enviar el mensaje. Intenta de nuevo en un momento.",
-      "sendErrorNoCredentials": "Este bot no tiene credenciales de WhatsApp configuradas. Completa la configuración de Meta antes de enviar mensajes."
+      "sendErrorNoCredentials": "Este bot no tiene credenciales de WhatsApp configuradas. Completa la configuración de Meta antes de enviar mensajes.",
+      "cases": {
+        "title": "Casos pendientes",
+        "subtitle": "Casos de esta conversación esperando resolución.",
+        "badgeAria": "{n} caso pendiente | {n} casos pendientes",
+        "toggleAria": "Expandir o contraer el panel de casos",
+        "toggleCaseAria": "Expandir o contraer el detalle del caso",
+        "empty": {
+          "title": "No hay casos pendientes",
+          "hint": "Cuando el bot escale una conversación o alguien cree un caso, aparecerá aquí."
+        },
+        "loading": "Cargando casos…",
+        "errorTitle": "No pudimos cargar los casos",
+        "retry": "Reintentar",
+        "viewHistory": "Ver historial del cliente",
+        "newCaseToast": "Nuevo caso agregado al panel",
+        "fields": {
+          "created": "Creado",
+          "attended": "Atendido",
+          "advisor": "Asesor notificado",
+          "followup": "Follow-up enviado"
+        },
+        "requiresHuman": {
+          "hint": "Toma la conversación (HUMAN) para poder resolver casos desde aquí."
+        },
+        "resolve": {
+          "action": "Marcar como resuelto",
+          "modalTitle": "Marcar caso como resuelto",
+          "modalBody": "Agrega una nota breve sobre cómo se resolvió (opcional). Quedará registrado como",
+          "modalEmph": "resuelto por el asesor",
+          "placeholder": "Ej. Se ajustó la facturación.",
+          "submit": "Marcar resuelto",
+          "cancel": "Cancelar",
+          "success": "Caso marcado como resuelto",
+          "error": "No se pudo resolver el caso. Intenta de nuevo."
+        }
+      }
     },
     "phone": {
       "statusBot": "bot activo",

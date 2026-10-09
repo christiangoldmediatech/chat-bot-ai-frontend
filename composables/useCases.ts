@@ -27,6 +27,7 @@ export function useCases(tenantId?: string) {
     if (filters?.status) query.status = filters.status
     if (filters?.botId) query.botId = filters.botId
     if (filters?.customerPhone) query.customerPhone = filters.customerPhone
+    if (filters?.conversationId) query.conversationId = filters.conversationId
     if (filters?.dateFrom) query.dateFrom = filters.dateFrom
     if (filters?.dateTo) query.dateTo = filters.dateTo
     return query
@@ -64,6 +65,20 @@ export function useCases(tenantId?: string) {
         `${customersBase}/${encodeURIComponent(phone)}/cases`,
         Object.keys(query).length > 0 ? { query } : undefined,
       )
+    },
+    byConversation: async (
+      conversationId: string,
+      botId: string,
+    ): Promise<Case[]> => {
+      const [pending, attended] = await Promise.all([
+        api.get<PaginatedCases>(casesBase, {
+          query: { conversationId, botId, status: 'PENDING', pageSize: 100 },
+        }),
+        api.get<PaginatedCases>(casesBase, {
+          query: { conversationId, botId, status: 'ATTENDED', pageSize: 100 },
+        }),
+      ])
+      return [...pending.items, ...attended.items]
     },
     get: (id: string): Promise<Case> =>
       api.get<Case>(`${casesBase}/${id}`),
