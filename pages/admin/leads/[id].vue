@@ -178,7 +178,7 @@ await load()
             <span v-if="lead.customerEmail" class="text-slate-500">·</span>
             <span v-if="lead.customerEmail" class="text-slate-700">{{ lead.customerEmail }}</span>
           </div>
-          <p v-if="lead.reason" class="mt-2 text-sm text-slate-700">{{ lead.reason }}</p>
+          <p v-if="lead.reason" class="mt-2 text-sm text-slate-700">{{ translateLeadReason(lead.reason, t) }}</p>
         </div>
         <div class="flex flex-col items-end gap-2">
           <span

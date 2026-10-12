@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { MessagesActivity, MessagesActivityRange } from '~/types/dashboard'
 
+const { t, locale } = useI18n()
+
 const props = withDefaults(defineProps<{
   data: MessagesActivity
   loading: boolean
@@ -141,20 +143,20 @@ const trendPct = computed<number | null>(() => {
 function formatBucketLabel(iso: string, range: MessagesActivityRange): string {
   const d = new Date(iso)
   if (range === 'day') {
-    return d.toLocaleDateString(undefined, { day: '2-digit', month: 'short' })
+    return d.toLocaleDateString(locale.value, { day: '2-digit', month: 'short' })
   }
   if (range === 'week') {
-    return `W ${d.toLocaleDateString(undefined, { day: '2-digit', month: 'short' })}`
+    return `W ${d.toLocaleDateString(locale.value, { day: '2-digit', month: 'short' })}`
   }
-  return d.toLocaleDateString(undefined, { month: 'short', year: '2-digit' })
+  return d.toLocaleDateString(locale.value, { month: 'short', year: '2-digit' })
 }
 
 const latestLabel = computed(() => {
   if (!props.data) return ''
   switch (props.data.range) {
-    case 'day': return 'Today'
-    case 'week': return 'This week'
-    case 'month': return 'This month'
+    case 'day': return t('common.activityChart.today')
+    case 'week': return t('common.activityChart.thisWeek')
+    case 'month': return t('common.activityChart.thisMonth')
   }
 })
 </script>
@@ -194,8 +196,8 @@ const latestLabel = computed(() => {
             {{ latest?.total?.toLocaleString() ?? 0 }}
           </p>
           <p class="mt-1 text-[11px]" :class="themeClasses.latestSub">
-            <span class="font-medium" :class="theme === 'dark' ? 'text-emerald-300' : 'text-success-600'">{{ latest?.sent ?? 0 }}</span> sent ·
-            <span class="font-medium" :class="themeClasses.footerStrong">{{ latest?.received ?? 0 }}</span> received
+            <span class="font-medium" :class="theme === 'dark' ? 'text-emerald-300' : 'text-success-600'">{{ latest?.sent ?? 0 }}</span> {{ t('common.activityChart.sent') }} ·
+            <span class="font-medium" :class="themeClasses.footerStrong">{{ latest?.received ?? 0 }}</span> {{ t('common.activityChart.received') }}
           </p>
         </div>
         <span
@@ -206,7 +208,7 @@ const latestLabel = computed(() => {
             : trendPct < 0
               ? 'bg-danger-50 text-danger-700 ring-danger-100'
               : 'bg-slate-100 text-slate-600 ring-slate-200'"
-          :title="`vs. previous period`"
+          :title="t('common.activityChart.vsPrevious')"
         >
           <svg v-if="trendPct > 0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-3" aria-hidden="true">
             <polyline points="6 9 12 3 18 9" />
@@ -227,11 +229,11 @@ const latestLabel = computed(() => {
           preserveAspectRatio="none"
           class="w-full h-[60px]"
           role="img"
-          :aria-label="`${title} message activity chart`"
+          :aria-label="t('common.activityChart.chartAriaLabel', { title })"
         >
           <g v-for="(b, i) in bars" :key="i">
             <title>
-              {{ formatBucketLabel(b.bucket, data.range) }}: {{ b.total }} ({{ b.sent }} sent, {{ b.received }} received)
+              {{ t('common.activityChart.bucketTooltip', { label: formatBucketLabel(b.bucket, data.range), total: b.total, sent: b.sent, received: b.received }) }}
             </title>
             <!-- Received (lower part) -->
             <rect
@@ -270,16 +272,16 @@ const latestLabel = computed(() => {
       <!-- Footer totals -->
       <footer class="flex items-center justify-between pt-2 border-t text-[11px]" :class="themeClasses.footer">
         <div>
-          <span class="font-medium tabular-nums" :class="themeClasses.footerStrong">{{ data.totals.total.toLocaleString() }}</span> total
+          <span class="font-medium tabular-nums" :class="themeClasses.footerStrong">{{ data.totals.total.toLocaleString() }}</span> {{ t('common.activityChart.total') }}
         </div>
         <div class="flex items-center gap-3">
           <span class="inline-flex items-center gap-1">
             <span class="size-2 rounded-sm" :class="toneClasses.legendBar" />
-            Sent
+            {{ t('common.activityChart.sentLegend') }}
           </span>
           <span class="inline-flex items-center gap-1">
             <span class="size-2 rounded-sm" :class="toneClasses.legendReceived" />
-            Received
+            {{ t('common.activityChart.receivedLegend') }}
           </span>
         </div>
       </footer>

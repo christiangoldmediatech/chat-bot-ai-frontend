@@ -45,7 +45,20 @@
     "inactive": "Inactive",
     "activate": "Activate",
     "deactivate": "Deactivate",
-    "downloading": "Downloading…"
+    "downloading": "Downloading…",
+    "activityChart": {
+      "today": "Today",
+      "thisWeek": "This week",
+      "thisMonth": "This month",
+      "sent": "sent",
+      "received": "received",
+      "total": "total",
+      "sentLegend": "Sent",
+      "receivedLegend": "Received",
+      "vsPrevious": "vs. previous period",
+      "chartAriaLabel": "{title} — message activity chart",
+      "bucketTooltip": "{label}: {total} ({sent} sent, {received} received)"
+    }
   },
   "errors": {
     "generic": "Something went wrong. Try again.",
@@ -960,7 +973,8 @@
         "whatsappTitle": "WhatsApp connection",
         "whatsappSubtitle": "Meta credentials & webhook",
         "agentTitle": "AI agent",
-        "agentSubtitle": "Tone, prompts & model · {provider}",
+        "agentHeadline": "Adaptable model",
+        "agentSubtitle": "Trained to respond to your customers with your business's tone and knowledge.",
         "documentsTitle": "Documents",
         "documentsBody": "Knowledge base",
         "documentsSubtitle": "Upload .md / .txt / .pdf for RAG",
@@ -1990,7 +2004,7 @@
   },
   "leads": {
     "title": "Leads",
-    "subtitle": "Customers showing real commercial intent — asked about pricing, requested a demo, left contact data, or booked a meeting.",
+    "subtitle": "Patients showing real commercial intent — asked about pricing, requested a demo, left contact data, or booked a meeting.",
     "totalLabel": "Total leads",
     "matchingLabel": "Matching",
     "stat": {

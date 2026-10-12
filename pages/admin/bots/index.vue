@@ -107,7 +107,7 @@ await load()
 
     <!-- Plan usage chip: visible whenever the plan has a finite bot quota. -->
     <p
-      v-if="!loading && tenantData && botsLimit !== null"
+      v-if="false"
       class="mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider ring-1"
       :class="atLimit
         ? 'bg-amber-50 text-amber-700 ring-amber-200'
@@ -117,7 +117,7 @@ await load()
       {{ $t('admin.botsList.usageWithRoom', { used: items.length, limit: botsLimit, plan: planName }) }}
     </p>
     <p
-      v-else-if="!loading && tenantData && botsLimit === null"
+      v-else-if="false"
       class="mt-3 inline-flex items-center gap-1.5 rounded-full bg-slate-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-slate-600 ring-1 ring-slate-200"
     >
       <span class="size-1.5 rounded-full bg-slate-400" />
@@ -130,7 +130,7 @@ await load()
 
     <!-- Soft, contextual banner — only shown once the limit is hit. -->
     <div
-      v-if="atLimit && tenantData"
+      v-if="false"
       class="mt-4 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50/70 p-3"
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 mt-0.5 shrink-0 text-amber-600" aria-hidden="true">
@@ -237,8 +237,8 @@ await load()
             </div>
             <div class="min-w-0 flex-1">
               <p class="text-[11px] uppercase tracking-wider font-semibold text-primary-800">{{ $t('admin.botsList.card.agentTitle') }}</p>
-              <p class="mt-0.5 text-xs text-slate-700 font-mono truncate">{{ bot.aiModel }}</p>
-              <p class="mt-0.5 text-[11px] text-slate-500">{{ $t('admin.botsList.card.agentSubtitle', { provider: bot.aiProvider }) }}</p>
+              <p class="mt-0.5 text-xs text-slate-700 font-medium truncate">{{ $t('admin.botsList.card.agentHeadline') }}</p>
+              <p class="mt-0.5 text-[11px] text-slate-500">{{ $t('admin.botsList.card.agentSubtitle') }}</p>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-primary-600 opacity-0 group-hover/card:opacity-100 self-center transition" aria-hidden="true">
               <line x1="5" y1="12" x2="19" y2="12" />
