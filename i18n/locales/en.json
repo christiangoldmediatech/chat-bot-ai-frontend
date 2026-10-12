@@ -2282,7 +2282,8 @@
       "from": "From",
       "to": "To",
       "clear": "Clear",
-      "apply": "Apply"
+      "apply": "Apply",
+      "invalidRange": "'From' date cannot be later than 'To'."
     },
     "empty": {
       "title": "No conversations",
@@ -2292,7 +2293,13 @@
       "customer": "Customer",
       "bot": "Bot",
       "status": "Status",
+      "securityStatus": "Block",
       "lastMessage": "Last message"
+    },
+    "status": {
+      "BOT": "Bot",
+      "HUMAN": "Human",
+      "CLOSED": "Closed"
     },
     "pagination": {
       "summary": "{total} conversations — page {page} / {totalPages}",

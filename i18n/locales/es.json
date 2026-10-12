@@ -2282,7 +2282,8 @@
       "from": "Desde",
       "to": "Hasta",
       "clear": "Limpiar",
-      "apply": "Aplicar"
+      "apply": "Aplicar",
+      "invalidRange": "La fecha 'Desde' no puede ser mayor que 'Hasta'."
     },
     "empty": {
       "title": "Sin conversaciones",
@@ -2292,7 +2293,13 @@
       "customer": "Cliente",
       "bot": "Bot",
       "status": "Estado",
+      "securityStatus": "Bloqueo",
       "lastMessage": "Último mensaje"
+    },
+    "status": {
+      "BOT": "Bot",
+      "HUMAN": "Humano",
+      "CLOSED": "Cerrada"
     },
     "pagination": {
       "summary": "{total} conversaciones — página {page} / {totalPages}",

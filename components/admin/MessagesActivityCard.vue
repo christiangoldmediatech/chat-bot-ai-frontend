@@ -151,12 +151,13 @@ function formatBucketLabel(iso: string, range: MessagesActivityRange): string {
   return d.toLocaleDateString(locale.value, { month: 'short', year: '2-digit' })
 }
 
-const latestLabel = computed(() => {
+const latestLabel = computed<string>(() => {
   if (!props.data) return ''
   switch (props.data.range) {
     case 'day': return t('common.activityChart.today')
     case 'week': return t('common.activityChart.thisWeek')
     case 'month': return t('common.activityChart.thisMonth')
+    default: return ''
   }
 })
 </script>
