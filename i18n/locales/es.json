@@ -1389,7 +1389,8 @@
         "sending": "Enviando…",
         "cancel": "Cancelar",
         "successTitle": "Plantilla enviada",
-        "errorTitle": "No se pudo enviar"
+        "errorTitle": "No se pudo enviar",
+        "customerNameHint": "Se usará el nombre del cliente de la conversación."
       }
     },
     "documents": {

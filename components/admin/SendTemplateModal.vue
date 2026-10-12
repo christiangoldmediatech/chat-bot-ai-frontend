@@ -7,7 +7,16 @@ const props = defineProps<{
   open: boolean
   conversationId: string
   botId: string
+  customerName?: string | null
 }>()
+
+function isCustomerNameLabel(label: string | null | undefined): boolean {
+  return /nombre|name|cliente|customer/.test((label || '').toLowerCase())
+}
+
+function customerFirstName(): string {
+  return (props.customerName || '').trim().split(/\s+/)[0] ?? ''
+}
 
 const emit = defineEmits<{
   close: []
@@ -161,7 +170,17 @@ watch(
 )
 
 watch(selected, (row) => {
-  values.value = row ? row.variables.map(v => v.example ?? '') : []
+  if (!row) {
+    values.value = []
+    return
+  }
+  const first = customerFirstName()
+  values.value = row.variables.map((v) => {
+    if (isCustomerNameLabel(v.label)) {
+      return first || v.example || ''
+    }
+    return v.example ?? ''
+  })
 })
 
 async function onSend(): Promise<void> {
@@ -240,9 +259,14 @@ async function onSend(): Promise<void> {
           <input
             v-model="values[i]"
             :placeholder="v.example ?? ''"
+            :disabled="isCustomerNameLabel(v.label)"
+            :readonly="isCustomerNameLabel(v.label)"
             required
-            class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none"
+            class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500"
           >
+          <span v-if="isCustomerNameLabel(v.label)" class="mt-1 block text-[11px] text-slate-500">
+            {{ t('admin.templates.convSend.customerNameHint') }}
+          </span>
         </label>
       </div>
 

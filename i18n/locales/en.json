@@ -1389,7 +1389,8 @@
         "sending": "Sending…",
         "cancel": "Cancel",
         "successTitle": "Template sent",
-        "errorTitle": "Could not send"
+        "errorTitle": "Could not send",
+        "customerNameHint": "The customer name from this conversation will be used."
       }
     },
     "documents": {
