@@ -116,13 +116,6 @@ await load()
       <span class="size-1.5 rounded-full" :class="atLimit ? 'bg-amber-500' : 'bg-slate-400'" />
       {{ $t('admin.botsList.usageWithRoom', { used: items.length, limit: botsLimit, plan: planName }) }}
     </p>
-    <p
-      v-else-if="false"
-      class="mt-3 inline-flex items-center gap-1.5 rounded-full bg-slate-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-slate-600 ring-1 ring-slate-200"
-    >
-      <span class="size-1.5 rounded-full bg-slate-400" />
-      {{ $t('admin.botsList.usageUnlimited', { used: items.length, plan: planName }) }}
-    </p>
 
     <p v-if="error" class="mt-4 rounded-2xl border border-danger-200 bg-danger-50/80 p-3 text-sm text-danger-700">
       {{ error }}

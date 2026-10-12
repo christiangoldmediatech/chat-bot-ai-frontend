@@ -73,3 +73,13 @@ The whole app is bilingual via `@nuxtjs/i18n` (v9). Locale files live in `i18n/l
 - **ESLint rule overrides** live in `eslint.config.mjs`. `vue/multi-word-component-names` is intentionally off so single-word page components are allowed.
 - **Tailwind `brand-*` palette** is defined in `tailwind.config.ts`; reuse it instead of hard-coding hexes.
 - **Dev port is 8080**, not 3000 — that's reserved for the NestJS backend.
+
+## Dates and timezone
+
+Business timezone is `America/Guayaquil`. Never use `new Date(s).toLocaleString()` for user-visible timestamps — it leaks the browser's TZ.
+
+- Dependency: `luxon` + `@types/luxon` are installed.
+- Shared helpers in `utils/business-date.ts`: `formatBusinessDateTime(iso, tz, locale)`, `formatBusinessDate(...)`, `assertDateRangeValid(from, to)`, and the `DEFAULT_BUSINESS_TIMEZONE` constant.
+- Composable `composables/useBusinessTimezone.ts` returns the current business TZ (default `'America/Guayaquil'`, override via `?tz=` query param).
+- `<input type="date">` sends raw `YYYY-MM-DD` strings to the backend. **Do not pre-convert to ISO/UTC on the frontend** — the backend parses the bare date as start-of-day in the business TZ via `buildDayRange`. The one exception is the dashboard range picker (`DashboardRangePicker.vue`) which legacy-sends full ISO; its format is accepted by the backend untouched.
+- Date-range forms must validate `from <= to` before firing the request and surface a localized error (`conversations.filter.invalidRange` pattern). Server also validates — the client check is UX.

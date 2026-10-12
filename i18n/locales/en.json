@@ -58,6 +58,24 @@
       "vsPrevious": "vs. previous period",
       "chartAriaLabel": "{title} — message activity chart",
       "bucketTooltip": "{label}: {total} ({sent} sent, {received} received)"
+    },
+    "customer": {
+      "unnamed": "Unnamed customer",
+      "edit": {
+        "editLabel": "Edit name",
+        "addName": "+ Add name",
+        "placeholder": "Customer name",
+        "whatsappLabel": "WhatsApp:",
+        "suggestUse": "Use «{name}»",
+        "toastSuccess": "Name updated",
+        "errors": {
+          "required": "Enter a name",
+          "tooShort": "Minimum 2 characters",
+          "tooLong": "Maximum 80 characters",
+          "onlySymbols": "Must include at least one letter",
+          "generic": "Could not save. Try again."
+        }
+      }
     }
   },
   "errors": {
@@ -2282,7 +2300,8 @@
       "from": "From",
       "to": "To",
       "clear": "Clear",
-      "apply": "Apply"
+      "apply": "Apply",
+      "invalidRange": "'From' date cannot be later than 'To'."
     },
     "empty": {
       "title": "No conversations",
@@ -2292,7 +2311,13 @@
       "customer": "Customer",
       "bot": "Bot",
       "status": "Status",
+      "securityStatus": "Block",
       "lastMessage": "Last message"
+    },
+    "status": {
+      "BOT": "Bot",
+      "HUMAN": "Human",
+      "CLOSED": "Closed"
     },
     "pagination": {
       "summary": "{total} conversations — page {page} / {totalPages}",

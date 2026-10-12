@@ -134,6 +134,15 @@ function onFilterChange(): void {
   void load()
 }
 
+function onLeadNameUpdated(row: Lead, newName: string): void {
+  row.customerName = newName
+  for (const r of rows.value) {
+    if (r.customerPhone === row.customerPhone && r.botId === row.botId) {
+      r.customerName = newName
+    }
+  }
+}
+
 function clearFilters(): void {
   search.value = ''
   interestFilter.value = ''
@@ -562,13 +571,16 @@ await load()
 
             <!-- Identity block -->
             <div class="flex-1 min-w-0">
-              <div class="flex items-baseline gap-2 flex-wrap">
-                <NuxtLink
-                  :to="`/admin/leads/${l.id}`"
-                  class="text-base font-semibold text-slate-900 hover:text-slate-600 transition truncate"
-                >
-                  {{ l.customerName || l.customerPhone }}
-                </NuxtLink>
+              <div class="flex items-center gap-2 flex-wrap">
+                <EditableCustomerName
+                  :phone="l.customerPhone"
+                  :bot-id="l.botId"
+                  :effective-name="l.customerName"
+                  :profile-name="l.customerName"
+                  size="compact"
+                  class="min-w-0"
+                  @updated="(n) => onLeadNameUpdated(l, n)"
+                />
                 <span class="text-xs text-slate-400 font-mono truncate">{{ l.customerPhone }}</span>
               </div>
 

@@ -16,6 +16,7 @@ definePageMeta({
 const conversationsApi = useConversations()
 const dashboardApi = useDashboard()
 const activeBot = useActiveBotStore()
+const businessTz = useBusinessTimezone()
 
 // Activity dashboard (day / week / month) shown above the filter panel.
 const activity = reactive<Record<MessagesActivityRange, MessagesActivity | null>>({
@@ -106,6 +107,11 @@ function syncBotsFromStore(): void {
 }
 
 function onApplyFilters(): void {
+  if (!assertDateRangeValid(filters.dateFrom, filters.dateTo)) {
+    error.value = t('conversations.filter.invalidRange')
+    return
+  }
+  error.value = null
   filters.page = 1
   void load()
 }
@@ -147,7 +153,7 @@ function notify(kind: 'success' | 'error', text: string): void {
   }, 2500)
 }
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 function onUnblocked(): void {
   notify('success', t('conversations.security.toast.unblocked'))
@@ -171,7 +177,7 @@ function statusClass(s: ConversationStatus): string {
 }
 
 function formatDate(s: string): string {
-  return new Date(s).toLocaleString()
+  return formatBusinessDateTime(s, businessTz.value, locale.value)
 }
 </script>
 
@@ -325,7 +331,7 @@ function formatDate(s: string): string {
               <th class="text-left font-medium px-4 py-3">{{ $t('conversations.table.customer') }}</th>
               <th class="text-left font-medium px-4 py-3">{{ $t('conversations.table.bot') }}</th>
               <th class="text-left font-medium px-4 py-3">{{ $t('conversations.table.status') }}</th>
-              <th class="text-left font-medium px-4 py-3">{{ $t('conversations.security.blockedList.filter.status') }}</th>
+              <th class="text-left font-medium px-4 py-3">{{ $t('conversations.table.securityStatus') }}</th>
               <th class="text-left font-medium px-4 py-3">{{ $t('conversations.table.lastMessage') }}</th>
               <th />
             </tr>
@@ -347,7 +353,7 @@ function formatDate(s: string): string {
                   class="inline-block rounded-full border px-2 py-0.5 text-xs font-medium"
                   :class="statusClass(c.status)"
                 >
-                  {{ c.status }}
+                  {{ $t(`conversations.status.${c.status}`) }}
                 </span>
               </td>
               <td class="px-4 py-3">

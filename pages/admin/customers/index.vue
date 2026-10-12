@@ -66,6 +66,10 @@ function clearFilters(): void {
   void load()
 }
 
+function onNameUpdated(row: CustomerSummary, newName: string): void {
+  row.customerName = newName
+}
+
 function goPrev(): void {
   if (page.value <= 1) return
   page.value -= 1
@@ -263,7 +267,17 @@ function isBlocked(c: CustomerSummary): boolean {
                 <div class="flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-indigo-600 text-white font-semibold text-sm ring-1 ring-indigo-300/60 shadow-sm">
                   {{ (c.customerName || c.customerPhone || '?').charAt(0).toUpperCase() }}
                 </div>
-                <span class="text-slate-900 font-medium truncate">{{ c.customerName || '—' }}</span>
+                <EditableCustomerName
+                  v-if="activeBot.botId"
+                  :phone="c.customerPhone"
+                  :bot-id="activeBot.botId"
+                  :effective-name="c.customerName"
+                  :profile-name="c.customerName"
+                  size="default"
+                  class="flex-1 min-w-0"
+                  @updated="(n) => onNameUpdated(c, n)"
+                />
+                <span v-else class="text-slate-900 font-medium truncate">{{ c.customerName || '—' }}</span>
               </div>
             </td>
             <td class="px-4 py-3 text-slate-600 font-mono text-xs">{{ c.customerPhone }}</td>

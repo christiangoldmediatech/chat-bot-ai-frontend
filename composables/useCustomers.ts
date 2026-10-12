@@ -61,5 +61,15 @@ export function useCustomers(tenantId?: string) {
         Object.keys(query).length > 0 ? { query } : undefined,
       )
     },
+    updateDisplayName: (
+      phone: string,
+      botId: string,
+      displayName: string,
+    ): Promise<{ phone: string; displayName: string }> =>
+      api.patch<{ phone: string; displayName: string }>(
+        `${base}/${encodeURIComponent(phone)}`,
+        { displayName },
+        { query: { botId } },
+      ),
   }
 }
