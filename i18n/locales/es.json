@@ -45,7 +45,20 @@
     "inactive": "Inactivo",
     "activate": "Activar",
     "deactivate": "Desactivar",
-    "downloading": "Descargando…"
+    "downloading": "Descargando…",
+    "activityChart": {
+      "today": "Hoy",
+      "thisWeek": "Esta semana",
+      "thisMonth": "Este mes",
+      "sent": "enviados",
+      "received": "recibidos",
+      "total": "total",
+      "sentLegend": "Enviados",
+      "receivedLegend": "Recibidos",
+      "vsPrevious": "vs. periodo anterior",
+      "chartAriaLabel": "{title} — gráfico de actividad de mensajes",
+      "bucketTooltip": "{label}: {total} ({sent} enviados, {received} recibidos)"
+    }
   },
   "errors": {
     "generic": "Algo salió mal. Inténtalo de nuevo.",
@@ -960,7 +973,8 @@
         "whatsappTitle": "Conexión WhatsApp",
         "whatsappSubtitle": "Credenciales Meta & webhook",
         "agentTitle": "Agente IA",
-        "agentSubtitle": "Tono, prompts & modelo · {provider}",
+        "agentHeadline": "Modelo adaptable",
+        "agentSubtitle": "Entrenado para responder a tus clientes con el tono y el conocimiento de tu negocio.",
         "documentsTitle": "Documentos",
         "documentsBody": "Base de conocimiento",
         "documentsSubtitle": "Sube .md / .txt / .pdf para RAG",
@@ -1990,7 +2004,7 @@
   },
   "leads": {
     "title": "Leads",
-    "subtitle": "Clientes con intención comercial real — preguntaron precios, pidieron una demo, dejaron datos o agendaron una cita.",
+    "subtitle": "Pacientes con intención comercial real — preguntaron precios, pidieron una demo, dejaron datos o agendaron una cita.",
     "totalLabel": "Total de leads",
     "matchingLabel": "Coincidencias",
     "stat": {

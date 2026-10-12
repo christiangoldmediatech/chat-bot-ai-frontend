@@ -9,6 +9,7 @@ definePageMeta({
 
 const leadsApi = useLeads()
 const activeBot = useActiveBotStore()
+const { t } = useI18n()
 
 const PAGE_SIZE = 25
 
@@ -405,6 +406,7 @@ await load()
           </svg>
         </button>
         <button
+          v-if="false"
           type="button"
           :disabled="backfilling"
           class="inline-flex items-center gap-1.5 rounded-lg bg-white ring-1 ring-slate-200 px-2.5 py-1.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 disabled:opacity-50 transition"
@@ -412,10 +414,9 @@ await load()
           @click="backfillCrm"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5" :class="{ 'animate-spin': backfilling }" aria-hidden="true">
-            <polyline points="23 4 23 10 17 10" />
-            <polyline points="1 20 1 14 7 14" />
-            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10" />
-            <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14" />
+            <path d="M12 19V7" />
+            <polyline points="7 12 12 7 17 12" />
+            <path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25" />
           </svg>
         </button>
         <button
@@ -656,7 +657,7 @@ await load()
             v-if="l.reason"
             class="mt-4 pl-4 border-l-2 border-slate-200 text-[15px] text-slate-800 leading-relaxed"
           >
-            {{ l.reason }}
+            {{ translateLeadReason(l.reason, t) }}
           </blockquote>
 
           <!-- Bottom bar: meta + actions -->
