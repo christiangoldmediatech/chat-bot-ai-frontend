@@ -64,6 +64,12 @@ function onTemplateSent(msg: Message): void {
   onOutboundMessage(msg)
 }
 
+function onCustomerNameUpdated(newName: string): void {
+  if (data.value) {
+    data.value.customerName = newName
+  }
+}
+
 function onMediaSent(msg: Message): void {
   onOutboundMessage(msg)
 }
@@ -331,15 +337,20 @@ function statusBadgeClass(s: ConversationStatus): string {
         <!-- Side controls panel -->
         <aside class="space-y-4">
           <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-4">
-            <h2 class="text-sm font-semibold text-slate-900">
-              {{ data.customerName || data.customerPhone }}
-            </h2>
+            <EditableCustomerName
+              :phone="data.customerPhone"
+              :bot-id="data.botId"
+              :effective-name="data.customerName"
+              :profile-name="data.customerName"
+              size="default"
+              @updated="onCustomerNameUpdated"
+            />
             <p class="mt-1 text-xs font-mono text-slate-500">{{ data.customerPhone }}</p>
             <span
               class="mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ring-1"
               :class="statusBadgeClass(data.status)"
             >
-              {{ data.status }}
+              {{ $t(`conversations.status.${data.status}`) }}
             </span>
           </section>
 

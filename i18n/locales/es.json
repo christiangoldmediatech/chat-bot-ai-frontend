@@ -58,6 +58,24 @@
       "vsPrevious": "vs. periodo anterior",
       "chartAriaLabel": "{title} — gráfico de actividad de mensajes",
       "bucketTooltip": "{label}: {total} ({sent} enviados, {received} recibidos)"
+    },
+    "customer": {
+      "unnamed": "Cliente sin nombre",
+      "edit": {
+        "editLabel": "Editar nombre",
+        "addName": "+ Agregar nombre",
+        "placeholder": "Nombre del cliente",
+        "whatsappLabel": "WhatsApp:",
+        "suggestUse": "Usar «{name}»",
+        "toastSuccess": "Nombre actualizado",
+        "errors": {
+          "required": "Ingresa un nombre",
+          "tooShort": "Mínimo 2 caracteres",
+          "tooLong": "Máximo 80 caracteres",
+          "onlySymbols": "Debe contener al menos una letra",
+          "generic": "No se pudo guardar. Intenta de nuevo."
+        }
+      }
     }
   },
   "errors": {
