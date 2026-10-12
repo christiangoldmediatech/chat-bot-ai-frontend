@@ -423,6 +423,7 @@ function statusBadgeClass(s: ConversationStatus): string {
       :open="templateModalOpen"
       :conversation-id="data.id"
       :bot-id="data.botId"
+      :customer-name="data.customerName"
       @close="templateModalOpen = false"
       @sent="onTemplateSent"
     />
