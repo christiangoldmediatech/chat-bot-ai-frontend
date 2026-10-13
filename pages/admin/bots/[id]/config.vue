@@ -24,7 +24,7 @@ const form = reactive({
   followupInactivityHours: 24,
   followupInactivityMaxCount: 3,
   aiProvider: 'anthropic',
-  aiModel: 'claude-sonnet-4-6',
+  aiModel: 'claude-sonnet-5-5',
   isActive: true,
   createMeetEnabled: false,
 })
@@ -50,7 +50,7 @@ const PROVIDERS: { value: string, label: string, models: string[] }[] = [
   {
     value: 'anthropic',
     label: 'Anthropic',
-    models: ['claude-opus-4-7', 'claude-sonnet-4-6', 'claude-haiku-4-5-20251001'],
+    models: ['claude-sonnet-5-5', 'claude-haiku-5-5', 'claude-opus-4-7', 'claude-sonnet-4-6', 'claude-haiku-4-5-20251001'],
   },
   {
     value: 'openai',
