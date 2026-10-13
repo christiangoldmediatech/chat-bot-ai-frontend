@@ -10,6 +10,7 @@ const links = computed(() => [
   { to: '/superadmin', label: t('nav.dashboard') },
   { to: '/superadmin/companies', label: t('nav.companies') },
   { to: '/superadmin/leads', label: t('nav.leads') },
+  { to: '/superadmin/llm-usage', label: t('nav.llmUsage') },
   { to: '/superadmin/profile', label: t('nav.myProfile') },
 ])
 

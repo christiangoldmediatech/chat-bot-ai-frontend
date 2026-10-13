@@ -15,10 +15,12 @@ const hoursOptions = [
   { value: 24 * 30, label: '30d' },
 ]
 const hours = ref<number>(24)
-const scope = ref<'all' | 'bot'>('all')
+const selectedBotId = ref<string>('')
 const data = ref<UsageSummary | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
+
+const botOptions = computed(() => activeBot.allBots.map((b) => ({ id: b.id, name: b.name })))
 
 async function load(): Promise<void> {
   loading.value = true
@@ -26,7 +28,7 @@ async function load(): Promise<void> {
   try {
     data.value = await api.summary({
       hours: hours.value,
-      botId: scope.value === 'bot' ? activeBot.botId ?? undefined : undefined,
+      botId: selectedBotId.value || undefined,
     })
   }
   catch (err) {
@@ -37,7 +39,7 @@ async function load(): Promise<void> {
   }
 }
 
-watch([hours, scope, () => activeBot.botId], () => void load())
+watch([hours, selectedBotId], () => void load())
 void load()
 
 function fmtMoney(n: number): string {
@@ -67,19 +69,19 @@ function kindLabel(k: string): string {
         <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Consumo de IA</h1>
         <p class="mt-1 text-sm text-slate-500">Tokens, llamadas y costo por modelo y tipo. Datos de la tabla llm_usage.</p>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
+        <select
+          v-model="selectedBotId"
+          class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700"
+        >
+          <option value="">Todos los bots</option>
+          <option v-for="b in botOptions" :key="b.id" :value="b.id">{{ b.name }}</option>
+        </select>
         <select
           v-model="hours"
           class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700"
         >
           <option v-for="o in hoursOptions" :key="o.value" :value="o.value">{{ o.label }}</option>
-        </select>
-        <select
-          v-model="scope"
-          class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700"
-        >
-          <option value="all">Todos los bots</option>
-          <option value="bot">Solo bot activo</option>
         </select>
       </div>
     </header>
