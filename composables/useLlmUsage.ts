@@ -18,6 +18,19 @@ export interface UsageSummary {
   byModelKind: UsageRow[]
 }
 
+export interface UsageByBotRow {
+  botId: string | null
+  botName: string | null
+  tenantId: string | null
+  tenantName: string | null
+  calls: number
+  costUsd: number
+}
+
+export interface PlatformUsageSummary extends UsageSummary {
+  byBot: UsageByBotRow[]
+}
+
 export function useLlmUsage() {
   const api = useApi()
   return {
@@ -27,6 +40,16 @@ export function useLlmUsage() {
       if (opts.hours !== undefined) query.hours = opts.hours
       return api.get<UsageSummary>(
         '/admin/llm-usage/summary',
+        Object.keys(query).length > 0 ? { query } : undefined,
+      )
+    },
+    platformSummary: (opts: { tenantId?: string, botId?: string, hours?: number } = {}): Promise<PlatformUsageSummary> => {
+      const query: Record<string, unknown> = {}
+      if (opts.tenantId) query.tenantId = opts.tenantId
+      if (opts.botId) query.botId = opts.botId
+      if (opts.hours !== undefined) query.hours = opts.hours
+      return api.get<PlatformUsageSummary>(
+        '/superadmin/llm-usage/summary',
         Object.keys(query).length > 0 ? { query } : undefined,
       )
     },
