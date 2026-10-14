@@ -30,16 +30,10 @@ export type DocumentType =
 
 export interface DocumentCoverageSummary {
   totalServices: number
-  servicesCovered: number
-  coveragePercent: number
+  servicesWithCompleteData: number
+  completenessPercent: number
   totalDocs: number
   docsWithoutServiceLink: number
-}
-
-export interface ServiceWithoutDoc {
-  serviceId: string
-  name: string
-  slug: string
 }
 
 export interface DocWithoutService {
@@ -57,7 +51,6 @@ export interface ServiceWithIncompleteFields {
 
 export interface DocumentCoverage {
   summary: DocumentCoverageSummary
-  servicesWithoutDocs: ServiceWithoutDoc[]
   docsWithoutServices: DocWithoutService[]
   servicesWithIncompleteFields: ServiceWithIncompleteFields[]
 }
