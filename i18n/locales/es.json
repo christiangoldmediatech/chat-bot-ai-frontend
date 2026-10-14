@@ -1450,7 +1450,26 @@
       "countOnly": "{count} documentos",
       "limitReached": "Alcanzaste el máximo de {max} documentos. Elimina uno para subir otro.",
       "deleteConfirmTitle": "¿Eliminar este documento?",
-      "deleteConfirmMessage": "\"{name}\" se eliminará de la base de conocimiento del bot. El bot dejará de usarlo como contexto en sus próximas respuestas. Esta acción no se puede deshacer."
+      "deleteConfirmMessage": "\"{name}\" se eliminará de la base de conocimiento del bot. El bot dejará de usarlo como contexto en sus próximas respuestas. Esta acción no se puede deshacer.",
+      "coverageTitle": "Calidad del catálogo",
+      "coverageSubtitle": "El bot responde sobre servicios con los datos del catálogo (nombre, descripción, precio, imagen). Los documentos son playbooks de casuística — no se asocian a servicios.",
+      "coverageRefresh": "Actualizar",
+      "coverageRefreshing": "Actualizando…",
+      "coverageLoading": "Cargando…",
+      "coverageServicesComplete": "{count} de {total} servicios con datos completos",
+      "coverageDocsTotal": "{count} documentos publicados (playbooks de casuística).",
+      "coverageIncompleteTitle": "Servicios con datos incompletos",
+      "coverageIncompleteHint": "El bot llama list_services para responder sobre precios y detalles. Si falta descripción o es muy corta, el bot caerá en “no tengo esa información” cuando el cliente pregunte.",
+      "coverageIncompleteMissingPrefix": "— falta {fields}",
+      "coverageDocsListTitle": "Documentos publicados (playbooks)",
+      "coverageDocsListHint": "Los documentos cubren casos específicos (políticas, cómo atender X situación, FAQ). El RAG los busca cuando el mensaje del cliente coincide semánticamente.",
+      "coverageAllGood": "Todos los servicios tienen descripción, precio e imagen listos para que el bot responda bien.",
+      "coverageMissingField": {
+        "description": "descripción",
+        "shortDescription": "descripción más detallada",
+        "priceCents": "precio",
+        "image": "imagen"
+      }
     },
     "calendar": {
       "cardTitle": "Google Calendar",

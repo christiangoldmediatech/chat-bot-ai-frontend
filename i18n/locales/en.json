@@ -1450,7 +1450,26 @@
       "countOnly": "{count} documents",
       "limitReached": "Maximum {max} documents reached. Delete one to upload another.",
       "deleteConfirmTitle": "Delete this document?",
-      "deleteConfirmMessage": "\"{name}\" will be removed from the bot's knowledge base. The bot will stop using it as context in future replies. This action cannot be undone."
+      "deleteConfirmMessage": "\"{name}\" will be removed from the bot's knowledge base. The bot will stop using it as context in future replies. This action cannot be undone.",
+      "coverageTitle": "Catalog quality",
+      "coverageSubtitle": "The bot answers service questions using catalog data (name, description, price, image). Documents are casuistics playbooks — they are not linked to services.",
+      "coverageRefresh": "Refresh",
+      "coverageRefreshing": "Refreshing…",
+      "coverageLoading": "Loading…",
+      "coverageServicesComplete": "{count} of {total} services with complete data",
+      "coverageDocsTotal": "{count} published documents (casuistics playbooks).",
+      "coverageIncompleteTitle": "Services with incomplete data",
+      "coverageIncompleteHint": "The bot calls list_services to answer about prices and details. If a description is missing or too short, the bot will fall back to “I don’t have that information” when the customer asks.",
+      "coverageIncompleteMissingPrefix": "— missing {fields}",
+      "coverageDocsListTitle": "Published documents (playbooks)",
+      "coverageDocsListHint": "Documents cover specific scenarios (policies, how to handle X case, FAQ). RAG retrieves them when the customer’s message matches semantically.",
+      "coverageAllGood": "Every service has description, price, and image ready for the bot to respond well.",
+      "coverageMissingField": {
+        "description": "description",
+        "shortDescription": "a more detailed description",
+        "priceCents": "price",
+        "image": "image"
+      }
     },
     "calendar": {
       "cardTitle": "Google Calendar",
