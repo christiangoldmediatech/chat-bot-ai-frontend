@@ -91,6 +91,11 @@ const audioTranscript = computed<string | null>(() => {
   return raw.transcript ?? null
 })
 
+const isAutoReminder = computed<boolean>(() => {
+  const raw = (props.message.metadata ?? {}) as { source?: string }
+  return raw.source === 'appointment-reminder'
+})
+
 function formatBytes(b: number): string {
   if (b === 0) return '0 B'
   const units = ['B', 'KB', 'MB', 'GB']
@@ -110,7 +115,18 @@ function closeLightbox(): void {
 
 <template>
   <!-- TEXT (legacy and explicit) — preserves existing behavior -->
-  <div v-if="kind === 'TEXT'" class="whitespace-pre-wrap">{{ message.content }}</div>
+  <div v-if="kind === 'TEXT'">
+    <span
+      v-if="isAutoReminder"
+      class="mb-1.5 inline-flex items-center gap-1 rounded-full bg-sky-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-sky-700 ring-1 ring-sky-200"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-3 w-3" aria-hidden="true">
+        <path d="M12 2a7 7 0 0 0-7 7v3.586l-1.707 1.707A1 1 0 0 0 4 16h16a1 1 0 0 0 .707-1.707L19 12.586V9a7 7 0 0 0-7-7Zm0 20a3 3 0 0 0 2.995-2.824L15 19H9a3 3 0 0 0 3 3Z"/>
+      </svg>
+      {{ $t('admin.reminders.bubble.autoReminder') }}
+    </span>
+    <div class="whitespace-pre-wrap">{{ message.content }}</div>
+  </div>
 
   <!-- IMAGE / STICKER -->
   <div v-else-if="kind === 'IMAGE' || kind === 'STICKER'" class="space-y-2">

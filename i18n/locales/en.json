@@ -92,7 +92,14 @@
       "SALE_APPOINTMENT_INCONSISTENT": "The linked appointment does not allow this sale state.",
       "UNIQUE_VIOLATION": "That value already exists.",
       "NOT_FOUND": "That record no longer exists.",
-      "INTERNAL_ERROR": "Unexpected server error. We've been notified."
+      "INTERNAL_ERROR": "Unexpected server error. We've been notified.",
+      "TEMPLATE_IS_AUTOMATIC": "This template is automatic and the system sends it on an event. It cannot be dispatched manually from the conversation.",
+      "TEMPLATE_AUTOMATIC_REQUIRES_TRIGGER": "An automatic template needs a trigger (e.g. Appointment reminder).",
+      "TEMPLATE_MANUAL_FORBIDS_TRIGGER": "Manual templates cannot have a trigger configured.",
+      "TEMPLATE_AUTOMATION_VARIABLE_OUT_OF_RANGE": "The variable mapping points to a position that does not exist in the template body.",
+      "TEMPLATE_AUTOMATION_DUPLICATE_FIELD": "Each data field (name, service, day, time, business) can only be mapped to one variable.",
+      "TEMPLATE_AUTOMATIC_ALREADY_ACTIVE": "This bot already has an active automatic template for that trigger. Pause or delete the existing one before activating another.",
+      "TEMPLATE_NAME_TAKEN": "A template with that name and language already exists for this bot."
     },
     "emailInvalid": "Enter a valid email.",
     "passwordTooShort": "Password is too short.",
@@ -471,7 +478,8 @@
       "operations": "Operations",
       "catalog": "Catalog",
       "settings": "Settings"
-    }
+    },
+    "reminders": "Reminders"
   },
   "activeBot": {
     "label": "Active bot",
@@ -1341,6 +1349,13 @@
           "UTILITY": "Utility",
           "MARKETING": "Marketing",
           "AUTHENTICATION": "Authentication"
+        },
+        "usage": {
+          "MANUAL": "Manual",
+          "AUTOMATIC": "Automatic"
+        },
+        "trigger": {
+          "APPOINTMENT_REMINDER": "Appointment reminder"
         }
       },
       "actions": {
@@ -1372,7 +1387,23 @@
         "addVariable": "+ Add variable",
         "variableIndex": "Index",
         "variableLabel": "Label",
-        "variableExample": "Example"
+        "variableExample": "Example",
+        "usage": "Usage",
+        "usageHint": "Manual: the agent picks it from the conversation. Automatic: the system sends it on an event.",
+        "trigger": "Trigger",
+        "triggerHint": "When the automatic template is sent.",
+        "automationOffset": "Lead time (minutes)",
+        "automationOffsetHint": "Minutes before the appointment that the reminder is sent. Default 120 (2 hours).",
+        "automationMapping": "Appointment data per variable",
+        "automationMappingHint": "Pick which data fills each body variable (1, 2, 3…). No value includes price or cost.",
+        "automationFieldPlaceholder": "Choose a data field",
+        "automationFields": {
+          "attendeeName": "Attendee first name",
+          "serviceName": "Service booked",
+          "appointmentDay": "Appointment day (e.g. Thursday, October 15)",
+          "appointmentTime": "Appointment time (e.g. 3:30 PM)",
+          "businessName": "Business name"
+        }
       },
       "testSend": {
         "title": "Send test template",
@@ -1424,6 +1455,13 @@
         "successTitle": "Template sent",
         "errorTitle": "Could not send",
         "customerNameHint": "The customer name from this conversation will be used."
+      },
+      "badges": {
+        "manual": "Manual",
+        "automatic": "Automatic",
+        "trigger": {
+          "APPOINTMENT_REMINDER": "Appointment reminder"
+        }
       }
     },
     "documents": {
@@ -1965,6 +2003,54 @@
         "units": "Units",
         "total": "Total",
         "empty": "No results for the selected range."
+      }
+    },
+    "reminders": {
+      "pageTitle": "Automatic reminders",
+      "pageSubtitle": "History of appointment reminders the system sent (or attempted to send) via WhatsApp.",
+      "selectBotLabel": "Bot",
+      "noBotTitle": "Select a bot",
+      "noBotHint": "Pick a bot above to see its reminder history.",
+      "filters": {
+        "status": "Status",
+        "statusAll": "All",
+        "dateFrom": "From",
+        "dateTo": "To",
+        "clear": "Clear filters"
+      },
+      "status": {
+        "SENT": "Sent",
+        "FAILED": "Failed",
+        "SKIPPED": "Skipped"
+      },
+      "columns": {
+        "sentAt": "Sent at",
+        "customer": "Customer",
+        "service": "Service",
+        "appointment": "Appointment",
+        "status": "Status",
+        "template": "Template",
+        "reason": "Reason / detail"
+      },
+      "bubble": {
+        "autoReminder": "Automatic reminder"
+      },
+      "reasons": {
+        "APPOINTMENT_REMINDER_NO_TEMPLATE": "No active automatic template is configured for this bot.",
+        "APPOINTMENT_REMINDER_TEMPLATE_PAUSED": "The template is paused.",
+        "APPOINTMENT_REMINDER_NO_SERVICE_FOUND": "The service for this appointment could not be resolved.",
+        "APPOINTMENT_REMINDER_BOT_INACTIVE": "The bot is inactive.",
+        "APPOINTMENT_REMINDER_BOT_MISSING_WHATSAPP": "The bot is missing its WhatsApp credentials.",
+        "APPOINTMENT_REMINDER_SECURITY_BLOCKED": "The conversation was blocked for security reasons.",
+        "APPOINTMENT_REMINDER_PRICE_IN_PAYLOAD": "The content included a price and the send was blocked.",
+        "APPOINTMENT_REMINDER_ALREADY_SENT": "A reminder was already sent for this appointment.",
+        "APPOINTMENT_REMINDER_META_REJECTED": "Meta rejected the send (see error code).",
+        "APPOINTMENT_REMINDER_MAPPING_INCOMPLETE": "The variable mapping is incomplete.",
+        "APPOINTMENT_REMINDER_EVENT_NOT_ELIGIBLE": "The appointment is no longer eligible (cancelled, past, or other reason)."
+      },
+      "empty": "No reminders have been registered for this bot yet.",
+      "errors": {
+        "loadFailed": "We could not load the reminders."
       }
     }
   },
