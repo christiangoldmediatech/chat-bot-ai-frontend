@@ -79,6 +79,7 @@ const groups = computed<NavGroup[]>(() => [
     links: [
       { to: '/admin/bots', label: t('nav.bots'), icon: 'bots' },
       { to: '/admin/templates', label: t('nav.templates'), icon: 'templates' },
+      { to: '/admin/reminders', label: t('nav.reminders'), icon: 'templates' },
       { to: '/admin/company', label: t('nav.myCompany'), icon: 'company' },
       { to: '/admin/profile', label: t('nav.myProfile'), icon: 'profile' },
     ],

@@ -92,7 +92,14 @@
       "SALE_APPOINTMENT_INCONSISTENT": "La cita vinculada no permite ese estado para la venta.",
       "UNIQUE_VIOLATION": "Ese valor ya existe.",
       "NOT_FOUND": "Ese registro ya no existe.",
-      "INTERNAL_ERROR": "Error inesperado del servidor. Ya nos notificaron."
+      "INTERNAL_ERROR": "Error inesperado del servidor. Ya nos notificaron.",
+      "TEMPLATE_IS_AUTOMATIC": "Esta plantilla es automática y la envía el sistema por un evento. No se puede mandar manualmente desde la conversación.",
+      "TEMPLATE_AUTOMATIC_REQUIRES_TRIGGER": "Una plantilla automática necesita un disparador (por ejemplo, Recordatorio de cita).",
+      "TEMPLATE_MANUAL_FORBIDS_TRIGGER": "Las plantillas manuales no pueden tener un disparador configurado.",
+      "TEMPLATE_AUTOMATION_VARIABLE_OUT_OF_RANGE": "El mapeo de variables apunta a una posición que no existe en el cuerpo de la plantilla.",
+      "TEMPLATE_AUTOMATION_DUPLICATE_FIELD": "Cada dato (nombre, servicio, día, hora, negocio) solo puede mapearse a una variable.",
+      "TEMPLATE_AUTOMATIC_ALREADY_ACTIVE": "Este bot ya tiene una plantilla automática activa para ese disparador. Pausa o elimina la anterior antes de activar otra.",
+      "TEMPLATE_NAME_TAKEN": "Ya existe una plantilla con ese nombre e idioma para este bot."
     },
     "emailInvalid": "Ingresa un correo válido.",
     "passwordTooShort": "La contraseña es muy corta.",
@@ -471,7 +478,8 @@
       "operations": "Operación",
       "catalog": "Catálogo",
       "settings": "Configuración"
-    }
+    },
+    "reminders": "Recordatorios"
   },
   "activeBot": {
     "label": "Bot activo",
@@ -1341,6 +1349,13 @@
           "UTILITY": "Utility",
           "MARKETING": "Marketing",
           "AUTHENTICATION": "Authentication"
+        },
+        "usage": {
+          "MANUAL": "Manual",
+          "AUTOMATIC": "Automático"
+        },
+        "trigger": {
+          "APPOINTMENT_REMINDER": "Recordatorio de cita"
         }
       },
       "actions": {
@@ -1372,7 +1387,23 @@
         "addVariable": "+ Agregar variable",
         "variableIndex": "Índice",
         "variableLabel": "Etiqueta",
-        "variableExample": "Ejemplo"
+        "variableExample": "Ejemplo",
+        "usage": "Uso",
+        "usageHint": "Manual: la elige el asesor en la vista de la conversación. Automática: la envía el sistema por un evento.",
+        "trigger": "Disparador",
+        "triggerHint": "Cuándo se envía la plantilla automática.",
+        "automationOffset": "Anticipación (minutos)",
+        "automationOffsetHint": "Minutos antes de la cita que se enviará el recordatorio. Default 120 (2 horas).",
+        "automationMapping": "Datos de la cita por variable",
+        "automationMappingHint": "Asigna a cada variable del cuerpo (1, 2, 3…) el dato que llenará el sistema. Ningún valor incluye el precio ni el costo.",
+        "automationFieldPlaceholder": "Elige un dato",
+        "automationFields": {
+          "attendeeName": "Nombre de quien agendó la cita",
+          "serviceName": "Servicio agendado",
+          "appointmentDay": "Día de la cita (ej. jueves 15 de octubre)",
+          "appointmentTime": "Hora de la cita (ej. 3:30 PM)",
+          "businessName": "Nombre del negocio"
+        }
       },
       "testSend": {
         "title": "Enviar plantilla de prueba",
@@ -1424,6 +1455,13 @@
         "successTitle": "Plantilla enviada",
         "errorTitle": "No se pudo enviar",
         "customerNameHint": "Se usará el nombre del cliente de la conversación."
+      },
+      "badges": {
+        "manual": "Manual",
+        "automatic": "Automática",
+        "trigger": {
+          "APPOINTMENT_REMINDER": "Recordatorio de cita"
+        }
       }
     },
     "documents": {
@@ -1965,6 +2003,54 @@
         "units": "Unidades",
         "total": "Total",
         "empty": "Sin resultados para el rango seleccionado."
+      }
+    },
+    "reminders": {
+      "pageTitle": "Recordatorios automáticos",
+      "pageSubtitle": "Historial de recordatorios de cita que el sistema envió (o intentó enviar) por WhatsApp.",
+      "selectBotLabel": "Bot",
+      "noBotTitle": "Selecciona un bot",
+      "noBotHint": "Elige un bot arriba para ver su historial de recordatorios.",
+      "filters": {
+        "status": "Estado",
+        "statusAll": "Todos",
+        "dateFrom": "Desde",
+        "dateTo": "Hasta",
+        "clear": "Limpiar filtros"
+      },
+      "status": {
+        "SENT": "Enviado",
+        "FAILED": "Falló",
+        "SKIPPED": "Omitido"
+      },
+      "columns": {
+        "sentAt": "Fecha de envío",
+        "customer": "Cliente",
+        "service": "Servicio",
+        "appointment": "Cita",
+        "status": "Estado",
+        "template": "Plantilla",
+        "reason": "Motivo / detalle"
+      },
+      "bubble": {
+        "autoReminder": "Recordatorio automático"
+      },
+      "reasons": {
+        "APPOINTMENT_REMINDER_NO_TEMPLATE": "No hay plantilla automática activa para este bot.",
+        "APPOINTMENT_REMINDER_TEMPLATE_PAUSED": "La plantilla está pausada.",
+        "APPOINTMENT_REMINDER_NO_SERVICE_FOUND": "No se encontró el servicio para esa cita.",
+        "APPOINTMENT_REMINDER_BOT_INACTIVE": "El bot está inactivo.",
+        "APPOINTMENT_REMINDER_BOT_MISSING_WHATSAPP": "Faltan credenciales de WhatsApp del bot.",
+        "APPOINTMENT_REMINDER_SECURITY_BLOCKED": "La conversación estaba bloqueada por seguridad.",
+        "APPOINTMENT_REMINDER_PRICE_IN_PAYLOAD": "El contenido incluía un precio y se bloqueó el envío.",
+        "APPOINTMENT_REMINDER_ALREADY_SENT": "Ya se había enviado un recordatorio para esta cita.",
+        "APPOINTMENT_REMINDER_META_REJECTED": "Meta rechazó el envío (ver código).",
+        "APPOINTMENT_REMINDER_MAPPING_INCOMPLETE": "El mapeo de variables está incompleto.",
+        "APPOINTMENT_REMINDER_EVENT_NOT_ELIGIBLE": "La cita ya no es elegible (cancelada, pasada, u otra razón)."
+      },
+      "empty": "Aún no hay recordatorios registrados para este bot.",
+      "errors": {
+        "loadFailed": "No pudimos cargar los recordatorios."
       }
     }
   },

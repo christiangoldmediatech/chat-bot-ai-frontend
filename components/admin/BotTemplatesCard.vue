@@ -2,11 +2,16 @@
 import type { ApiError } from '~/types/api'
 import type {
   CreateTemplateInput,
+  ReminderVariableKey,
+  TemplateAutomation,
   TemplateVariable,
   WhatsappTemplate,
   WhatsappTemplateCategory,
   WhatsappTemplateStatus,
+  WhatsappTemplateTrigger,
+  WhatsappTemplateUsage,
 } from '~/types/whatsapp-template'
+import { REMINDER_VARIABLE_KEYS } from '~/types/whatsapp-template'
 
 const props = defineProps<{
   botId: string
@@ -41,10 +46,77 @@ const form = reactive<CreateTemplateInput>({
   bodyPreview: '',
   variables: [],
   status: 'ACTIVE',
+  usage: 'MANUAL',
+  trigger: null,
+  automation: { reminderOffsetMinutes: 120, variableMapping: {} },
 })
 
 const categoryOptions: WhatsappTemplateCategory[] = ['UTILITY', 'MARKETING', 'AUTHENTICATION']
 const statusOptions: WhatsappTemplateStatus[] = ['ACTIVE', 'PAUSED']
+const usageOptions: WhatsappTemplateUsage[] = ['MANUAL', 'AUTOMATIC']
+const triggerOptions: WhatsappTemplateTrigger[] = ['APPOINTMENT_REMINDER']
+const reminderVariableKeys = REMINDER_VARIABLE_KEYS
+
+function ensureAutomation(): TemplateAutomation {
+  if (!form.automation) form.automation = { reminderOffsetMinutes: 120, variableMapping: {} }
+  if (!form.automation.variableMapping) form.automation.variableMapping = {}
+  if (form.automation.reminderOffsetMinutes == null) form.automation.reminderOffsetMinutes = 120
+  return form.automation
+}
+
+function onUsageChange(): void {
+  if (form.usage === 'AUTOMATIC') {
+    if (!form.trigger) form.trigger = 'APPOINTMENT_REMINDER'
+    ensureAutomation()
+    form.category = 'UTILITY'
+  }
+  else {
+    form.trigger = null
+    form.automation = { reminderOffsetMinutes: 120, variableMapping: {} }
+  }
+}
+
+function mappingValue(index: number): ReminderVariableKey | '' {
+  return (ensureAutomation().variableMapping?.[String(index)] as ReminderVariableKey | undefined) ?? ''
+}
+
+function setMappingValue(index: number, value: string): void {
+  const auto = ensureAutomation()
+  const map = { ...(auto.variableMapping ?? {}) }
+  if (!value) {
+    delete map[String(index)]
+  }
+  else {
+    map[String(index)] = value as ReminderVariableKey
+  }
+  auto.variableMapping = map
+}
+
+function reminderOffsetHours(): number {
+  const mins = ensureAutomation().reminderOffsetMinutes ?? 120
+  return Math.round((mins / 60) * 10) / 10
+}
+
+function setReminderOffsetHours(hours: number): void {
+  const auto = ensureAutomation()
+  auto.reminderOffsetMinutes = Math.max(15, Math.round(hours * 60))
+}
+
+const mappingSelections = computed<ReminderVariableKey[]>(() => {
+  const m = form.automation?.variableMapping ?? {}
+  return Object.values(m)
+})
+
+function isMappingValueUsedElsewhere(index: number, key: ReminderVariableKey): boolean {
+  const m = form.automation?.variableMapping ?? {}
+  const current = m[String(index)]
+  if (current === key) return false
+  return mappingSelections.value.includes(key)
+}
+
+function variablePlaceholder(index: number): string {
+  return `{{${index}}}`
+}
 
 async function load(): Promise<void> {
   loading.value = true
@@ -68,6 +140,9 @@ function openCreate(): void {
   form.bodyPreview = ''
   form.variables = []
   form.status = 'ACTIVE'
+  form.usage = 'MANUAL'
+  form.trigger = null
+  form.automation = { reminderOffsetMinutes: 120, variableMapping: {} }
   formError.value = null
   formOpen.value = true
 }
@@ -80,6 +155,12 @@ function openEdit(row: WhatsappTemplate): void {
   form.bodyPreview = row.bodyPreview
   form.variables = row.variables.map(v => ({ ...v }))
   form.status = row.status
+  form.usage = row.usage ?? 'MANUAL'
+  form.trigger = row.trigger ?? null
+  form.automation = {
+    reminderOffsetMinutes: row.automation?.reminderOffsetMinutes ?? 120,
+    variableMapping: { ...(row.automation?.variableMapping ?? {}) },
+  }
   formError.value = null
   formOpen.value = true
 }
@@ -112,6 +193,14 @@ async function onSave(): Promise<void> {
       example: v.example?.trim() || undefined,
     })) ?? [],
     status: form.status,
+    usage: form.usage,
+    trigger: form.usage === 'AUTOMATIC' ? form.trigger : null,
+    automation: form.usage === 'AUTOMATIC'
+      ? {
+          reminderOffsetMinutes: form.automation?.reminderOffsetMinutes ?? 120,
+          variableMapping: { ...(form.automation?.variableMapping ?? {}) },
+        }
+      : { reminderOffsetMinutes: 120, variableMapping: {} },
   }
   try {
     if (editing.value) {
@@ -125,12 +214,7 @@ async function onSave(): Promise<void> {
   }
   catch (err) {
     const apiErr = err as ApiError
-    if (apiErr.status === 409) {
-      formError.value = t('admin.templates.errors.duplicate')
-    }
-    else {
-      formError.value = apiErr.message || t('admin.templates.errors.generic')
-    }
+    formError.value = apiErr.message || t('admin.templates.errors.generic')
   }
   finally {
     saving.value = false
@@ -251,6 +335,14 @@ watch(() => props.botId, () => { void load() }, { immediate: true })
             <span class="rounded-full bg-sky-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-sky-700">
               {{ t(`admin.templates.list.category.${row.category}`) }}
             </span>
+            <span
+              class="rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide"
+              :class="row.usage === 'AUTOMATIC' ? 'bg-violet-100 text-violet-700 ring-1 ring-violet-200' : 'bg-slate-100 text-slate-700'"
+            >{{ t(`admin.templates.list.usage.${row.usage}`) }}</span>
+            <span
+              v-if="row.usage === 'AUTOMATIC' && row.trigger"
+              class="rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-indigo-700"
+            >{{ t(`admin.templates.list.trigger.${row.trigger}`) }}</span>
           </div>
           <p class="mt-1.5 text-sm text-slate-800 whitespace-pre-wrap">{{ renderedPreview(row) }}</p>
           <p v-if="row.variables.length" class="mt-1 text-xs text-slate-500">
@@ -329,6 +421,39 @@ watch(() => props.botId, () => { void load() }, { immediate: true })
               <option v-for="s in statusOptions" :key="s" :value="s">{{ t(`admin.templates.list.status.${s}`) }}</option>
             </select>
           </label>
+          <label class="block text-sm">
+            <span class="font-medium text-slate-800">{{ t('admin.templates.form.usage') }}</span>
+            <select
+              v-model="form.usage"
+              class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none"
+              @change="onUsageChange"
+            >
+              <option v-for="u in usageOptions" :key="u" :value="u">{{ t(`admin.templates.list.usage.${u}`) }}</option>
+            </select>
+            <span class="mt-1 block text-xs text-slate-500">{{ t('admin.templates.form.usageHint') }}</span>
+          </label>
+          <label v-if="form.usage === 'AUTOMATIC'" class="block text-sm">
+            <span class="font-medium text-slate-800">{{ t('admin.templates.form.trigger') }}</span>
+            <select
+              v-model="form.trigger"
+              class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none"
+            >
+              <option v-for="tr in triggerOptions" :key="tr" :value="tr">{{ t(`admin.templates.list.trigger.${tr}`) }}</option>
+            </select>
+            <span class="mt-1 block text-xs text-slate-500">{{ t('admin.templates.form.triggerHint') }}</span>
+          </label>
+          <label v-if="form.usage === 'AUTOMATIC'" class="block text-sm">
+            <span class="font-medium text-slate-800">{{ t('admin.templates.form.automationOffset') }}</span>
+            <input
+              type="number"
+              min="0.25"
+              step="0.25"
+              :value="reminderOffsetHours()"
+              class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none"
+              @input="(e) => setReminderOffsetHours(Number((e.target as HTMLInputElement).value))"
+            >
+            <span class="mt-1 block text-xs text-slate-500">{{ t('admin.templates.form.automationOffsetHint') }}</span>
+          </label>
         </div>
         <label class="block text-sm">
           <span class="font-medium text-slate-800">{{ t('admin.templates.form.bodyPreview') }}</span>
@@ -388,6 +513,36 @@ watch(() => props.botId, () => { void load() }, { immediate: true })
               </button>
             </li>
           </ul>
+        </div>
+
+        <div v-if="form.usage === 'AUTOMATIC'" class="rounded-lg border border-violet-200 bg-violet-50/40 p-3">
+          <p class="text-sm font-medium text-slate-800">{{ t('admin.templates.form.automationMapping') }}</p>
+          <p class="text-xs text-slate-500">{{ t('admin.templates.form.automationMappingHint') }}</p>
+          <ul v-if="form.variables?.length" class="mt-3 space-y-2">
+            <li
+              v-for="v in form.variables"
+              :key="v.index"
+              class="grid grid-cols-12 gap-2 items-center"
+            >
+              <code class="col-span-2 rounded bg-white px-2 py-1 text-xs font-semibold text-slate-800 ring-1 ring-slate-200">{{ variablePlaceholder(v.index) }}</code>
+              <select
+                :value="mappingValue(v.index)"
+                class="col-span-10 rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm"
+                @change="(e) => setMappingValue(v.index, (e.target as HTMLSelectElement).value)"
+              >
+                <option value="">{{ t('admin.templates.form.automationFieldPlaceholder') }}</option>
+                <option
+                  v-for="k in reminderVariableKeys"
+                  :key="k"
+                  :value="k"
+                  :disabled="isMappingValueUsedElsewhere(v.index, k)"
+                >
+                  {{ t(`admin.templates.form.automationFields.${k}`) }}
+                </option>
+              </select>
+            </li>
+          </ul>
+          <p v-else class="mt-2 text-xs text-slate-500 italic">{{ t('admin.templates.form.variablesHint') }}</p>
         </div>
 
         <div v-if="formError" class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">

@@ -1,5 +1,6 @@
 import type {
   CreateTemplateInput,
+  ListTemplatesQuery,
   TestSendTemplateInput,
   TestSendTemplateResponse,
   UpdateTemplateInput,
@@ -14,9 +15,21 @@ export function useTemplates(tenantId?: string) {
       ? `/superadmin/companies/${tenantId}/bots/${botId}/templates`
       : `/bots/${botId}/templates`
 
+  function withQuery(url: string, query?: ListTemplatesQuery): string {
+    if (!query) return url
+    const parts: string[] = []
+    if (query.usage) parts.push(`usage=${encodeURIComponent(query.usage)}`)
+    if (query.status) parts.push(`status=${encodeURIComponent(query.status)}`)
+    return parts.length ? `${url}?${parts.join('&')}` : url
+  }
+
   return {
-    listForBot: (botId: string): Promise<WhatsappTemplate[]> => {
-      return api.get<WhatsappTemplate[]>(base(botId))
+    listForBot: (botId: string, query?: ListTemplatesQuery): Promise<WhatsappTemplate[]> => {
+      return api.get<WhatsappTemplate[]>(withQuery(base(botId), query))
+    },
+
+    listManualForBot: (botId: string): Promise<WhatsappTemplate[]> => {
+      return api.get<WhatsappTemplate[]>(withQuery(base(botId), { usage: 'MANUAL', status: 'ACTIVE' }))
     },
 
     getById: (botId: string, id: string): Promise<WhatsappTemplate> => {

@@ -145,9 +145,7 @@ async function load(): Promise<void> {
   loading.value = true
   loadError.value = null
   try {
-    templates.value = (await templatesApi.listForBot(props.botId)).filter(
-      t => t.status === 'ACTIVE',
-    )
+    templates.value = await templatesApi.listManualForBot(props.botId)
   }
   catch (err) {
     loadError.value = (err as ApiError).message || t('admin.templates.errors.loadFailed')
