@@ -444,14 +444,18 @@ watch(() => props.botId, () => { void load() }, { immediate: true })
           </label>
           <label v-if="form.usage === 'AUTOMATIC'" class="block text-sm">
             <span class="font-medium text-slate-800">{{ t('admin.templates.form.automationOffset') }}</span>
-            <input
-              type="number"
-              min="0.25"
-              step="0.25"
-              :value="reminderOffsetHours()"
-              class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none"
-              @input="(e) => setReminderOffsetHours(Number((e.target as HTMLInputElement).value))"
-            >
+            <div class="mt-1 flex rounded-lg border border-slate-300 bg-white focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-200">
+              <input
+                type="number"
+                min="0.25"
+                step="0.25"
+                placeholder="2"
+                :value="reminderOffsetHours()"
+                class="flex-1 rounded-l-lg bg-transparent px-3 py-2 text-sm text-slate-900 focus:outline-none"
+                @input="(e) => setReminderOffsetHours(Number((e.target as HTMLInputElement).value))"
+              >
+              <span class="inline-flex items-center rounded-r-lg bg-slate-100 px-3 text-sm font-medium text-slate-600">horas</span>
+            </div>
             <span class="mt-1 block text-xs text-slate-500">{{ t('admin.templates.form.automationOffsetHint') }}</span>
           </label>
         </div>
