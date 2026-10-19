@@ -27,8 +27,6 @@ const emit = defineEmits<{
   confirm: [payload: { monthsCovered: number; file: File; paidAt?: string; note?: string }]
 }>()
 
-const { t } = useI18n()
-
 const monthsCovered = ref(1)
 const file = ref<File | null>(null)
 const paidAt = ref('')

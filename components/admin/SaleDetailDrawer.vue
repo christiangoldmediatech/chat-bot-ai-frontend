@@ -7,7 +7,7 @@ import type { SaleAuditLogEntry, SaleDetail } from '~/types/sale'
  * customer/conversation cuando existen; el resto se muestra como texto para
  * mantener honestidad ("Sin conversación vinculada").
  */
-const props = defineProps<{
+defineProps<{
   open: boolean
   detail: SaleDetail | null
   loading?: boolean

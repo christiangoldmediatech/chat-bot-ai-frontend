@@ -100,15 +100,15 @@ export function useApi() {
   }
 
   return {
-    get: <T>(path: string, opts?: RequestOptions): Promise<T> =>
+    get: <T = unknown>(path: string, opts?: RequestOptions): Promise<T> =>
       request<T>('GET', path, undefined, opts),
-    post: <T>(path: string, body?: unknown, opts?: RequestOptions): Promise<T> =>
+    post: <T = unknown>(path: string, body?: unknown, opts?: RequestOptions): Promise<T> =>
       request<T>('POST', path, body, opts),
-    patch: <T>(path: string, body?: unknown, opts?: RequestOptions): Promise<T> =>
+    patch: <T = unknown>(path: string, body?: unknown, opts?: RequestOptions): Promise<T> =>
       request<T>('PATCH', path, body, opts),
-    put: <T>(path: string, body?: unknown, opts?: RequestOptions): Promise<T> =>
+    put: <T = unknown>(path: string, body?: unknown, opts?: RequestOptions): Promise<T> =>
       request<T>('PUT', path, body, opts),
-    delete: <T = void>(path: string, opts?: RequestOptions): Promise<T> =>
+    delete: <T = unknown>(path: string, opts?: RequestOptions): Promise<T> =>
       request<T>('DELETE', path, undefined, opts),
   }
 }

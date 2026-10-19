@@ -449,7 +449,8 @@ const cardShadow = {
 
             <div>
               <label class="block text-sm font-medium text-slate-700">{{ $t('auth.password.reset.confirmLabel') }}</label>
-              <div class="mt-1 flex items-center gap-2 rounded-xl border bg-white/90 px-3 py-2 focus-within:ring-1 transition"
+              <div
+class="mt-1 flex items-center gap-2 rounded-xl border bg-white/90 px-3 py-2 focus-within:ring-1 transition"
                 :class="confirmPassword && !passwordsMatch ? 'border-danger-300 focus-within:border-danger-500 focus-within:ring-danger-500' : 'border-slate-200 focus-within:border-primary-500 focus-within:ring-primary-500'">
                 <input
                   v-model="confirmPassword"

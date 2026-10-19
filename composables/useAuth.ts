@@ -56,7 +56,7 @@ export function useAuth() {
    * code-verified `changePasswordWithCode` and this can be removed.
    */
   async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
-    await api.post<void>('/auth/change-password', { currentPassword, newPassword })
+    await api.post('/auth/change-password', { currentPassword, newPassword })
   }
 
   // ─── Password reset (no session) ────────────────────────────────────────
@@ -77,7 +77,7 @@ export function useAuth() {
     newPassword: string
     confirmPassword: string
   }): Promise<void> {
-    await api.post<void>('/auth/password/reset', input)
+    await api.post('/auth/password/reset', input)
   }
 
   // ─── Password change (authenticated tenant user) ────────────────────────
@@ -130,7 +130,7 @@ export function useAuth() {
    * Legacy single-shot superadmin password change. See changePassword above.
    */
   async function superadminChangePassword(currentPassword: string, newPassword: string): Promise<void> {
-    await api.post<void>('/superadmin/auth/change-password', { currentPassword, newPassword })
+    await api.post('/superadmin/auth/change-password', { currentPassword, newPassword })
   }
 
   async function superadminRequestPasswordReset(email: string): Promise<PasswordCodeResponse> {
@@ -152,7 +152,7 @@ export function useAuth() {
     newPassword: string
     confirmPassword: string
   }): Promise<void> {
-    await api.post<void>('/superadmin/auth/password/reset', input)
+    await api.post('/superadmin/auth/password/reset', input)
   }
 
   async function superadminRequestPasswordChange(): Promise<PasswordCodeResponse> {

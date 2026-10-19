@@ -2,7 +2,6 @@
 import type { ApiError } from '~/types/api'
 import type {
   BusinessHoursConfig,
-  BusinessHoursRule,
   ReplaceBusinessHoursPayload,
 } from '~/types/schedule'
 

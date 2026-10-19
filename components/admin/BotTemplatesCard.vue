@@ -4,7 +4,6 @@ import type {
   CreateTemplateInput,
   ReminderVariableKey,
   TemplateAutomation,
-  TemplateVariable,
   WhatsappTemplate,
   WhatsappTemplateCategory,
   WhatsappTemplateStatus,
@@ -82,14 +81,16 @@ function mappingValue(index: number): ReminderVariableKey | '' {
 
 function setMappingValue(index: number, value: string): void {
   const auto = ensureAutomation()
-  const map = { ...(auto.variableMapping ?? {}) }
+  const map: Record<string, ReminderVariableKey> = { ...(auto.variableMapping ?? {}) }
+  const key = String(index)
   if (!value) {
-    delete map[String(index)]
+    const { [key]: _removed, ...rest } = map
+    auto.variableMapping = rest
   }
   else {
-    map[String(index)] = value as ReminderVariableKey
+    map[key] = value as ReminderVariableKey
+    auto.variableMapping = map
   }
-  auto.variableMapping = map
 }
 
 function reminderOffsetHours(): number {

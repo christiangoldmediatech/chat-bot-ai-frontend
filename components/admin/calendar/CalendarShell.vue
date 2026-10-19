@@ -16,7 +16,7 @@ const props = defineProps<{
   tenantId?: string
 }>()
 
-const { t, locale } = useI18n()
+const { locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const cal = useCalendar(props.tenantId)

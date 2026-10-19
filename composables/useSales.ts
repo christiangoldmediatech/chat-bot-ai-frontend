@@ -37,7 +37,7 @@ export function useSales() {
     markLost: (botId: string, id: string, input: MarkLostInput): Promise<Sale> =>
       api.post<Sale>(`${base(botId)}/${id}/lost`, input),
     remove: (botId: string, id: string): Promise<void> =>
-      api.delete<void>(`${base(botId)}/${id}`),
+      api.delete(`${base(botId)}/${id}`),
 
     listForCustomer: (
       botId: string,

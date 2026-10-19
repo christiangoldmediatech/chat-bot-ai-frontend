@@ -106,14 +106,15 @@ function smoothScroll(ev: MouseEvent, href: string) {
 </script>
 
 <template>
-  <!-- Background live: wave-strands canvas + grain overlay + ground base. -->
-  <LandingHeroCanvas />
-  <div class="lurviax-grain" aria-hidden="true" />
-  <div class="fixed inset-0 z-0 pointer-events-none bg-ground" aria-hidden="true" />
+  <div>
+    <!-- Background live: wave-strands canvas + grain overlay + ground base. -->
+    <LandingHeroCanvas />
+    <div class="lurviax-grain" aria-hidden="true" />
+    <div class="fixed inset-0 z-0 pointer-events-none bg-ground" aria-hidden="true" />
 
-  <LurviaxSectionDots />
+    <LurviaxSectionDots />
 
-  <div class="relative z-[3] min-h-screen overflow-x-hidden bg-transparent font-sans text-pearl">
+    <div class="relative z-[3] min-h-screen overflow-x-hidden bg-transparent font-sans text-pearl">
     <!-- ══════════ NAV ══════════ -->
     <header
       id="nav"
@@ -494,6 +495,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
       </svg>
       <span class="hidden sm:inline">{{ $t('landing.whatsappFloat.label') }}</span>
     </a>
+    </div>
   </div>
 </template>
 
