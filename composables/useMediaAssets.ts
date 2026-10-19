@@ -51,7 +51,7 @@ export function useMediaAssets(tenantId?: string) {
     },
 
     remove: (botId: string, id: string): Promise<void> => {
-      return api.delete<void>(`${base(botId)}/${id}`)
+      return api.delete(`${base(botId)}/${id}`)
     },
 
     /**

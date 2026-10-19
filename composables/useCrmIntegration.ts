@@ -45,7 +45,7 @@ export function useCrmIntegration(tenantId?: string) {
     },
 
     disconnect: (botId: string, id: string): Promise<void> => {
-      return api.delete<void>(`${base(botId)}/${id}`)
+      return api.delete(`${base(botId)}/${id}`)
     },
 
     testPush: (botId: string, id: string): Promise<TestPushResult> => {

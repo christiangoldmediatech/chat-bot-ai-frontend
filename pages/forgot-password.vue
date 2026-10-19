@@ -207,7 +207,8 @@ function goToLogin(): void {
                     : 'bg-white/70 text-slate-500 ring-1 ring-slate-200',
               ]"
             >
-              <span class="inline-flex size-5 items-center justify-center rounded-full text-[10px] font-semibold"
+              <span
+class="inline-flex size-5 items-center justify-center rounded-full text-[10px] font-semibold"
                 :class="idx <= activeStepIndex ? 'bg-white/20' : 'bg-slate-200 text-slate-500'">
                 {{ idx + 1 }}
               </span>
@@ -377,7 +378,8 @@ function goToLogin(): void {
               </div>
             </div>
 
-            <label class="flex items-center gap-3 rounded-2xl bg-white/80 ring-1 px-4 py-3 focus-within:ring-2 transition"
+            <label
+class="flex items-center gap-3 rounded-2xl bg-white/80 ring-1 px-4 py-3 focus-within:ring-2 transition"
               :class="confirmPassword && !passwordsMatch
                 ? 'ring-danger-300 focus-within:ring-danger-500'
                 : 'ring-slate-200/80 focus-within:ring-slate-900'">

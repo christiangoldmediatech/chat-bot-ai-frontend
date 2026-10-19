@@ -38,7 +38,7 @@ export function useBilling() {
     },
 
     deactivate: (tenantId: string): Promise<void> =>
-      api.delete<void>(`/superadmin/tenants/${tenantId}/billing`),
+      api.delete(`/superadmin/tenants/${tenantId}/billing`),
 
     expiringSoon: (days = 7): Promise<ExpiringTenant[]> =>
       api.get<ExpiringTenant[]>(`/superadmin/billing/expiring-soon?days=${days}`),

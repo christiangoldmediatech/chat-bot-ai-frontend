@@ -6,7 +6,6 @@ definePageMeta({ layout: 'admin', middleware: 'auth' })
 
 const api = useLlmUsage()
 const activeBot = useActiveBotStore()
-const { t } = useI18n()
 
 const hoursOptions = [
   { value: 1, label: '1h' },

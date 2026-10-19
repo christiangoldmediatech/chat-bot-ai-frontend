@@ -369,7 +369,8 @@ function apptDisplayService(appt: CalendarAppointment): string {
           @click.stop="emit('clickEvent', item.appt)"
         >
           <div class="flex items-start gap-2 px-2.5 py-2">
-            <div class="shrink-0 flex size-8 items-center justify-center rounded-full text-[11px] font-bold ring-2 ring-white/60"
+            <div
+class="shrink-0 flex size-8 items-center justify-center rounded-full text-[11px] font-bold ring-2 ring-white/60"
                  :class="[appointmentTone(item.appt).avatarBg, appointmentTone(item.appt).avatarText]">
               {{ apptInitials(item.appt) }}
             </div>

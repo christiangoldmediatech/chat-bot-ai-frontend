@@ -27,7 +27,7 @@ export function useCompanies() {
       userId: string,
       newPassword: string,
     ): Promise<void> =>
-      api.patch<void>(
+      api.patch(
         `/superadmin/companies/${tenantId}/users/${userId}/password`,
         { newPassword },
       ),

@@ -1,3 +1,5 @@
+import type { BlockStatus } from './security'
+
 export type ConversationStatus = 'BOT' | 'HUMAN' | 'CLOSED'
 export type MessageRole = 'USER' | 'ASSISTANT' | 'SYSTEM'
 
@@ -17,8 +19,6 @@ export type MessageMediaType =
 // persisted before delivery tracking shipped (renderer treats null as
 // "estado desconocido" with no indicator).
 export type DeliveryStatus = 'SENT' | 'DELIVERED' | 'READ' | 'FAILED'
-
-import type { BlockStatus } from './security'
 
 export interface Conversation {
   id: string

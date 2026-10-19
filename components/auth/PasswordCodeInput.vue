@@ -15,8 +15,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void
-  (e: 'complete', value: string): void
+  (e: 'update:modelValue' | 'complete', value: string): void
 }>()
 
 const boxes = ref<Array<HTMLInputElement | null>>([])
@@ -149,6 +148,6 @@ onMounted(() => {
       ]"
       @input="onInput(idx, $event)"
       @keydown="onKeydown(idx, $event)"
-    />
+    >
   </div>
 </template>

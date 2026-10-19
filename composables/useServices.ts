@@ -26,7 +26,7 @@ export function useServices(tenantId?: string) {
     update: (botId: string, id: string, input: UpdateServiceInput): Promise<Service> =>
       api.patch<Service>(`${base(botId)}/${id}`, input),
     remove: (botId: string, id: string): Promise<void> =>
-      api.delete<void>(`${base(botId)}/${id}`),
+      api.delete(`${base(botId)}/${id}`),
     uploadImage: (botId: string, id: string, file: File): Promise<Service> => {
       const fd = new FormData()
       fd.append('file', file)

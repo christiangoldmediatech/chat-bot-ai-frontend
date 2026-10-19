@@ -87,7 +87,7 @@ export function useLeads(tenantId?: string) {
      * 202 Accepted; poll `get()` for the updated `crmSyncStatus`.
      */
     syncCrm: (id: string): Promise<void> =>
-      api.post<void>(`${base}/${id}/sync-crm`, {}),
+      api.post(`${base}/${id}/sync-crm`, {}),
 
     /**
      * Build the public URL for the CSV export endpoint. Returns a fully-
@@ -229,7 +229,7 @@ export function useSuperadminLeads() {
 
     /** Cross-tenant manual CRM sync retry. Backend responds 202. */
     syncCrm: (id: string): Promise<void> =>
-      api.post<void>(`/superadmin/leads/${id}/sync-crm`, {}),
+      api.post(`/superadmin/leads/${id}/sync-crm`, {}),
 
     /**
      * Cross-tenant backfill — only callable by platform admins. Without

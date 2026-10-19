@@ -167,12 +167,14 @@ watch(() => props.botId, () => { void load() })
     </header>
 
     <div class="flex gap-2 border-b border-slate-200/70">
-      <button type="button" class="px-3 py-2 text-sm font-medium transition"
+      <button
+type="button" class="px-3 py-2 text-sm font-medium transition"
               :class="tab === 'active' ? 'text-slate-900 border-b-2 border-slate-900' : 'text-slate-500 hover:text-slate-700'"
               @click="tab = 'active'">
         {{ $t('admin.scheduleBlocks.tabActive') }} ({{ activeBlocks.length }})
       </button>
-      <button type="button" class="px-3 py-2 text-sm font-medium transition"
+      <button
+type="button" class="px-3 py-2 text-sm font-medium transition"
               :class="tab === 'past' ? 'text-slate-900 border-b-2 border-slate-900' : 'text-slate-500 hover:text-slate-700'"
               @click="tab = 'past'">
         {{ $t('admin.scheduleBlocks.tabPast') }} ({{ pastBlocks.length }})

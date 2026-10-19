@@ -56,7 +56,8 @@ const initials = computed(() =>
     @click.stop="emit('click', appointment)"
   >
     <div class="relative flex h-full items-start gap-2.5 px-3 py-2.5">
-      <div class="shrink-0 flex size-9 items-center justify-center rounded-full text-[11px] font-bold ring-2 ring-white/60"
+      <div
+class="shrink-0 flex size-9 items-center justify-center rounded-full text-[11px] font-bold ring-2 ring-white/60"
            :class="[tone.avatarBg, tone.avatarText]">
         {{ initials }}
       </div>
