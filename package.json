@@ -12,6 +12,7 @@
     "dev:fresh": "npm run clean && nuxt prepare && npm run dev",
     "generate": "NODE_OPTIONS=--max-old-space-size=8192 nuxt generate",
     "preview": "nuxt preview",
+    "prepare": "husky",
     "postinstall": "nuxt prepare",
     "clean": "rm -rf .nuxt .output node_modules/.cache node_modules/.vite",
     "reinstall": "rm -rf node_modules package-lock.json .nuxt .output && npm install",
@@ -39,6 +40,7 @@
     "@types/node": "^22.10.0",
     "@types/three": "^0.185.0",
     "eslint": "^9.14.0",
+    "husky": "^9.1.7",
     "typescript": "^5.6.3",
     "vue-tsc": "^2.1.10"
   }

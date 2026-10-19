@@ -57,3 +57,7 @@ vite.config.js.timestamp-*
 # Temp
 tmp
 temp
+
+# Gentle AI / CodeGraph local state
+.atl/
+.codegraph/

@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+
+# Allow skipping with: git push --no-verify
+# Mirrors the GitHub Actions CI gate (.github/workflows/ci.yml) — minus the full build (too slow for pre-push).
+
+echo "▸ Running lint..."
+npm run lint || {
+  echo "✗ Lint failed. Fix the errors or push with --no-verify to bypass."
+  exit 1
+}
+
+echo "▸ Running typecheck..."
+npm run typecheck || {
+  echo "✗ Typecheck failed. Fix the errors or push with --no-verify to bypass."
+  exit 1
+}
+
+echo "▸ Running i18n parity check..."
+npm run i18n:check || {
+  echo "✗ i18n parity check failed. Fix missing/extra keys or push with --no-verify to bypass."
+  exit 1
+}
+
+echo "✓ Pre-push checks passed."
