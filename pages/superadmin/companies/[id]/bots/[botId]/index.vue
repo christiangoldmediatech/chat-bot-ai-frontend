@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SuperadminBotOpenRouterKeyCard from '~/components/superadmin/BotOpenRouterKeyCard.vue'
 import type { ApiError } from '~/types/api'
 import type { Bot } from '~/types/bot'
 import type { CompanyDetail, Plan } from '~/types/company'
