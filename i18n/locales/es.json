@@ -76,7 +76,9 @@
           "generic": "No se pudo guardar. Intenta de nuevo."
         }
       }
-    }
+    },
+    "saved": "Guardado",
+    "retry": "Reintentar"
   },
   "errors": {
     "generic": "Algo salió mal. Inténtalo de nuevo.",
@@ -2986,6 +2988,27 @@
       "deactivateConfirmAction": "Sí, desactivar",
       "deactivateSuccess": "Tenant desactivado.",
       "deactivateError": "No se pudo desactivar el tenant."
+    },
+    "openrouterKey": {
+      "cardTitle": "Sub-key de OpenRouter",
+      "cardDescription": "Provisioná una API key dedicada para que este bot facture su consumo contra un budget propio.",
+      "notProvisioned": "Este bot todavía no tiene una sub-key provisionada. Hoy consume la master key compartida.",
+      "actionProvision": "Provisionar sub-key",
+      "actionProvisionConfirm": "Provisionar",
+      "actionUpdateBudget": "Actualizar budget",
+      "actionRevoke": "Revocar",
+      "confirmRevoke": "¿Seguro que querés revocar la sub-key? El bot volverá a facturar en la master key hasta que provisiones una nueva.",
+      "confirmRevokeYes": "Sí, revocar",
+      "fieldHash": "Hash",
+      "fieldProvisionedAt": "Provisionada el",
+      "fieldBudget": "Gasto / Budget mensual",
+      "fieldMonthlyBudget": "Budget mensual (USD)",
+      "fieldNewBudget": "Nuevo budget (USD)",
+      "budgetHelp": "OpenRouter detiene las llamadas de la sub-key cuando el gasto acumulado llega al tope. Dejá en 0 o vacío para sub-key sin tope.",
+      "budgetUncapped": "Sin tope",
+      "usageUnavailable": "No pude leer el gasto en vivo (reintentá en unos segundos). Muestro el budget cacheado.",
+      "placeholderUncapped": "Sin tope",
+      "footerNote": "Para auditar gasto detallado por request, mirá"
     }
   },
   "billing": {
