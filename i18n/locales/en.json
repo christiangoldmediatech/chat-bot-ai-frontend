@@ -77,7 +77,8 @@
         }
       }
     },
-    "saved": "Saved"
+    "saved": "Saved",
+    "retry": "Retry"
   },
   "errors": {
     "generic": "Something went wrong. Try again.",

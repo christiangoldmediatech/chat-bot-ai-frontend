@@ -77,7 +77,8 @@
         }
       }
     },
-    "saved": "Guardado"
+    "saved": "Guardado",
+    "retry": "Reintentar"
   },
   "errors": {
     "generic": "Algo salió mal. Inténtalo de nuevo.",

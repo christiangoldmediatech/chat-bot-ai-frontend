@@ -128,12 +128,20 @@ onMounted(load)
       </button>
     </div>
 
-    <p
+    <div
       v-if="error"
-      class="mt-3 rounded-md border border-danger-200 bg-danger-50 px-3 py-2 text-xs text-danger-700"
+      class="mt-3 rounded-md border border-danger-200 bg-danger-50 px-3 py-2 text-xs text-danger-700 flex items-start justify-between gap-3"
     >
-      {{ error }}
-    </p>
+      <span class="min-w-0">{{ error }}</span>
+      <button
+        type="button"
+        class="shrink-0 rounded border border-danger-300 bg-white px-2 py-0.5 text-[11px] font-medium text-danger-700 hover:bg-danger-100"
+        :disabled="busy"
+        @click="load"
+      >
+        {{ $t('common.retry') }}
+      </button>
+    </div>
 
     <p
       v-if="savedAt"
@@ -290,8 +298,8 @@ onMounted(load)
       </div>
     </template>
 
-    <template v-else-if="view && !view.hasKey">
-      <!-- Not provisioned state -->
+    <template v-else>
+      <!-- Not provisioned state (also the fallback when GET failed and view is null) -->
       <p class="mt-4 text-sm text-slate-600">
         {{ $t('superadmin.openrouterKey.notProvisioned') }}
       </p>
