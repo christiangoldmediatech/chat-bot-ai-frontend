@@ -3008,7 +3008,9 @@
       "budgetUncapped": "Sin tope",
       "usageUnavailable": "No pude leer el gasto en vivo (reintentá en unos segundos). Muestro el budget cacheado.",
       "placeholderUncapped": "Sin tope",
-      "footerNote": "Para auditar gasto detallado por request, mirá"
+      "footerNote": "Para auditar gasto detallado por request, mirá",
+      "actionRefresh": "Actualizar",
+      "lastRefresh": "Actualizado"
     }
   },
   "billing": {

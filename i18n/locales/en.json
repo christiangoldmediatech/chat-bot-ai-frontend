@@ -3008,7 +3008,9 @@
       "budgetUncapped": "Uncapped",
       "usageUnavailable": "Could not read live spend right now (retry in a few seconds). Showing cached budget.",
       "placeholderUncapped": "Uncapped",
-      "footerNote": "For detailed per-request spend audit, see"
+      "footerNote": "For detailed per-request spend audit, see",
+      "actionRefresh": "Refresh",
+      "lastRefresh": "Updated"
     }
   },
   "billing": {
