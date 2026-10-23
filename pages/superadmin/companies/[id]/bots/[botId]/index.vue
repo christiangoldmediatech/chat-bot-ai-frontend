@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SuperadminBotOpenRouterKeyCard from '~/components/superadmin/BotOpenRouterKeyCard.vue'
 import type { ApiError } from '~/types/api'
 import type { Bot } from '~/types/bot'
 import type { CompanyDetail, Plan } from '~/types/company'
@@ -436,6 +437,23 @@ await Promise.all([load(), loadActivity()])
           </div>
         </header>
         <BotCrmCard :bot-id="bot.id" :plan="companyPlan" :tenant-id="tenantId" />
+      </section>
+
+      <!-- OpenRouter Sub-Key (super-admin only) -->
+      <section id="openrouter-key" class="scroll-mt-24 mt-6">
+        <header class="flex items-start gap-3 mb-4">
+          <div class="flex size-10 items-center justify-center rounded-xl bg-indigo-500/15 ring-1 ring-indigo-500/30">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-indigo-300" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <h2 class="text-lg font-semibold text-slate-50 tracking-tight">{{ $t('superadmin.openrouterKey.cardTitle') }}</h2>
+            <p class="text-sm text-slate-400 mt-1 leading-relaxed">{{ $t('superadmin.openrouterKey.cardDescription') }}</p>
+          </div>
+        </header>
+        <SuperadminBotOpenRouterKeyCard :bot-id="bot.id" :tenant-id="tenantId" />
       </section>
 
       <!-- WhatsApp Templates -->
