@@ -76,7 +76,8 @@
           "generic": "Could not save. Try again."
         }
       }
-    }
+    },
+    "saved": "Saved"
   },
   "errors": {
     "generic": "Something went wrong. Try again.",
@@ -2986,6 +2987,27 @@
       "deactivateConfirmAction": "Yes, deactivate",
       "deactivateSuccess": "Tenant deactivated.",
       "deactivateError": "Could not deactivate the tenant."
+    },
+    "openrouterKey": {
+      "cardTitle": "OpenRouter Sub-Key",
+      "cardDescription": "Provision a dedicated API key so this bot bills against its own budget.",
+      "notProvisioned": "This bot does not have a provisioned sub-key yet. It is currently charging the shared master key.",
+      "actionProvision": "Provision Sub-Key",
+      "actionProvisionConfirm": "Provision",
+      "actionUpdateBudget": "Update Budget",
+      "actionRevoke": "Revoke",
+      "confirmRevoke": "Revoke this sub-key? The bot will fall back to the master key until a new one is provisioned.",
+      "confirmRevokeYes": "Yes, revoke",
+      "fieldHash": "Hash",
+      "fieldProvisionedAt": "Provisioned at",
+      "fieldBudget": "Spend / Monthly Budget",
+      "fieldMonthlyBudget": "Monthly Budget (USD)",
+      "fieldNewBudget": "New Budget (USD)",
+      "budgetHelp": "OpenRouter stops the sub-key once cumulative spend reaches the cap. Leave at 0 or blank for an uncapped sub-key.",
+      "budgetUncapped": "Uncapped",
+      "usageUnavailable": "Could not read live spend right now (retry in a few seconds). Showing cached budget.",
+      "placeholderUncapped": "Uncapped",
+      "footerNote": "For detailed per-request spend audit, see"
     }
   },
   "billing": {
