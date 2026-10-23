@@ -2,6 +2,8 @@
 import type { ApiError } from '~/types/api'
 import type { OpenRouterKeyResponse } from '~/types/openrouter-key'
 
+const { locale } = useI18n()
+
 const props = defineProps<{
   tenantId: string
   botId: string
@@ -9,10 +11,15 @@ const props = defineProps<{
 
 const service = useOpenRouterKey(props.tenantId, props.botId)
 
+const AUTO_REFRESH_MS = 60_000
+
 const view = ref<OpenRouterKeyResponse | null>(null)
 const loading = ref(true)
 const busy = ref(false)
+const refreshing = ref(false)
 const error = ref<string | null>(null)
+const lastRefreshAt = ref<number | null>(null)
+const nowTick = ref(Date.now())
 
 const provisionOpen = ref(false)
 const editBudgetOpen = ref(false)
@@ -21,6 +28,9 @@ const savedAt = ref<number | null>(null)
 
 const provisionForm = reactive({ limitUsd: 10 })
 const budgetForm = reactive({ limitUsd: null as number | null })
+
+let refreshTimer: ReturnType<typeof setInterval> | null = null
+let tickTimer: ReturnType<typeof setInterval> | null = null
 
 const budgetBarColor = computed(() => {
   const pct = view.value?.usagePercent
@@ -35,16 +45,50 @@ const formattedProvisionedAt = computed(() => {
   return new Date(view.value.provisionedAt).toLocaleString()
 })
 
+const lastRefreshRelative = computed(() => {
+  if (!lastRefreshAt.value) return null
+  const diffMs = nowTick.value - lastRefreshAt.value
+  const diffSec = Math.max(0, Math.round(diffMs / 1000))
+  const isEs = (locale.value || 'es').startsWith('es')
+  if (diffSec < 10) return isEs ? 'justo ahora' : 'just now'
+  if (diffSec < 60) return isEs ? `hace ${diffSec} s` : `${diffSec}s ago`
+  const diffMin = Math.round(diffSec / 60)
+  return isEs ? `hace ${diffMin} min` : `${diffMin} min ago`
+})
+
 async function load(): Promise<void> {
   loading.value = true
   error.value = null
   try {
     view.value = await service.get()
     budgetForm.limitUsd = view.value.budgetUsd
+    lastRefreshAt.value = Date.now()
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
     loading.value = false
+  }
+}
+
+async function refresh(): Promise<void> {
+  if (refreshing.value || loading.value) return
+  refreshing.value = true
+  try {
+    const next = await service.get()
+    view.value = next
+    budgetForm.limitUsd = next.budgetUsd
+    lastRefreshAt.value = Date.now()
+    error.value = null
+  } catch (err) {
+    error.value = (err as ApiError).message
+  } finally {
+    refreshing.value = false
+  }
+}
+
+function onVisibilityChange(): void {
+  if (document.visibilityState === 'visible') {
+    void refresh()
   }
 }
 
@@ -103,7 +147,26 @@ function flashSaved(): void {
   }, 2600)
 }
 
-onMounted(load)
+onMounted(async () => {
+  await load()
+  refreshTimer = setInterval(() => {
+    void refresh()
+  }, AUTO_REFRESH_MS)
+  tickTimer = setInterval(() => {
+    nowTick.value = Date.now()
+  }, 15_000)
+  if (typeof document !== 'undefined') {
+    document.addEventListener('visibilitychange', onVisibilityChange)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (refreshTimer) clearInterval(refreshTimer)
+  if (tickTimer) clearInterval(tickTimer)
+  if (typeof document !== 'undefined') {
+    document.removeEventListener('visibilitychange', onVisibilityChange)
+  }
+})
 </script>
 
 <template>
@@ -206,14 +269,35 @@ onMounted(load)
         >
           {{ $t('superadmin.openrouterKey.actionRevoke') }}
         </button>
-        <button
-          type="button"
-          class="ml-auto text-xs text-slate-500 hover:text-slate-700"
-          :disabled="busy"
-          @click="load"
-        >
-          {{ $t('common.reload') }}
-        </button>
+        <div class="ml-auto flex items-center gap-3">
+          <span v-if="lastRefreshRelative" class="text-xs text-slate-500">
+            {{ $t('superadmin.openrouterKey.lastRefresh') }}: {{ lastRefreshRelative }}
+          </span>
+          <button
+            type="button"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+            :disabled="busy || refreshing"
+            @click="refresh"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="size-4"
+              :class="refreshing ? 'animate-spin' : ''"
+              aria-hidden="true"
+            >
+              <polyline points="23 4 23 10 17 10" />
+              <polyline points="1 20 1 14 7 14" />
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+            </svg>
+            {{ $t('superadmin.openrouterKey.actionRefresh') }}
+          </button>
+        </div>
       </div>
 
       <!-- Edit budget inline form -->
