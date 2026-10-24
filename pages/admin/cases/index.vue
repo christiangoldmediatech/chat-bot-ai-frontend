@@ -147,9 +147,7 @@ async function markAttended(id: string): Promise<void> {
     const res = await casesApi.attend(id)
     upsert(res.case)
     void loadCounts()
-    if (typeof window !== 'undefined') {
-      window.open(`/admin/conversations/${res.conversation.id}`, '_blank', 'noopener')
-    }
+    await navigateTo(`/admin/conversations/${res.conversation.id}`)
   } catch (err) {
     error.value = (err as ApiError).message
   } finally {
