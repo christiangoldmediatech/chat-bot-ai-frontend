@@ -2915,7 +2915,10 @@
     },
     "companyBotDetail": {
       "back": "← Back to company",
+      "kicker": "WhatsApp bot",
+      "actionsLabel": "Actions",
       "configureAgent": "Configure agent",
+      "metaConfig": "Meta configuration",
       "whatsapp": "WhatsApp",
       "deleteBot": "Delete bot",
       "deleteConfirmTitle": "Delete bot {name}?",
@@ -2925,12 +2928,11 @@
       "activityTitle": "Message activity",
       "activitySubtitle": "Inbound & outbound volume for this bot only.",
       "reloadStats": "Reload stats",
-      "nav": {
-        "activity": "Activity",
-        "overview": "Overview",
+      "tabs": {
+        "openrouter": "OpenRouter Sub-Key",
+        "metrics": "Metrics",
         "documents": "Documents",
-        "multimedia": "Multimedia",
-        "calendar": "Google Calendar",
+        "integrations": "Integrations",
         "templates": "WhatsApp Templates"
       }
     },
