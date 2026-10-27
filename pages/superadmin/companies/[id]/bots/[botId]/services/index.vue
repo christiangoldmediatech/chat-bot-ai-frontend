@@ -76,9 +76,7 @@ await load()
 
 <template>
   <div>
-    <NuxtLink :to="`/superadmin/companies/${tenantId}/bots/${botId}`" class="text-xs text-slate-500 hover:text-slate-900">
-      ← Bot
-    </NuxtLink>
+    <SuperadminBackLink :to="`/superadmin/companies/${tenantId}/bots/${botId}`" :label="$t('superadmin.companyBotDetail.back')" />
     <div class="mt-2 flex flex-wrap items-start justify-between gap-3">
       <div>
         <h1 class="text-2xl font-semibold tracking-tight">{{ $t('admin.services.title') }}</h1>

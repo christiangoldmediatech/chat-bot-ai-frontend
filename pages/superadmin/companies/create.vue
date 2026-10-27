@@ -62,7 +62,7 @@ async function onSubmit(): Promise<void> {
 
 <template>
   <div>
-    <NuxtLink to="/superadmin/companies" class="text-sm text-slate-400 hover:text-slate-200">{{ $t('superadmin.companyCreate.back') }}</NuxtLink>
+    <SuperadminBackLink to="/superadmin/companies" :label="$t('superadmin.companyCreate.back')" />
     <h1 class="mt-2 text-2xl font-semibold text-slate-100">{{ $t('superadmin.companyCreate.title') }}</h1>
     <p class="text-slate-400 text-sm mt-1">
       {{ $t('superadmin.companyCreate.subtitle') }}
