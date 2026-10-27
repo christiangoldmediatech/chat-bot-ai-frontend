@@ -98,7 +98,6 @@ const canUnblock = computed(() => {
 })
 
 const canBlock = computed(() => {
-  if (props.mode !== 'superadmin') return false
   const s = status.value
   if (!s) return true
   return s.blockStatus !== 'MANUAL_BLOCKED'
