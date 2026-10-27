@@ -25,16 +25,10 @@ export function useConversationSecurity(tenantId?: string) {
         reason,
       }),
 
-    block: (id: string, reason?: string): Promise<SecurityStatus> => {
-      if (!tenantId) {
-        return Promise.reject(
-          new Error('Manual block is only available in the superadmin context'),
-        )
-      }
-      return api.post<SecurityStatus>(`${conversationsBase}/${id}/security/block`, {
+    block: (id: string, reason?: string): Promise<SecurityStatus> =>
+      api.post<SecurityStatus>(`${conversationsBase}/${id}/security/block`, {
         reason,
-      })
-    },
+      }),
 
     listAudit: (id: string, limit = 50): Promise<SecurityAuditEntry[]> =>
       api.get<SecurityAuditEntry[]>(`${conversationsBase}/${id}/security/audit`, {
