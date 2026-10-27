@@ -34,10 +34,10 @@ let tickTimer: ReturnType<typeof setInterval> | null = null
 
 const budgetBarColor = computed(() => {
   const pct = view.value?.usagePercent
-  if (pct === null || pct === undefined) return 'bg-slate-300'
-  if (pct >= 90) return 'bg-danger-500'
-  if (pct >= 70) return 'bg-amber-500'
-  return 'bg-emerald-500'
+  if (pct === null || pct === undefined) return 'bg-ink-cardHi'
+  if (pct >= 90) return 'bg-danger-500 shadow-[0_0_12px_rgba(244,63,94,0.6)]'
+  if (pct >= 70) return 'bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.6)]'
+  return 'bg-brand-gradient shadow-halo-glow'
 })
 
 const formattedProvisionedAt = computed(() => {
@@ -170,16 +170,15 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="rounded-2xl bg-white ring-1 ring-slate-200 shadow-glass p-6">
-    <!-- Error banner with retry -->
+  <section class="space-y-5">
     <div
       v-if="error"
-      class="mb-4 rounded-lg border border-danger-200 bg-danger-50 px-4 py-3 text-sm text-danger-700 flex items-start justify-between gap-3"
+      class="rounded-xl border border-danger-500/40 bg-danger-500/10 backdrop-blur-sm px-4 py-3 text-sm text-danger-200 flex items-start justify-between gap-3"
     >
       <span class="min-w-0 leading-relaxed">{{ error }}</span>
       <button
         type="button"
-        class="shrink-0 rounded-md border border-danger-300 bg-white px-3 py-1 text-xs font-semibold text-danger-700 hover:bg-danger-100"
+        class="shrink-0 rounded-lg border border-danger-500/50 bg-danger-500/10 px-3 py-1 text-xs font-semibold text-danger-100 hover:bg-danger-500/20 transition disabled:opacity-60"
         :disabled="busy"
         @click="load"
       >
@@ -189,73 +188,75 @@ onBeforeUnmount(() => {
 
     <div
       v-if="savedAt"
-      class="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
+      class="rounded-xl border border-success-500/40 bg-success-500/10 px-4 py-3 text-sm text-success-200 flex items-center gap-2"
     >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
       {{ $t('common.saved') }}
     </div>
 
-    <SpinnerInline v-if="loading" />
+    <SpinnerInline v-if="loading" tone="dark" />
 
-    <!-- Provisioned state -->
     <template v-else-if="view && view.hasKey">
-      <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
-        <div class="min-w-0">
-          <dt class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+      <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="rounded-2xl bg-ink-card/60 ring-1 ring-line p-4 min-w-0 backdrop-blur-sm">
+          <dt class="text-[10px] uppercase tracking-[0.18em] font-semibold text-mist mb-1.5">
             {{ $t('superadmin.openrouterKey.fieldHash') }}
           </dt>
-          <dd class="mt-1 text-slate-900 font-mono text-sm truncate">
+          <dd class="text-pearl font-mono text-sm break-all">
             {{ view.hashPreview }}
           </dd>
         </div>
-        <div class="min-w-0">
-          <dt class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+        <div class="rounded-2xl bg-ink-card/60 ring-1 ring-line p-4 min-w-0 backdrop-blur-sm">
+          <dt class="text-[10px] uppercase tracking-[0.18em] font-semibold text-mist mb-1.5">
             {{ $t('superadmin.openrouterKey.fieldProvisionedAt') }}
           </dt>
-          <dd class="mt-1 text-slate-900 text-sm">
+          <dd class="text-pearl text-sm">
             {{ formattedProvisionedAt }}
           </dd>
         </div>
       </dl>
 
-      <div class="mt-6">
-        <div class="flex items-baseline justify-between">
-          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+      <div class="rounded-2xl bg-ink-card/60 ring-1 ring-line p-5 backdrop-blur-sm">
+        <div class="flex items-baseline justify-between gap-3 flex-wrap">
+          <span class="text-[10px] uppercase tracking-[0.18em] font-semibold text-mist">
             {{ $t('superadmin.openrouterKey.fieldBudget') }}
           </span>
-          <span v-if="view.budgetUsd !== null" class="text-sm text-slate-800">
-            <span v-if="view.usageUsd !== null" class="font-mono font-semibold">
+          <span v-if="view.budgetUsd !== null" class="inline-flex items-baseline gap-1 text-pearl">
+            <span v-if="view.usageUsd !== null" class="font-mono font-semibold text-2xl text-pearl">
               ${{ view.usageUsd.toFixed(2) }}
             </span>
-            <span v-else class="text-slate-400">—</span>
-            <span class="text-slate-400"> / </span>
-            <span class="font-mono">${{ view.budgetUsd.toFixed(2) }}</span>
+            <span v-else class="text-mist text-2xl">—</span>
+            <span class="text-mist mx-1">/</span>
+            <span class="font-mono text-sm text-mist">${{ view.budgetUsd.toFixed(2) }}</span>
           </span>
-          <span v-else class="text-sm text-slate-500">
+          <span v-else class="text-sm text-mist">
             {{ $t('superadmin.openrouterKey.budgetUncapped') }}
           </span>
         </div>
         <div
           v-if="view.budgetUsd !== null && view.usagePercent !== null"
-          class="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-slate-100"
+          class="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-ink-surface ring-1 ring-line"
         >
           <div
-            class="h-full transition-all"
+            class="h-full rounded-full transition-all duration-500"
             :class="budgetBarColor"
             :style="{ width: `${view.usagePercent}%` }"
           />
         </div>
         <p
           v-if="view.budgetUsd !== null && view.usageUsd === null"
-          class="mt-2 text-xs text-amber-700"
+          class="mt-2 text-xs text-amber-300"
         >
           {{ $t('superadmin.openrouterKey.usageUnavailable') }}
         </p>
       </div>
 
-      <div class="mt-6 flex flex-wrap items-center gap-3">
+      <div class="flex flex-wrap items-center gap-3">
         <button
           type="button"
-          class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-60"
+          class="rounded-xl bg-brand-gradient text-ink-tealDeep px-4 py-2 text-sm font-semibold hover:brightness-110 disabled:opacity-60 shadow-halo-glow transition"
           :disabled="busy"
           @click="editBudgetOpen = true"
         >
@@ -263,19 +264,19 @@ onBeforeUnmount(() => {
         </button>
         <button
           type="button"
-          class="rounded-lg border border-danger-200 bg-white px-4 py-2 text-sm font-semibold text-danger-700 hover:bg-danger-50 disabled:opacity-60"
+          class="rounded-xl border border-danger-500/40 bg-danger-500/10 px-4 py-2 text-sm font-semibold text-danger-200 hover:bg-danger-500/20 disabled:opacity-60 transition"
           :disabled="busy"
           @click="confirmingRevoke = true"
         >
           {{ $t('superadmin.openrouterKey.actionRevoke') }}
         </button>
         <div class="ml-auto flex items-center gap-3">
-          <span v-if="lastRefreshRelative" class="text-xs text-slate-500">
+          <span v-if="lastRefreshRelative" class="text-xs text-mist">
             {{ $t('superadmin.openrouterKey.lastRefresh') }}: {{ lastRefreshRelative }}
           </span>
           <button
             type="button"
-            class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+            class="inline-flex items-center gap-1.5 rounded-xl border border-line bg-ink-card/60 px-3 py-1.5 text-sm font-semibold text-pearl hover:bg-ink-cardHi/60 disabled:opacity-60 transition"
             :disabled="busy || refreshing"
             @click="refresh"
           >
@@ -300,32 +301,31 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <!-- Edit budget inline form -->
       <div
         v-if="editBudgetOpen"
-        class="mt-5 rounded-lg border border-slate-200 bg-slate-50 p-4"
+        class="rounded-2xl border border-line bg-ink-card/60 backdrop-blur-sm p-5"
       >
-        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">
+        <label class="block text-[10px] uppercase tracking-[0.18em] font-semibold text-mist mb-2">
           {{ $t('superadmin.openrouterKey.fieldNewBudget') }}
         </label>
-        <div class="mt-2 flex items-center gap-2">
-          <span class="text-sm text-slate-500">$</span>
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-mist">$</span>
           <input
             v-model.number="budgetForm.limitUsd"
             type="number"
             min="0"
             step="0.01"
-            class="w-40 rounded-md border border-slate-300 px-3 py-2 text-sm"
+            class="w-40 rounded-xl border border-line bg-ink-surface/70 !text-pearl !caret-pearl placeholder:text-mist/60 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-halo focus:border-halo transition"
             :placeholder="$t('superadmin.openrouterKey.placeholderUncapped')"
           >
         </div>
-        <p class="mt-2 text-xs text-slate-600">
+        <p class="mt-2 text-xs text-mist leading-relaxed">
           {{ $t('superadmin.openrouterKey.budgetHelp') }}
         </p>
         <div class="mt-4 flex items-center gap-2">
           <button
             type="button"
-            class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
+            class="rounded-xl bg-brand-gradient text-ink-tealDeep px-4 py-2 text-sm font-semibold hover:brightness-110 disabled:opacity-60 shadow-halo-glow transition"
             :disabled="busy"
             @click="onSaveBudget"
           >
@@ -333,7 +333,7 @@ onBeforeUnmount(() => {
           </button>
           <button
             type="button"
-            class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+            class="rounded-xl border border-line bg-ink-surface/40 px-4 py-2 text-sm font-semibold text-pearl hover:bg-ink-card/60 disabled:opacity-60 transition"
             :disabled="busy"
             @click="editBudgetOpen = false"
           >
@@ -342,18 +342,17 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <!-- Revoke confirmation -->
       <div
         v-if="confirmingRevoke"
-        class="mt-5 rounded-lg border border-danger-200 bg-danger-50 p-4"
+        class="rounded-2xl border border-danger-500/40 bg-danger-500/10 backdrop-blur-sm p-5"
       >
-        <p class="text-sm text-danger-700 leading-relaxed">
+        <p class="text-sm text-danger-200 leading-relaxed">
           {{ $t('superadmin.openrouterKey.confirmRevoke') }}
         </p>
         <div class="mt-4 flex items-center gap-2">
           <button
             type="button"
-            class="rounded-lg bg-danger-600 px-4 py-2 text-sm font-semibold text-white hover:bg-danger-700 disabled:opacity-60"
+            class="rounded-xl bg-danger-500 text-white px-4 py-2 text-sm font-semibold hover:bg-danger-400 disabled:opacity-60 transition"
             :disabled="busy"
             @click="onRevoke"
           >
@@ -361,7 +360,7 @@ onBeforeUnmount(() => {
           </button>
           <button
             type="button"
-            class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+            class="rounded-xl border border-line bg-ink-surface/40 px-4 py-2 text-sm font-semibold text-pearl hover:bg-ink-card/60 disabled:opacity-60 transition"
             :disabled="busy"
             @click="confirmingRevoke = false"
           >
@@ -371,10 +370,9 @@ onBeforeUnmount(() => {
       </div>
     </template>
 
-    <!-- Not provisioned (also fallback when GET failed) -->
     <template v-else>
-      <div v-if="!provisionOpen" class="text-center py-6">
-        <div class="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-slate-100">
+      <div v-if="!provisionOpen" class="text-center py-8">
+        <div class="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-ink-card/60 ring-1 ring-line backdrop-blur-sm">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -383,19 +381,19 @@ onBeforeUnmount(() => {
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="size-7 text-slate-500"
+            class="size-7 text-halo"
             aria-hidden="true"
           >
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
         </div>
-        <p class="mx-auto max-w-md text-sm text-slate-600 leading-relaxed">
+        <p class="mx-auto max-w-md text-sm text-mist leading-relaxed">
           {{ $t('superadmin.openrouterKey.notProvisioned') }}
         </p>
         <button
           type="button"
-          class="mt-5 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+          class="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-gradient text-ink-tealDeep px-5 py-2.5 text-sm font-semibold shadow-halo-glow hover:brightness-110 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-halo transition"
           :disabled="busy"
           @click="provisionOpen = true"
         >
@@ -404,7 +402,7 @@ onBeforeUnmount(() => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             stroke-linecap="round"
             stroke-linejoin="round"
             class="size-4"
@@ -419,28 +417,28 @@ onBeforeUnmount(() => {
 
       <div
         v-else
-        class="rounded-lg border border-slate-200 bg-slate-50 p-4"
+        class="rounded-2xl border border-line bg-ink-card/60 backdrop-blur-sm p-5"
       >
-        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500">
+        <label class="block text-[10px] uppercase tracking-[0.18em] font-semibold text-mist mb-2">
           {{ $t('superadmin.openrouterKey.fieldMonthlyBudget') }}
         </label>
-        <div class="mt-2 flex items-center gap-2">
-          <span class="text-sm text-slate-500">$</span>
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-mist">$</span>
           <input
             v-model.number="provisionForm.limitUsd"
             type="number"
             min="0"
             step="0.01"
-            class="w-40 rounded-md border border-slate-300 px-3 py-2 text-sm"
+            class="w-40 rounded-xl border border-line bg-ink-surface/70 !text-pearl !caret-pearl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-halo focus:border-halo transition"
           >
         </div>
-        <p class="mt-2 text-xs text-slate-600">
+        <p class="mt-2 text-xs text-mist leading-relaxed">
           {{ $t('superadmin.openrouterKey.budgetHelp') }}
         </p>
         <div class="mt-4 flex items-center gap-2">
           <button
             type="button"
-            class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
+            class="rounded-xl bg-brand-gradient text-ink-tealDeep px-4 py-2 text-sm font-semibold hover:brightness-110 disabled:opacity-60 shadow-halo-glow transition"
             :disabled="busy"
             @click="onProvision"
           >
@@ -448,7 +446,7 @@ onBeforeUnmount(() => {
           </button>
           <button
             type="button"
-            class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+            class="rounded-xl border border-line bg-ink-surface/40 px-4 py-2 text-sm font-semibold text-pearl hover:bg-ink-card/60 disabled:opacity-60 transition"
             :disabled="busy"
             @click="provisionOpen = false"
           >
@@ -458,15 +456,14 @@ onBeforeUnmount(() => {
       </div>
     </template>
 
-    <p class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500">
+    <p class="pt-4 border-t border-line text-xs text-mist leading-relaxed">
       {{ $t('superadmin.openrouterKey.footerNote') }}
       <a
         href="https://openrouter.ai/activity"
         target="_blank"
         rel="noopener noreferrer"
-        class="font-medium text-indigo-600 underline hover:text-indigo-700"
-        >openrouter.ai/activity</a
-      >.
+        class="font-medium text-halo underline underline-offset-2 hover:text-halo-dim transition"
+      >openrouter.ai/activity</a>.
     </p>
   </section>
 </template>
