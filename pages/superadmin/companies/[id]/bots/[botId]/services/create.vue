@@ -76,9 +76,7 @@ async function onSubmit(input: CreateServiceInput): Promise<void> {
 
 <template>
   <div class="max-w-2xl">
-    <NuxtLink :to="`/superadmin/companies/${tenantId}/bots/${botId}/services`" class="text-xs text-slate-500 hover:text-slate-900">
-      ← {{ $t('admin.services.title') }}
-    </NuxtLink>
+    <SuperadminBackLink :to="`/superadmin/companies/${tenantId}/bots/${botId}/services`" :label="$t('admin.services.title')" />
     <h1 class="mt-2 text-2xl font-semibold tracking-tight">{{ $t('admin.services.createTitle') }}</h1>
     <p class="text-slate-500 text-sm mt-1">{{ $t('admin.services.createSubtitle') }}</p>
 

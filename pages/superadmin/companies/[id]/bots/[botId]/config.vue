@@ -135,7 +135,7 @@ await load()
 
 <template>
   <div class="max-w-6xl">
-    <NuxtLink :to="`/superadmin/companies/${tenantId}/bots/${botId}`" class="text-sm text-slate-400 hover:text-slate-200">{{ $t('admin.botConfig.back') }}</NuxtLink>
+    <SuperadminBackLink :to="`/superadmin/companies/${tenantId}/bots/${botId}`" :label="$t('admin.botConfig.back')" />
 
     <section class="mt-3 rounded-2xl bg-slate-900/70 backdrop-blur-xl ring-1 ring-slate-800 shadow-glass-lg p-6">
       <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">

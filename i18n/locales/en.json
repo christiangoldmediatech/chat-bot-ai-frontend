@@ -2582,6 +2582,7 @@
     "testBench": {
       "title": "Test bench",
       "subtitle": "Chat with this bot using its real configuration (prompt, catalog, documents, tools). Nothing is sent over WhatsApp, no meetings or sales are created — it's a dry run.",
+      "back": "Back to bot",
       "reset": "Reset",
       "warning": "Test mode — tool side-effects are simulated with fake data. This transcript is lost when you leave the page.",
       "processing": "The bot is processing…",
@@ -2594,7 +2595,12 @@
       "detail": "detail",
       "noBody": "(no body)",
       "showPrompt": "Show system prompt preview (first 4000 chars)",
-      "hidePrompt": "Hide system prompt preview"
+      "hidePrompt": "Hide system prompt preview",
+      "phoneHeaderName": "Test bench",
+      "phoneHeaderPhone": "Dry-run sandbox",
+      "debugTitle": "Debug",
+      "debugSubtitle": "Internal signals the bot produced for your last message.",
+      "emptyState": "Say hi to start the conversation. Replies here are not sent to WhatsApp."
     },
     "leads": {
       "kicker": "Leads",
@@ -2914,7 +2920,10 @@
     },
     "companyBotDetail": {
       "back": "← Back to company",
+      "kicker": "WhatsApp bot",
+      "actionsLabel": "Actions",
       "configureAgent": "Configure agent",
+      "metaConfig": "Meta configuration",
       "whatsapp": "WhatsApp",
       "deleteBot": "Delete bot",
       "deleteConfirmTitle": "Delete bot {name}?",
@@ -2924,12 +2933,11 @@
       "activityTitle": "Message activity",
       "activitySubtitle": "Inbound & outbound volume for this bot only.",
       "reloadStats": "Reload stats",
-      "nav": {
-        "activity": "Activity",
-        "overview": "Overview",
+      "tabs": {
+        "openrouter": "OpenRouter Sub-Key",
+        "metrics": "Metrics",
         "documents": "Documents",
-        "multimedia": "Multimedia",
-        "calendar": "Google Calendar",
+        "integrations": "Integrations",
         "templates": "WhatsApp Templates"
       }
     },
