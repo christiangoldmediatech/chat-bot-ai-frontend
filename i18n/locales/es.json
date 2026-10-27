@@ -461,7 +461,6 @@
     "meetings": "Citas",
     "calendar": "Calendario",
     "sales": "Ventas",
-    "llmUsage": "Consumo de IA",
     "services": "Servicios",
     "schedule": "Horario de atención",
     "cases": "Casos",
@@ -2583,6 +2582,7 @@
     "testBench": {
       "title": "Banco de pruebas",
       "subtitle": "Conversa con este bot usando su configuración real (prompt, catálogo, documentos, tools). No se envía nada por WhatsApp, no se crean citas ni ventas — es una simulación.",
+      "back": "Volver al bot",
       "reset": "Reiniciar",
       "warning": "Modo prueba — los efectos de las tools están simulados con datos ficticios. Este historial se pierde al salir de la página.",
       "processing": "El bot está procesando…",
@@ -2595,7 +2595,12 @@
       "detail": "detalle",
       "noBody": "(sin cuerpo)",
       "showPrompt": "Ver preview del system prompt (primeros 4000 caracteres)",
-      "hidePrompt": "Ocultar preview del system prompt"
+      "hidePrompt": "Ocultar preview del system prompt",
+      "phoneHeaderName": "Banco de pruebas",
+      "phoneHeaderPhone": "Sesión de simulación",
+      "debugTitle": "Debug",
+      "debugSubtitle": "Señales internas que generó el bot con tu último mensaje.",
+      "emptyState": "Saludá para iniciar la conversación. Lo que respondas acá no se envía por WhatsApp."
     },
     "leads": {
       "kicker": "Leads",
@@ -2915,7 +2920,10 @@
     },
     "companyBotDetail": {
       "back": "← Volver a la empresa",
+      "kicker": "Bot de WhatsApp",
+      "actionsLabel": "Acciones",
       "configureAgent": "Configurar agente",
+      "metaConfig": "Configuración Meta",
       "whatsapp": "WhatsApp",
       "deleteBot": "Eliminar bot",
       "deleteConfirmTitle": "¿Eliminar el bot {name}?",
@@ -2925,12 +2933,11 @@
       "activityTitle": "Actividad de mensajes",
       "activitySubtitle": "Volumen inbound y outbound solo de este bot.",
       "reloadStats": "Recargar estadísticas",
-      "nav": {
-        "activity": "Actividad",
-        "overview": "Resumen",
+      "tabs": {
+        "openrouter": "OpenRouter Sub-Key",
+        "metrics": "Métricas",
         "documents": "Documentos",
-        "multimedia": "Multimedia",
-        "calendar": "Google Calendar",
+        "integrations": "Integraciones",
         "templates": "Plantillas WhatsApp"
       }
     },

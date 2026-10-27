@@ -52,7 +52,6 @@ const groups = computed<NavGroup[]>(() => [
       { to: '/admin/cases', label: t('nav.cases'), icon: 'cases' },
       { to: '/admin/calendar', label: t('nav.calendar'), icon: 'calendar' },
       { to: '/admin/sales', label: t('nav.sales'), icon: 'sales' },
-      { to: '/admin/llm-usage', label: t('nav.llmUsage'), icon: 'dashboard' },
     ],
   },
   {

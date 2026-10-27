@@ -66,7 +66,7 @@ async function onContinue(): Promise<void> {
 
 <template>
   <div>
-    <NuxtLink :to="`/superadmin/companies/${tenantId}`" class="text-sm text-slate-400 hover:text-slate-200">{{ $t('superadmin.companyBotCreate.back') }}</NuxtLink>
+    <SuperadminBackLink :to="`/superadmin/companies/${tenantId}`" :label="$t('superadmin.companyBotCreate.back')" />
     <h1 class="mt-2 text-2xl font-semibold text-slate-100 tracking-tight">{{ $t('admin.botCreate.title') }}</h1>
     <p class="text-slate-400 text-sm mt-1 max-w-2xl">
       {{ $t('admin.botCreate.subtitle') }}

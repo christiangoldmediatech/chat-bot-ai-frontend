@@ -101,7 +101,7 @@ planCatalog.value = await plansApi.list()
 
 <template>
   <div>
-    <NuxtLink :to="`/superadmin/companies/${id}`" class="text-sm text-slate-400 hover:text-slate-200">{{ $t('superadmin.companyEdit.back') }}</NuxtLink>
+    <SuperadminBackLink :to="`/superadmin/companies/${id}`" :label="$t('superadmin.companyEdit.back')" />
     <div class="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
       <span class="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-indigo-300 ring-1 ring-indigo-500/30">
         <span class="size-1.5 rounded-full bg-indigo-400" />
