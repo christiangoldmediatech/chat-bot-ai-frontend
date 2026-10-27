@@ -76,7 +76,7 @@ await load()
 
 <template>
   <div>
-    <SuperadminBackLink :to="`/superadmin/companies/${tenantId}/bots/${botId}`" :label="$t('superadmin.companyBotDetail.back')" />
+    <SuperadminBackLink :to="`/superadmin/companies/${tenantId}/bots/${botId}`" :label="$t('admin.botEdit.back')" />
     <div class="mt-2 flex flex-wrap items-start justify-between gap-3">
       <div>
         <h1 class="text-2xl font-semibold tracking-tight">{{ $t('admin.services.title') }}</h1>
