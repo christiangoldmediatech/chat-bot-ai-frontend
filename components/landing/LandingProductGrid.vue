@@ -1,4 +1,9 @@
 <script setup lang="ts">
+interface InboxRow { name: string, msg: string, time: string, unread: number }
+interface AgendaSlot { time: string, duration: number, name: string, tone: string }
+
+const { tm, rt } = useI18n()
+
 const chartSeries = [38, 52, 44, 67, 59, 81, 92]
 const chartMax = Math.max(...chartSeries)
 const chartPath = computed(() => {
@@ -19,23 +24,42 @@ const chartAreaPath = computed(() => {
   return `${pts} L ${w} ${h} L 0 ${h} Z`
 })
 
-const agendaSlots = [
-  { time: '08:00', duration: 2.5, name: 'Carla Ruiz', type: 'reparación', tone: 'primary' },
-  { time: '10:30', duration: 2, name: 'Mateo Díaz', type: 'urgencia', tone: 'warn' },
-  { time: '14:00', duration: 3, name: 'Sofía Pérez', type: 'reagendada', tone: 'muted' },
-]
+const chartDays = computed(() => {
+  const raw = tm('landing.productGrid.cards.chart.days') as unknown
+  return Array.isArray(raw) ? raw.map(x => rt(x as string)) : []
+})
 
-const inboxRows = [
-  { initial: 'L', name: 'Lucía G.', msg: '¿Hacen limpieza dental?', time: '09:22', unread: 1 },
-  { initial: 'J', name: 'Javier M.', msg: '¿Hasta qué hora atienden?', time: '14:05', unread: 0 },
-  { initial: 'M', name: 'Mateo R.', msg: 'Me duele una muela 😣', time: '03:14', unread: 2 },
-]
+const inboxRows = computed<InboxRow[]>(() => {
+  const raw = tm('landing.productGrid.cards.inbox.messages') as unknown
+  if (!Array.isArray(raw)) return []
+  return raw.map((entry: Record<string, unknown>) => ({
+    name: rt(entry.name as string),
+    msg: rt(entry.msg as string),
+    time: rt(entry.time as string),
+    unread: typeof entry.unread === 'number' ? entry.unread : 0,
+  }))
+})
+
+const agendaSlots = computed<AgendaSlot[]>(() => {
+  const raw = tm('landing.productGrid.cards.agenda.slots') as unknown
+  if (!Array.isArray(raw)) return []
+  return raw.map((entry: Record<string, unknown>) => ({
+    time: rt(entry.time as string),
+    duration: typeof entry.duration === 'number' ? entry.duration : Number(rt(entry.duration as string)),
+    name: rt(entry.name as string),
+    tone: rt(entry.tone as string),
+  }))
+})
 
 const settings = [
   { label: 'landing.productGrid.settings.auto', on: true },
   { label: 'landing.productGrid.settings.handoff', on: true },
   { label: 'landing.productGrid.settings.voice', on: false },
 ]
+
+function initialOf(name: string) {
+  return name.trim().charAt(0).toUpperCase()
+}
 </script>
 
 <template>
@@ -80,7 +104,7 @@ const settings = [
               </circle>
             </svg>
             <div class="pg-chart-x">
-              <span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span>
+              <span v-for="(day, i) in chartDays" :key="i">{{ day }}</span>
             </div>
           </div>
           <div class="pg-card__meta">
@@ -122,7 +146,7 @@ const settings = [
           </div>
           <ul class="pg-inbox">
             <li v-for="row in inboxRows" :key="row.name">
-              <span class="pg-inbox__avatar">{{ row.initial }}</span>
+              <span class="pg-inbox__avatar">{{ initialOf(row.name) }}</span>
               <div class="pg-inbox__body">
                 <div class="pg-inbox__row">
                   <span class="pg-inbox__name">{{ row.name }}</span>
@@ -149,7 +173,7 @@ const settings = [
               </svg>
             </div>
             <div class="pg-bot__main">
-              <div class="pg-bot__name">Dr. Paredes</div>
+              <div class="pg-bot__name">{{ $t('landing.productGrid.cards.bot.name') }}</div>
               <div class="pg-bot__sub">{{ $t('landing.productGrid.cards.bot.specialty') }}</div>
             </div>
           </div>
@@ -191,10 +215,10 @@ const settings = [
           </div>
           <div class="pg-customer">
             <div class="pg-customer__row">
-              <span class="pg-customer__avatar">C</span>
+              <span class="pg-customer__avatar">{{ initialOf($t('landing.productGrid.cards.customer.name')) }}</span>
               <div>
-                <div class="pg-customer__name">Carla Ruiz</div>
-                <div class="pg-customer__since">{{ $t('landing.productGrid.cards.customer.since') }} 2023</div>
+                <div class="pg-customer__name">{{ $t('landing.productGrid.cards.customer.name') }}</div>
+                <div class="pg-customer__since">{{ $t('landing.productGrid.cards.customer.since') }} {{ $t('landing.productGrid.cards.customer.year') }}</div>
               </div>
             </div>
             <dl class="pg-customer__grid">

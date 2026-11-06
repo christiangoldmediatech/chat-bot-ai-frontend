@@ -260,15 +260,64 @@
       "cards": {
         "chart": {
           "label": "Mensajes · 7 días",
-          "sub": "respondidos esta semana"
+          "sub": "respondidos esta semana",
+          "days": [
+            "L",
+            "M",
+            "X",
+            "J",
+            "V",
+            "S",
+            "D"
+          ]
         },
         "agenda": {
           "label": "Agenda",
-          "day": "Viernes"
+          "day": "Viernes",
+          "slots": [
+            {
+              "time": "08:00",
+              "duration": 2.5,
+              "name": "Carla Ruiz",
+              "tone": "primary"
+            },
+            {
+              "time": "10:30",
+              "duration": 2,
+              "name": "Mateo Díaz",
+              "tone": "warn"
+            },
+            {
+              "time": "14:00",
+              "duration": 3,
+              "name": "Sofía Pérez",
+              "tone": "muted"
+            }
+          ]
         },
         "inbox": {
           "label": "Bandeja WhatsApp",
-          "live": "en vivo"
+          "live": "en vivo",
+          "messages": [
+            {
+              "name": "Lucía G.",
+              "msg": "¿Hacen limpieza dental?",
+              "time": "09:22",
+              "unread": 1
+            },
+            {
+              "name": "Javier M.",
+              "msg": "¿Hasta qué hora atienden?",
+              "time": "14:05",
+              "unread": 0
+            },
+            {
+              "name": "Mateo R.",
+              "msg": "Me duele una muela 😣",
+              "time": "03:14",
+              "unread": 2
+            }
+          ]
         },
         "bot": {
           "label": "Estado del bot",
@@ -276,7 +325,8 @@
           "specialty": "Odontología · WhatsApp 24/7",
           "latency": "latencia",
           "today": "hoy",
-          "resolved": "resueltos"
+          "resolved": "resueltos",
+          "name": "Dr. Paredes"
         },
         "settings": {
           "label": "Configuración",
@@ -286,7 +336,9 @@
           "label": "Ficha del cliente",
           "since": "cliente desde",
           "visits": "citas",
-          "sat": "satisfacción"
+          "sat": "satisfacción",
+          "name": "Carla Ruiz",
+          "year": "2023"
         }
       },
       "settings": {
