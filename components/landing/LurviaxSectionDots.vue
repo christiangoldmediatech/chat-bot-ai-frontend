@@ -10,7 +10,6 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   sections: () => [
-    { id: 'splash', labelKey: 'landing.dots.splash' },
     { id: 'hero', labelKey: 'landing.dots.hero' },
     { id: 'demo', labelKey: 'landing.dots.demo' },
     { id: 'capacidades', labelKey: 'landing.dots.capacidades' },

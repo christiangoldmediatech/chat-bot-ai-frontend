@@ -150,13 +150,81 @@
         "channels": "Media formats on WhatsApp"
       }
     },
-    "inbox": {
-      "panelTitle": "Team inbox",
-      "pendingCount": "{count} pending",
-      "allCaught": "All caught up",
-      "replied": "Replied by LURVIAX",
-      "summary": "A unified view across every bot in your account.",
-      "botActive": "Active"
+    "heroScene": {
+      "eyebrow": "Live · Real conversation",
+      "claimA": "Books appointments",
+      "claimEm": "without missing",
+      "claimB": "a single client.",
+      "copy": "LURVIAX understands what your patient needs, offers real slots from your calendar, confirms the appointment and sends automatic reminders — all over WhatsApp, 24 hours a day, 7 days a week.",
+      "ctaPrimary": "Create account",
+      "ctaSecondary": "See how it works",
+      "capsAria": "Key capabilities",
+      "caps": {
+        "247": "24/7 coverage",
+        "agenda": "Auto scheduling",
+        "voice": "Understands voice notes"
+      },
+      "phoneStatus": "online",
+      "phoneInputPlaceholder": "Message",
+      "typing": "LURVIAX is typing",
+      "m1": "Hi, I need an appointment for a dental repair 🦷",
+      "m2": "Hey! 😊 For a repair I have tomorrow Thursday 11:30 or Friday 08:00. Which works better?",
+      "m3": "Friday at 8 please",
+      "m4": "Perfect. Can you confirm your full name and phone?",
+      "m5": "Carla Ruiz, 099 912 3456",
+      "m6": "Done Carla ✅ Appointment set for Friday at 08:00. I'll send you a reminder on Thursday afternoon.",
+      "phoneContact": "Dr. Paredes",
+      "phoneContactSub": "Dental practice"
+    },
+    "parallel": {
+      "eyebrow": "While you sleep · While you work",
+      "titleA": "Four customers.",
+      "titleB": "One LURVIAX.",
+      "copy": "There's no bad hour for a customer to message you. LURVIAX handles every conversation in parallel, with context and coherence — booking, quoting and answering without leaving anyone waiting.",
+      "centerLabel": "Running",
+      "centerSub": "non-stop",
+      "stat1": {
+        "num": "100%",
+        "label": "Messages answered"
+      },
+      "stat2": {
+        "num": "<3s",
+        "label": "Average latency"
+      },
+      "stat3": {
+        "num": "0",
+        "label": "Customers waiting"
+      },
+      "panels": {
+        "1": {
+          "time": "03:14",
+          "name": "Mateo",
+          "intent": "Urgent booking",
+          "c": "My tooth hurts, anything tomorrow?",
+          "a": "Tomorrow 09:30 with Dr. Paredes. Confirm?"
+        },
+        "2": {
+          "time": "09:22",
+          "name": "Lucía",
+          "intent": "Services",
+          "c": "Do you do dental cleaning?",
+          "a": "Yes, $35 and includes scaling. Book you in?"
+        },
+        "3": {
+          "time": "14:05",
+          "name": "Javier",
+          "intent": "Hours",
+          "c": "What time do you close today?",
+          "a": "Today until 19:00. I have an 18:30 slot if it works."
+        },
+        "4": {
+          "time": "22:47",
+          "name": "Sofía",
+          "intent": "Reschedule",
+          "c": "I need to reschedule my Friday appointment 🙏",
+          "a": "I can move it to Friday 11:00. Works for you?"
+        }
+      }
     },
     "demo": {
       "eyebrow": "Real conversation",
@@ -231,6 +299,14 @@
           "m8meta": "Andrea · Web panel"
         }
       }
+    },
+    "inbox": {
+      "panelTitle": "Team inbox",
+      "pendingCount": "{count} pending",
+      "allCaught": "All caught up",
+      "replied": "Replied by LURVIAX",
+      "summary": "A unified view across every bot in your account.",
+      "botActive": "Active"
     },
     "caps": {
       "eyebrow": "What it does today",

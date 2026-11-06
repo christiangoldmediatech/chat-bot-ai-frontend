@@ -150,13 +150,81 @@
         "channels": "Formatos multimedia en WhatsApp"
       }
     },
-    "inbox": {
-      "panelTitle": "Bandeja del equipo",
-      "pendingCount": "{count} pendientes",
-      "allCaught": "Todo al día",
-      "replied": "Respondido por LURVIAX",
-      "summary": "Una vista unificada de todos los bots de tu cuenta.",
-      "botActive": "Activo"
+    "heroScene": {
+      "eyebrow": "En vivo · Conversación real",
+      "claimA": "Agenda citas",
+      "claimEm": "sin perder",
+      "claimB": "un solo cliente.",
+      "copy": "LURVIAX entiende lo que necesita tu paciente, le ofrece horarios reales en tu agenda, confirma y le envía recordatorios automáticos — todo por WhatsApp, 24 horas, 7 días.",
+      "ctaPrimary": "Crear cuenta",
+      "ctaSecondary": "Ver cómo funciona",
+      "capsAria": "Capacidades principales",
+      "caps": {
+        "247": "Atención 24/7",
+        "agenda": "Agenda automática",
+        "voice": "Entiende notas de voz"
+      },
+      "phoneStatus": "en línea",
+      "phoneInputPlaceholder": "Mensaje",
+      "typing": "LURVIAX está escribiendo",
+      "m1": "Hola, necesito una cita para una reparación dental 🦷",
+      "m2": "¡Hola! 😊 Para reparación tengo mañana jueves 11:30 o viernes 08:00. ¿Cuál te queda mejor?",
+      "m3": "viernes a las 8 por favor",
+      "m4": "Perfecto. ¿Me confirmas tu nombre completo y teléfono?",
+      "m5": "Carla Ruiz, 099 912 3456",
+      "m6": "Listo Carla ✅ Cita el viernes a las 08:00. Te paso recordatorio el jueves en la tarde.",
+      "phoneContact": "Dr. Paredes",
+      "phoneContactSub": "Odontología"
+    },
+    "parallel": {
+      "eyebrow": "Mientras dormís · Mientras atendés",
+      "titleA": "Cuatro clientes.",
+      "titleB": "Una sola LURVIAX.",
+      "copy": "No hay horario malo para que un cliente te escriba. LURVIAX atiende cada conversación en paralelo, con contexto y coherencia — agenda, cotiza y responde dudas sin dejar a nadie esperando.",
+      "centerLabel": "Operativa",
+      "centerSub": "sin pausa",
+      "stat1": {
+        "num": "100%",
+        "label": "Mensajes respondidos"
+      },
+      "stat2": {
+        "num": "<3s",
+        "label": "Latencia promedio"
+      },
+      "stat3": {
+        "num": "0",
+        "label": "Clientes en espera"
+      },
+      "panels": {
+        "1": {
+          "time": "03:14",
+          "name": "Mateo",
+          "intent": "Cita urgente",
+          "c": "Me duele una muela, ¿tienen algo mañana?",
+          "a": "Mañana 09:30 con Dr. Paredes. ¿Confirmo?"
+        },
+        "2": {
+          "time": "09:22",
+          "name": "Lucía",
+          "intent": "Servicios",
+          "c": "¿Hacen limpieza dental?",
+          "a": "Sí, $35 e incluye profilaxis. ¿Te reservo?"
+        },
+        "3": {
+          "time": "14:05",
+          "name": "Javier",
+          "intent": "Horarios",
+          "c": "¿Hasta qué hora atienden hoy?",
+          "a": "Hoy hasta las 19:00. Tengo un cupo a las 18:30 si te sirve."
+        },
+        "4": {
+          "time": "22:47",
+          "name": "Sofía",
+          "intent": "Agenda",
+          "c": "Quiero reagendar mi cita del viernes 🙏",
+          "a": "La muevo al viernes 11:00. ¿Te queda bien?"
+        }
+      }
     },
     "demo": {
       "eyebrow": "Conversación real",
@@ -231,6 +299,14 @@
           "m8meta": "Andrea · Panel web"
         }
       }
+    },
+    "inbox": {
+      "panelTitle": "Bandeja del equipo",
+      "pendingCount": "{count} pendientes",
+      "allCaught": "Todo al día",
+      "replied": "Respondido por LURVIAX",
+      "summary": "Una vista unificada de todos los bots de tu cuenta.",
+      "botActive": "Activo"
     },
     "caps": {
       "eyebrow": "Lo que hace hoy",

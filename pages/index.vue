@@ -23,14 +23,23 @@ const auth = useAuthStore()
 const isAuthenticated = computed(() => auth.isAuthenticated)
 const primaryCtaTarget = computed(() => (isAuthenticated.value ? '/admin' : '/login'))
 
-// ---- Nav sticky (background al scrollear más de 24px) ----
-// La directiva `v-reveal` global (plugins/reveal.client.ts) se encarga de
-// agregar `reveal-in` a los elementos con class `.lurviax-rv` cuando entran
-// en el viewport — el CSS de la clase reacciona a ese estado.
-const stuck = ref(false)
-const onScroll = () => { stuck.value = window.scrollY > 24 }
+const closeCtaRef = ref<{ $el: HTMLElement } | HTMLElement | null>(null)
+const plansCtaRef = ref<HTMLElement | null>(null)
+const closeCtaEl = computed<HTMLElement | null>(() => {
+  const r = closeCtaRef.value as { $el?: HTMLElement } | HTMLElement | null
+  if (!r) return null
+  return '$el' in r ? r.$el ?? null : r as HTMLElement
+})
+useMagnetic(closeCtaEl, { radius: 110, strength: 0.3 })
+useMagnetic(plansCtaRef as unknown as Ref<HTMLElement | null>, { radius: 100, strength: 0.26 })
 
-// ---- Contadores (números del ticker + resultados) ----
+const stuck = ref(false)
+const onScroll = () => {
+  const y = window.scrollY
+  if (!stuck.value && y > 24) stuck.value = true
+  else if (stuck.value && y < 8) stuck.value = false
+}
+
 function runCount(el: HTMLElement) {
   const target = parseFloat(el.dataset.count ?? '0')
   const dec = parseInt(el.dataset.dec ?? '0', 10)
@@ -42,7 +51,7 @@ function runCount(el: HTMLElement) {
     return
   }
   const start = performance.now()
-  const dur = 1400
+  const dur = 1200
   const step = (now: number) => {
     const k = Math.min((now - start) / dur, 1)
     const e = 1 - (1 - k) ** 3
@@ -52,33 +61,26 @@ function runCount(el: HTMLElement) {
   requestAnimationFrame(step)
 }
 
-// Ticker del hero arranca a los ~2.9s (después de las animaciones de entrada).
-// Los contadores de la sección de resultados se activan al entrar al viewport
-// vía un IntersectionObserver dedicado.
 let countObserver: IntersectionObserver | null = null
 
 onMounted(() => {
   window.addEventListener('scroll', onScroll, { passive: true })
   onScroll()
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-  // Hero ticker — dispara con delay para no chocar con las líneas del headline.
-  setTimeout(() => {
-    document.querySelectorAll<HTMLElement>('.js-ticker [data-count]').forEach(runCount)
-  }, reduce ? 0 : 2900)
-
-  // Contadores fuera del hero (resultados) — se disparan al entrar al viewport.
   countObserver = new IntersectionObserver((entries) => {
+    const batch: HTMLElement[] = []
     for (const entry of entries) {
       if (entry.isIntersecting) {
-        runCount(entry.target as HTMLElement)
+        batch.push(entry.target as HTMLElement)
         countObserver?.unobserve(entry.target)
       }
     }
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const stepDelay = reduce ? 0 : 80
+    batch.forEach((el, i) => window.setTimeout(() => runCount(el), i * stepDelay))
   }, { threshold: 0.4 })
   document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
-    // Los del hero ticker no entran aquí — ya los cubrió el timeout de arriba.
-    if (!el.closest('.js-ticker')) countObserver?.observe(el)
+    countObserver?.observe(el)
   })
 })
 
@@ -118,7 +120,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
     <!-- ══════════ NAV ══════════ -->
     <header
       id="nav"
-      class="sticky top-0 z-40 flex items-center gap-6 border-b px-[clamp(20px,4vw,44px)] py-4 transition-all duration-400"
+      class="sticky top-0 z-40 flex items-center gap-6 border-b px-[clamp(20px,4vw,44px)] py-4 transition-[background-color,backdrop-filter,border-color] duration-300 ease-out"
       :class="stuck
         ? 'bg-ink-deep/70 backdrop-blur-md backdrop-saturate-150 border-line-soft'
         : 'border-transparent'"
@@ -154,100 +156,9 @@ function smoothScroll(ev: MouseEvent, href: string) {
     </header>
 
     <main id="top">
-      <div id="splash">
-        <LurviaxMeshHero />
-      </div>
+      <LandingHeroScene />
 
-      <section id="hero" class="relative pb-[clamp(56px,9vh,110px)] pt-[clamp(48px,9vh,108px)] text-center">
-        <!-- Halo respirando detrás del wordmark. -->
-        <div
-          class="pointer-events-none absolute left-1/2 top-[16%] aspect-square w-[min(820px,96vw)] -translate-x-1/2 -translate-y-[18%] animate-breathe bg-halo-radial"
-          aria-hidden="true"
-        />
-
-        <div class="mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
-          <p class="lurviax-fade-up mx-auto inline-flex items-center gap-2 rounded-full border border-halo-line bg-ink-card/55 px-4 py-1.5 font-mono text-[clamp(0.66rem,1.4vw,0.78rem)] uppercase tracking-[0.32em] text-pearl backdrop-blur-sm" style="animation-delay: 1.35s;">
-            <span class="inline-block size-1.5 rounded-full bg-halo animate-ping" aria-hidden="true" />
-            {{ $t('landing.hero.eyebrow') }}
-          </p>
-
-          <p class="lurviax-fade-up mt-6 font-mono text-[clamp(0.66rem,1.5vw,0.82rem)] uppercase tracking-[0.52em] text-mist" style="animation-delay: 1.55s;">
-            {{ $t('landing.hero.tagline') }}
-          </p>
-
-          <h1 class="mx-auto mt-[clamp(34px,6vh,62px)] max-w-[20ch] font-display text-[clamp(2.9rem,8.2vw,6.4rem)] leading-[0.98] tracking-[-0.028em] text-pearl" style="font-variation-settings: 'wdth' 96, 'wght' 420;">
-            <span class="lurviax-ln"><span style="animation-delay: 1.75s;">{{ $t('landing.hero.line1') }}</span></span>
-            <span class="lurviax-ln"><span style="animation-delay: 1.88s;">{{ $t('landing.hero.line2') }}</span></span>
-            <span class="lurviax-ln"><span style="animation-delay: 2.01s;"><em class="not-italic font-medium text-halo" style="font-variation-settings: 'wdth' 96, 'wght' 620;">{{ $t('landing.hero.line3') }}</em></span></span>
-          </h1>
-
-          <p class="lurviax-fade-up mx-auto mt-6.5 max-w-[54ch] text-[clamp(1.05rem,1.7vw,1.3rem)] text-mist" style="animation-delay: 2.35s;">
-            {{ $t('landing.hero.copy') }}
-          </p>
-
-          <div class="lurviax-fade-up mt-8.5 flex flex-wrap justify-center gap-3.5" style="animation-delay: 2.55s;">
-            <a
-              href="#demo"
-              class="inline-flex items-center gap-2 rounded-full border border-transparent bg-brand-gradient px-6 py-3.5 font-mono text-[0.78rem] font-medium uppercase tracking-[0.12em] text-ink-tealDeep shadow-halo-glow transition-transform hover:-translate-y-0.5"
-              @click="smoothScroll($event, '#demo')"
-            >
-              <span class="inline-block size-1.5 rounded-full bg-halo animate-ping" aria-hidden="true" />
-              {{ $t('landing.hero.ctaPrimary') }}
-            </a>
-            <a
-              href="#proceso"
-              class="inline-flex items-center gap-2 rounded-full border border-halo-line bg-ink-card/55 px-6 py-3.5 font-mono text-[0.78rem] uppercase tracking-[0.12em] text-pearl backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-halo hover:bg-ink-tealMid/55"
-              @click="smoothScroll($event, '#proceso')"
-            >
-              {{ $t('landing.hero.ctaSecondary') }}
-            </a>
-          </div>
-
-          <!-- Ticker de 4 métricas -->
-          <div class="lurviax-fade-up js-ticker mt-[clamp(48px,8vh,88px)] grid grid-cols-2 border-y border-line-soft sm:grid-cols-4" style="animation-delay: 2.8s;">
-            <div class="border-l-0 border-line-soft p-6 text-left sm:border-l">
-              <div class="font-display tabular-nums text-[clamp(1.5rem,3vw,2.15rem)] leading-none tracking-[-0.02em] text-pearl" data-count="2.4" data-dec="1" data-suffix=" s">0 s</div>
-              <span class="mt-2 block font-mono text-[0.705rem] uppercase tracking-[0.16em] text-mist-dim">{{ $t('landing.hero.ticker.avgReply') }}</span>
-            </div>
-            <div class="border-l border-line-soft p-6 text-left">
-              <div class="font-display tabular-nums text-[clamp(1.5rem,3vw,2.15rem)] leading-none tracking-[-0.02em] text-pearl">24 / 7</div>
-              <span class="mt-2 block font-mono text-[0.705rem] uppercase tracking-[0.16em] text-mist-dim">{{ $t('landing.hero.ticker.always') }}</span>
-            </div>
-            <div class="border-l-0 border-t border-line-soft p-6 text-left sm:border-l sm:border-t-0">
-              <div class="font-display tabular-nums text-[clamp(1.5rem,3vw,2.15rem)] leading-none tracking-[-0.02em] text-pearl" data-count="72" data-suffix=" %">0 %</div>
-              <span class="mt-2 block font-mono text-[0.705rem] uppercase tracking-[0.16em] text-mist-dim">{{ $t('landing.hero.ticker.noHuman') }}</span>
-            </div>
-            <div class="border-l border-t border-line-soft p-6 text-left sm:border-t-0">
-              <div class="font-display tabular-nums text-[clamp(1.5rem,3vw,2.15rem)] leading-none tracking-[-0.02em] text-pearl" data-count="7" data-suffix="">0</div>
-              <span class="mt-2 block font-mono text-[0.705rem] uppercase tracking-[0.16em] text-mist-dim">{{ $t('landing.hero.ticker.channels') }}</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ══════════ DEMO ══════════ -->
-      <section id="demo" class="relative py-[clamp(80px,11vh,148px)]">
-        <div class="mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
-          <div v-reveal class="lurviax-rv mb-[clamp(38px,6vw,62px)] grid grid-cols-1 items-end gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
-            <div>
-              <p class="flex items-center gap-3 font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">
-                <span class="h-px w-6 bg-halo-dim" />
-                {{ $t('landing.demo.eyebrow') }}
-              </p>
-              <h2 class="mt-4 font-display text-[clamp(1.9rem,4.2vw,3.1rem)] leading-tight tracking-[-0.012em]" style="font-variation-settings: 'wdth' 112, 'wght' 500;">
-                {{ $t('landing.demo.titleA') }}<br>{{ $t('landing.demo.titleB') }}
-              </h2>
-            </div>
-            <p class="max-w-[62ch] text-mist">
-              {{ $t('landing.demo.copy') }}
-            </p>
-          </div>
-
-          <div v-reveal="140" class="lurviax-rv">
-            <PhoneDemo />
-          </div>
-        </div>
-      </section>
+      <LandingParallelScene />
 
       <!-- ══════════ CAPACIDADES ══════════ -->
       <section id="capacidades" class="relative py-[clamp(80px,11vh,148px)]">
@@ -258,7 +169,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
                 <span class="h-px w-6 bg-halo-dim" />
                 {{ $t('landing.caps.eyebrow') }}
               </p>
-              <h2 class="mt-4 font-display text-[clamp(1.9rem,4.2vw,3.1rem)] leading-tight tracking-[-0.012em]" style="font-variation-settings: 'wdth' 112, 'wght' 500;">
+              <h2 class="lurviax-h2-breathe mt-4 font-display text-[clamp(1.9rem,4.2vw,3.1rem)] leading-tight tracking-[-0.012em]" style="font-variation-settings: 'wdth' 112, 'wght' 500;">
                 {{ $t('landing.caps.titleA') }}<br>{{ $t('landing.caps.titleB') }}
               </h2>
             </div>
@@ -269,7 +180,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
 
           <div
             v-reveal="140"
-            class="lurviax-rv grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-line-soft bg-line-soft sm:grid-cols-2 lg:grid-cols-3"
+            class="lurviax-rv lurviax-stagger grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-line-soft bg-line-soft sm:grid-cols-2 lg:grid-cols-3"
             @pointermove="onCapPointer"
           >
             <article
@@ -278,24 +189,42 @@ function smoothScroll(ev: MouseEvent, href: string) {
               class="js-cap relative isolate overflow-hidden bg-ink p-6 sm:p-8"
             >
               <span class="cap-glow pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
-              <svg class="mb-5 size-8 text-halo transition-transform duration-500 group-hover:-translate-y-0.5" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <svg class="cap-ico mb-5 size-8 text-halo" :class="`cap-ico--${i}`" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
                 <template v-if="i === 1">
-                  <path d="M4 8h24v14H14l-7 6v-6H4z" /><path d="M10 13h12M10 17h8" />
+                  <path d="M4 8h24v14H14l-7 6v-6H4z" />
+                  <circle class="cap-ico__typing-dot" cx="11" cy="15" r="1.3" fill="currentColor" stroke="none" />
+                  <circle class="cap-ico__typing-dot" cx="16" cy="15" r="1.3" fill="currentColor" stroke="none" />
+                  <circle class="cap-ico__typing-dot" cx="21" cy="15" r="1.3" fill="currentColor" stroke="none" />
                 </template>
                 <template v-else-if="i === 2">
-                  <rect x="4" y="7" width="24" height="21" rx="3" /><path d="M4 13h24M10 4v6M22 4v6" /><path d="M12 19l3 3 6-6" />
+                  <rect x="4" y="7" width="24" height="21" rx="3" />
+                  <path d="M4 13h24M10 4v6M22 4v6" />
+                  <path class="cap-ico__check" d="M12 19l3 3 6-6" pathLength="100" />
                 </template>
                 <template v-else-if="i === 3">
-                  <path d="M7 4h13l5 5v19H7z" /><path d="M20 4v5h5" /><path d="M12 16h8M12 21h6" />
+                  <path d="M7 4h13l5 5v19H7z" />
+                  <path d="M20 4v5h5" />
+                  <path class="cap-ico__write cap-ico__write--1" d="M12 16h8" pathLength="100" />
+                  <path class="cap-ico__write cap-ico__write--2" d="M12 21h6" pathLength="100" />
                 </template>
                 <template v-else-if="i === 4">
-                  <circle cx="11" cy="11" r="5" /><path d="M3 27c0-4.4 3.6-8 8-8s8 3.6 8 8" /><path d="M22 12h7M25.5 8.5L29 12l-3.5 3.5" />
+                  <circle cx="11" cy="11" r="5" />
+                  <path d="M3 27c0-4.4 3.6-8 8-8s8 3.6 8 8" />
+                  <g class="cap-ico__sparkle">
+                    <path d="M22 12h7M25.5 8.5L29 12l-3.5 3.5" />
+                  </g>
                 </template>
                 <template v-else-if="i === 5">
-                  <rect x="12" y="3" width="8" height="15" rx="4" /><path d="M7 15a9 9 0 0018 0M16 24v5M11 29h10" />
+                  <rect x="12" y="3" width="8" height="15" rx="4" />
+                  <path class="cap-ico__wave" d="M7 15a9 9 0 0018 0" />
+                  <path d="M16 24v5M11 29h10" />
+                  <circle class="cap-ico__wave-ring" cx="16" cy="15" r="11" fill="none" stroke="currentColor" stroke-width="1" opacity="0" />
                 </template>
                 <template v-else>
-                  <path d="M4 26h24" /><rect x="7" y="16" width="4" height="10" /><rect x="14" y="10" width="4" height="16" /><rect x="21" y="5" width="4" height="21" />
+                  <path d="M4 26h24" />
+                  <rect class="cap-ico__bar cap-ico__bar--1" x="7" y="16" width="4" height="10" />
+                  <rect class="cap-ico__bar cap-ico__bar--2" x="14" y="10" width="4" height="16" />
+                  <rect class="cap-ico__bar cap-ico__bar--3" x="21" y="5" width="4" height="21" />
                 </template>
               </svg>
               <h3 class="font-display text-[clamp(1.05rem,1.5vw,1.2rem)] leading-tight" style="font-variation-settings: 'wdth' 105, 'wght' 550;">{{ $t(`landing.caps.items.${i}.title`) }}</h3>
@@ -314,7 +243,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
                 <span class="h-px w-6 bg-halo-dim" />
                 {{ $t('landing.process.eyebrow') }}
               </p>
-              <h2 class="mt-4 font-display text-[clamp(1.9rem,4.2vw,3.1rem)] leading-tight tracking-[-0.012em]" style="font-variation-settings: 'wdth' 112, 'wght' 500;">
+              <h2 class="lurviax-h2-breathe mt-4 font-display text-[clamp(1.9rem,4.2vw,3.1rem)] leading-tight tracking-[-0.012em]" style="font-variation-settings: 'wdth' 112, 'wght' 500;">
                 {{ $t('landing.process.titleA') }}<br>{{ $t('landing.process.titleB') }}
               </h2>
             </div>
@@ -323,13 +252,15 @@ function smoothScroll(ev: MouseEvent, href: string) {
             </p>
           </div>
 
-          <div v-reveal="140" class="lurviax-rv">
+          <div v-reveal="140" class="lurviax-rv lurviax-stagger pp-process relative">
+            <span class="pp-process__rail" aria-hidden="true" />
             <div
               v-for="i in 3"
               :key="i"
-              class="grid grid-cols-[92px_minmax(0,1fr)] gap-[clamp(18px,3vw,44px)] border-t border-line-soft py-[clamp(28px,4vw,42px)] transition-colors duration-500 hover:bg-[linear-gradient(90deg,rgba(88,240,206,0.10),transparent_60%)] md:grid-cols-[118px_minmax(0,0.85fr)_minmax(0,1.2fr)]"
+              class="pp-step relative grid grid-cols-[92px_minmax(0,1fr)] gap-[clamp(18px,3vw,44px)] border-t border-line-soft py-[clamp(28px,4vw,42px)] transition-colors duration-500 hover:bg-[linear-gradient(90deg,rgba(88,240,206,0.10),transparent_60%)] md:grid-cols-[118px_minmax(0,0.85fr)_minmax(0,1.2fr)]"
               :class="i === 3 ? 'border-b' : ''"
             >
+              <span class="pp-step__node" aria-hidden="true" />
               <div class="pt-1 font-mono text-[0.78rem] uppercase tracking-[0.18em] text-halo-dim whitespace-nowrap">
                 0{{ i }} · {{ $t(`landing.process.items.${i}.week`) }}
               </div>
@@ -360,7 +291,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
                 <span class="h-px w-6 bg-halo-dim" />
                 {{ $t('landing.results.eyebrow') }}
               </p>
-              <h2 class="mt-4 font-display text-[clamp(1.9rem,4.2vw,3.1rem)] leading-tight tracking-[-0.012em]" style="font-variation-settings: 'wdth' 112, 'wght' 500;">
+              <h2 class="lurviax-h2-breathe mt-4 font-display text-[clamp(1.9rem,4.2vw,3.1rem)] leading-tight tracking-[-0.012em]" style="font-variation-settings: 'wdth' 112, 'wght' 500;">
                 {{ $t('landing.results.titleA') }}<br>{{ $t('landing.results.titleB') }}
               </h2>
             </div>
@@ -369,7 +300,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
             </p>
           </div>
 
-          <div v-reveal="140" class="lurviax-rv grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-line-soft bg-line-soft md:grid-cols-3">
+          <div v-reveal="140" class="lurviax-rv lurviax-stagger grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-line-soft bg-line-soft md:grid-cols-3">
             <div class="bg-gradient-to-b from-ink-surface to-ink p-8 sm:p-10">
               <div class="font-display tabular-nums text-[clamp(2.8rem,6vw,4.4rem)] leading-none tracking-[-0.03em] text-halo" style="font-variation-settings: 'wdth' 88, 'wght' 300;" data-count="72" data-suffix="%">0%</div>
               <p class="mt-3.5 text-sm text-pearl">{{ $t('landing.results.items.1.title') }}</p>
@@ -399,7 +330,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
                 <span class="h-px w-6 bg-halo-dim" />
                 {{ $t('landing.plans.eyebrow') }}
               </p>
-              <h2 class="mt-4 font-display text-[clamp(1.9rem,4.2vw,3.1rem)] leading-tight tracking-[-0.012em]" style="font-variation-settings: 'wdth' 112, 'wght' 500;">
+              <h2 class="lurviax-h2-breathe mt-4 font-display text-[clamp(1.9rem,4.2vw,3.1rem)] leading-tight tracking-[-0.012em]" style="font-variation-settings: 'wdth' 112, 'wght' 500;">
                 {{ $t('landing.plans.titleA') }}<br>{{ $t('landing.plans.titleB') }}
               </h2>
             </div>
@@ -409,13 +340,13 @@ function smoothScroll(ev: MouseEvent, href: string) {
           </div>
 
           <div v-reveal="140" class="lurviax-rv mx-auto grid max-w-2xl grid-cols-1 items-start gap-4">
-            <article class="flex flex-col gap-5 rounded-2xl border border-halo-line bg-gradient-to-b from-ink-tealMid/70 to-ink/95 p-6 shadow-halo-glow-lg transition-all duration-400 hover:-translate-y-1 sm:p-10">
+            <article class="plan-card flex flex-col gap-5 rounded-2xl bg-gradient-to-b from-ink-tealMid/70 to-ink/95 p-6 sm:p-10">
               <div class="flex flex-wrap items-center gap-2.5">
                 <p class="font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">{{ $t('landing.plans.single.name') }}</p>
                 <span class="rounded-full border border-halo-line px-3 py-1 font-mono text-[0.64rem] uppercase tracking-[0.12em] text-halo">{{ $t('landing.plans.single.badge') }}</span>
               </div>
               <div class="font-display text-[clamp(2.6rem,5vw,3.6rem)] leading-none tracking-[-0.03em]" style="font-variation-settings: 'wdth' 94, 'wght' 400;">
-                $75<small class="ml-2 font-mono text-[0.72rem] tracking-[0.12em] text-mist-dim">{{ $t('landing.plans.perMonth') }}</small>
+                $79<small class="ml-2 font-mono text-[0.72rem] tracking-[0.12em] text-mist-dim">{{ $t('landing.plans.perMonth') }}</small>
               </div>
               <p class="text-mist">{{ $t('landing.plans.single.tagline') }}</p>
               <ul class="grid gap-3">
@@ -425,8 +356,9 @@ function smoothScroll(ev: MouseEvent, href: string) {
                 </li>
               </ul>
               <a
+                ref="plansCtaRef"
                 href="#cierre"
-                class="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-brand-gradient px-6 py-3.5 font-mono text-[0.78rem] font-medium uppercase tracking-[0.12em] text-ink-tealDeep shadow-halo-glow transition-transform hover:-translate-y-0.5"
+                class="plans-cta mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-brand-gradient px-6 py-3.5 font-mono text-[0.78rem] font-medium uppercase tracking-[0.12em] text-ink-tealDeep shadow-halo-glow transition-transform"
                 @click="smoothScroll($event, '#cierre')"
               >
                 {{ $t('landing.plans.start') }}
@@ -446,21 +378,14 @@ function smoothScroll(ev: MouseEvent, href: string) {
             {{ $t('landing.close.titleA') }}<br>{{ $t('landing.close.titleB') }}
             <em class="not-italic font-medium text-halo" style="font-variation-settings: 'wdth' 92, 'wght' 620;">{{ $t('landing.close.titleEm') }}</em>
           </h2>
-          <div v-reveal="140" class="lurviax-rv mt-9 flex flex-wrap justify-center gap-3.5">
+          <div v-reveal="140" class="lurviax-rv mt-9 flex justify-center">
             <NuxtLink
+              ref="closeCtaRef"
               :to="primaryCtaTarget"
-              class="inline-flex items-center gap-2 rounded-full border border-transparent bg-brand-gradient px-6 py-3.5 font-mono text-[0.78rem] font-medium uppercase tracking-[0.12em] text-ink-tealDeep shadow-halo-glow transition-transform hover:-translate-y-0.5"
+              class="close-cta inline-flex items-center gap-2 rounded-full border border-transparent bg-brand-gradient px-6 py-3.5 font-mono text-[0.78rem] font-medium uppercase tracking-[0.12em] text-ink-tealDeep shadow-halo-glow transition-transform"
             >
-              <span class="inline-block size-1.5 rounded-full bg-halo animate-ping" aria-hidden="true" />
-              {{ isAuthenticated ? $t('landing.goToDashboard') : $t('landing.close.ctaPrimary') }}
+              {{ isAuthenticated ? $t('landing.goToDashboard') : $t('landing.createAccount') }}
             </NuxtLink>
-            <a
-              href="#planes"
-              class="inline-flex items-center gap-2 rounded-full border border-halo-line bg-ink-card/55 px-6 py-3.5 font-mono text-[0.78rem] uppercase tracking-[0.12em] text-pearl backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-halo hover:bg-ink-tealMid/55"
-              @click="smoothScroll($event, '#planes')"
-            >
-              {{ $t('landing.close.ctaSecondary') }}
-            </a>
           </div>
         </div>
       </section>
@@ -508,6 +433,186 @@ function smoothScroll(ev: MouseEvent, href: string) {
 }
 .js-cap:hover .cap-glow {
   opacity: 1;
+}
+
+.cap-ico {
+  overflow: visible;
+  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.js-cap:hover .cap-ico {
+  transform: translateY(-2px);
+}
+
+.cap-ico__typing-dot {
+  animation: cap-typing 1.4s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.cap-ico__typing-dot:nth-of-type(1) { animation-delay: 0s; }
+.cap-ico__typing-dot:nth-of-type(2) { animation-delay: 0.18s; }
+.cap-ico__typing-dot:nth-of-type(3) { animation-delay: 0.36s; }
+@keyframes cap-typing {
+  0%, 65%, 100% { transform: translateY(0); opacity: 0.55; }
+  30% { transform: translateY(-1.6px); opacity: 1; }
+}
+
+.cap-ico__check {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: cap-check 4.2s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+}
+@keyframes cap-check {
+  0%, 10% { stroke-dashoffset: 100; }
+  28% { stroke-dashoffset: 0; }
+  78% { stroke-dashoffset: 0; opacity: 1; }
+  92%, 100% { stroke-dashoffset: 0; opacity: 0.35; }
+}
+
+.cap-ico__write {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: cap-write 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.cap-ico__write--1 { animation-delay: 0s; }
+.cap-ico__write--2 { animation-delay: 0.8s; }
+@keyframes cap-write {
+  0%, 8% { stroke-dashoffset: 100; }
+  28% { stroke-dashoffset: 0; }
+  82% { stroke-dashoffset: 0; opacity: 1; }
+  94%, 100% { stroke-dashoffset: 0; opacity: 0.25; }
+}
+
+.cap-ico__sparkle {
+  transform-origin: 25.5px 12px;
+  animation: cap-sparkle 3.6s ease-in-out infinite;
+}
+@keyframes cap-sparkle {
+  0%, 100% { transform: scale(1) rotate(0); opacity: 0.6; }
+  25% { transform: scale(1.18) rotate(8deg); opacity: 1; }
+  50% { transform: scale(0.92) rotate(-4deg); opacity: 0.55; }
+  75% { transform: scale(1.08) rotate(6deg); opacity: 0.9; }
+}
+
+.cap-ico__wave {
+  animation: cap-wave 2.6s ease-in-out infinite;
+  transform-origin: 16px 15px;
+  transform-box: fill-box;
+}
+@keyframes cap-wave {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+.cap-ico__wave-ring {
+  transform-origin: 16px 15px;
+  transform-box: fill-box;
+  animation: cap-wave-ring 2.6s ease-out infinite;
+}
+@keyframes cap-wave-ring {
+  0% { transform: scale(0.4); opacity: 0.8; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+.cap-ico__bar {
+  transform-origin: center bottom;
+  transform-box: fill-box;
+  animation: cap-bar 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.cap-ico__bar--1 { animation-delay: 0s; }
+.cap-ico__bar--2 { animation-delay: 0.22s; }
+.cap-ico__bar--3 { animation-delay: 0.44s; }
+@keyframes cap-bar {
+  0%, 100% { transform: scaleY(0.45); opacity: 0.55; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cap-ico__typing-dot,
+  .cap-ico__check,
+  .cap-ico__write,
+  .cap-ico__sparkle,
+  .cap-ico__wave,
+  .cap-ico__wave-ring,
+  .cap-ico__bar {
+    animation: none !important;
+  }
+  .cap-ico__check,
+  .cap-ico__write { stroke-dashoffset: 0; }
+}
+
+.pp-process__rail {
+  position: absolute;
+  left: -18px;
+  top: 28px;
+  bottom: 28px;
+  width: 1px;
+  background-image: linear-gradient(to bottom, rgba(91, 233, 236, 0.5) 50%, transparent 50%);
+  background-size: 1px 10px;
+  background-repeat: repeat-y;
+  transform-origin: top center;
+  transform: scaleY(0);
+  transition: transform 1.4s cubic-bezier(0.23, 1, 0.32, 1) 0.2s;
+  pointer-events: none;
+}
+.lurviax-rv.reveal-in .pp-process__rail {
+  transform: scaleY(1);
+}
+.pp-process__rail::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #5BE9EC;
+  box-shadow: 0 0 12px #5BE9EC;
+  opacity: 0;
+  animation: pp-rail-dot 5.5s cubic-bezier(0.4, 0, 0.2, 1) 1.2s infinite;
+}
+@keyframes pp-rail-dot {
+  0% { top: -4px; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { top: calc(100% + 4px); opacity: 0; }
+}
+
+.pp-step__node {
+  position: absolute;
+  left: -22px;
+  top: calc(clamp(28px, 4vw, 42px) + 2px);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #01142A;
+  border: 1.5px solid rgba(91, 233, 236, 0.6);
+  transform: scale(0);
+  transition: transform 0.5s cubic-bezier(0.34, 1.6, 0.6, 1);
+}
+.lurviax-rv.reveal-in .pp-step:nth-child(2) .pp-step__node { transition-delay: 0.35s; }
+.lurviax-rv.reveal-in .pp-step:nth-child(3) .pp-step__node { transition-delay: 0.6s; }
+.lurviax-rv.reveal-in .pp-step:nth-child(4) .pp-step__node { transition-delay: 0.85s; }
+.lurviax-rv.reveal-in .pp-step .pp-step__node {
+  transform: scale(1);
+  background: radial-gradient(circle, #5BE9EC 0 3px, #01142A 3.5px);
+  border-color: #5BE9EC;
+  box-shadow: 0 0 14px rgba(91, 233, 236, 0.75);
+}
+
+@media (max-width: 767px) {
+  .pp-process__rail,
+  .pp-step__node { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-process__rail {
+    transform: scaleY(1) !important;
+    transition: none !important;
+  }
+  .pp-process__rail::after { animation: none; opacity: 0; }
+  .pp-step__node {
+    transform: scale(1) !important;
+    transition: none !important;
+  }
 }
 
 /* Layout ganancias: Tailwind no tiene `gap-6.5` nativo; compensamos aquí. */
