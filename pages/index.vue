@@ -89,15 +89,6 @@ onBeforeUnmount(() => {
   countObserver?.disconnect()
 })
 
-function onCapPointer(ev: PointerEvent) {
-  const card = (ev.target as HTMLElement).closest('.js-cap') as HTMLElement | null
-  if (!card) return
-  const r = card.getBoundingClientRect()
-  card.style.setProperty('--mx', `${ev.clientX - r.left}px`)
-  card.style.setProperty('--my', `${ev.clientY - r.top}px`)
-}
-
-// Scroll suave para los anchors internos.
 function smoothScroll(ev: MouseEvent, href: string) {
   const el = document.querySelector(href)
   if (!el) return
@@ -160,79 +151,9 @@ function smoothScroll(ev: MouseEvent, href: string) {
 
       <LandingParallelScene />
 
-      <!-- ══════════ CAPACIDADES ══════════ -->
-      <section id="capacidades" class="relative py-[clamp(80px,11vh,148px)]">
-        <div class="mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
-          <div v-reveal class="lurviax-rv mb-[clamp(38px,6vw,62px)] grid grid-cols-1 items-end gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
-            <div>
-              <p class="flex items-center gap-3 font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">
-                <span class="h-px w-6 bg-halo-dim" />
-                {{ $t('landing.caps.eyebrow') }}
-              </p>
-              <h2 class="lurviax-h2-breathe mt-4 font-display text-[clamp(1.9rem,4.2vw,3.1rem)] leading-tight tracking-[-0.012em]" style="font-variation-settings: 'wdth' 112, 'wght' 500;">
-                {{ $t('landing.caps.titleA') }}<br>{{ $t('landing.caps.titleB') }}
-              </h2>
-            </div>
-            <p class="max-w-[62ch] text-mist">
-              {{ $t('landing.caps.copy') }}
-            </p>
-          </div>
+      <LandingSystemDiagram />
 
-          <div
-            v-reveal="140"
-            class="lurviax-rv lurviax-stagger grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-line-soft bg-line-soft sm:grid-cols-2 lg:grid-cols-3"
-            @pointermove="onCapPointer"
-          >
-            <article
-              v-for="i in 6"
-              :key="i"
-              class="js-cap relative isolate overflow-hidden bg-ink p-6 sm:p-8"
-            >
-              <span class="cap-glow pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
-              <svg class="cap-ico mb-5 size-8 text-halo" :class="`cap-ico--${i}`" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
-                <template v-if="i === 1">
-                  <path d="M4 8h24v14H14l-7 6v-6H4z" />
-                  <circle class="cap-ico__typing-dot" cx="11" cy="15" r="1.3" fill="currentColor" stroke="none" />
-                  <circle class="cap-ico__typing-dot" cx="16" cy="15" r="1.3" fill="currentColor" stroke="none" />
-                  <circle class="cap-ico__typing-dot" cx="21" cy="15" r="1.3" fill="currentColor" stroke="none" />
-                </template>
-                <template v-else-if="i === 2">
-                  <rect x="4" y="7" width="24" height="21" rx="3" />
-                  <path d="M4 13h24M10 4v6M22 4v6" />
-                  <path class="cap-ico__check" d="M12 19l3 3 6-6" pathLength="100" />
-                </template>
-                <template v-else-if="i === 3">
-                  <path d="M7 4h13l5 5v19H7z" />
-                  <path d="M20 4v5h5" />
-                  <path class="cap-ico__write cap-ico__write--1" d="M12 16h8" pathLength="100" />
-                  <path class="cap-ico__write cap-ico__write--2" d="M12 21h6" pathLength="100" />
-                </template>
-                <template v-else-if="i === 4">
-                  <circle cx="11" cy="11" r="5" />
-                  <path d="M3 27c0-4.4 3.6-8 8-8s8 3.6 8 8" />
-                  <g class="cap-ico__sparkle">
-                    <path d="M22 12h7M25.5 8.5L29 12l-3.5 3.5" />
-                  </g>
-                </template>
-                <template v-else-if="i === 5">
-                  <rect x="12" y="3" width="8" height="15" rx="4" />
-                  <path class="cap-ico__wave" d="M7 15a9 9 0 0018 0" />
-                  <path d="M16 24v5M11 29h10" />
-                  <circle class="cap-ico__wave-ring" cx="16" cy="15" r="11" fill="none" stroke="currentColor" stroke-width="1" opacity="0" />
-                </template>
-                <template v-else>
-                  <path d="M4 26h24" />
-                  <rect class="cap-ico__bar cap-ico__bar--1" x="7" y="16" width="4" height="10" />
-                  <rect class="cap-ico__bar cap-ico__bar--2" x="14" y="10" width="4" height="16" />
-                  <rect class="cap-ico__bar cap-ico__bar--3" x="21" y="5" width="4" height="21" />
-                </template>
-              </svg>
-              <h3 class="font-display text-[clamp(1.05rem,1.5vw,1.2rem)] leading-tight" style="font-variation-settings: 'wdth' 105, 'wght' 550;">{{ $t(`landing.caps.items.${i}.title`) }}</h3>
-              <p class="mt-2.5 text-sm text-mist">{{ $t(`landing.caps.items.${i}.body`) }}</p>
-            </article>
-          </div>
-        </div>
-      </section>
+      <LandingProductGrid />
 
       <!-- ══════════ PROCESO ══════════ -->
       <section id="proceso" class="relative py-[clamp(80px,11vh,148px)]">
@@ -282,89 +203,77 @@ function smoothScroll(ev: MouseEvent, href: string) {
         </div>
       </section>
 
-      <!-- ══════════ RESULTADOS ══════════ -->
-      <section id="resultados" class="relative py-[clamp(80px,11vh,148px)]">
-        <div class="mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
-          <div v-reveal class="lurviax-rv mb-[clamp(38px,6vw,62px)] grid grid-cols-1 items-end gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
-            <div>
-              <p class="flex items-center gap-3 font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">
-                <span class="h-px w-6 bg-halo-dim" />
-                {{ $t('landing.results.eyebrow') }}
-              </p>
-              <h2 class="lurviax-h2-breathe mt-4 font-display text-[clamp(1.9rem,4.2vw,3.1rem)] leading-tight tracking-[-0.012em]" style="font-variation-settings: 'wdth' 112, 'wght' 500;">
-                {{ $t('landing.results.titleA') }}<br>{{ $t('landing.results.titleB') }}
-              </h2>
-            </div>
-            <p class="max-w-[62ch] text-mist">
-              {{ $t('landing.results.copy') }}
+      <!-- ══════════ RESULTADOS — type moment ══════════ -->
+      <section id="resultados" class="results-moment relative flex min-h-[80vh] items-center justify-center overflow-hidden py-[clamp(90px,14vh,170px)] text-center">
+        <div class="results-moment__halo" aria-hidden="true" />
+        <div class="relative z-10 mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
+          <p v-reveal class="lurviax-rv results-moment__eyebrow">
+            <span class="results-moment__eyebrow-line" />
+            {{ $t('landing.results.eyebrow') }}
+            <span class="results-moment__eyebrow-line" />
+          </p>
+          <div v-reveal="120" class="lurviax-rv">
+            <div class="results-moment__num" data-count="72" data-suffix="%">0%</div>
+            <p class="results-moment__caption">
+              <em class="results-moment__caption-em">{{ $t('landing.results.items.1.title') }}</em>
+              {{ $t('landing.results.items.1.desc') }}
             </p>
           </div>
-
-          <div v-reveal="140" class="lurviax-rv lurviax-stagger grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-line-soft bg-line-soft md:grid-cols-3">
-            <div class="bg-gradient-to-b from-ink-surface to-ink p-8 sm:p-10">
-              <div class="font-display tabular-nums text-[clamp(2.8rem,6vw,4.4rem)] leading-none tracking-[-0.03em] text-halo" style="font-variation-settings: 'wdth' 88, 'wght' 300;" data-count="72" data-suffix="%">0%</div>
-              <p class="mt-3.5 text-sm text-pearl">{{ $t('landing.results.items.1.title') }}</p>
-              <p class="mt-1.5 text-[0.8rem] text-mist-dim">{{ $t('landing.results.items.1.desc') }}</p>
+          <div v-reveal="200" class="lurviax-rv results-moment__row">
+            <div class="results-moment__sub">
+              <div class="results-moment__sub-num" data-count="2.4" data-dec="1" data-suffix=" s">0 s</div>
+              <div class="results-moment__sub-label">{{ $t('landing.results.items.2.title') }}</div>
             </div>
-            <div class="bg-gradient-to-b from-ink-surface to-ink p-8 sm:p-10">
-              <div class="font-display tabular-nums text-[clamp(2.8rem,6vw,4.4rem)] leading-none tracking-[-0.03em] text-halo" style="font-variation-settings: 'wdth' 88, 'wght' 300;" data-count="2.4" data-dec="1" data-suffix=" s">0 s</div>
-              <p class="mt-3.5 text-sm text-pearl">{{ $t('landing.results.items.2.title') }}</p>
-              <p class="mt-1.5 text-[0.8rem] text-mist-dim">{{ $t('landing.results.items.2.desc') }}</p>
-            </div>
-            <div class="bg-gradient-to-b from-ink-surface to-ink p-8 sm:p-10">
-              <div class="font-display tabular-nums text-[clamp(2.8rem,6vw,4.4rem)] leading-none tracking-[-0.03em] text-halo" style="font-variation-settings: 'wdth' 88, 'wght' 300;" data-count="31" data-prefix="+" data-suffix="%">0%</div>
-              <p class="mt-3.5 text-sm text-pearl">{{ $t('landing.results.items.3.title') }}</p>
-              <p class="mt-1.5 text-[0.8rem] text-mist-dim">{{ $t('landing.results.items.3.desc') }}</p>
+            <div class="results-moment__sub">
+              <div class="results-moment__sub-num" data-count="31" data-prefix="+" data-suffix="%">0%</div>
+              <div class="results-moment__sub-label">{{ $t('landing.results.items.3.title') }}</div>
             </div>
           </div>
-          <p class="mt-4 text-[0.8rem] text-mist-dim">{{ $t('landing.results.footnote') }}</p>
+          <p class="results-moment__footnote">{{ $t('landing.results.footnote') }}</p>
         </div>
       </section>
 
       <!-- ══════════ PLANES ══════════ -->
-      <section id="planes" class="relative py-[clamp(80px,11vh,148px)]">
-        <div class="mx-auto w-full max-w-[1180px] px-[clamp(20px,4vw,44px)]">
-          <div v-reveal class="lurviax-rv mb-[clamp(38px,6vw,62px)] grid grid-cols-1 items-end gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
-            <div>
-              <p class="flex items-center gap-3 font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">
-                <span class="h-px w-6 bg-halo-dim" />
-                {{ $t('landing.plans.eyebrow') }}
-              </p>
-              <h2 class="lurviax-h2-breathe mt-4 font-display text-[clamp(1.9rem,4.2vw,3.1rem)] leading-tight tracking-[-0.012em]" style="font-variation-settings: 'wdth' 112, 'wght' 500;">
-                {{ $t('landing.plans.titleA') }}<br>{{ $t('landing.plans.titleB') }}
-              </h2>
-            </div>
-            <p class="max-w-[62ch] text-mist">
-              {{ $t('landing.plans.copy') }}
-            </p>
-          </div>
+      <section id="planes" class="relative py-[clamp(90px,13vh,170px)]">
+        <div class="mx-auto w-full max-w-[520px] px-[clamp(20px,4vw,44px)] text-center">
+          <p v-reveal class="lurviax-rv mb-5 inline-flex items-center gap-3 font-mono text-[0.705rem] uppercase tracking-[0.26em] text-halo">
+            <span class="h-px w-8 bg-halo" />
+            {{ $t('landing.plans.eyebrow') }}
+            <span class="h-px w-8 bg-halo" />
+          </p>
 
-          <div v-reveal="140" class="lurviax-rv mx-auto grid max-w-2xl grid-cols-1 items-start gap-4">
-            <article class="plan-card flex flex-col gap-5 rounded-2xl bg-gradient-to-b from-ink-tealMid/70 to-ink/95 p-6 sm:p-10">
-              <div class="flex flex-wrap items-center gap-2.5">
-                <p class="font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">{{ $t('landing.plans.single.name') }}</p>
-                <span class="rounded-full border border-halo-line px-3 py-1 font-mono text-[0.64rem] uppercase tracking-[0.12em] text-halo">{{ $t('landing.plans.single.badge') }}</span>
-              </div>
-              <div class="font-display text-[clamp(2.6rem,5vw,3.6rem)] leading-none tracking-[-0.03em]" style="font-variation-settings: 'wdth' 94, 'wght' 400;">
-                $79<small class="ml-2 font-mono text-[0.72rem] tracking-[0.12em] text-mist-dim">{{ $t('landing.plans.perMonth') }}</small>
-              </div>
-              <p class="text-mist">{{ $t('landing.plans.single.tagline') }}</p>
-              <ul class="grid gap-3">
-                <li v-for="k in 7" :key="k" class="flex items-start gap-3 text-sm text-mist">
-                  <span class="mt-1 size-3.5 shrink-0 rounded-full border border-halo-line" style="background: radial-gradient(circle, #58F0CE 0 3px, transparent 3.5px);" />
-                  <span>{{ $t(`landing.plans.single.items.${k}`) }}</span>
-                </li>
-              </ul>
-              <a
-                ref="plansCtaRef"
-                href="#cierre"
-                class="plans-cta mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-brand-gradient px-6 py-3.5 font-mono text-[0.78rem] font-medium uppercase tracking-[0.12em] text-ink-tealDeep shadow-halo-glow transition-transform"
-                @click="smoothScroll($event, '#cierre')"
-              >
-                {{ $t('landing.plans.start') }}
-              </a>
-            </article>
-          </div>
+          <h2 v-reveal="80" class="lurviax-rv lurviax-h2-breathe font-display text-[clamp(2rem,4.6vw,3.2rem)] leading-tight tracking-[-0.015em] text-pearl" style="font-variation-settings: 'wdth' 108, 'wght' 500;">
+            {{ $t('landing.plans.titleA') }}<br>{{ $t('landing.plans.titleB') }}
+          </h2>
+
+          <p v-reveal="140" class="lurviax-rv mx-auto mt-5 max-w-[42ch] text-mist">
+            {{ $t('landing.plans.copy') }}
+          </p>
+
+          <article v-reveal="200" class="lurviax-rv plan-card mt-[clamp(32px,4vw,48px)] flex flex-col items-center gap-5 rounded-3xl bg-gradient-to-b from-ink-tealMid/75 to-ink/95 p-8 text-left sm:p-10">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <p class="font-mono text-[0.705rem] uppercase tracking-[0.22em] text-halo-dim">{{ $t('landing.plans.single.name') }}</p>
+              <span class="rounded-full border border-halo-line px-3 py-1 font-mono text-[0.64rem] uppercase tracking-[0.12em] text-halo">{{ $t('landing.plans.single.badge') }}</span>
+            </div>
+            <div class="font-display text-[clamp(3.2rem,6.5vw,4.6rem)] leading-none tracking-[-0.04em] text-pearl" style="font-variation-settings: 'wdth' 90, 'wght' 320;">
+              $79<small class="ml-2 align-top font-mono text-[0.72rem] tracking-[0.12em] text-mist-dim">{{ $t('landing.plans.perMonth') }}</small>
+            </div>
+            <p class="self-stretch text-mist">{{ $t('landing.plans.single.tagline') }}</p>
+            <ul class="grid w-full gap-3 self-stretch">
+              <li v-for="k in 7" :key="k" class="flex items-start gap-3 text-sm text-mist">
+                <span class="mt-1 size-3.5 shrink-0 rounded-full border border-halo-line" style="background: radial-gradient(circle, #58F0CE 0 3px, transparent 3.5px);" />
+                <span>{{ $t(`landing.plans.single.items.${k}`) }}</span>
+              </li>
+            </ul>
+            <a
+              ref="plansCtaRef"
+              href="#cierre"
+              class="plans-cta mt-3 inline-flex self-stretch items-center justify-center gap-2 rounded-full bg-brand-gradient px-6 py-3.5 font-mono text-[0.78rem] font-medium uppercase tracking-[0.12em] text-ink-tealDeep shadow-halo-glow transition-transform"
+              @click="smoothScroll($event, '#cierre')"
+            >
+              {{ $t('landing.plans.start') }}
+            </a>
+          </article>
         </div>
       </section>
 
@@ -626,4 +535,101 @@ function smoothScroll(ev: MouseEvent, href: string) {
 .mb-6\.5 { margin-bottom: 1.625rem; }
 .pl-5\.5 { padding-left: 1.375rem; }
 .pt-5\.5 { padding-top: 1.375rem; }
+
+.results-moment {
+  isolation: isolate;
+}
+.results-moment__halo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 42%, rgba(91, 233, 236, 0.18), transparent 65%),
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(7, 125, 220, 0.12), transparent 70%);
+  pointer-events: none;
+}
+.results-moment__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: 'Chivo Mono', ui-monospace, monospace;
+  font-size: 0.705rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(91, 233, 236, 0.8);
+  margin-bottom: clamp(32px, 4vw, 48px);
+}
+.results-moment__eyebrow-line {
+  display: inline-block;
+  width: 32px;
+  height: 1px;
+  background: rgba(91, 233, 236, 0.75);
+  transition: width 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.lurviax-rv.reveal-in .results-moment__eyebrow-line { width: 68px; }
+
+.results-moment__num {
+  font-family: Archivo, ui-sans-serif, system-ui, sans-serif;
+  font-variation-settings: 'wdth' 80, 'wght' 220;
+  font-size: clamp(6rem, 22vw, 18rem);
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  text-shadow:
+    0 2px 2px rgba(0, 0, 0, 0.3),
+    0 0 100px rgba(91, 233, 236, 0.35);
+}
+.results-moment__caption {
+  max-width: 44ch;
+  margin: clamp(22px, 3vw, 34px) auto 0;
+  font-family: Archivo, ui-sans-serif, system-ui, sans-serif;
+  font-variation-settings: 'wdth' 100, 'wght' 400;
+  font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.82);
+}
+.results-moment__caption-em {
+  font-style: normal;
+  font-variation-settings: 'wdth' 100, 'wght' 620;
+  color: #5BE9EC;
+  margin-right: 0.35em;
+}
+
+.results-moment__row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(32px, 6vw, 72px);
+  margin-top: clamp(44px, 6vw, 72px);
+  padding-top: clamp(28px, 4vw, 44px);
+  border-top: 1px solid rgba(91, 233, 236, 0.18);
+}
+.results-moment__sub {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+}
+.results-moment__sub-num {
+  font-family: Archivo, ui-sans-serif, system-ui, sans-serif;
+  font-variation-settings: 'wdth' 88, 'wght' 280;
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  line-height: 1;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.results-moment__sub-label {
+  font-family: 'Chivo Mono', ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+.results-moment__footnote {
+  margin-top: clamp(32px, 4vw, 48px);
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.42);
+}
 </style>

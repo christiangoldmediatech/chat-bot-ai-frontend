@@ -132,7 +132,8 @@
       "proceso": "Proceso",
       "resultados": "Resultados",
       "planes": "Planes",
-      "cierre": "Empezar"
+      "cierre": "Empezar",
+      "sistema": "Arquitectura"
     },
     "hero": {
       "eyebrow": "En vivo · WhatsApp · 24/7",
@@ -224,6 +225,74 @@
           "c": "Quiero reagendar mi cita del viernes 🙏",
           "a": "La muevo al viernes 11:00. ¿Te queda bien?"
         }
+      }
+    },
+    "system": {
+      "eyebrow": "La arquitectura en una sola imagen",
+      "titleA": "Un mensaje entra.",
+      "titleEm": "Tres caminos",
+      "titleB": "lo resuelven.",
+      "coreSub": "Motor conversacional",
+      "source": {
+        "label": "WhatsApp",
+        "sub": "del cliente"
+      },
+      "lanes": {
+        "reply": {
+          "label": "Responde",
+          "desc": "Contesta con tu catálogo, tus precios y tu tono."
+        },
+        "agenda": {
+          "label": "Agenda",
+          "desc": "Crea la cita en Google Calendar y la confirma."
+        },
+        "handoff": {
+          "label": "Escala",
+          "desc": "Pasa la conversación a tu equipo cuando hace falta."
+        }
+      }
+    },
+    "productGrid": {
+      "eyebrow": "Lo que ves al entrar al panel",
+      "titleA": "Un software que",
+      "titleB": "ya está funcionando.",
+      "copy": "No es una promesa ni un pitch — esto es lo que vas a ver vos el primer día que abras LURVIAX: tus bots respondiendo, tu agenda llenándose, tus clientes resueltos.",
+      "cards": {
+        "chart": {
+          "label": "Mensajes · 7 días",
+          "sub": "respondidos esta semana"
+        },
+        "agenda": {
+          "label": "Agenda",
+          "day": "Viernes"
+        },
+        "inbox": {
+          "label": "Bandeja WhatsApp",
+          "live": "en vivo"
+        },
+        "bot": {
+          "label": "Estado del bot",
+          "online": "activo",
+          "specialty": "Odontología · WhatsApp 24/7",
+          "latency": "latencia",
+          "today": "hoy",
+          "resolved": "resueltos"
+        },
+        "settings": {
+          "label": "Configuración",
+          "saved": "guardado"
+        },
+        "customer": {
+          "label": "Ficha del cliente",
+          "since": "cliente desde",
+          "visits": "citas",
+          "sat": "satisfacción"
+        }
+      },
+      "settings": {
+        "auto": "Auto-respuesta en WhatsApp",
+        "handoff": "Escalado a humano si duda",
+        "voice": "Entiende notas de voz"
       }
     },
     "demo": {
