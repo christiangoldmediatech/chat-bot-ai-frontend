@@ -89,7 +89,7 @@ async function initSpline() {
   sceneLoading.value = true
   sceneError.value = null
 
-  splineApp = new Application(canvasEl.value)
+  splineApp = new Application(canvasEl.value, { htmlContentMode: 'inline' } as ConstructorParameters<typeof Application>[1])
 
   try {
     await splineApp.load(SPLINE_SCENE_URL)
@@ -97,6 +97,7 @@ async function initSpline() {
 
     const anyApp = splineApp as unknown as {
       findObjectByName?: (name: string) => SplineObject | undefined
+      addEventListener?: (type: string, cb: (e: { target?: { name?: string } }) => void) => void
     }
     const internal = splineApp as unknown as {
       _camera?: SplineObject
@@ -131,6 +132,12 @@ async function initSpline() {
     }
 
     buildScrollTimeline()
+
+    anyApp.addEventListener?.('mouseDown', (e) => {
+      const name = e?.target?.name ?? ''
+      if (name === 'Office/Agenda_ClickArea') pauseScrollJourney()
+      else if (name === 'Office/AgendaScreen_ClickArea') resumeScrollJourney()
+    })
   }
   catch (err) {
     console.error('[clinic-journey] Spline load failed', err)
@@ -177,6 +184,22 @@ function buildScrollTimeline() {
 
 function updateActiveFromProgress() {
   showFinalCta.value = progress.value >= 0.95
+}
+
+const agendaOpen = ref(false)
+
+function pauseScrollJourney() {
+  if (agendaOpen.value) return
+  agendaOpen.value = true
+  scrollTrigger?.disable(false)
+  lenis?.stop()
+}
+
+function resumeScrollJourney() {
+  if (!agendaOpen.value) return
+  agendaOpen.value = false
+  lenis?.start()
+  scrollTrigger?.enable(false)
 }
 
 function onScroll() {
@@ -312,7 +335,7 @@ onMounted(() => {
 
       <Transition name="cj-fade">
         <button
-          v-if="!hasAdvanced && !showFinalCta && !sceneLoading"
+          v-if="!hasAdvanced && !showFinalCta && !sceneLoading && !agendaOpen"
           type="button"
           class="clinic-journey__hint"
           @click="advanceClick"
@@ -320,6 +343,13 @@ onMounted(() => {
           <span class="clinic-journey__hint-dot" />
           {{ $t('landing.frames.clickHint') }}
         </button>
+      </Transition>
+
+      <Transition name="cj-fade">
+        <div v-if="agendaOpen" class="clinic-journey__agenda-badge" aria-live="polite">
+          <span class="clinic-journey__agenda-badge-dot" />
+          AGENDA · tap pantalla para volver
+        </div>
       </Transition>
 
       <div class="clinic-journey__progress" aria-hidden="true">
@@ -685,6 +715,36 @@ onMounted(() => {
 
 .cj-fade-enter-active, .cj-fade-leave-active { transition: opacity 0.5s ease; }
 .cj-fade-enter-from, .cj-fade-leave-to { opacity: 0; }
+
+.clinic-journey__agenda-badge {
+  position: absolute;
+  top: clamp(20px, 3vh, 36px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(5, 12, 21, 0.9);
+  color: #5BE9EC;
+  font-family: 'Chivo Mono', ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: 1px solid rgba(91, 233, 236, 0.4);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 16px 36px -14px rgba(91, 233, 236, 0.4);
+  z-index: 14;
+}
+.clinic-journey__agenda-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #5BE9EC;
+  box-shadow: 0 0 10px #5BE9EC;
+  animation: hint-pulse 1.4s ease-in-out infinite;
+}
 
 .clinic-journey__card {
   position: absolute;
