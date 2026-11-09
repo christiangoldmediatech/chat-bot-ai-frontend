@@ -378,6 +378,10 @@ onMounted(() => {
   >
     <div v-if="!reducedMotion" class="clinic-journey__sticky">
       <canvas ref="canvasEl" class="clinic-journey__canvas" @click="advanceClick" />
+      <div class="clinic-journey__brand" aria-hidden="true">
+        <span class="clinic-journey__brand-dot" />
+        <span class="clinic-journey__brand-text">LURVIAX · AI SCENE</span>
+      </div>
 
       <Transition name="cj-fade">
         <div v-if="sceneLoading" class="clinic-journey__loader" aria-live="polite">
@@ -543,6 +547,38 @@ onMounted(() => {
   display: block;
   cursor: pointer;
 }
+.clinic-journey__brand {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  min-width: 190px;
+  justify-content: center;
+  border-radius: 10px 0 0 0;
+  background: rgba(5, 12, 21, 0.95);
+  color: #5BE9EC;
+  font-family: 'Chivo Mono', ui-monospace, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  border-top: 1px solid rgba(91, 233, 236, 0.4);
+  border-left: 1px solid rgba(91, 233, 236, 0.4);
+  box-shadow: 0 -4px 20px -8px rgba(5, 12, 21, 0.4);
+  z-index: 9;
+  pointer-events: none;
+}
+.clinic-journey__brand-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5BE9EC;
+  box-shadow: 0 0 8px #5BE9EC;
+  animation: hint-pulse 1.8s ease-in-out infinite;
+}
+.clinic-journey__brand-text { font-weight: 600; }
 
 .clinic-journey__loader {
   position: absolute;
