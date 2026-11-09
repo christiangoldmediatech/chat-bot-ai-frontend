@@ -132,7 +132,8 @@
       "proceso": "Proceso",
       "resultados": "Resultados",
       "planes": "Planes",
-      "cierre": "Empezar"
+      "cierre": "Empezar",
+      "sistema": "Arquitectura"
     },
     "hero": {
       "eyebrow": "En vivo · WhatsApp · 24/7",
@@ -150,13 +151,201 @@
         "channels": "Formatos multimedia en WhatsApp"
       }
     },
-    "inbox": {
-      "panelTitle": "Bandeja del equipo",
-      "pendingCount": "{count} pendientes",
-      "allCaught": "Todo al día",
-      "replied": "Respondido por LURVIAX",
-      "summary": "Una vista unificada de todos los bots de tu cuenta.",
-      "botActive": "Activo"
+    "heroScene": {
+      "eyebrow": "En vivo · Conversación real",
+      "claimA": "Agenda citas",
+      "claimEm": "sin perder",
+      "claimB": "un solo cliente.",
+      "copy": "LURVIAX entiende lo que necesita tu paciente, le ofrece horarios reales en tu agenda, confirma y le envía recordatorios automáticos — todo por WhatsApp, 24 horas, 7 días.",
+      "ctaPrimary": "Crear cuenta",
+      "ctaSecondary": "Ver cómo funciona",
+      "capsAria": "Capacidades principales",
+      "caps": {
+        "247": "Atención 24/7",
+        "agenda": "Agenda automática",
+        "voice": "Entiende notas de voz"
+      },
+      "phoneStatus": "en línea",
+      "phoneInputPlaceholder": "Mensaje",
+      "typing": "LURVIAX está escribiendo",
+      "m1": "Hola, necesito una cita para una reparación dental 🦷",
+      "m2": "¡Hola! 😊 Para reparación tengo mañana jueves 11:30 o viernes 08:00. ¿Cuál te queda mejor?",
+      "m3": "viernes a las 8 por favor",
+      "m4": "Perfecto. ¿Me confirmas tu nombre completo y teléfono?",
+      "m5": "Carla Ruiz, 099 912 3456",
+      "m6": "Listo Carla ✅ Cita el viernes a las 08:00. Te paso recordatorio el jueves en la tarde.",
+      "phoneContact": "Dr. Paredes",
+      "phoneContactSub": "Odontología"
+    },
+    "parallel": {
+      "eyebrow": "Mientras dormís · Mientras atendés",
+      "titleA": "Cuatro clientes.",
+      "titleB": "Una sola LURVIAX.",
+      "copy": "No hay horario malo para que un cliente te escriba. LURVIAX atiende cada conversación en paralelo, con contexto y coherencia — agenda, cotiza y responde dudas sin dejar a nadie esperando.",
+      "centerLabel": "Operativa",
+      "centerSub": "sin pausa",
+      "stat1": {
+        "num": "100%",
+        "label": "Mensajes respondidos"
+      },
+      "stat2": {
+        "num": "<3s",
+        "label": "Latencia promedio"
+      },
+      "stat3": {
+        "num": "0",
+        "label": "Clientes en espera"
+      },
+      "panels": {
+        "1": {
+          "time": "03:14",
+          "name": "Mateo",
+          "intent": "Cita urgente",
+          "c": "Me duele una muela, ¿tienen algo mañana?",
+          "a": "Mañana 09:30 con Dr. Paredes. ¿Confirmo?"
+        },
+        "2": {
+          "time": "09:22",
+          "name": "Lucía",
+          "intent": "Servicios",
+          "c": "¿Hacen limpieza dental?",
+          "a": "Sí, $35 e incluye profilaxis. ¿Te reservo?"
+        },
+        "3": {
+          "time": "14:05",
+          "name": "Javier",
+          "intent": "Horarios",
+          "c": "¿Hasta qué hora atienden hoy?",
+          "a": "Hoy hasta las 19:00. Tengo un cupo a las 18:30 si te sirve."
+        },
+        "4": {
+          "time": "22:47",
+          "name": "Sofía",
+          "intent": "Agenda",
+          "c": "Quiero reagendar mi cita del viernes 🙏",
+          "a": "La muevo al viernes 11:00. ¿Te queda bien?"
+        }
+      }
+    },
+    "system": {
+      "eyebrow": "La arquitectura en una sola imagen",
+      "titleA": "Un mensaje entra.",
+      "titleEm": "Tres caminos",
+      "titleB": "lo resuelven.",
+      "coreSub": "Motor conversacional",
+      "source": {
+        "label": "WhatsApp",
+        "sub": "del cliente"
+      },
+      "lanes": {
+        "reply": {
+          "label": "Responde",
+          "desc": "Contesta con tu catálogo, tus precios y tu tono."
+        },
+        "agenda": {
+          "label": "Agenda",
+          "desc": "Crea la cita en Google Calendar y la confirma."
+        },
+        "handoff": {
+          "label": "Escala",
+          "desc": "Pasa la conversación a tu equipo cuando hace falta."
+        }
+      }
+    },
+    "productGrid": {
+      "eyebrow": "Lo que ves al entrar al panel",
+      "titleA": "Un software que",
+      "titleB": "ya está funcionando.",
+      "copy": "No es una promesa ni un pitch — esto es lo que vas a ver vos el primer día que abras LURVIAX: tus bots respondiendo, tu agenda llenándose, tus clientes resueltos.",
+      "cards": {
+        "chart": {
+          "label": "Mensajes · 7 días",
+          "sub": "respondidos esta semana",
+          "days": [
+            "L",
+            "M",
+            "X",
+            "J",
+            "V",
+            "S",
+            "D"
+          ]
+        },
+        "agenda": {
+          "label": "Agenda",
+          "day": "Viernes",
+          "slots": [
+            {
+              "time": "08:00",
+              "duration": 2.5,
+              "name": "Carla Ruiz",
+              "tone": "primary"
+            },
+            {
+              "time": "10:30",
+              "duration": 2,
+              "name": "Mateo Díaz",
+              "tone": "warn"
+            },
+            {
+              "time": "14:00",
+              "duration": 3,
+              "name": "Sofía Pérez",
+              "tone": "muted"
+            }
+          ]
+        },
+        "inbox": {
+          "label": "Bandeja WhatsApp",
+          "live": "en vivo",
+          "messages": [
+            {
+              "name": "Lucía G.",
+              "msg": "¿Hacen limpieza dental?",
+              "time": "09:22",
+              "unread": 1
+            },
+            {
+              "name": "Javier M.",
+              "msg": "¿Hasta qué hora atienden?",
+              "time": "14:05",
+              "unread": 0
+            },
+            {
+              "name": "Mateo R.",
+              "msg": "Me duele una muela 😣",
+              "time": "03:14",
+              "unread": 2
+            }
+          ]
+        },
+        "bot": {
+          "label": "Estado del bot",
+          "online": "activo",
+          "specialty": "Odontología · WhatsApp 24/7",
+          "latency": "latencia",
+          "today": "hoy",
+          "resolved": "resueltos",
+          "name": "Dr. Paredes"
+        },
+        "settings": {
+          "label": "Configuración",
+          "saved": "guardado"
+        },
+        "customer": {
+          "label": "Ficha del cliente",
+          "since": "cliente desde",
+          "visits": "citas",
+          "sat": "satisfacción",
+          "name": "Carla Ruiz",
+          "year": "2023"
+        }
+      },
+      "settings": {
+        "auto": "Auto-respuesta en WhatsApp",
+        "handoff": "Escalado a humano si duda",
+        "voice": "Entiende notas de voz"
+      }
     },
     "demo": {
       "eyebrow": "Conversación real",
@@ -231,6 +420,14 @@
           "m8meta": "Andrea · Panel web"
         }
       }
+    },
+    "inbox": {
+      "panelTitle": "Bandeja del equipo",
+      "pendingCount": "{count} pendientes",
+      "allCaught": "Todo al día",
+      "replied": "Respondido por LURVIAX",
+      "summary": "Una vista unificada de todos los bots de tu cuenta.",
+      "botActive": "Activo"
     },
     "caps": {
       "eyebrow": "Lo que hace hoy",
@@ -349,6 +546,99 @@
     "whatsappFloat": {
       "label": "Escríbenos por WhatsApp",
       "ariaLabel": "Escribir a LURVIAX por WhatsApp"
+    },
+    "shift": {
+      "status": "En turno",
+      "handled": "atendidos hoy",
+      "clock": "hora actual del turno",
+      "stickyStatus": "En turno · Dr. Paredes",
+      "stickyCount": "atendidos",
+      "boot": {
+        "step1": "Conectando a WhatsApp Business…",
+        "step2": "Cargando el contexto del Dr. Paredes…",
+        "step3": "Listo. Primer mensaje entrando."
+      }
+    },
+    "sectionNum": {
+      "hero": "01 — Arranca el turno",
+      "demo": "02 — Llega la primera ronda de mensajes",
+      "sistema": "03 — Cómo los rutea y resuelve",
+      "capacidades": "04 — Lo que ves dentro del panel",
+      "resultados": "05 — Cierra el día"
+    },
+    "frames": {
+      "welcome": {
+        "title": "Agenda citas sin perder un solo cliente.",
+        "subtitle": "24/7 por WhatsApp · Dr. Paredes atendiendo ahora."
+      },
+      "problem": {
+        "title": "El costo del cliente que esperó.",
+        "b1": "Cada mensaje sin respuesta en la primera hora es un cliente que se enfría o se va a la competencia.",
+        "b2": "Tu equipo humano no cubre fuera de horario — fines de semana y madrugadas quedan abiertos.",
+        "b3": "Agendar a mano consume horas que el equipo necesita para la atención presencial."
+      },
+      "solution": {
+        "title": "Un asistente IA sobre tu WhatsApp Business.",
+        "b1": "Entiende texto, voz, imágenes y PDFs de tu cliente.",
+        "b2": "Responde con tu catálogo, tus precios y tu tono — aprende de tus históricos.",
+        "b3": "Escala a una persona de tu equipo solo cuando de verdad hace falta."
+      },
+      "parallelism": {
+        "title": "Cuatro clientes. Una sola LURVIAX.",
+        "b1": "100% de mensajes respondidos — nadie queda en visto.",
+        "b2": "Latencia promedio menor a 3 segundos, de día o de madrugada.",
+        "b3": "Cero clientes en espera — las conversaciones corren en paralelo con contexto propio."
+      },
+      "arch": {
+        "title": "Un mensaje entra. Tres caminos lo resuelven.",
+        "b1": "Responde: usa tu catálogo, precios y tono.",
+        "b2": "Agenda: crea la cita en Google Calendar y la confirma.",
+        "b3": "Escala: pasa la conversación a tu equipo cuando hace falta."
+      },
+      "features1": {
+        "title": "Lo que hace hoy — 1 de 2."
+      },
+      "features2": {
+        "title": "Lo que hace hoy — 2 de 2."
+      },
+      "panel": {
+        "title": "Lo que vas a ver en el panel.",
+        "b1": "Dashboard con mensajes de los últimos 7 días.",
+        "b2": "Agenda de citas con slots reales de Google Calendar.",
+        "b3": "Bandeja WhatsApp unificada de todos tus bots.",
+        "b4": "Settings del bot con toggles de auto-respuesta y escalado.",
+        "b5": "Ficha del cliente con historial, LTV y satisfacción."
+      },
+      "implementation": {
+        "title": "De cero a producción en 3 semanas."
+      },
+      "impact": {
+        "title": "Lo que cambia al mes tres.",
+        "stat1Num": "72%",
+        "stat1Label": "de las consultas se cierran sin intervención humana",
+        "stat2Num": "2.4s",
+        "stat2Label": "tiempo de primera respuesta, a cualquier hora",
+        "stat3Num": "+31%",
+        "stat3Label": "más citas agendadas desde el mismo tráfico"
+      },
+      "plan": {
+        "title": "$79 al mes · Todo incluido.",
+        "subtitle": "Plan Negocio — sin permanencia, implementación incluida.",
+        "ctaLabel": "Empezar ahora"
+      },
+      "close": {
+        "title": "Tráele las preguntas más difíciles de tus clientes.",
+        "subtitle": "15 minutos, con tus propias preguntas.",
+        "ctaLabel": "Contactar por WhatsApp"
+      },
+      "progress": "{current} de {total}",
+      "ariaFrame": "Cuadro {current} de {total}: {title}",
+      "ariaNext": "Siguiente cuadro",
+      "ariaPrev": "Cuadro anterior",
+      "reducedFallback": "Experiencia simplificada — deshabilitaste animaciones.",
+      "clickHint": "Hacé click o scrollea para avanzar",
+      "loading": "Cargando la escena 3D…",
+      "loadError": "La escena 3D no pudo cargar"
     }
   },
   "auth": {

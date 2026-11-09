@@ -10,9 +10,9 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   sections: () => [
-    { id: 'splash', labelKey: 'landing.dots.splash' },
     { id: 'hero', labelKey: 'landing.dots.hero' },
     { id: 'demo', labelKey: 'landing.dots.demo' },
+    { id: 'sistema', labelKey: 'landing.dots.sistema' },
     { id: 'capacidades', labelKey: 'landing.dots.capacidades' },
     { id: 'proceso', labelKey: 'landing.dots.proceso' },
     { id: 'resultados', labelKey: 'landing.dots.resultados' },
