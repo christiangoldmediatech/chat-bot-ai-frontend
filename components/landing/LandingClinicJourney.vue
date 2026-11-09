@@ -85,33 +85,60 @@ let scrollTimeline: gsap.core.Timeline | null = null
 let scrollTrigger: ScrollTrigger | null = null
 let watermarkObserver: MutationObserver | null = null
 
-function nukeSplineWatermarks(root: ParentNode) {
-  const selectors = [
-    'a[href*="spline.design"]',
-    'a[href*="app.spline.design"]',
-    '[class*="spline-watermark" i]',
-    '[id*="spline-watermark" i]',
-  ]
-  for (const sel of selectors) {
-    root.querySelectorAll(sel).forEach((el) => {
+function isSplineBadge(el: Element): boolean {
+  if (el.tagName === 'A') {
+    const href = (el as HTMLAnchorElement).href ?? ''
+    if (href.includes('spline.design')) return true
+  }
+  const text = (el.textContent ?? '').trim().toLowerCase()
+  if (text === 'built with spline' || (text.includes('built with') && text.includes('spline'))) return true
+  const cls = (el.getAttribute('class') ?? '').toLowerCase()
+  if (cls.includes('watermark') || cls.includes('spline-logo') || cls.includes('spline-brand')) return true
+  return false
+}
+
+function walkAndNuke(root: Document | Element | ShadowRoot) {
+  const candidates: Element[] = []
+  const stack: Array<Document | Element | ShadowRoot> = [root]
+  while (stack.length) {
+    const node = stack.pop()!
+    const children = (node as Element).children ?? (node as Document).children ?? []
+    for (const child of Array.from(children)) {
+      if (isSplineBadge(child)) candidates.push(child)
+      if ((child as Element & { shadowRoot?: ShadowRoot }).shadowRoot) {
+        stack.push((child as Element & { shadowRoot: ShadowRoot }).shadowRoot)
+      }
+      stack.push(child)
+    }
+  }
+  candidates.forEach((el) => {
+    try {
       ;(el as HTMLElement).style.display = 'none'
       el.remove()
-    })
-  }
-  root.querySelectorAll('a').forEach((a) => {
-    const text = (a.textContent ?? '').toLowerCase()
-    if (text.includes('built with spline') || text.includes('spline')) {
-      ;(a as HTMLElement).style.display = 'none'
-      a.remove()
+    }
+    catch {
+      // skip
     }
   })
+  return candidates.length
+}
+
+function nukeSplineWatermarks() {
+  walkAndNuke(document)
+  if (canvasEl.value?.parentElement) walkAndNuke(canvasEl.value.parentElement)
 }
 
 function startWatermarkObserver() {
   if (watermarkObserver) return
-  nukeSplineWatermarks(document.body)
-  watermarkObserver = new MutationObserver(() => nukeSplineWatermarks(document.body))
-  watermarkObserver.observe(document.body, { childList: true, subtree: true })
+  nukeSplineWatermarks()
+  watermarkObserver = new MutationObserver(nukeSplineWatermarks)
+  watermarkObserver.observe(document.body, { childList: true, subtree: true, attributes: true })
+  let tries = 0
+  const retry = () => {
+    nukeSplineWatermarks()
+    if (++tries < 40) setTimeout(retry, 150)
+  }
+  retry()
 }
 
 async function initSpline() {
