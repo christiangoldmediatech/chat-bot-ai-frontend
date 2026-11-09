@@ -483,6 +483,11 @@ onMounted(() => {
   display: block;
   cursor: pointer;
 }
+.clinic-journey__sticky :deep(a[href*="spline.design"]),
+.clinic-journey__sticky :deep([class*="watermark" i]),
+.clinic-journey__sticky :deep([class*="spline-logo" i]) {
+  display: none !important;
+}
 
 .clinic-journey__loader {
   position: absolute;
