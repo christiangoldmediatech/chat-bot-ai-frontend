@@ -546,6 +546,99 @@
     "whatsappFloat": {
       "label": "Chat with us on WhatsApp",
       "ariaLabel": "Write to LURVIAX on WhatsApp"
+    },
+    "shift": {
+      "status": "On shift",
+      "handled": "handled today",
+      "clock": "current shift time",
+      "stickyStatus": "On shift · Dr. Paredes",
+      "stickyCount": "handled",
+      "boot": {
+        "step1": "Connecting to WhatsApp Business…",
+        "step2": "Loading Dr. Paredes' context…",
+        "step3": "Ready. First message coming in."
+      }
+    },
+    "sectionNum": {
+      "hero": "01 — The shift begins",
+      "demo": "02 — The first wave of messages",
+      "sistema": "03 — How it routes and resolves",
+      "capacidades": "04 — What you see inside the panel",
+      "resultados": "05 — Closing the day"
+    },
+    "frames": {
+      "welcome": {
+        "title": "Book appointments without missing a single client.",
+        "subtitle": "24/7 on WhatsApp · Dr. Paredes attending right now."
+      },
+      "problem": {
+        "title": "The cost of the client who waited.",
+        "b1": "Every message unanswered in the first hour is a client cooling off or picking the competition.",
+        "b2": "Your team doesn't cover off-hours — weekends and nights stay open.",
+        "b3": "Booking by hand burns hours your team needs for in-person care."
+      },
+      "solution": {
+        "title": "An AI assistant on your WhatsApp Business.",
+        "b1": "Understands text, voice, images and PDFs from your client.",
+        "b2": "Replies with your catalog, your prices and your tone — learns from your history.",
+        "b3": "Escalates to a human only when it truly needs to."
+      },
+      "parallelism": {
+        "title": "Four clients. One LURVIAX.",
+        "b1": "100% of messages answered — nobody left on read.",
+        "b2": "Average latency under 3 seconds, day or night.",
+        "b3": "Zero clients waiting — conversations run in parallel with their own context."
+      },
+      "arch": {
+        "title": "One message in. Three paths handle it.",
+        "b1": "Replies: uses your catalog, prices and tone.",
+        "b2": "Books: creates the appointment in Google Calendar and confirms it.",
+        "b3": "Escalates: hands the conversation to your team when needed."
+      },
+      "features1": {
+        "title": "What it does today — 1 of 2."
+      },
+      "features2": {
+        "title": "What it does today — 2 of 2."
+      },
+      "panel": {
+        "title": "What you'll see in the dashboard.",
+        "b1": "Dashboard with 7-day message trends.",
+        "b2": "Calendar view with real Google Calendar slots.",
+        "b3": "Unified WhatsApp inbox across your bots.",
+        "b4": "Bot settings with auto-reply and escalation toggles.",
+        "b5": "Customer profile with history, LTV and satisfaction."
+      },
+      "implementation": {
+        "title": "From zero to production in 3 weeks."
+      },
+      "impact": {
+        "title": "What changes by month three.",
+        "stat1Num": "72%",
+        "stat1Label": "of inquiries resolved without human intervention",
+        "stat2Num": "2.4s",
+        "stat2Label": "first-response time, any hour",
+        "stat3Num": "+31%",
+        "stat3Label": "more appointments booked from the same traffic"
+      },
+      "plan": {
+        "title": "$79 per month · Everything included.",
+        "subtitle": "Business plan — no lock-in, implementation included.",
+        "ctaLabel": "Start now"
+      },
+      "close": {
+        "title": "Bring the toughest questions from your clients.",
+        "subtitle": "15 minutes, with your own questions.",
+        "ctaLabel": "Contact us on WhatsApp"
+      },
+      "progress": "{current} of {total}",
+      "ariaFrame": "Frame {current} of {total}: {title}",
+      "ariaNext": "Next frame",
+      "ariaPrev": "Previous frame",
+      "reducedFallback": "Simplified experience — animations disabled.",
+      "clickHint": "Click or scroll to advance",
+      "loading": "Loading 3D scene…",
+      "loadError": "The 3D scene failed to load"
     }
   },
   "auth": {

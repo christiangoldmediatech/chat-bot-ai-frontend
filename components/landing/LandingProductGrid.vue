@@ -60,11 +60,16 @@ const settings = [
 function initialOf(name: string) {
   return name.trim().charAt(0).toUpperCase()
 }
+
+const sectionEl = ref<HTMLElement | null>(null)
+const { observeSection } = useShiftState()
+observeSection(sectionEl, 'capacidades')
 </script>
 
 <template>
   <section
     id="capacidades"
+    ref="sectionEl"
     class="pg-wrap relative py-[clamp(90px,13vh,170px)]"
     aria-labelledby="pg-title"
   >
@@ -73,7 +78,7 @@ function initialOf(name: string) {
         <div>
           <p class="pg-eyebrow">
             <span class="pg-eyebrow__line" />
-            {{ $t('landing.productGrid.eyebrow') }}
+            {{ $t('landing.sectionNum.capacidades') }}
           </p>
           <h2 id="pg-title" class="lurviax-h2-breathe pg-title">
             {{ $t('landing.productGrid.titleA') }}<br>

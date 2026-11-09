@@ -29,6 +29,8 @@ const panels = computed(() => PANELS.map((p) => ({
 
 const rootEl = ref<HTMLElement | null>(null)
 const stage = ref(0)
+const { observeSection } = useShiftState()
+observeSection(rootEl, 'demo')
 let timers: number[] = []
 let observer: IntersectionObserver | null = null
 
@@ -106,7 +108,7 @@ function aliaVisible(id: number) {
         <div>
           <p class="pp-eyebrow">
             <span class="pp-eyebrow__line" />
-            {{ $t('landing.parallel.eyebrow') }}
+            {{ $t('landing.sectionNum.demo') }}
           </p>
           <h2 id="pp-title" class="pp-title">
             {{ $t('landing.parallel.titleA') }}<br>

@@ -4,11 +4,16 @@ const lanes = [
   { id: 'agenda', labelKey: 'landing.system.lanes.agenda.label', descKey: 'landing.system.lanes.agenda.desc' },
   { id: 'handoff', labelKey: 'landing.system.lanes.handoff.label', descKey: 'landing.system.lanes.handoff.desc' },
 ]
+
+const sectionEl = ref<HTMLElement | null>(null)
+const { observeSection } = useShiftState()
+observeSection(sectionEl, 'sistema')
 </script>
 
 <template>
   <section
     id="sistema"
+    ref="sectionEl"
     class="sd-wrap relative py-[clamp(90px,13vh,170px)]"
     aria-labelledby="sd-title"
   >
@@ -16,7 +21,7 @@ const lanes = [
       <div v-reveal class="lurviax-rv mb-[clamp(44px,6vw,72px)] text-center">
         <p class="sd-eyebrow">
           <span class="sd-eyebrow__line" />
-          {{ $t('landing.system.eyebrow') }}
+          {{ $t('landing.sectionNum.sistema') }}
           <span class="sd-eyebrow__line" />
         </p>
         <h2 id="sd-title" class="lurviax-h2-breathe sd-title">

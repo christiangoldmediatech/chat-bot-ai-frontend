@@ -27,6 +27,13 @@ const heroCtaEl = computed<HTMLElement | null>(() => {
   return '$el' in r ? r.$el ?? null : r as HTMLElement
 })
 useMagnetic(heroCtaEl, { radius: 110, strength: 0.28 })
+
+const bootStage = ref<'dark' | 'status' | 'header' | 'ready'>('dark')
+const bootLineIndex = ref(0)
+const sectionEl = ref<HTMLElement | null>(null)
+const { displayedTime, displayedCount, observeSection } = useShiftState()
+observeSection(sectionEl, 'hero')
+
 let timers: number[] = []
 let reducedMotion = false
 
@@ -96,9 +103,27 @@ function smoothScroll(ev: MouseEvent, href: string) {
   el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
 }
 
+function boot() {
+  if (reducedMotion) {
+    bootStage.value = 'ready'
+    bootLineIndex.value = 3
+    run()
+    return
+  }
+  const steps: Array<{ at: number, fn: () => void }> = [
+    { at: 220, fn: () => { bootStage.value = 'status'; bootLineIndex.value = 1 } },
+    { at: 560, fn: () => { bootStage.value = 'header'; bootLineIndex.value = 2 } },
+    { at: 1000, fn: () => { bootStage.value = 'ready'; bootLineIndex.value = 3 } },
+    { at: 1350, fn: () => { run() } },
+  ]
+  steps.forEach(({ at, fn }) => {
+    timers.push(window.setTimeout(fn, at))
+  })
+}
+
 onMounted(() => {
   reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  run()
+  boot()
 })
 
 onBeforeUnmount(() => {
@@ -110,6 +135,7 @@ onBeforeUnmount(() => {
 <template>
   <section
     id="hero"
+    ref="sectionEl"
     class="hero-scene relative flex min-h-screen items-center overflow-hidden px-[clamp(20px,4vw,52px)] py-[clamp(72px,10vh,120px)]"
     aria-labelledby="hero-scene-title"
   >
@@ -131,8 +157,17 @@ onBeforeUnmount(() => {
       <div class="text-left">
         <p class="hs-eyebrow">
           <span class="hs-eyebrow__dot" aria-hidden="true" />
-          {{ $t('landing.heroScene.eyebrow') }}
+          {{ $t('landing.sectionNum.hero') }}
         </p>
+
+        <div class="hs-shift" :aria-label="$t('landing.shift.clock')">
+          <span class="hs-shift__dot" aria-hidden="true" />
+          <span class="hs-shift__status">{{ $t('landing.shift.status') }}</span>
+          <span class="hs-shift__divider" aria-hidden="true">·</span>
+          <span class="hs-shift__time">{{ displayedTime }}</span>
+          <span class="hs-shift__divider" aria-hidden="true">·</span>
+          <span class="hs-shift__count"><strong>{{ displayedCount }}</strong> {{ $t('landing.shift.handled') }}</span>
+        </div>
 
         <h1 id="hero-scene-title" class="hs-wordmark">
           <span class="hs-wordmark__text">LURVIAX</span>
@@ -177,7 +212,27 @@ onBeforeUnmount(() => {
       <div class="relative mx-auto w-full max-w-[380px] lg:mx-0 lg:justify-self-end">
         <div class="hs-phone" :class="{ 'hs-phone--buzz': vibrating }">
           <div class="hs-phone__notch" aria-hidden="true" />
-          <div class="hs-phone__screen">
+          <div class="hs-phone__screen" :data-boot="bootStage">
+            <div v-if="bootStage !== 'ready'" class="hs-boot" aria-hidden="true">
+              <div class="hs-boot__status">
+                <span class="hs-boot__status-time">{{ displayedTime }}</span>
+                <div class="hs-boot__status-icons">
+                  <svg viewBox="0 0 24 10" width="22" height="10"><path d="M1 1h18l3 4-3 4H1V1z" fill="none" stroke="currentColor" stroke-width="1" /><rect x="3" y="3" width="14" height="4" fill="currentColor" /></svg>
+                  <svg viewBox="0 0 16 10" width="14" height="10"><rect x="0" y="7" width="2" height="3" fill="currentColor" /><rect x="4" y="5" width="2" height="5" fill="currentColor" /><rect x="8" y="2" width="2" height="8" fill="currentColor" /><rect x="12" y="0" width="2" height="10" fill="currentColor" opacity="0.4" /></svg>
+                </div>
+              </div>
+              <div class="hs-boot__console">
+                <div class="hs-boot__line" :class="{ 'hs-boot__line--done': bootLineIndex >= 1 }">
+                  <span class="hs-boot__caret">›</span>{{ $t('landing.shift.boot.step1') }}
+                </div>
+                <div class="hs-boot__line" :class="{ 'hs-boot__line--done': bootLineIndex >= 2 }">
+                  <span class="hs-boot__caret">›</span>{{ $t('landing.shift.boot.step2') }}
+                </div>
+                <div class="hs-boot__line" :class="{ 'hs-boot__line--done': bootLineIndex >= 3 }">
+                  <span class="hs-boot__caret">›</span>{{ $t('landing.shift.boot.step3') }}
+                </div>
+              </div>
+            </div>
             <div class="hs-wa-header">
               <div class="hs-wa-avatar" aria-hidden="true">D</div>
               <div class="min-w-0 flex-1">
@@ -274,6 +329,54 @@ onBeforeUnmount(() => {
   background: #5BE9EC;
   box-shadow: 0 0 10px #5BE9EC;
   animation: hs-pulse 2.2s ease-in-out infinite;
+}
+
+.hs-shift {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 8px 14px;
+  border: 1px solid rgba(37, 211, 102, 0.35);
+  border-radius: 999px;
+  background: rgba(1, 20, 42, 0.5);
+  backdrop-filter: blur(8px);
+  font-family: 'Chivo Mono', ui-monospace, monospace;
+  font-size: clamp(0.62rem, 0.95vw, 0.72rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffffff;
+  opacity: 0;
+  animation: hs-rise 0.55s cubic-bezier(0.23, 1, 0.32, 1) 0.16s forwards;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 10px 24px -14px rgba(37, 211, 102, 0.6);
+}
+.hs-shift__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #25D366;
+  box-shadow: 0 0 10px rgba(37, 211, 102, 0.9);
+  animation: hs-shift-dot 2.2s ease-in-out infinite;
+}
+@keyframes hs-shift-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+.hs-shift__status { color: rgba(37, 211, 102, 0.9); }
+.hs-shift__divider { color: rgba(255, 255, 255, 0.3); }
+.hs-shift__time {
+  color: #5BE9EC;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.1em;
+}
+.hs-shift__count { color: rgba(255, 255, 255, 0.72); }
+.hs-shift__count strong {
+  color: #ffffff;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  margin-right: 4px;
 }
 
 .hs-wordmark {
@@ -507,6 +610,102 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
 }
+.hs-phone__screen[data-boot="dark"] .hs-wa-header,
+.hs-phone__screen[data-boot="dark"] .hs-wa-thread,
+.hs-phone__screen[data-boot="dark"] .hs-wa-input,
+.hs-phone__screen[data-boot="status"] .hs-wa-header,
+.hs-phone__screen[data-boot="status"] .hs-wa-thread,
+.hs-phone__screen[data-boot="status"] .hs-wa-input,
+.hs-phone__screen[data-boot="header"] .hs-wa-thread,
+.hs-phone__screen[data-boot="header"] .hs-wa-input {
+  opacity: 0;
+}
+.hs-phone__screen[data-boot="header"] .hs-wa-header {
+  opacity: 1;
+  animation: hs-boot-slide 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.hs-phone__screen[data-boot="ready"] .hs-wa-header,
+.hs-phone__screen[data-boot="ready"] .hs-wa-thread,
+.hs-phone__screen[data-boot="ready"] .hs-wa-input {
+  opacity: 1;
+  transition: opacity 0.35s ease-out;
+}
+@keyframes hs-boot-slide {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.hs-boot {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(ellipse at 50% 20%, #022a4a 0%, #000306 80%);
+  padding: 44px 16px 20px;
+  color: rgba(91, 233, 236, 0.9);
+  font-family: 'Chivo Mono', ui-monospace, monospace;
+  animation: hs-boot-fade-in 0.3s ease-out;
+}
+.hs-phone__screen[data-boot="ready"] .hs-boot {
+  animation: hs-boot-fade-out 0.45s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  pointer-events: none;
+}
+@keyframes hs-boot-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes hs-boot-fade-out {
+  to { opacity: 0; transform: scale(1.02); }
+}
+.hs-boot__status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+  animation: hs-boot-step 0.3s ease-out 0.15s forwards;
+}
+.hs-boot__status-icons {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.85);
+}
+.hs-boot__console {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 4px;
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+.hs-boot__line {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  opacity: 0.25;
+  color: rgba(91, 233, 236, 0.65);
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+.hs-boot__line--done {
+  opacity: 1;
+  color: rgba(91, 233, 236, 0.95);
+  animation: hs-boot-step 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.hs-boot__caret {
+  color: #5BE9EC;
+  font-weight: 700;
+}
+@keyframes hs-boot-step {
+  from { opacity: 0; transform: translateX(-4px); }
+  to { opacity: 1; transform: none; }
+}
 .hs-phone__glow {
   position: absolute;
   inset: -18%;
@@ -695,6 +894,15 @@ onBeforeUnmount(() => {
       inset 0 0 0 1px rgba(91, 233, 236, 0.25),
       0 30px 80px -30px rgba(0, 0, 0, 0.9),
       0 0 60px -12px rgba(91, 233, 236, 0.25);
+  }
+  .hs-shift,
+  .hs-shift__dot,
+  .hs-boot,
+  .hs-boot__status,
+  .hs-boot__line {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }
 </style>

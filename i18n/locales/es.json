@@ -546,6 +546,99 @@
     "whatsappFloat": {
       "label": "Escríbenos por WhatsApp",
       "ariaLabel": "Escribir a LURVIAX por WhatsApp"
+    },
+    "shift": {
+      "status": "En turno",
+      "handled": "atendidos hoy",
+      "clock": "hora actual del turno",
+      "stickyStatus": "En turno · Dr. Paredes",
+      "stickyCount": "atendidos",
+      "boot": {
+        "step1": "Conectando a WhatsApp Business…",
+        "step2": "Cargando el contexto del Dr. Paredes…",
+        "step3": "Listo. Primer mensaje entrando."
+      }
+    },
+    "sectionNum": {
+      "hero": "01 — Arranca el turno",
+      "demo": "02 — Llega la primera ronda de mensajes",
+      "sistema": "03 — Cómo los rutea y resuelve",
+      "capacidades": "04 — Lo que ves dentro del panel",
+      "resultados": "05 — Cierra el día"
+    },
+    "frames": {
+      "welcome": {
+        "title": "Agenda citas sin perder un solo cliente.",
+        "subtitle": "24/7 por WhatsApp · Dr. Paredes atendiendo ahora."
+      },
+      "problem": {
+        "title": "El costo del cliente que esperó.",
+        "b1": "Cada mensaje sin respuesta en la primera hora es un cliente que se enfría o se va a la competencia.",
+        "b2": "Tu equipo humano no cubre fuera de horario — fines de semana y madrugadas quedan abiertos.",
+        "b3": "Agendar a mano consume horas que el equipo necesita para la atención presencial."
+      },
+      "solution": {
+        "title": "Un asistente IA sobre tu WhatsApp Business.",
+        "b1": "Entiende texto, voz, imágenes y PDFs de tu cliente.",
+        "b2": "Responde con tu catálogo, tus precios y tu tono — aprende de tus históricos.",
+        "b3": "Escala a una persona de tu equipo solo cuando de verdad hace falta."
+      },
+      "parallelism": {
+        "title": "Cuatro clientes. Una sola LURVIAX.",
+        "b1": "100% de mensajes respondidos — nadie queda en visto.",
+        "b2": "Latencia promedio menor a 3 segundos, de día o de madrugada.",
+        "b3": "Cero clientes en espera — las conversaciones corren en paralelo con contexto propio."
+      },
+      "arch": {
+        "title": "Un mensaje entra. Tres caminos lo resuelven.",
+        "b1": "Responde: usa tu catálogo, precios y tono.",
+        "b2": "Agenda: crea la cita en Google Calendar y la confirma.",
+        "b3": "Escala: pasa la conversación a tu equipo cuando hace falta."
+      },
+      "features1": {
+        "title": "Lo que hace hoy — 1 de 2."
+      },
+      "features2": {
+        "title": "Lo que hace hoy — 2 de 2."
+      },
+      "panel": {
+        "title": "Lo que vas a ver en el panel.",
+        "b1": "Dashboard con mensajes de los últimos 7 días.",
+        "b2": "Agenda de citas con slots reales de Google Calendar.",
+        "b3": "Bandeja WhatsApp unificada de todos tus bots.",
+        "b4": "Settings del bot con toggles de auto-respuesta y escalado.",
+        "b5": "Ficha del cliente con historial, LTV y satisfacción."
+      },
+      "implementation": {
+        "title": "De cero a producción en 3 semanas."
+      },
+      "impact": {
+        "title": "Lo que cambia al mes tres.",
+        "stat1Num": "72%",
+        "stat1Label": "de las consultas se cierran sin intervención humana",
+        "stat2Num": "2.4s",
+        "stat2Label": "tiempo de primera respuesta, a cualquier hora",
+        "stat3Num": "+31%",
+        "stat3Label": "más citas agendadas desde el mismo tráfico"
+      },
+      "plan": {
+        "title": "$79 al mes · Todo incluido.",
+        "subtitle": "Plan Negocio — sin permanencia, implementación incluida.",
+        "ctaLabel": "Empezar ahora"
+      },
+      "close": {
+        "title": "Tráele las preguntas más difíciles de tus clientes.",
+        "subtitle": "15 minutos, con tus propias preguntas.",
+        "ctaLabel": "Contactar por WhatsApp"
+      },
+      "progress": "{current} de {total}",
+      "ariaFrame": "Cuadro {current} de {total}: {title}",
+      "ariaNext": "Siguiente cuadro",
+      "ariaPrev": "Cuadro anterior",
+      "reducedFallback": "Experiencia simplificada — deshabilitaste animaciones.",
+      "clickHint": "Hacé click o scrollea para avanzar",
+      "loading": "Cargando la escena 3D…",
+      "loadError": "La escena 3D no pudo cargar"
     }
   },
   "auth": {
