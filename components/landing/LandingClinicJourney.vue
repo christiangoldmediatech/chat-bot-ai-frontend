@@ -83,6 +83,36 @@ let splineCamera: SplineObject | null = null
 let waypoints: SplineObject[] = []
 let scrollTimeline: gsap.core.Timeline | null = null
 let scrollTrigger: ScrollTrigger | null = null
+let watermarkObserver: MutationObserver | null = null
+
+function nukeSplineWatermarks(root: ParentNode) {
+  const selectors = [
+    'a[href*="spline.design"]',
+    'a[href*="app.spline.design"]',
+    '[class*="spline-watermark" i]',
+    '[id*="spline-watermark" i]',
+  ]
+  for (const sel of selectors) {
+    root.querySelectorAll(sel).forEach((el) => {
+      ;(el as HTMLElement).style.display = 'none'
+      el.remove()
+    })
+  }
+  root.querySelectorAll('a').forEach((a) => {
+    const text = (a.textContent ?? '').toLowerCase()
+    if (text.includes('built with spline') || text.includes('spline')) {
+      ;(a as HTMLElement).style.display = 'none'
+      a.remove()
+    }
+  })
+}
+
+function startWatermarkObserver() {
+  if (watermarkObserver) return
+  nukeSplineWatermarks(document.body)
+  watermarkObserver = new MutationObserver(() => nukeSplineWatermarks(document.body))
+  watermarkObserver.observe(document.body, { childList: true, subtree: true })
+}
 
 async function initSpline() {
   if (!canvasEl.value) return
@@ -132,6 +162,7 @@ async function initSpline() {
     }
 
     buildScrollTimeline()
+    startWatermarkObserver()
 
     anyApp.addEventListener?.('mouseDown', (e) => {
       const name = e?.target?.name ?? ''
@@ -302,6 +333,8 @@ onMounted(() => {
     lenis?.destroy()
     lenis = null
     lenisRaf = null
+    watermarkObserver?.disconnect()
+    watermarkObserver = null
     splineApp?.dispose?.()
     splineApp = null
   })
@@ -318,7 +351,6 @@ onMounted(() => {
   >
     <div v-if="!reducedMotion" class="clinic-journey__sticky">
       <canvas ref="canvasEl" class="clinic-journey__canvas" @click="advanceClick" />
-      <div class="clinic-journey__spline-mask" aria-hidden="true" />
 
       <Transition name="cj-fade">
         <div v-if="sceneLoading" class="clinic-journey__loader" aria-live="polite">
@@ -483,19 +515,6 @@ onMounted(() => {
   height: 100%;
   display: block;
   cursor: pointer;
-}
-.clinic-journey__spline-mask {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 170px;
-  height: 46px;
-  backdrop-filter: blur(14px) saturate(1.1);
-  -webkit-backdrop-filter: blur(14px) saturate(1.1);
-  background: linear-gradient(135deg, transparent 0%, rgba(238, 241, 245, 0.55) 60%, rgba(238, 241, 245, 0.85) 100%);
-  z-index: 8;
-  pointer-events: none;
-  border-radius: 12px 0 0 0;
 }
 
 .clinic-journey__loader {
@@ -1147,7 +1166,6 @@ onMounted(() => {
   .clinic-journey__card-inner { padding: 18px 18px 16px; }
   .clinic-journey__card-title { font-size: 1.1rem; }
   .clinic-journey__card-sub, .clinic-journey__card-bullets li { font-size: 0.82rem; }
-  .clinic-journey__spline-mask { width: 140px; height: 40px; }
 }
 </style>
 
