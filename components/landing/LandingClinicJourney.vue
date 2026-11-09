@@ -318,6 +318,7 @@ onMounted(() => {
   >
     <div v-if="!reducedMotion" class="clinic-journey__sticky">
       <canvas ref="canvasEl" class="clinic-journey__canvas" @click="advanceClick" />
+      <div class="clinic-journey__spline-mask" aria-hidden="true" />
 
       <Transition name="cj-fade">
         <div v-if="sceneLoading" class="clinic-journey__loader" aria-live="polite">
@@ -483,10 +484,18 @@ onMounted(() => {
   display: block;
   cursor: pointer;
 }
-.clinic-journey__sticky :deep(a[href*="spline.design"]),
-.clinic-journey__sticky :deep([class*="watermark" i]),
-.clinic-journey__sticky :deep([class*="spline-logo" i]) {
-  display: none !important;
+.clinic-journey__spline-mask {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 170px;
+  height: 46px;
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  background: linear-gradient(135deg, transparent 0%, rgba(238, 241, 245, 0.55) 60%, rgba(238, 241, 245, 0.85) 100%);
+  z-index: 8;
+  pointer-events: none;
+  border-radius: 12px 0 0 0;
 }
 
 .clinic-journey__loader {
@@ -1138,5 +1147,18 @@ onMounted(() => {
   .clinic-journey__card-inner { padding: 18px 18px 16px; }
   .clinic-journey__card-title { font-size: 1.1rem; }
   .clinic-journey__card-sub, .clinic-journey__card-bullets li { font-size: 0.82rem; }
+  .clinic-journey__spline-mask { width: 140px; height: 40px; }
+}
+</style>
+
+<style>
+a[href*="spline.design"],
+a[href*="app.spline.design"],
+[class*="spline-watermark" i],
+[id*="spline-watermark" i] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 </style>
