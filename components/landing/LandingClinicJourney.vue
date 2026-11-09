@@ -32,6 +32,16 @@ const WAYPOINT_NAMES = [
   'Camera_Beat_5_OfficeGallery',
   'Camera_Beat_4_DoctorOffice',
 ]
+const DOCTOR_FINAL_CANDIDATES = [
+  'Camera_Beat_4_DoctorOffice',
+  'Camera_Beat_Doctor',
+  'Camera_Doctor',
+  'Camera_DoctorOffice',
+  'Camera_Final',
+  'Camera_End',
+  'Camera_Beat_7_DoctorOffice',
+  'Camera_Beat_6_DoctorOffice',
+]
 const STOP_DURATIONS = [1.2, 1.5, 0.6, 3.0, 1.5]
 const TAIL_DURATION = 0.5
 
@@ -92,6 +102,27 @@ let waypoints: SplineObject[] = []
 let scrollTimeline: gsap.core.Timeline | null = null
 let scrollTrigger: ScrollTrigger | null = null
 let watermarkObserver: MutationObserver | null = null
+let finalTargetOverride: { position: { x: number, y: number, z: number }, rotation: { x: number, y: number, z: number } } | null = null
+
+function computeFinalTargetFromAvatars(doctor: SplineObject, patient: SplineObject) {
+  const dp = doctor.position
+  const pp = patient.position
+  const midX = (dp.x + pp.x) / 2
+  const midY = Math.max(dp.y, pp.y) + 10
+  const midZ = (dp.z + pp.z) / 2
+  const BACK = 260
+  const camY = 175
+  const camX = midX
+  const camZ = midZ + BACK
+  const dy = midY - camY
+  const dz = midZ - camZ
+  const pitch = Math.atan2(dy, Math.hypot(0, dz))
+  finalTargetOverride = {
+    position: { x: camX, y: camY, z: camZ },
+    rotation: { x: pitch, y: 0, z: 0 },
+  }
+  console.log('[clinic-journey] final waypoint auto-framed on avatars:', finalTargetOverride)
+}
 
 function isSplineBadge(el: Element): boolean {
   if (el.tagName === 'A') {
@@ -186,8 +217,21 @@ async function initSpline() {
     }
 
     waypoints = []
-    for (const name of WAYPOINT_NAMES) {
-      const obj = anyApp.findObjectByName?.(name)
+    const lastIdx = WAYPOINT_NAMES.length - 1
+    for (let i = 0; i < WAYPOINT_NAMES.length; i++) {
+      const name = WAYPOINT_NAMES[i]
+      let obj = anyApp.findObjectByName?.(name)
+      if (!obj && i === lastIdx) {
+        for (const alt of DOCTOR_FINAL_CANDIDATES) {
+          if (alt === name) continue
+          const candidate = anyApp.findObjectByName?.(alt)
+          if (candidate) {
+            console.warn(`[clinic-journey] final waypoint '${name}' missing — falling back to '${alt}'`)
+            obj = candidate
+            break
+          }
+        }
+      }
       if (obj) waypoints.push(obj)
       else console.warn('[clinic-journey] waypoint missing:', name)
     }
@@ -195,6 +239,31 @@ async function initSpline() {
       sceneError.value = `Missing waypoints (${waypoints.length}/${WAYPOINT_NAMES.length})`
       return
     }
+    console.group('[clinic-journey] waypoint diagnostics')
+    waypoints.forEach((wp, i) => {
+      const p = wp.position
+      const r = wp.rotation
+      console.log(`  ${i} ${WAYPOINT_NAMES[i]}:`, {
+        pos: p && { x: p.x?.toFixed(1), y: p.y?.toFixed(1), z: p.z?.toFixed(1) },
+        rot: r && { x: r.x?.toFixed(3), y: r.y?.toFixed(3), z: r.z?.toFixed(3) },
+      })
+    })
+    const candidateFinals = ['Camera_Beat_4_DoctorOffice', 'Camera_Beat_Doctor', 'Camera_Doctor', 'Camera_Final', 'Camera_End', 'Camera_Beat_6_Pullback']
+    for (const n of candidateFinals) {
+      const obj = anyApp.findObjectByName?.(n)
+      if (obj) console.log(`  CANDIDATE final ${n}:`, {
+        pos: obj.position && { x: obj.position.x?.toFixed(1), y: obj.position.y?.toFixed(1), z: obj.position.z?.toFixed(1) },
+        rot: obj.rotation && { x: obj.rotation.x?.toFixed(3), y: obj.rotation.y?.toFixed(3), z: obj.rotation.z?.toFixed(3) },
+      })
+    }
+    const doctor = anyApp.findObjectByName?.('Avatar_Doctor')
+    const patient = anyApp.findObjectByName?.('Avatar_Patient')
+    if (doctor) console.log('  Avatar_Doctor pos:', doctor.position && { x: doctor.position.x?.toFixed(1), y: doctor.position.y?.toFixed(1), z: doctor.position.z?.toFixed(1) })
+    if (patient) console.log('  Avatar_Patient pos:', patient.position && { x: patient.position.x?.toFixed(1), y: patient.position.y?.toFixed(1), z: patient.position.z?.toFixed(1) })
+    console.groupEnd()
+
+    finalTargetOverride = null
+    if (doctor && patient) computeFinalTargetFromAvatars(doctor, patient)
 
     buildScrollTimeline()
     startWatermarkObserver()
@@ -238,11 +307,16 @@ function buildScrollTimeline() {
   scrollTrigger = scrollTimeline.scrollTrigger as ScrollTrigger
 
   const stops = waypoints.slice(1)
+  const lastIdx = stops.length - 1
   stops.forEach((s, idx) => {
     const dur = STOP_DURATIONS[idx] ?? 1
-    scrollTimeline!.to(splineCamera!.position, { x: s.position.x, y: s.position.y, z: s.position.z, duration: dur })
-    if (s.rotation && splineCamera!.rotation) {
-      scrollTimeline!.to(splineCamera!.rotation, { x: s.rotation.x, y: s.rotation.y, z: s.rotation.z, duration: dur }, '<')
+    const isLast = idx === lastIdx
+    const target = isLast && finalTargetOverride
+      ? finalTargetOverride
+      : { position: { x: s.position.x, y: s.position.y, z: s.position.z }, rotation: s.rotation ? { x: s.rotation.x, y: s.rotation.y, z: s.rotation.z } : null }
+    scrollTimeline!.to(splineCamera!.position, { x: target.position.x, y: target.position.y, z: target.position.z, duration: dur })
+    if (target.rotation && splineCamera!.rotation) {
+      scrollTimeline!.to(splineCamera!.rotation, { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z, duration: dur }, '<')
     }
   })
   scrollTimeline!.to({}, { duration: TAIL_DURATION })
