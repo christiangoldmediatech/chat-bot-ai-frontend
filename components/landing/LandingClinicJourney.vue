@@ -10,6 +10,14 @@ if (import.meta.client) {
   gsap.registerPlugin(ScrollTrigger)
 }
 
+useHead({
+  link: [
+    { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+    { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+    { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap' },
+  ],
+})
+
 let lenis: Lenis | null = null
 let lenisRaf: ((time: number) => void) | null = null
 
@@ -441,6 +449,7 @@ onMounted(() => {
         <aside v-if="activeFrameData && !showFinalCta" class="clinic-journey__card" :class="{ 'clinic-journey__card--featured': activeFrameData.highlight === 'featured' }">
           <span class="clinic-journey__card-halo" aria-hidden="true" />
           <div class="clinic-journey__card-shell">
+            <span class="clinic-journey__card-sheen" aria-hidden="true" />
             <span class="clinic-journey__card-corner clinic-journey__card-corner--tl" />
             <span class="clinic-journey__card-corner clinic-journey__card-corner--tr" />
             <span class="clinic-journey__card-corner clinic-journey__card-corner--bl" />
@@ -449,10 +458,15 @@ onMounted(() => {
               <span class="clinic-journey__card-rail-dot" />
             </span>
             <div class="clinic-journey__card-inner">
+              <span class="clinic-journey__card-sigil" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </span>
               <p class="clinic-journey__card-eyebrow" style="--d: 0.08s">
                 <span class="clinic-journey__card-live">
                   <span class="clinic-journey__card-dot" />
-                  LIVE
+                  <span class="clinic-journey__card-live-text">LIVE</span>
                 </span>
                 <span class="clinic-journey__card-ebsep">·</span>
                 <span class="clinic-journey__card-ebtext">{{ $t('landing.frames.progress', { current: activeFrameNumber, total: FRAME_PROGRESS_RANGES.length }) }}</span>
@@ -460,6 +474,7 @@ onMounted(() => {
               </p>
               <h3 class="clinic-journey__card-title" style="--d: 0.14s">{{ $t(activeFrameData.titleKey) }}</h3>
               <p v-if="activeFrameData.subtitleKey" class="clinic-journey__card-sub" style="--d: 0.2s">{{ $t(activeFrameData.subtitleKey) }}</p>
+              <div v-if="activeFrameData.bulletKeys.length" class="clinic-journey__card-divider" style="--d: 0.24s" aria-hidden="true" />
               <ul v-if="activeFrameData.bulletKeys.length" class="clinic-journey__card-bullets">
                 <li v-for="(k, idx) in activeFrameData.bulletKeys" :key="k" :style="{ '--d': `${0.28 + idx * 0.07}s` }">
                   <span class="clinic-journey__card-bulletmark">▸</span>
@@ -479,6 +494,11 @@ onMounted(() => {
                   <span>[</span><span class="clinic-journey__card-cta-glyph">→</span><span>]</span>
                 </span>
               </a>
+              <div class="clinic-journey__card-progress" aria-hidden="true">
+                <span class="clinic-journey__card-progress-track">
+                  <span class="clinic-journey__card-progress-fill" :style="{ width: `${(activeFrameNumber / FRAME_PROGRESS_RANGES.length) * 100}%` }" />
+                </span>
+              </div>
             </div>
           </div>
         </aside>
@@ -851,59 +871,127 @@ onMounted(() => {
   position: absolute;
   top: clamp(24px, 6vh, 56px);
   left: clamp(20px, 4vw, 48px);
-  width: min(420px, 40vw);
+  width: min(440px, 42vw);
   z-index: 12;
   pointer-events: auto;
   isolation: isolate;
   animation: card-breathe 6s ease-in-out infinite;
+  perspective: 1200px;
 }
 .clinic-journey__card-halo {
   position: absolute;
-  inset: -40px -60px -40px -30px;
+  inset: -60px -80px -50px -40px;
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 55% 55% at 20% 30%, rgba(91, 233, 236, 0.22), transparent 60%),
-    radial-gradient(ellipse 50% 60% at 70% 80%, rgba(26, 155, 184, 0.18), transparent 60%);
-  filter: blur(18px);
-  opacity: 0.9;
+    radial-gradient(ellipse 55% 55% at 18% 25%, rgba(91, 233, 236, 0.32), transparent 65%),
+    radial-gradient(ellipse 50% 60% at 75% 80%, rgba(26, 155, 184, 0.22), transparent 65%),
+    radial-gradient(ellipse 30% 40% at 90% 15%, rgba(217, 168, 86, 0.14), transparent 70%);
+  filter: blur(22px);
+  opacity: 0.95;
+  animation: halo-drift 9s ease-in-out infinite;
 }
 .clinic-journey__card--featured .clinic-journey__card-halo {
   background:
-    radial-gradient(ellipse 55% 55% at 20% 30%, rgba(255, 213, 128, 0.28), transparent 60%),
-    radial-gradient(ellipse 50% 60% at 70% 80%, rgba(217, 168, 86, 0.2), transparent 60%);
+    radial-gradient(ellipse 55% 55% at 18% 25%, rgba(255, 213, 128, 0.38), transparent 65%),
+    radial-gradient(ellipse 50% 60% at 75% 80%, rgba(217, 168, 86, 0.25), transparent 65%),
+    radial-gradient(ellipse 30% 40% at 90% 15%, rgba(91, 233, 236, 0.18), transparent 70%);
+}
+@keyframes halo-drift {
+  0%, 100% { transform: translate(0, 0); opacity: 0.9; }
+  50% { transform: translate(6px, -4px); opacity: 1; }
 }
 .clinic-journey__card-shell {
   position: relative;
   border-radius: 6px;
   padding: 1px;
   background:
-    conic-gradient(from 140deg, rgba(91, 233, 236, 0.1) 0deg, rgba(91, 233, 236, 0.65) 60deg, rgba(26, 155, 184, 0.25) 160deg, rgba(10, 20, 32, 0.05) 240deg, rgba(91, 233, 236, 0.55) 320deg, rgba(91, 233, 236, 0.1) 360deg);
+    conic-gradient(from var(--shell-angle, 140deg),
+      rgba(91, 233, 236, 0.12) 0deg,
+      rgba(91, 233, 236, 0.75) 55deg,
+      rgba(26, 155, 184, 0.3) 155deg,
+      rgba(10, 20, 32, 0.08) 235deg,
+      rgba(91, 233, 236, 0.65) 315deg,
+      rgba(91, 233, 236, 0.12) 360deg);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 30px 60px -28px rgba(10, 20, 32, 0.6),
-    0 2px 6px -2px rgba(10, 20, 32, 0.3);
+    0 1px 0 rgba(255, 255, 255, 0.65) inset,
+    0 36px 72px -32px rgba(10, 20, 32, 0.65),
+    0 10px 22px -10px rgba(26, 155, 184, 0.28),
+    0 2px 6px -2px rgba(10, 20, 32, 0.35);
   overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease;
+  animation: shell-spin 12s linear infinite;
 }
 .clinic-journey__card--featured .clinic-journey__card-shell {
   background:
-    conic-gradient(from 140deg, rgba(255, 213, 128, 0.15) 0deg, rgba(255, 213, 128, 0.8) 60deg, rgba(217, 168, 86, 0.3) 160deg, rgba(10, 20, 32, 0.05) 240deg, rgba(255, 213, 128, 0.65) 320deg, rgba(255, 213, 128, 0.15) 360deg);
+    conic-gradient(from var(--shell-angle, 140deg),
+      rgba(255, 213, 128, 0.15) 0deg,
+      rgba(255, 213, 128, 0.85) 55deg,
+      rgba(217, 168, 86, 0.35) 155deg,
+      rgba(10, 20, 32, 0.08) 235deg,
+      rgba(255, 213, 128, 0.7) 315deg,
+      rgba(255, 213, 128, 0.15) 360deg);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 36px 72px -30px rgba(74, 54, 16, 0.5),
+    0 10px 24px -10px rgba(217, 168, 86, 0.4),
+    0 2px 6px -2px rgba(10, 20, 32, 0.3);
+}
+@property --shell-angle {
+  syntax: '<angle>';
+  initial-value: 140deg;
+  inherits: false;
+}
+@keyframes shell-spin {
+  to { --shell-angle: 500deg; }
+}
+.clinic-journey__card-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.35) 50%, transparent 62%);
+  transform: translateX(-120%);
+  mix-blend-mode: overlay;
+}
+@media (hover: hover) {
+  .clinic-journey__card:hover .clinic-journey__card-shell {
+    transform: rotateX(1.2deg) rotateY(-1.4deg) translateY(-2px);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      0 44px 88px -30px rgba(10, 20, 32, 0.7),
+      0 16px 32px -10px rgba(26, 155, 184, 0.38),
+      0 2px 6px -2px rgba(10, 20, 32, 0.35);
+  }
+  .clinic-journey__card:hover .clinic-journey__card-sheen {
+    transform: translateX(120%);
+    transition: transform 1.1s cubic-bezier(0.23, 1, 0.32, 1);
+  }
 }
 .clinic-journey__card-inner {
   position: relative;
-  padding: 26px 28px 24px 34px;
+  padding: 28px 30px 24px 36px;
   border-radius: 5px;
   background:
-    linear-gradient(180deg, rgba(250, 252, 253, 0.98) 0%, rgba(238, 244, 248, 0.96) 100%);
+    radial-gradient(ellipse 100% 70% at 0% 100%, rgba(91, 233, 236, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 100% 0%, rgba(217, 168, 86, 0.06) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(252, 253, 254, 0.98) 0%, rgba(236, 243, 247, 0.96) 100%);
   overflow: hidden;
+}
+.clinic-journey__card--featured .clinic-journey__card-inner {
+  background:
+    radial-gradient(ellipse 100% 70% at 0% 100%, rgba(255, 213, 128, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 100% 0%, rgba(91, 233, 236, 0.08) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(254, 251, 244, 0.98) 0%, rgba(247, 240, 226, 0.96) 100%);
 }
 .clinic-journey__card-inner::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, rgba(26, 155, 184, 0.14) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(26, 155, 184, 0.15) 1px, transparent 1px);
   background-size: 18px 18px;
-  mask-image: radial-gradient(ellipse at 90% 5%, rgba(0, 0, 0, 0.3), transparent 65%);
+  mask-image: radial-gradient(ellipse at 90% 5%, rgba(0, 0, 0, 0.4), transparent 65%);
   pointer-events: none;
   z-index: 0;
 }
@@ -918,6 +1006,35 @@ onMounted(() => {
   z-index: 0;
 }
 .clinic-journey__card-inner > * { position: relative; z-index: 1; }
+
+.clinic-journey__card-sigil {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: none;
+}
+.clinic-journey__card-sigil span {
+  display: block;
+  height: 2px;
+  background: #1a9bb8;
+  border-radius: 1px;
+  box-shadow: 0 0 6px rgba(91, 233, 236, 0.6);
+  animation: sigil-swell 2.4s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+}
+.clinic-journey__card-sigil span:nth-child(1) { width: 22px; animation-delay: 0s; }
+.clinic-journey__card-sigil span:nth-child(2) { width: 14px; animation-delay: 0.18s; }
+.clinic-journey__card-sigil span:nth-child(3) { width: 18px; animation-delay: 0.36s; }
+.clinic-journey__card--featured .clinic-journey__card-sigil span {
+  background: #d9a856;
+  box-shadow: 0 0 6px rgba(255, 213, 128, 0.65);
+}
+@keyframes sigil-swell {
+  0%, 100% { opacity: 0.55; transform: scaleX(1); }
+  50% { opacity: 1; transform: scaleX(1.15); }
+}
 
 .clinic-journey__card-corner {
   position: absolute;
@@ -988,6 +1105,7 @@ onMounted(() => {
 .clinic-journey__card-eyebrow,
 .clinic-journey__card-title,
 .clinic-journey__card-sub,
+.clinic-journey__card-divider,
 .clinic-journey__card-bullets li,
 .clinic-journey__card-cta {
   opacity: 0;
@@ -1011,18 +1129,37 @@ onMounted(() => {
   color: #0d7a93;
 }
 .clinic-journey__card-live {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 3px 8px 3px 6px;
+  padding: 4px 10px 4px 7px;
   border-radius: 3px;
-  background: rgba(10, 20, 32, 0.92);
+  background: linear-gradient(135deg, #050c15 0%, #122838 100%);
   color: #5BE9EC;
   font-weight: 700;
   font-size: 0.62rem;
-  letter-spacing: 0.26em;
+  letter-spacing: 0.28em;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(91, 233, 236, 0.3) inset, 0 4px 10px -4px rgba(10, 20, 32, 0.6);
 }
-.clinic-journey__card--featured .clinic-journey__card-live { color: #ffd580; }
+.clinic-journey__card-live::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(91, 233, 236, 0.45) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: live-shimmer 2.8s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+}
+.clinic-journey__card-live-text { position: relative; z-index: 1; }
+.clinic-journey__card--featured .clinic-journey__card-live { color: #ffd580; box-shadow: 0 0 0 1px rgba(255, 213, 128, 0.35) inset, 0 4px 10px -4px rgba(74, 54, 16, 0.5); }
+.clinic-journey__card--featured .clinic-journey__card-live::before {
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 213, 128, 0.45) 50%, transparent 70%);
+}
+@keyframes live-shimmer {
+  0% { transform: translateX(-100%); }
+  40%, 100% { transform: translateX(100%); }
+}
 .clinic-journey__card-ebsep { color: rgba(13, 122, 147, 0.4); }
 .clinic-journey__card-ebtext { color: #0a1420; font-weight: 600; }
 .clinic-journey__card-ebtag { color: rgba(13, 122, 147, 0.55); font-weight: 500; margin-left: auto; }
@@ -1056,11 +1193,11 @@ onMounted(() => {
 }
 
 .clinic-journey__card-title {
-  margin: 0 0 10px;
-  font-family: Archivo, system-ui, sans-serif;
-  font-weight: 600;
-  font-size: clamp(1.3rem, 1.7vw, 1.6rem);
-  line-height: 1.15;
+  margin: 0 0 12px;
+  font-family: 'Instrument Serif', 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.7rem, 2.3vw, 2.15rem);
+  line-height: 1.08;
   color: #050c15;
   letter-spacing: -0.02em;
   background: linear-gradient(180deg, #050c15 0%, #1a2b3e 100%);
@@ -1073,6 +1210,44 @@ onMounted(() => {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+.clinic-journey__card-divider {
+  height: 1px;
+  margin: 14px 0 14px;
+  background: linear-gradient(90deg, transparent, rgba(26, 155, 184, 0.55) 15%, rgba(26, 155, 184, 0.55) 85%, transparent);
+}
+.clinic-journey__card--featured .clinic-journey__card-divider {
+  background: linear-gradient(90deg, transparent, rgba(217, 168, 86, 0.6) 15%, rgba(217, 168, 86, 0.6) 85%, transparent);
+}
+
+.clinic-journey__card-progress {
+  position: absolute;
+  bottom: 0;
+  left: 1px;
+  right: 1px;
+  height: 3px;
+  z-index: 2;
+  pointer-events: none;
+}
+.clinic-journey__card-progress-track {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(26, 155, 184, 0.14), rgba(26, 155, 184, 0.14));
+  overflow: hidden;
+}
+.clinic-journey__card-progress-fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #1a9bb8 0%, #5BE9EC 100%);
+  box-shadow: 0 0 10px rgba(91, 233, 236, 0.65);
+  transition: width 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.clinic-journey__card--featured .clinic-journey__card-progress-track {
+  background: rgba(217, 168, 86, 0.16);
+}
+.clinic-journey__card--featured .clinic-journey__card-progress-fill {
+  background: linear-gradient(90deg, #d9a856 0%, #ffd580 100%);
+  box-shadow: 0 0 10px rgba(255, 213, 128, 0.7);
 }
 .clinic-journey__card-sub {
   margin: 0 0 18px;
@@ -1189,13 +1364,18 @@ onMounted(() => {
 
 @media (prefers-reduced-motion: reduce) {
   .clinic-journey__card,
+  .clinic-journey__card-shell,
+  .clinic-journey__card-halo,
   .clinic-journey__card-rail-dot,
-  .clinic-journey__card-dot::before {
+  .clinic-journey__card-dot::before,
+  .clinic-journey__card-live::before,
+  .clinic-journey__card-sigil span {
     animation: none !important;
   }
   .clinic-journey__card-eyebrow,
   .clinic-journey__card-title,
   .clinic-journey__card-sub,
+  .clinic-journey__card-divider,
   .clinic-journey__card-bullets li,
   .clinic-journey__card-cta {
     opacity: 1 !important;
@@ -1233,9 +1413,15 @@ onMounted(() => {
     right: 12px;
     width: auto;
   }
-  .clinic-journey__card-inner { padding: 18px 18px 16px; }
-  .clinic-journey__card-title { font-size: 1.1rem; }
+  .clinic-journey__card-inner { padding: 22px 20px 18px 26px; }
+  .clinic-journey__card-title { font-size: 1.45rem; line-height: 1.1; }
   .clinic-journey__card-sub, .clinic-journey__card-bullets li { font-size: 0.82rem; }
+  .clinic-journey__card-sigil { top: 14px; right: 16px; gap: 3px; }
+  .clinic-journey__card-sigil span { height: 1.5px; }
+  .clinic-journey__card-sigil span:nth-child(1) { width: 16px; }
+  .clinic-journey__card-sigil span:nth-child(2) { width: 10px; }
+  .clinic-journey__card-sigil span:nth-child(3) { width: 13px; }
+  .clinic-journey__card-divider { margin: 10px 0; }
   .clinic-journey__brand {
     bottom: auto;
     top: 12px;
