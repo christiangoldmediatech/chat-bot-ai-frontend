@@ -331,10 +331,13 @@ onMounted(() => {
   reducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   if (reducedMotion.value) return
 
+  const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches
+
   lenis = new Lenis({
     duration: 1.1,
     easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     smoothWheel: true,
+    touchMultiplier: isCoarsePointer ? 2 : 1,
   })
   lenis.on('scroll', ScrollTrigger.update)
   lenisRaf = (time: number) => lenis?.raf(time * 1000)
@@ -546,6 +549,8 @@ onMounted(() => {
   height: 100%;
   display: block;
   cursor: pointer;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
 }
 .clinic-journey__brand {
   position: absolute;
@@ -1219,6 +1224,8 @@ onMounted(() => {
 @media (max-width: 720px) {
   .clinic-journey__progress { display: none; }
   .clinic-journey__counter { font-size: 0.7rem; }
+  .clinic-journey__nav { bottom: 14px; right: 14px; gap: 6px; }
+  .clinic-journey__nav-btn { width: 36px; height: 36px; font-size: 1.25rem; }
   .clinic-journey__card {
     top: auto;
     bottom: 80px;
@@ -1229,6 +1236,18 @@ onMounted(() => {
   .clinic-journey__card-inner { padding: 18px 18px 16px; }
   .clinic-journey__card-title { font-size: 1.1rem; }
   .clinic-journey__card-sub, .clinic-journey__card-bullets li { font-size: 0.82rem; }
+  .clinic-journey__brand {
+    bottom: auto;
+    top: 12px;
+    right: 12px;
+    padding: 7px 12px;
+    min-width: 0;
+    font-size: 0.56rem;
+    letter-spacing: 0.2em;
+    border-radius: 999px;
+    border: 1px solid rgba(91, 233, 236, 0.4);
+  }
+  .clinic-journey__agenda-badge { font-size: 0.6rem; padding: 7px 14px; }
 }
 </style>
 
