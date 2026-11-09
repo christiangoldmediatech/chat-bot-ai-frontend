@@ -342,35 +342,47 @@ onMounted(() => {
 
       <Transition name="cj-card">
         <aside v-if="activeFrameData && !showFinalCta" class="clinic-journey__card" :class="{ 'clinic-journey__card--featured': activeFrameData.highlight === 'featured' }">
-          <span class="clinic-journey__card-corner clinic-journey__card-corner--tl" />
-          <span class="clinic-journey__card-corner clinic-journey__card-corner--tr" />
-          <span class="clinic-journey__card-corner clinic-journey__card-corner--bl" />
-          <span class="clinic-journey__card-corner clinic-journey__card-corner--br" />
-          <span class="clinic-journey__card-scanner" />
-          <div class="clinic-journey__card-inner">
-            <p class="clinic-journey__card-eyebrow">
-              <span class="clinic-journey__card-dot" />
-              <span class="clinic-journey__card-ebtext">{{ $t('landing.frames.progress', { current: activeFrameNumber, total: FRAME_PROGRESS_RANGES.length }) }}</span>
-              <span class="clinic-journey__card-ebtag">· LURVIAX</span>
-            </p>
-            <h3 class="clinic-journey__card-title">{{ $t(activeFrameData.titleKey) }}</h3>
-            <p v-if="activeFrameData.subtitleKey" class="clinic-journey__card-sub">{{ $t(activeFrameData.subtitleKey) }}</p>
-            <ul v-if="activeFrameData.bulletKeys.length" class="clinic-journey__card-bullets">
-              <li v-for="(k, idx) in activeFrameData.bulletKeys" :key="k" :style="{ '--i': idx }">
-                <span class="clinic-journey__card-bulletmark" />
-                <span>{{ $t(k) }}</span>
-              </li>
-            </ul>
-            <a
-              v-if="activeFrameData.cta"
-              :href="activeFrameData.cta.href"
-              target="_blank"
-              rel="noreferrer noopener"
-              class="clinic-journey__card-cta"
-            >
-              <span>{{ $t(activeFrameData.cta.labelKey) }}</span>
-              <span class="clinic-journey__card-cta-arrow">→</span>
-            </a>
+          <span class="clinic-journey__card-halo" aria-hidden="true" />
+          <div class="clinic-journey__card-shell">
+            <span class="clinic-journey__card-corner clinic-journey__card-corner--tl" />
+            <span class="clinic-journey__card-corner clinic-journey__card-corner--tr" />
+            <span class="clinic-journey__card-corner clinic-journey__card-corner--bl" />
+            <span class="clinic-journey__card-corner clinic-journey__card-corner--br" />
+            <span class="clinic-journey__card-rail" aria-hidden="true">
+              <span class="clinic-journey__card-rail-dot" />
+            </span>
+            <div class="clinic-journey__card-inner">
+              <p class="clinic-journey__card-eyebrow" style="--d: 0.08s">
+                <span class="clinic-journey__card-live">
+                  <span class="clinic-journey__card-dot" />
+                  LIVE
+                </span>
+                <span class="clinic-journey__card-ebsep">·</span>
+                <span class="clinic-journey__card-ebtext">{{ $t('landing.frames.progress', { current: activeFrameNumber, total: FRAME_PROGRESS_RANGES.length }) }}</span>
+                <span class="clinic-journey__card-ebtag">LURVIAX</span>
+              </p>
+              <h3 class="clinic-journey__card-title" style="--d: 0.14s">{{ $t(activeFrameData.titleKey) }}</h3>
+              <p v-if="activeFrameData.subtitleKey" class="clinic-journey__card-sub" style="--d: 0.2s">{{ $t(activeFrameData.subtitleKey) }}</p>
+              <ul v-if="activeFrameData.bulletKeys.length" class="clinic-journey__card-bullets">
+                <li v-for="(k, idx) in activeFrameData.bulletKeys" :key="k" :style="{ '--d': `${0.28 + idx * 0.07}s` }">
+                  <span class="clinic-journey__card-bulletmark">▸</span>
+                  <span>{{ $t(k) }}</span>
+                </li>
+              </ul>
+              <a
+                v-if="activeFrameData.cta"
+                :href="activeFrameData.cta.href"
+                target="_blank"
+                rel="noreferrer noopener"
+                class="clinic-journey__card-cta"
+                :style="{ '--d': `${0.3 + activeFrameData.bulletKeys.length * 0.07}s` }"
+              >
+                <span>{{ $t(activeFrameData.cta.labelKey) }}</span>
+                <span class="clinic-journey__card-cta-arrow">
+                  <span>[</span><span class="clinic-journey__card-cta-glyph">→</span><span>]</span>
+                </span>
+              </a>
+            </div>
           </div>
         </aside>
       </Transition>
@@ -678,45 +690,69 @@ onMounted(() => {
   position: absolute;
   top: clamp(24px, 6vh, 56px);
   left: clamp(20px, 4vw, 48px);
-  width: min(400px, 40vw);
+  width: min(420px, 40vw);
   z-index: 12;
   pointer-events: auto;
-  border-radius: 4px;
+  isolation: isolate;
+  animation: card-breathe 6s ease-in-out infinite;
+}
+.clinic-journey__card-halo {
+  position: absolute;
+  inset: -40px -60px -40px -30px;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 55% at 20% 30%, rgba(91, 233, 236, 0.22), transparent 60%),
+    radial-gradient(ellipse 50% 60% at 70% 80%, rgba(26, 155, 184, 0.18), transparent 60%);
+  filter: blur(18px);
+  opacity: 0.9;
+}
+.clinic-journey__card--featured .clinic-journey__card-halo {
+  background:
+    radial-gradient(ellipse 55% 55% at 20% 30%, rgba(255, 213, 128, 0.28), transparent 60%),
+    radial-gradient(ellipse 50% 60% at 70% 80%, rgba(217, 168, 86, 0.2), transparent 60%);
+}
+.clinic-journey__card-shell {
+  position: relative;
+  border-radius: 6px;
   padding: 1px;
   background:
-    linear-gradient(140deg, rgba(91, 233, 236, 0.55) 0%, rgba(26, 155, 184, 0.28) 32%, rgba(10, 20, 32, 0.05) 60%, rgba(26, 155, 184, 0.45) 100%);
+    conic-gradient(from 140deg, rgba(91, 233, 236, 0.1) 0deg, rgba(91, 233, 236, 0.65) 60deg, rgba(26, 155, 184, 0.25) 160deg, rgba(10, 20, 32, 0.05) 240deg, rgba(91, 233, 236, 0.55) 320deg, rgba(91, 233, 236, 0.1) 360deg);
   box-shadow:
-    0 30px 60px -28px rgba(10, 20, 32, 0.55),
-    0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 60px -20px rgba(91, 233, 236, 0.35);
-  isolation: isolate;
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 30px 60px -28px rgba(10, 20, 32, 0.6),
+    0 2px 6px -2px rgba(10, 20, 32, 0.3);
   overflow: hidden;
 }
-.clinic-journey__card--featured {
+.clinic-journey__card--featured .clinic-journey__card-shell {
   background:
-    linear-gradient(140deg, rgba(255, 213, 128, 0.7) 0%, rgba(217, 168, 86, 0.35) 40%, rgba(26, 155, 184, 0.2) 70%, rgba(217, 168, 86, 0.55) 100%);
-  box-shadow:
-    0 30px 60px -28px rgba(10, 20, 32, 0.55),
-    0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 60px -14px rgba(217, 168, 86, 0.5);
+    conic-gradient(from 140deg, rgba(255, 213, 128, 0.15) 0deg, rgba(255, 213, 128, 0.8) 60deg, rgba(217, 168, 86, 0.3) 160deg, rgba(10, 20, 32, 0.05) 240deg, rgba(255, 213, 128, 0.65) 320deg, rgba(255, 213, 128, 0.15) 360deg);
 }
 .clinic-journey__card-inner {
   position: relative;
-  padding: 24px 26px 22px;
-  border-radius: 3px;
+  padding: 26px 28px 24px 34px;
+  border-radius: 5px;
   background:
-    linear-gradient(180deg, rgba(248, 252, 253, 0.97) 0%, rgba(235, 243, 247, 0.94) 100%);
+    linear-gradient(180deg, rgba(250, 252, 253, 0.98) 0%, rgba(238, 244, 248, 0.96) 100%);
   overflow: hidden;
 }
 .clinic-journey__card-inner::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(26, 155, 184, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(26, 155, 184, 0.06) 1px, transparent 1px);
-  background-size: 24px 24px;
-  mask-image: radial-gradient(ellipse at top right, rgba(0, 0, 0, 0.4), transparent 70%);
+  background-image: radial-gradient(circle, rgba(26, 155, 184, 0.14) 1px, transparent 1px);
+  background-size: 18px 18px;
+  mask-image: radial-gradient(ellipse at 90% 5%, rgba(0, 0, 0, 0.3), transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+.clinic-journey__card-inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.05 0 0 0 0 0.12 0 0 0 0 0.16 0 0 0 0.6 0'/></filter><rect width='120' height='120' filter='url(%23n)' opacity='0.35'/></svg>");
+  opacity: 0.12;
+  mix-blend-mode: multiply;
   pointer-events: none;
   z-index: 0;
 }
@@ -724,83 +760,137 @@ onMounted(() => {
 
 .clinic-journey__card-corner {
   position: absolute;
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid #1a9bb8;
+  width: 16px;
+  height: 16px;
   z-index: 3;
   pointer-events: none;
-  box-shadow: 0 0 8px rgba(91, 233, 236, 0.4);
 }
-.clinic-journey__card-corner--tl { top: 0; left: 0; border-right: 0; border-bottom: 0; border-top-left-radius: 4px; }
-.clinic-journey__card-corner--tr { top: 0; right: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 4px; }
-.clinic-journey__card-corner--bl { bottom: 0; left: 0; border-right: 0; border-top: 0; border-bottom-left-radius: 4px; }
-.clinic-journey__card-corner--br { bottom: 0; right: 0; border-left: 0; border-top: 0; border-bottom-right-radius: 4px; }
-.clinic-journey__card--featured .clinic-journey__card-corner {
-  border-color: #d9a856;
-  box-shadow: 0 0 10px rgba(255, 213, 128, 0.55);
+.clinic-journey__card-corner::before,
+.clinic-journey__card-corner::after {
+  content: '';
+  position: absolute;
+  background: #1a9bb8;
+  box-shadow: 0 0 6px rgba(91, 233, 236, 0.5);
+}
+.clinic-journey__card-corner::before { width: 100%; height: 1.5px; }
+.clinic-journey__card-corner::after { width: 1.5px; height: 100%; }
+.clinic-journey__card-corner--tl::before { top: 0; left: 0; }
+.clinic-journey__card-corner--tl::after { top: 0; left: 0; }
+.clinic-journey__card-corner--tr::before { top: 0; right: 0; }
+.clinic-journey__card-corner--tr::after { top: 0; right: 0; }
+.clinic-journey__card-corner--bl::before { bottom: 0; left: 0; }
+.clinic-journey__card-corner--bl::after { bottom: 0; left: 0; }
+.clinic-journey__card-corner--br::before { bottom: 0; right: 0; }
+.clinic-journey__card-corner--br::after { bottom: 0; right: 0; }
+.clinic-journey__card--featured .clinic-journey__card-corner::before,
+.clinic-journey__card--featured .clinic-journey__card-corner::after {
+  background: #d9a856;
+  box-shadow: 0 0 8px rgba(255, 213, 128, 0.7);
 }
 
-.clinic-journey__card-scanner {
+.clinic-journey__card-rail {
   position: absolute;
-  inset: 1px 1px auto 1px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #5BE9EC 50%, transparent);
-  opacity: 0.8;
-  z-index: 3;
-  animation: card-scanner 3.6s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+  left: 14px;
+  top: 28px;
+  bottom: 28px;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(26, 155, 184, 0.35) 15%, rgba(26, 155, 184, 0.35) 85%, transparent);
+  z-index: 2;
   pointer-events: none;
+  overflow: hidden;
 }
-.clinic-journey__card--featured .clinic-journey__card-scanner {
-  background: linear-gradient(90deg, transparent, #ffd580 50%, transparent);
+.clinic-journey__card-rail-dot {
+  position: absolute;
+  left: -2px;
+  top: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #5BE9EC;
+  box-shadow: 0 0 8px #5BE9EC, 0 0 16px rgba(91, 233, 236, 0.6);
+  animation: rail-travel 3.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
-@keyframes card-scanner {
-  0% { transform: translateY(0); opacity: 0; }
-  10% { opacity: 0.85; }
-  45% { transform: translateY(240px); opacity: 0.5; }
-  80% { opacity: 0; }
-  100% { transform: translateY(0); opacity: 0; }
+.clinic-journey__card--featured .clinic-journey__card-rail {
+  background: linear-gradient(180deg, transparent, rgba(217, 168, 86, 0.35) 15%, rgba(217, 168, 86, 0.35) 85%, transparent);
+}
+.clinic-journey__card--featured .clinic-journey__card-rail-dot {
+  background: #ffd580;
+  box-shadow: 0 0 8px #ffd580, 0 0 16px rgba(255, 213, 128, 0.65);
+}
+@keyframes rail-travel {
+  0% { transform: translateY(-10px); opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { transform: translateY(calc(100% + 10px)); opacity: 0; }
+}
+
+.clinic-journey__card-eyebrow,
+.clinic-journey__card-title,
+.clinic-journey__card-sub,
+.clinic-journey__card-bullets li,
+.clinic-journey__card-cta {
+  opacity: 0;
+  transform: translateY(6px);
+  animation: content-in 0.55s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation-delay: var(--d, 0s);
+}
+@keyframes content-in {
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .clinic-journey__card-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin: 0 0 14px;
+  margin: 0 0 16px;
   font-family: 'Chivo Mono', ui-monospace, monospace;
   font-size: 0.66rem;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #0d7a93;
 }
+.clinic-journey__card-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px 3px 6px;
+  border-radius: 3px;
+  background: rgba(10, 20, 32, 0.92);
+  color: #5BE9EC;
+  font-weight: 700;
+  font-size: 0.62rem;
+  letter-spacing: 0.26em;
+}
+.clinic-journey__card--featured .clinic-journey__card-live { color: #ffd580; }
+.clinic-journey__card-ebsep { color: rgba(13, 122, 147, 0.4); }
 .clinic-journey__card-ebtext { color: #0a1420; font-weight: 600; }
-.clinic-journey__card-ebtag { color: rgba(13, 122, 147, 0.55); font-weight: 500; }
-.clinic-journey__card--featured .clinic-journey__card-ebtext { color: #7a5a1e; }
-.clinic-journey__card--featured .clinic-journey__card-ebtag { color: rgba(122, 90, 30, 0.5); }
+.clinic-journey__card-ebtag { color: rgba(13, 122, 147, 0.55); font-weight: 500; margin-left: auto; }
+.clinic-journey__card--featured .clinic-journey__card-ebtext { color: #4a3610; }
+.clinic-journey__card--featured .clinic-journey__card-ebtag { color: rgba(122, 90, 30, 0.6); }
 
 .clinic-journey__card-dot {
   position: relative;
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: #1a9bb8;
-  box-shadow: 0 0 10px rgba(91, 233, 236, 0.8);
+  background: #5BE9EC;
+  box-shadow: 0 0 6px #5BE9EC, 0 0 12px rgba(91, 233, 236, 0.5);
 }
 .clinic-journey__card-dot::before {
   content: '';
   position: absolute;
-  inset: -4px;
+  inset: -3px;
   border-radius: 50%;
   border: 1px solid #5BE9EC;
-  opacity: 0.6;
-  animation: dot-ping 2s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+  animation: dot-ping 1.8s cubic-bezier(0.23, 1, 0.32, 1) infinite;
 }
 .clinic-journey__card--featured .clinic-journey__card-dot {
-  background: #d9a856;
-  box-shadow: 0 0 10px rgba(255, 213, 128, 0.85);
+  background: #ffd580;
+  box-shadow: 0 0 6px #ffd580, 0 0 12px rgba(255, 213, 128, 0.55);
 }
 .clinic-journey__card--featured .clinic-journey__card-dot::before { border-color: #ffd580; }
 @keyframes dot-ping {
-  0% { transform: scale(0.8); opacity: 0.6; }
+  0% { transform: scale(0.8); opacity: 0.7; }
   100% { transform: scale(2.4); opacity: 0; }
 }
 
@@ -810,113 +900,148 @@ onMounted(() => {
   font-weight: 600;
   font-size: clamp(1.3rem, 1.7vw, 1.6rem);
   line-height: 1.15;
-  color: #061119;
-  letter-spacing: -0.015em;
+  color: #050c15;
+  letter-spacing: -0.02em;
+  background: linear-gradient(180deg, #050c15 0%, #1a2b3e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.clinic-journey__card--featured .clinic-journey__card-title {
+  background: linear-gradient(180deg, #2d1f08 0%, #5a3f14 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .clinic-journey__card-sub {
-  margin: 0 0 16px;
+  margin: 0 0 18px;
   color: #3d4a5c;
   font-size: 0.92rem;
   line-height: 1.5;
 }
 .clinic-journey__card-bullets {
-  margin: 0 0 18px;
+  margin: 0 0 20px;
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 10px;
+  gap: 9px;
 }
 .clinic-journey__card-bullets li {
   display: grid;
-  grid-template-columns: 16px 1fr;
+  grid-template-columns: 14px 1fr;
   gap: 10px;
   align-items: start;
   font-size: 0.87rem;
-  line-height: 1.45;
+  line-height: 1.5;
   color: #1a2434;
-  opacity: 0;
-  transform: translateX(-6px);
-  animation: bullet-in 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-  animation-delay: calc(0.08s * var(--i, 0) + 0.15s);
 }
 .clinic-journey__card-bulletmark {
-  width: 14px;
-  height: 14px;
-  margin-top: 3px;
-  border: 1px solid #1a9bb8;
-  background: rgba(91, 233, 236, 0.18);
-  position: relative;
-  transform: rotate(45deg);
-  flex-shrink: 0;
+  color: #1a9bb8;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  text-shadow: 0 0 6px rgba(91, 233, 236, 0.5);
+  transition: transform 0.25s ease, color 0.25s ease;
 }
-.clinic-journey__card-bulletmark::after {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  background: #1a9bb8;
-  box-shadow: 0 0 6px rgba(91, 233, 236, 0.6);
+.clinic-journey__card-bullets li:hover .clinic-journey__card-bulletmark {
+  transform: translateX(2px);
+  color: #0d7a93;
 }
 .clinic-journey__card--featured .clinic-journey__card-bulletmark {
-  border-color: #d9a856;
-  background: rgba(255, 213, 128, 0.22);
+  color: #d9a856;
+  text-shadow: 0 0 6px rgba(255, 213, 128, 0.55);
 }
-.clinic-journey__card--featured .clinic-journey__card-bulletmark::after {
-  background: #d9a856;
-  box-shadow: 0 0 6px rgba(255, 213, 128, 0.7);
-}
-@keyframes bullet-in {
-  to { opacity: 1; transform: translateX(0); }
-}
+.clinic-journey__card--featured .clinic-journey__card-bullets li:hover .clinic-journey__card-bulletmark { color: #a67a2b; }
 
 .clinic-journey__card-cta {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 11px 20px 11px 22px;
-  background: linear-gradient(120deg, #061119 0%, #0d2530 100%);
+  gap: 12px;
+  padding: 12px 18px 12px 22px;
+  background: linear-gradient(135deg, #050c15 0%, #0d2530 100%);
   color: #5BE9EC;
   font-family: 'Chivo Mono', ui-monospace, monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   text-decoration: none;
-  border: 1px solid rgba(91, 233, 236, 0.45);
+  border: 1px solid rgba(91, 233, 236, 0.5);
   position: relative;
   overflow: hidden;
-  transition: color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  transition: color 0.25s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
 }
 .clinic-journey__card-cta::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, transparent 40%, rgba(91, 233, 236, 0.22) 50%, transparent 60%);
-  transform: translateX(-100%);
-  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  background: linear-gradient(120deg, transparent 35%, rgba(91, 233, 236, 0.28) 50%, transparent 65%);
+  transform: translateX(-120%);
+  transition: transform 0.75s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .clinic-journey__card-cta:hover {
   color: #ffffff;
   border-color: #5BE9EC;
   transform: translateY(-1px);
-  box-shadow: 0 10px 30px -12px rgba(91, 233, 236, 0.6);
+  box-shadow: 0 14px 34px -14px rgba(91, 233, 236, 0.7), 0 0 0 1px rgba(91, 233, 236, 0.2);
 }
-.clinic-journey__card-cta:hover::before { transform: translateX(100%); }
-.clinic-journey__card-cta-arrow { transition: transform 0.25s ease; }
-.clinic-journey__card-cta:hover .clinic-journey__card-cta-arrow { transform: translateX(3px); }
+.clinic-journey__card-cta:hover::before { transform: translateX(120%); }
+.clinic-journey__card-cta-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.64rem;
+  letter-spacing: 0;
+  color: rgba(91, 233, 236, 0.55);
+  transition: color 0.25s ease;
+}
+.clinic-journey__card-cta-glyph {
+  display: inline-block;
+  color: #5BE9EC;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), color 0.25s ease;
+}
+.clinic-journey__card-cta:hover .clinic-journey__card-cta-arrow { color: rgba(255, 255, 255, 0.5); }
+.clinic-journey__card-cta:hover .clinic-journey__card-cta-glyph { transform: translateX(3px); color: #ffffff; }
 .clinic-journey__card--featured .clinic-journey__card-cta {
   color: #ffd580;
   border-color: rgba(255, 213, 128, 0.55);
 }
+.clinic-journey__card--featured .clinic-journey__card-cta::before {
+  background: linear-gradient(120deg, transparent 35%, rgba(255, 213, 128, 0.3) 50%, transparent 65%);
+}
 .clinic-journey__card--featured .clinic-journey__card-cta:hover {
   color: #ffffff;
   border-color: #ffd580;
-  box-shadow: 0 10px 30px -12px rgba(255, 213, 128, 0.65);
+  box-shadow: 0 14px 34px -14px rgba(255, 213, 128, 0.7), 0 0 0 1px rgba(255, 213, 128, 0.25);
+}
+.clinic-journey__card--featured .clinic-journey__card-cta-arrow { color: rgba(255, 213, 128, 0.55); }
+.clinic-journey__card--featured .clinic-journey__card-cta-glyph { color: #ffd580; }
+
+@keyframes card-breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-2px) scale(1.004); }
 }
 
 .cj-card-enter-active, .cj-card-leave-active {
-  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), filter 0.5s ease;
+  transition: opacity 0.55s ease, transform 0.7s cubic-bezier(0.23, 1, 0.32, 1), filter 0.5s ease;
 }
-.cj-card-enter-from { opacity: 0; transform: translateX(-28px) scale(0.98); filter: blur(4px); }
-.cj-card-leave-to { opacity: 0; transform: translateX(-16px) scale(0.98); filter: blur(4px); }
+.cj-card-enter-from { opacity: 0; transform: translateX(-32px) scale(0.96); filter: blur(6px); }
+.cj-card-leave-to { opacity: 0; transform: translateX(-20px) scale(0.97); filter: blur(5px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .clinic-journey__card,
+  .clinic-journey__card-rail-dot,
+  .clinic-journey__card-dot::before {
+    animation: none !important;
+  }
+  .clinic-journey__card-eyebrow,
+  .clinic-journey__card-title,
+  .clinic-journey__card-sub,
+  .clinic-journey__card-bullets li,
+  .clinic-journey__card-cta {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
 
 .sr-only {
   position: absolute;
