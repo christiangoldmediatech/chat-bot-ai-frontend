@@ -24,14 +24,16 @@ const error = ref<string | null>(null)
 const confirmingDelete = ref(false)
 const webhookOpen = ref(false)
 
-// Rename inline: modal simple con un solo campo. Se guarda vía PATCH /bots/:id
-// solo con el nombre — el backend acepta partial updates.
+// Rename inline: modal simple con el nombre del bot y el del asistente. Se
+// guarda vía PATCH /bots/:id — el backend acepta partial updates.
 const renameOpen = ref(false)
 const renameValue = ref('')
+const renameAssistantValue = ref('')
 const renameSaving = ref(false)
 
 function openRename(): void {
   renameValue.value = bot.value?.name ?? ''
+  renameAssistantValue.value = bot.value?.assistantName ?? ''
   renameOpen.value = true
 }
 
@@ -39,14 +41,16 @@ async function onRenameSubmit(): Promise<void> {
   if (!bot.value) return
   const trimmed = renameValue.value.trim()
   if (trimmed.length < 2 || trimmed.length > 80) return
-  if (trimmed === bot.value.name) {
+  const assistantTrimmed = renameAssistantValue.value.trim()
+  const assistantName = assistantTrimmed.length > 0 ? assistantTrimmed : null
+  if (trimmed === bot.value.name && assistantName === (bot.value.assistantName ?? null)) {
     renameOpen.value = false
     return
   }
   renameSaving.value = true
   try {
-    const updated = await bots.update(bot.value.id, { name: trimmed })
-    bot.value = { ...bot.value, name: updated.name }
+    const updated = await bots.update(bot.value.id, { name: trimmed, assistantName })
+    bot.value = { ...bot.value, name: updated.name, assistantName: updated.assistantName }
     renameOpen.value = false
   } catch (err) {
     error.value = (err as ApiError).message
@@ -118,6 +122,7 @@ await load()
               </button>
               <BotStatusBadge :is-active="bot.isActive" />
             </h1>
+            <p class="text-slate-500 mt-0.5 text-sm">{{ bot.assistantName ? $t('admin.bot.assistantLabel', { name: bot.assistantName }) : $t('admin.bot.assistantMissing') }}</p>
             <p v-if="bot.description" class="text-slate-500 mt-0.5 text-sm">{{ bot.description }}</p>
           </div>
         </div>
@@ -368,6 +373,19 @@ await load()
               class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
               required
             >
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+              {{ $t('admin.botConfig.aiBehavior.assistantName') }}
+            </label>
+            <input
+              v-model="renameAssistantValue"
+              type="text"
+              maxlength="40"
+              :placeholder="$t('admin.botConfig.aiBehavior.assistantNamePlaceholder')"
+              class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+            <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botConfig.aiBehavior.assistantNameHint') }}</p>
           </div>
           <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
             <button

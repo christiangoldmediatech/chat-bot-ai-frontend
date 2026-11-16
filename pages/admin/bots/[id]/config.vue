@@ -13,6 +13,7 @@ const bots = useBots()
 const id = route.params.id as string
 
 const form = reactive({
+  assistantName: '' as string,
   description: '' as string,
   tone: '' as string,
   personality: '' as string,
@@ -72,6 +73,7 @@ const success = ref<string | null>(null)
 function hydrate(cfg: BotConfig): void {
   botName.value = cfg.name
   form.description = cfg.description ?? ''
+  form.assistantName = cfg.assistantName ?? ''
   form.tone = cfg.tone ?? ''
   form.personality = cfg.personality ?? ''
   form.welcomeMessage = cfg.welcomeMessage ?? ''
@@ -113,6 +115,7 @@ async function onSubmit(): Promise<void> {
   try {
     const updated = await bots.updateConfig(id, {
       description: emptyToNull(form.description),
+      assistantName: emptyToNull(form.assistantName),
       tone: emptyToNull(form.tone),
       personality: emptyToNull(form.personality),
       welcomeMessage: emptyToNull(form.welcomeMessage),
@@ -197,6 +200,18 @@ await load()
             <p class="text-xs text-slate-500 mt-0.5">{{ $t('admin.botConfig.aiBehavior.subtitle') }}</p>
           </div>
         </header>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700">{{ $t('admin.botConfig.aiBehavior.assistantName') }}</label>
+          <input
+            v-model="form.assistantName"
+            type="text"
+            maxlength="40"
+            :placeholder="$t('admin.botConfig.aiBehavior.assistantNamePlaceholder')"
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          >
+          <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botConfig.aiBehavior.assistantNameHint') }}</p>
+        </div>
 
         <div>
           <label class="block text-sm font-medium text-slate-700">{{ $t('admin.botConfig.aiBehavior.tone') }}</label>
