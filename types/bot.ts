@@ -1,6 +1,7 @@
 export interface Bot {
   id: string
   name: string
+  assistantName: string | null
   description: string | null
   systemPrompt: string
   whatsappPhoneId: string
@@ -17,6 +18,7 @@ export interface Bot {
 export interface BotConfig {
   id: string
   name: string
+  assistantName: string | null
   description: string | null
   tone: string | null
   personality: string | null
@@ -35,6 +37,7 @@ export interface BotConfig {
 
 export interface CreateBotInput {
   name: string
+  assistantName?: string | null
   systemPrompt: string
   whatsappPhoneId: string
   phoneNumber?: string
@@ -47,6 +50,7 @@ export interface CreateBotInput {
 
 export interface UpdateBotInput {
   name?: string
+  assistantName?: string | null
   systemPrompt?: string
   whatsappPhoneId?: string
   phoneNumber?: string
@@ -58,6 +62,7 @@ export interface UpdateBotInput {
 }
 
 export interface UpdateBotConfigInput {
+  assistantName?: string | null
   description?: string | null
   tone?: string | null
   personality?: string | null

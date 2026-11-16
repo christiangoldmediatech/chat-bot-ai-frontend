@@ -14,6 +14,7 @@ const bots = useBots(tenantId)
 
 const form = reactive({
   name: '',
+  assistantName: '',
   systemPrompt: '',
   whatsappPhoneId: '',
   phoneNumber: '',
@@ -42,6 +43,7 @@ async function onSubmit(): Promise<void> {
   try {
     createdBot.value = await bots.create({
       name: form.name,
+      assistantName: form.assistantName.trim() || undefined,
       systemPrompt: form.systemPrompt,
       whatsappPhoneId: form.whatsappPhoneId,
       phoneNumber: form.phoneNumber || undefined,
@@ -194,6 +196,18 @@ async function onContinue(): Promise<void> {
             :placeholder="$t('admin.botCreate.section.namePlaceholder')"
             class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           >
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-300">{{ $t('admin.botConfig.aiBehavior.assistantName') }}</label>
+          <input
+            v-model="form.assistantName"
+            type="text"
+            maxlength="40"
+            :placeholder="$t('admin.botConfig.aiBehavior.assistantNamePlaceholder')"
+            class="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          >
+          <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botConfig.aiBehavior.assistantNameHint') }}</p>
         </div>
 
         <div>
