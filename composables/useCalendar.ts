@@ -1,4 +1,9 @@
-import type { CalendarViewResponse } from '~/types/calendar'
+import type {
+  CalendarViewResponse,
+  CancelledAppointment,
+  CreateManualAppointmentPayload,
+  ManualAppointment,
+} from '~/types/calendar'
 
 export function useCalendar(tenantId?: string) {
   const api = useApi()
@@ -16,5 +21,22 @@ export function useCalendar(tenantId?: string) {
       api.get<CalendarViewResponse>(`${baseForBot(botId)}/calendar`, {
         query: { from, to },
       }),
+    createAppointment: (
+      botId: string,
+      payload: CreateManualAppointmentPayload,
+    ): Promise<ManualAppointment> =>
+      api.post<ManualAppointment>(
+        `${baseForBot(botId)}/calendar/appointments`,
+        payload,
+      ),
+    cancelAppointment: (
+      botId: string,
+      appointmentId: string,
+      reason?: string,
+    ): Promise<CancelledAppointment> =>
+      api.post<CancelledAppointment>(
+        `${baseForBot(botId)}/calendar/appointments/${appointmentId}/cancel`,
+        reason ? { reason } : {},
+      ),
   }
 }
