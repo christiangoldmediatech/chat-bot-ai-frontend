@@ -20,6 +20,7 @@ const callbackUrl = computed(() => `${config.public.apiBaseUrl}/webhooks/whatsap
 
 const form = reactive({
   name: '',
+  assistantName: '',
   systemPrompt: '',
   whatsappPhoneId: '',
   phoneNumber: '',
@@ -37,6 +38,7 @@ const success = ref<string | null>(null)
 
 function hydrate(bot: Bot): void {
   form.name = bot.name
+  form.assistantName = bot.assistantName ?? ''
   form.systemPrompt = bot.systemPrompt
   form.whatsappPhoneId = bot.whatsappPhoneId
   form.phoneNumber = bot.phoneNumber ?? ''
@@ -68,6 +70,7 @@ async function onSubmit(): Promise<void> {
   try {
     const updated = await bots.update(id, {
       name: form.name,
+      assistantName: form.assistantName.trim() || null,
       systemPrompt: form.systemPrompt,
       whatsappPhoneId: form.whatsappPhoneId,
       phoneNumber: form.phoneNumber || undefined,
@@ -231,6 +234,18 @@ await load()
             maxlength="80"
             class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700">{{ $t('admin.botConfig.aiBehavior.assistantName') }}</label>
+          <input
+            v-model="form.assistantName"
+            type="text"
+            maxlength="40"
+            :placeholder="$t('admin.botConfig.aiBehavior.assistantNamePlaceholder')"
+            class="mt-1 w-full rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          >
+          <p class="mt-1 text-xs text-slate-500">{{ $t('admin.botConfig.aiBehavior.assistantNameHint') }}</p>
         </div>
 
         <div>

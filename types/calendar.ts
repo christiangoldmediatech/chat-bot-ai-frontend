@@ -33,6 +33,39 @@ export interface CalendarAppointment {
   conversationId: string
   meetLink: string | null
   confirmedAt: string | null
+  createdManually?: boolean
+}
+
+export interface CreateManualAppointmentPayload {
+  customerName: string
+  customerPhone: string
+  customerEmail: string
+  serviceName: string
+  startsAt: string
+  notes?: string
+}
+
+export interface CancelledAppointment {
+  id: string
+  status: CalendarAppointmentStatus
+  cancelledAt: string | null
+}
+
+export interface ManualAppointment {
+  id: string
+  startsAt: string
+  endsAt: string
+  status: CalendarAppointmentStatus
+  topic: string | null
+  customer: {
+    id: string
+    name: string | null
+    phone: string
+    email: string
+  }
+  conversationId: string
+  meetLink: string | null
+  createdManually: boolean
 }
 
 export interface CalendarBlock {
