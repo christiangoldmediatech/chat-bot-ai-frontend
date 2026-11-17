@@ -198,6 +198,13 @@ async function onBlockClick(block: CalendarBlock): Promise<void> {
 function onBlockSaved(): void {
   void load()
 }
+
+const appointmentModalOpen = ref(false)
+const activeServiceOptions = computed(() => serviceOptions.value.filter((s) => s.isActive))
+
+function onAppointmentSaved(): void {
+  void load()
+}
 </script>
 
 <template>
@@ -247,6 +254,17 @@ function onBlockSaved(): void {
         <input type="date" :value="anchorDay" class="rounded-lg border border-slate-200 bg-white/80 px-2 py-1.5 text-sm text-slate-700 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500" @change="(e) => { const v = (e.target as HTMLInputElement).value; if (v) anchorDay = v }">
         <button
           type="button"
+          class="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-700 shadow-sm transition"
+          @click="appointmentModalOpen = true"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          {{ $t('admin.calendarView.newAppointment') }}
+        </button>
+        <button
+          type="button"
           class="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-700 shadow-sm transition"
           @click="openCreateBlock"
         >
@@ -284,8 +302,10 @@ function onBlockSaved(): void {
       :appointment="selected"
       :timezone="activeTimezone"
       :tenant-id="tenantId"
+      :bot-id="botId"
       :locale="locale"
       @close="selected = null"
+      @cancelled="onAppointmentSaved"
     />
 
     <ScheduleBlockModal
@@ -299,6 +319,17 @@ function onBlockSaved(): void {
       @close="blockModalOpen = false"
       @saved="onBlockSaved"
       @deleted="onBlockSaved"
+    />
+
+    <ManualAppointmentModal
+      :open="appointmentModalOpen"
+      :bot-id="botId"
+      :tenant-id="tenantId"
+      :services="activeServiceOptions"
+      :default-date="anchorDay"
+      :timezone-label="timezoneLabel"
+      @close="appointmentModalOpen = false"
+      @saved="onAppointmentSaved"
     />
   </section>
 </template>

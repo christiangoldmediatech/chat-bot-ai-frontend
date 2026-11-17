@@ -1,14 +1,52 @@
 <script setup lang="ts">
+import type { ApiError } from '~/types/api'
 import type { CalendarAppointment } from '~/types/calendar'
 
 const props = defineProps<{
   appointment: CalendarAppointment | null
   timezone: string
   tenantId?: string
+  botId?: string
   locale: string
 }>()
 
-const emit = defineEmits<{ close: [] }>()
+const emit = defineEmits<{ close: [], cancelled: [string] }>()
+
+const cal = useCalendar(props.tenantId)
+const confirmingCancel = ref(false)
+const cancelReason = ref('')
+const cancelling = ref(false)
+const cancelError = ref<string | null>(null)
+
+const canCancel = computed(
+  () => Boolean(props.botId) && props.appointment?.status === 'CREATED',
+)
+
+watch(
+  () => props.appointment?.id,
+  () => {
+    confirmingCancel.value = false
+    cancelReason.value = ''
+    cancelError.value = null
+    cancelling.value = false
+  },
+)
+
+async function onConfirmCancel(): Promise<void> {
+  const appointment = props.appointment
+  if (!appointment || !props.botId || cancelling.value) return
+  cancelling.value = true
+  cancelError.value = null
+  try {
+    await cal.cancelAppointment(props.botId, appointment.id, cancelReason.value.trim() || undefined)
+    emit('cancelled', appointment.id)
+    emit('close')
+  } catch (err) {
+    cancelError.value = (err as ApiError).message
+  } finally {
+    cancelling.value = false
+  }
+}
 
 const isOpen = computed(() => props.appointment !== null)
 
@@ -95,6 +133,9 @@ const statusToneClass = computed(() => {
             <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider ring-1" :class="statusToneClass">
               {{ $t(`admin.calendarView.status.${appointment.status.toLowerCase()}`) }}
             </span>
+            <span v-if="appointment.createdManually" class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-700 ring-1 ring-slate-200">
+              {{ $t('admin.calendarView.manualBadge') }}
+            </span>
             <span v-if="appointment.confirmedAt" class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-700 ring-1 ring-emerald-200">
               ✓ {{ $t('admin.calendarView.drawer.confirmed') }}
             </span>
@@ -135,6 +176,47 @@ const statusToneClass = computed(() => {
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-slate-400"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
               {{ $t('admin.calendarView.drawer.viewCustomer') }}
             </NuxtLink>
+          </div>
+
+          <div v-if="canCancel" class="pt-2 border-t border-slate-200 space-y-2">
+            <button
+              v-if="!confirmingCancel"
+              type="button"
+              class="w-full rounded-lg bg-white px-3 py-2 text-sm font-medium text-danger-700 ring-1 ring-danger-200 hover:bg-danger-50 transition"
+              @click="confirmingCancel = true"
+            >
+              {{ $t('admin.calendarView.cancelAppointment.action') }}
+            </button>
+            <div v-else class="rounded-xl bg-danger-50/60 ring-1 ring-danger-200 px-4 py-3 space-y-2">
+              <p class="text-sm font-medium text-slate-900">{{ $t('admin.calendarView.cancelAppointment.confirmTitle') }}</p>
+              <p class="text-xs text-slate-600">{{ $t('admin.calendarView.cancelAppointment.confirmMessage') }}</p>
+              <textarea
+                v-model="cancelReason"
+                rows="2"
+                maxlength="500"
+                :placeholder="$t('admin.calendarView.cancelAppointment.reasonPlaceholder')"
+                class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              />
+              <p v-if="cancelError" class="text-xs text-danger-700">{{ cancelError }}</p>
+              <div class="flex justify-end gap-2">
+                <button
+                  type="button"
+                  class="rounded-lg px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-100"
+                  :disabled="cancelling"
+                  @click="confirmingCancel = false"
+                >
+                  {{ $t('admin.calendarView.cancelAppointment.keep') }}
+                </button>
+                <button
+                  type="button"
+                  class="rounded-lg bg-danger-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-danger-700 disabled:opacity-50"
+                  :disabled="cancelling"
+                  @click="onConfirmCancel"
+                >
+                  {{ cancelling ? $t('common.saving') : $t('admin.calendarView.cancelAppointment.confirm') }}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </aside>
