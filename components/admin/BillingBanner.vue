@@ -82,7 +82,7 @@ const days = computed(() => state.value?.daysRemaining ?? 0)
 const SUPPORT_EMAIL = 'info@lurviax.com'
 const supportEmail = computed(() => SUPPORT_EMAIL)
 
-// Deposit breakdown (plan price + IVA). Shown inline in the banner so the
+// Deposit breakdown (plan price already includes IVA). Shown inline in the banner so the
 // customer knows the exact amount before clicking through to /admin/payment.
 // The IVA rate is parametrized via `usePricing` — change `NUXT_PUBLIC_IVA_RATE`
 // if Ecuador's rate moves, no edits needed here.
@@ -96,7 +96,7 @@ const planPriceDetails = computed<PlanDetails | null>(() => {
 })
 const depositBreakdown = computed(() => {
   if (!planPriceDetails.value) return null
-  return pricing.breakdown(planPriceDetails.value.monthlyPrice)
+  return pricing.breakdownFromTotal(planPriceDetails.value.monthlyPrice)
 })
 const depositTotalFormatted = computed(() => {
   if (!planPriceDetails.value || !depositBreakdown.value) return null

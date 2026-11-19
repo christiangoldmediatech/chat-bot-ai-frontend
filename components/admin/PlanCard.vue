@@ -20,7 +20,7 @@ const formattedPrice = computed(() =>
 )
 
 const priceBreakdown = computed(() => {
-  const { subtotal, iva, total } = pricing.breakdown(props.plan.monthlyPrice)
+  const { subtotal, iva, total } = pricing.breakdownFromTotal(props.plan.monthlyPrice)
   return {
     subtotal: pricing.formatMoney(subtotal, props.plan.currency),
     iva: pricing.formatMoney(iva, props.plan.currency),

@@ -22,13 +22,13 @@ export function usePricing() {
   const rawRate = config.public.ivaRate
   const ivaRate = typeof rawRate === 'number' && rawRate >= 0 ? rawRate : 0.15
 
-  function breakdown(subtotal: number): PriceBreakdown {
-    const safeSubtotal = Number.isFinite(subtotal) ? subtotal : 0
-    const iva = safeSubtotal * ivaRate
+  function breakdownFromTotal(total: number): PriceBreakdown {
+    const safeTotal = Number.isFinite(total) ? total : 0
+    const subtotal = Math.round((safeTotal / (1 + ivaRate)) * 100) / 100
     return {
-      subtotal: safeSubtotal,
-      iva,
-      total: safeSubtotal + iva,
+      subtotal,
+      iva: Math.round((safeTotal - subtotal) * 100) / 100,
+      total: safeTotal,
     }
   }
 
@@ -51,7 +51,7 @@ export function usePricing() {
   return {
     ivaRate,
     ivaPercentLabel,
-    breakdown,
+    breakdownFromTotal,
     formatMoney,
   }
 }

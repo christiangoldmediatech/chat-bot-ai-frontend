@@ -49,7 +49,7 @@ const userEmail = computed(() => auth.user?.email ?? '')
 const planDetails = computed(() => tenantData.value?.planDetails ?? null)
 const planCurrency = computed(() => planDetails.value?.currency ?? 'USD')
 const planDisplayName = computed(() => planDetails.value?.displayName ?? '')
-const planBreakdown = computed(() => pricing.breakdown(planDetails.value?.monthlyPrice ?? 0))
+const planBreakdown = computed(() => pricing.breakdownFromTotal(planDetails.value?.monthlyPrice ?? 0))
 
 function formatMoney(n: number): string {
   return pricing.formatMoney(n, planCurrency.value)

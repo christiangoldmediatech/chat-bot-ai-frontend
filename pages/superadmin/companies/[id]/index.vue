@@ -28,8 +28,7 @@ const slugCopied = ref(false)
 
 const planBreakdown = computed(() => {
   if (!data.value) return null
-  const subtotal = data.value.planDetails.monthlyPrice
-  const { iva, total } = pricing.breakdown(subtotal)
+  const { subtotal, iva, total } = pricing.breakdownFromTotal(data.value.planDetails.monthlyPrice)
   const currency = data.value.planDetails.currency
   return {
     subtotalFormatted: pricing.formatMoney(subtotal, currency),
