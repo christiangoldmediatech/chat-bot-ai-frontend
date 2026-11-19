@@ -301,7 +301,7 @@ function smoothScroll(ev: MouseEvent, href: string) {
               <span class="rounded-full border border-halo-line px-3 py-1 font-mono text-[0.64rem] uppercase tracking-[0.12em] text-halo">{{ $t('landing.plans.single.badge') }}</span>
             </div>
             <div class="font-display text-[clamp(3.2rem,6.5vw,4.6rem)] leading-none tracking-[-0.04em] text-pearl" style="font-variation-settings: 'wdth' 90, 'wght' 320;">
-              $79<small class="ml-2 align-top font-mono text-[0.72rem] tracking-[0.12em] text-mist-dim">{{ $t('landing.plans.perMonth') }}</small>
+              $79,99<small class="ml-2 align-top font-mono text-[0.72rem] tracking-[0.12em] text-mist-dim">{{ $t('landing.plans.perMonth') }}</small>
             </div>
             <p class="self-stretch text-mist">{{ $t('landing.plans.single.tagline') }}</p>
             <ul class="grid w-full gap-3 self-stretch">
