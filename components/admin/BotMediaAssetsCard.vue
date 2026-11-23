@@ -35,6 +35,7 @@ const locLatitude = ref<number | null>(null)
 const locLongitude = ref<number | null>(null)
 const locName = ref('')
 const locAddress = ref('')
+const editingLocation = ref<MediaAsset | null>(null)
 
 const isSuperadmin = computed(() => Boolean(props.tenantId))
 
@@ -85,6 +86,30 @@ function resetLocationForm(): void {
   locName.value = ''
   locAddress.value = ''
   locationError.value = null
+  editingLocation.value = null
+}
+
+function closeLocationForm(): void {
+  locationOpen.value = false
+  resetLocationForm()
+}
+
+function openEditLocation(asset: MediaAsset): void {
+  const m = asset.metadata as {
+    latitude?: unknown
+    longitude?: unknown
+    name?: unknown
+    address?: unknown
+  }
+  resetLocationForm()
+  editingLocation.value = asset
+  locKey.value = asset.key
+  locDescription.value = asset.description
+  locLatitude.value = typeof m.latitude === 'number' ? m.latitude : null
+  locLongitude.value = typeof m.longitude === 'number' ? m.longitude : null
+  locName.value = typeof m.name === 'string' ? m.name : ''
+  locAddress.value = typeof m.address === 'string' ? m.address : ''
+  locationOpen.value = true
 }
 
 async function onUpload(): Promise<void> {
@@ -113,29 +138,45 @@ async function onUpload(): Promise<void> {
   }
 }
 
-async function onCreateLocation(): Promise<void> {
-  if (!locKey.value.trim() || !locDescription.value.trim()) {
+async function onSaveLocation(): Promise<void> {
+  const editing = editingLocation.value
+  const description = locDescription.value.trim()
+  const latitude = locLatitude.value
+  const longitude = locLongitude.value
+  if ((!editing && !locKey.value.trim()) || !description) {
     locationError.value = t('admin.media.form.keyAndDescriptionRequired')
     return
   }
-  if (locLatitude.value === null || locLongitude.value === null) {
+  if (typeof latitude !== 'number' || typeof longitude !== 'number') {
     locationError.value = t('admin.media.form.latLngRequired')
     return
   }
+  const name = locName.value.trim()
+  const address = locAddress.value.trim()
   creatingLocation.value = true
   locationError.value = null
   try {
-    const created = await assets.createLocation(props.botId, {
-      key: locKey.value.trim(),
-      description: locDescription.value.trim(),
-      latitude: locLatitude.value,
-      longitude: locLongitude.value,
-      ...(locName.value.trim() ? { name: locName.value.trim() } : {}),
-      ...(locAddress.value.trim() ? { address: locAddress.value.trim() } : {}),
-    })
-    items.value = [created, ...items.value]
-    resetLocationForm()
-    locationOpen.value = false
+    if (editing) {
+      const updated = await assets.updateLocation(props.botId, editing.id, {
+        description,
+        latitude,
+        longitude,
+        name,
+        address,
+      })
+      items.value = items.value.map((a) => (a.id === updated.id ? updated : a))
+    } else {
+      const created = await assets.createLocation(props.botId, {
+        key: locKey.value.trim(),
+        description,
+        latitude,
+        longitude,
+        ...(name ? { name } : {}),
+        ...(address ? { address } : {}),
+      })
+      items.value = [created, ...items.value]
+    }
+    closeLocationForm()
   } catch (err) {
     locationError.value = (err as ApiError).message
   } finally {
@@ -333,25 +374,32 @@ onMounted(() => {
     <!-- Location modal -->
     <Modal
       :open="locationOpen"
-      :title="$t('admin.media.form.newLocation')"
-      :subtitle="$t('admin.media.actions.addLocation')"
+      :title="editingLocation ? $t('admin.media.form.editLocation') : $t('admin.media.form.newLocation')"
+      :subtitle="editingLocation ? editingLocation.key : $t('admin.media.actions.addLocation')"
       size="lg"
-      @close="locationOpen = false; resetLocationForm()"
+      @close="closeLocationForm"
     >
       <div class="space-y-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.keyLabel') }}</label>
+            <label for="media-loc-key" class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.keyLabel') }}</label>
             <input
+              id="media-loc-key"
               v-model="locKey"
               type="text"
               :placeholder="$t('admin.media.form.locationKeyPlaceholder')"
-              class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100"
+              :disabled="!!editingLocation"
+              :aria-describedby="editingLocation ? 'media-loc-key-help' : undefined"
+              class="block w-full rounded-lg border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 px-3 py-2 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-100 disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
             >
+            <p v-if="editingLocation" id="media-loc-key-help" class="mt-1 text-xs text-slate-500">
+              {{ $t('admin.media.form.keyLockedHelp') }}
+            </p>
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.descriptionLabel') }}</label>
+            <label for="media-loc-description" class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.descriptionLabel') }}</label>
             <input
+              id="media-loc-description"
               v-model="locDescription"
               type="text"
               :placeholder="$t('admin.media.form.locationDescriptionPlaceholder')"
@@ -359,8 +407,9 @@ onMounted(() => {
             >
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.latitudeLabel') }}</label>
+            <label for="media-loc-latitude" class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.latitudeLabel') }}</label>
             <input
+              id="media-loc-latitude"
               v-model.number="locLatitude"
               type="number"
               step="any"
@@ -369,8 +418,9 @@ onMounted(() => {
             >
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.longitudeLabel') }}</label>
+            <label for="media-loc-longitude" class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.longitudeLabel') }}</label>
             <input
+              id="media-loc-longitude"
               v-model.number="locLongitude"
               type="number"
               step="any"
@@ -379,8 +429,9 @@ onMounted(() => {
             >
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.placeNameLabel') }}</label>
+            <label for="media-loc-name" class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.placeNameLabel') }}</label>
             <input
+              id="media-loc-name"
               v-model="locName"
               type="text"
               :placeholder="$t('admin.media.form.placeNamePlaceholder')"
@@ -388,8 +439,9 @@ onMounted(() => {
             >
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.addressLabel') }}</label>
+            <label for="media-loc-address" class="block text-xs font-medium text-slate-600 mb-1">{{ $t('admin.media.form.addressLabel') }}</label>
             <input
+              id="media-loc-address"
               v-model="locAddress"
               type="text"
               :placeholder="$t('admin.media.form.addressPlaceholder')"
@@ -409,7 +461,7 @@ onMounted(() => {
             type="button"
             class="rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-slate-900"
             :disabled="creatingLocation"
-            @click="locationOpen = false; resetLocationForm()"
+            @click="closeLocationForm"
           >
             {{ $t('common.cancel') }}
           </button>
@@ -417,7 +469,7 @@ onMounted(() => {
             type="button"
             class="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed transition"
             :disabled="creatingLocation"
-            @click="onCreateLocation"
+            @click="onSaveLocation"
           >
             <SpinnerInline v-if="creatingLocation" class="!size-4" />
             {{ creatingLocation ? $t('common.saving') : $t('admin.media.form.saveLocation') }}
@@ -490,14 +542,25 @@ onMounted(() => {
           </p>
         </div>
 
-        <button
-          type="button"
-          class="shrink-0 text-xs text-danger-600 hover:text-danger-700 disabled:opacity-50"
-          :disabled="removing === a.id"
-          @click="askRemove(a)"
-        >
-          {{ removing === a.id ? $t('common.deleting') : $t('common.delete') }}
-        </button>
+        <div class="shrink-0 flex flex-col items-end gap-1.5">
+          <button
+            v-if="a.mediaType === 'LOCATION'"
+            type="button"
+            class="text-xs font-medium text-primary-600 hover:text-primary-700"
+            :aria-label="$t('admin.media.list.editLocationAria', { key: a.key })"
+            @click="openEditLocation(a)"
+          >
+            {{ $t('common.edit') }}
+          </button>
+          <button
+            type="button"
+            class="text-xs font-medium text-danger-600 hover:text-danger-700 disabled:opacity-50"
+            :disabled="removing === a.id"
+            @click="askRemove(a)"
+          >
+            {{ removing === a.id ? $t('common.deleting') : $t('common.delete') }}
+          </button>
+        </div>
       </li>
     </ul>
 

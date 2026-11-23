@@ -46,3 +46,11 @@ export interface CreateLocationMediaAssetInput {
   name?: string
   address?: string
 }
+
+export interface UpdateLocationMediaAssetInput {
+  description?: string
+  latitude?: number
+  longitude?: number
+  name?: string
+  address?: string
+}
