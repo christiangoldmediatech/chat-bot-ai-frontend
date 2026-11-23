@@ -1363,6 +1363,8 @@
       "form": {
         "newFile": "New file",
         "newLocation": "New location",
+        "editLocation": "Edit location",
+        "keyLockedHelp": "The key can't be changed: the bot uses it to find this resource.",
         "file": "File",
         "unknownType": "unknown type",
         "keyLabel": "Key (unique identifier)",
@@ -1386,6 +1388,7 @@
       },
       "list": {
         "emptyTitle": "No resources yet",
+        "editLocationAria": "Edit location {key}",
         "emptyBody": "Upload your first file or register a location so the bot can send native content.",
         "cachedAtMeta": "Cached at Meta",
         "cachedAtMetaTooltip": "Meta has this file cached — the next send is instant"

@@ -2,6 +2,7 @@ import type {
   CreateLocationMediaAssetInput,
   CreateMediaAssetInput,
   MediaAsset,
+  UpdateLocationMediaAssetInput,
 } from '~/types/media-asset'
 
 /**
@@ -48,6 +49,14 @@ export function useMediaAssets(tenantId?: string) {
       input: CreateLocationMediaAssetInput,
     ): Promise<MediaAsset> => {
       return api.post<MediaAsset>(`${base(botId)}/location`, input)
+    },
+
+    updateLocation: (
+      botId: string,
+      id: string,
+      input: UpdateLocationMediaAssetInput,
+    ): Promise<MediaAsset> => {
+      return api.patch<MediaAsset>(`${base(botId)}/${id}/location`, input)
     },
 
     remove: (botId: string, id: string): Promise<void> => {
