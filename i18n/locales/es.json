@@ -3389,9 +3389,12 @@
       "typedMismatch": "El texto todavía no coincide.",
       "cancel": "Cancelar",
       "confirm": "Borrar clientes y chats",
-      "submitting": "Borrando…",
+      "submitting": "Iniciando…",
       "success": "Datos reiniciados: {customers} clientes, {conversations} chats y {messages} mensajes borrados.",
-      "dismiss": "Cerrar"
+      "dismiss": "Cerrar",
+      "noteBackground": "El borrado se ejecuta en segundo plano: puedes seguir usando el panel y esta pantalla avisa cuando termine.",
+      "inProgress": "Reinicio en curso: se están borrando los clientes y chats de este bot. Esta pantalla se actualiza sola cuando termine.",
+      "failed": "El reinicio falló y no se borró nada. {error}"
     }
   },
   "billing": {

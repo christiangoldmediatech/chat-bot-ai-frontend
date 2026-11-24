@@ -93,8 +93,15 @@ export interface BotDataResetDeleted {
   securityBlockAudits: number
 }
 
-export interface BotDataResetResult {
+export type BotDataResetStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED'
+
+export interface BotDataReset {
+  id: string
   botId: string
   botName: string
-  deleted: BotDataResetDeleted
+  status: BotDataResetStatus
+  deleted: BotDataResetDeleted | null
+  error: string | null
+  createdAt: string
+  finishedAt: string | null
 }

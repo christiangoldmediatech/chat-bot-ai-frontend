@@ -116,6 +116,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
             </div>
 
             <ul class="mt-4 space-y-1 text-xs text-slate-600 list-disc pl-4">
+              <li>{{ $t('superadmin.botDataReset.noteBackground') }}</li>
               <li>{{ $t('superadmin.botDataReset.noteGoogleCalendar') }}</li>
               <li>{{ $t('superadmin.botDataReset.noteBlockedCustomers') }}</li>
               <li class="font-semibold text-danger-700">{{ $t('superadmin.botDataReset.noteIrreversible') }}</li>
