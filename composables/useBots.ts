@@ -1,6 +1,7 @@
 import type {
   Bot,
   BotConfig,
+  BotDataResetResult,
   CreateBotInput,
   UpdateBotConfigInput,
   UpdateBotInput,
@@ -29,6 +30,13 @@ export function useBots(tenantId?: string) {
     })
   }
 
+  function resetData(id: string, confirmBotName: string): Promise<BotDataResetResult> {
+    if (!tenantId) {
+      return Promise.reject(new Error('Bot data reset is only available to the platform admin'))
+    }
+    return api.post<BotDataResetResult>(`${base}/${id}/reset-data`, { confirmBotName })
+  }
+
   return {
     list: (): Promise<Bot[]> => api.get<Bot[]>(base),
     get: (id: string): Promise<Bot> => api.get<Bot>(`${base}/${id}`),
@@ -41,5 +49,6 @@ export function useBots(tenantId?: string) {
     updateConfig: (id: string, data: UpdateBotConfigInput): Promise<BotConfig> =>
       api.patch<BotConfig>(`${base}/${id}/config`, data),
     messagesActivity,
+    resetData,
   }
 }

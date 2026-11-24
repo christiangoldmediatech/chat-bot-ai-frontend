@@ -3360,6 +3360,38 @@
       "footerNote": "Para auditar gasto detallado por request, mirá",
       "actionRefresh": "Actualizar",
       "lastRefresh": "Actualizado"
+    },
+    "botDataReset": {
+      "button": "Reiniciar datos",
+      "buttonTitle": "Borrar clientes, chats y mensajes de este bot",
+      "title": "¿Reiniciar los datos del bot {name}?",
+      "intro": "Se borran los datos generados por los clientes de este bot para empezar un ciclo limpio. La configuración no se toca y ningún otro bot se ve afectado.",
+      "deletedTitle": "Se borra",
+      "keptTitle": "Se conserva",
+      "deleted": {
+        "customers": "Clientes",
+        "conversations": "Chats y mensajes (los contadores vuelven a 0)",
+        "leads": "Leads, casos y ventas",
+        "appointments": "Citas y recordatorios de la plataforma",
+        "usage": "Historial de costos y eventos de calidad"
+      },
+      "kept": {
+        "config": "Configuración del bot y conexión de WhatsApp",
+        "services": "Servicios",
+        "templates": "Plantillas",
+        "documents": "Documentos y recursos multimedia",
+        "calendar": "Calendario: conexión, horarios y bloqueos"
+      },
+      "noteGoogleCalendar": "Los eventos que ya están en Google Calendar no se borran: esos horarios siguen ocupados y ya no se podrán cancelar desde la plataforma.",
+      "noteBlockedCustomers": "Los clientes bloqueados dejan de estarlo, porque el bloqueo vive en el chat que se borra.",
+      "noteIrreversible": "Esta acción no se puede deshacer.",
+      "typedLabel": "Para confirmar, escribe el nombre exacto del bot:",
+      "typedMismatch": "El texto todavía no coincide.",
+      "cancel": "Cancelar",
+      "confirm": "Borrar clientes y chats",
+      "submitting": "Borrando…",
+      "success": "Datos reiniciados: {customers} clientes, {conversations} chats y {messages} mensajes borrados.",
+      "dismiss": "Cerrar"
     }
   },
   "billing": {
