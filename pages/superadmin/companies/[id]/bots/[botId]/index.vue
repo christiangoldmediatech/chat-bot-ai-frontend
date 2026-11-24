@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import SuperadminBotDataResetDialog from '~/components/superadmin/BotDataResetDialog.vue'
 import SuperadminBotOpenRouterKeyCard from '~/components/superadmin/BotOpenRouterKeyCard.vue'
 import type { ApiError } from '~/types/api'
-import type { Bot } from '~/types/bot'
+import type { Bot, BotDataReset } from '~/types/bot'
 import type { CompanyDetail, Plan } from '~/types/company'
 import type { MessagesActivity, MessagesActivityRange } from '~/types/dashboard'
 
@@ -27,6 +28,12 @@ const bot = ref<Bot | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
 const confirmingDelete = ref(false)
+const resetOpen = ref(false)
+const resetSubmitting = ref(false)
+const resetError = ref<string | null>(null)
+const resetResult = ref<BotDataReset | null>(null)
+const resetInProgress = computed(() => resetResult.value?.status === 'PENDING' || resetResult.value?.status === 'RUNNING')
+let resetPollTimer: ReturnType<typeof setTimeout> | null = null
 
 type TabId = 'openrouter' | 'metrics' | 'documents' | 'integrations' | 'templates'
 const VALID_TABS: readonly TabId[] = ['openrouter', 'metrics', 'documents', 'integrations', 'templates']
@@ -126,12 +133,94 @@ async function onConfirmDelete(): Promise<void> {
   }
 }
 
+const RESET_POLL_INTERVAL_MS = 2000
+
+function openReset(): void {
+  resetError.value = null
+  resetOpen.value = true
+}
+
+function stopResetPolling(): void {
+  if (resetPollTimer) clearTimeout(resetPollTimer)
+  resetPollTimer = null
+}
+
+function scheduleResetPoll(resetId: string): void {
+  stopResetPolling()
+  resetPollTimer = setTimeout(() => void pollReset(resetId), RESET_POLL_INTERVAL_MS)
+}
+
+async function pollReset(resetId: string): Promise<void> {
+  try {
+    const current = await bots.getDataReset(botId, resetId)
+    resetResult.value = current
+    if (current.status === 'PENDING' || current.status === 'RUNNING') {
+      scheduleResetPoll(resetId)
+      return
+    }
+    if (current.status === 'COMPLETED') await loadActivity()
+  } catch {
+    scheduleResetPoll(resetId)
+  }
+}
+
+async function onConfirmReset(typedName: string): Promise<void> {
+  resetSubmitting.value = true
+  resetError.value = null
+  try {
+    const started = await bots.resetData(botId, typedName)
+    resetResult.value = started
+    resetOpen.value = false
+    scheduleResetPoll(started.id)
+  } catch (err) {
+    resetError.value = (err as ApiError).message
+  } finally {
+    resetSubmitting.value = false
+  }
+}
+
+onBeforeUnmount(stopResetPolling)
+
 await Promise.all([load(), loadActivity()])
 </script>
 
 <template>
   <div>
     <SuperadminBackLink :to="`/superadmin/companies/${tenantId}`" :label="$t('superadmin.companyBotDetail.back')" />
+
+    <div
+      v-if="resetResult && resetInProgress"
+      class="mt-4 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-amber-300"
+      role="status"
+    >
+      {{ $t('superadmin.botDataReset.inProgress') }}
+    </div>
+    <div
+      v-else-if="resetResult && resetResult.status === 'COMPLETED' && resetResult.deleted"
+      class="mt-4 flex items-start justify-between gap-3 rounded-2xl border border-success-800 bg-success-950/80 p-3 text-sm text-success-300"
+      role="status"
+    >
+      <p>
+        {{ $t('superadmin.botDataReset.success', {
+          customers: resetResult.deleted.customers,
+          conversations: resetResult.deleted.conversations,
+          messages: resetResult.deleted.messages,
+        }) }}
+      </p>
+      <button type="button" class="shrink-0 text-xs underline hover:text-success-100" @click="resetResult = null">
+        {{ $t('superadmin.botDataReset.dismiss') }}
+      </button>
+    </div>
+    <div
+      v-else-if="resetResult && resetResult.status === 'FAILED'"
+      class="mt-4 flex items-start justify-between gap-3 rounded-2xl border border-danger-800 bg-danger-950/80 p-3 text-sm text-danger-300"
+      role="alert"
+    >
+      <p>{{ $t('superadmin.botDataReset.failed', { error: resetResult.error ?? '' }) }}</p>
+      <button type="button" class="shrink-0 text-xs underline hover:text-danger-100" @click="resetResult = null">
+        {{ $t('superadmin.botDataReset.dismiss') }}
+      </button>
+    </div>
 
     <p v-if="error" class="mt-4 rounded-2xl border border-danger-800 bg-danger-950/80 p-3 text-sm text-danger-300">
       {{ error }}
@@ -169,6 +258,19 @@ await Promise.all([load(), loadActivity()])
               <p class="text-mist mt-2 text-sm leading-relaxed max-w-2xl">{{ bot.assistantName ? $t('admin.bot.assistantLabel', { name: bot.assistantName }) : $t('admin.bot.assistantMissing') }}</p>
               <p v-if="bot.description" class="text-mist mt-2 text-sm leading-relaxed max-w-2xl">{{ bot.description }}</p>
             </div>
+            <button
+              type="button"
+              class="shrink-0 inline-flex h-9 items-center gap-2 rounded-xl border border-danger-500/30 bg-danger-500/5 px-3 text-xs font-medium text-danger-300 hover:bg-danger-500/15 hover:border-danger-500/60 hover:text-danger-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              :title="$t('superadmin.botDataReset.buttonTitle')"
+              :disabled="resetInProgress"
+              @click="openReset"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 0 3-6.7" />
+                <polyline points="3 4 3 9 8 9" />
+              </svg>
+              {{ $t('superadmin.botDataReset.button') }}
+            </button>
             <button
               type="button"
               class="shrink-0 inline-flex size-9 items-center justify-center rounded-xl border border-danger-500/30 bg-danger-500/5 text-danger-300 hover:bg-danger-500/15 hover:border-danger-500/60 hover:text-danger-100 transition"
@@ -576,6 +678,15 @@ await Promise.all([load(), loadActivity()])
       </section>
         </div>
       </Transition>
+
+      <SuperadminBotDataResetDialog
+        :open="resetOpen"
+        :bot-name="bot.name"
+        :submitting="resetSubmitting"
+        :error="resetError"
+        @cancel="resetOpen = false"
+        @confirm="onConfirmReset"
+      />
 
       <ConfirmDialog
         :open="confirmingDelete"

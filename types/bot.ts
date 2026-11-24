@@ -78,3 +78,30 @@ export interface UpdateBotConfigInput {
   isActive?: boolean
   createMeetEnabled?: boolean
 }
+
+export interface BotDataResetDeleted {
+  customers: number
+  conversations: number
+  messages: number
+  leads: number
+  cases: number
+  sales: number
+  appointments: number
+  appointmentReminders: number
+  qualityEvents: number
+  llmUsage: number
+  securityBlockAudits: number
+}
+
+export type BotDataResetStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED'
+
+export interface BotDataReset {
+  id: string
+  botId: string
+  botName: string
+  status: BotDataResetStatus
+  deleted: BotDataResetDeleted | null
+  error: string | null
+  createdAt: string
+  finishedAt: string | null
+}
